@@ -31,7 +31,6 @@ extern void __redisplay_curses(); /* redisplay, but do not sync with remote scre
 extern void retitle_all_curses();
 extern void set_raw_curses();
 extern void set_cooked_curses();
-extern void special_menu_curses( /* yuser, int, int, int, int */ );
 extern void start_scroll_curses( /* yuser */ );
 extern void end_scroll_curses( /* yuser */ );
 extern void update_scroll_curses( /* yuser */ );

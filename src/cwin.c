@@ -163,33 +163,20 @@ old_draw_title(w)
 	move(w->row - 1, w->col);
 	x = 0;
 	for (; x < pad - 2; x++)
-		if (def_flags & FL_VT100)
-			addch(ACS_HLINE);
-		else
-			addch('-');
+		addch('-');
 	if (pad >= 2) {
-		if (def_flags & FL_VT100)
-			addch(ACS_RTEE);
-		else
-			addch('=');
-		addch(' ');
+		addch('=');
 		x += 2;
 	}
 	for (t = w->title; *t && x < w->width; x++, t++)
 		addch(*t);
 	if (pad >= 2) {
 		addch(' ');
-		if (def_flags & FL_VT100)
-			addch(ACS_LTEE);
-		else
-			addch('=');
+		addch('=');
 		x += 2;
 	}
 	for (; x < w->width; x++)
-		if (def_flags & FL_VT100)
-			addch(ACS_HLINE);
-		else
-			addch('-');
+		addch('-');
 }
 
 static void
@@ -665,56 +652,6 @@ set_cooked_curses()
 	noraw();
 	crmode();
 	noecho();
-}
-
-/*
- * Curses handler for VT100 menu output. This is pretty ugly. Don't tell! :-)
- */
-void
-special_menu_curses(user, y, x, section, len)
-	yuser *user;
-	int y, x;
-	int section;
-	int len;
-{
-	register int i;
-
-	if (y < 0 || y >= user->t_rows)
-		return;
-	if (x < 0 || x >= user->t_cols)
-		return;
-	move_curses(user, y, x);
-	switch (section) {
-	case 0:
-		raw_addch_curses(user, ACS_ULCORNER);
-		break;
-	case 1:
-	case 2:
-		raw_addch_curses(user, ACS_VLINE);
-		return;
-		break;
-	case 3:
-	case 4:
-		raw_addch_curses(user, ACS_BTEE);
-		return;
-		break;
-	case 5:
-		raw_addch_curses(user, ACS_LLCORNER);
-		break;
-	}
-
-	for (i = 0; i < (len - 2); i++) {
-		raw_addch_curses(user, ACS_HLINE);
-	}
-
-	switch (section) {
-	case 0:
-		raw_addch_curses(user, ACS_URCORNER);
-		break;
-	case 5:
-		raw_addch_curses(user, ACS_LRCORNER);
-		break;
-	}
 }
 
 void

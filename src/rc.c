@@ -173,9 +173,6 @@ set_option(opt, value)
 	else if (strcmp(opt, "ignorebreak") == 0)
 		mask |= FL_IGNBRK;
 
-	else if (strcmp(opt, "vt100") == 0)
-		mask |= FL_VT100;
-
 #ifdef YTALK_COLOR
 	else if (strcmp(opt, "newui") == 0)
 		mask |= FL_NEWUI;

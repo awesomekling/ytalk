@@ -202,7 +202,6 @@ typedef struct _yuser {
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
 #define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
-#define FL_VT100	0x00002000L	/* VT100 enhanced menus and such */
 #define FL_NEWUI	0x00004000L	/* newui on or off */
 #define FL_PROMPTQUIT	0x00008000L	/* prompt before quitting */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
@@ -385,7 +384,6 @@ extern void set_raw_term();	/* term.c */
 extern void set_cooked_term();	/* term.c */
 extern int term_does_asides();	/* term.c */
 extern int term_does_scrollback();	/* term.c */
-extern void special_menu_term( /* yuser, int, int, int, int) */ );	/* term.c */
 extern void start_scroll_term( /* yuser */ );	/* term.c */
 extern void end_scroll_term( /* yuser */ );	/* term.c */
 extern void update_scroll_term( /* yuser */ );	/* term.c */

@@ -1438,17 +1438,6 @@ spew_term(user, fd, rows, cols)
 	}
 }
 
-void
-special_menu_term(user, y, x, section, len)
-	yuser *user;
-	int y, x;
-	int section;
-	int len;
-{
-	if (term_type == 1)
-		special_menu_curses(user, y, x, section, len);
-}
-
 /*
  * Draw some raw characters to the screen without updating any buffers.
  * Whoever uses this should know what they're doing.  It should always be
