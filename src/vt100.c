@@ -75,6 +75,10 @@ vt100_process(yuser *user, char data)
 		}
 		user->vt.got_esc = 0;
 		break;
+	case 'c':
+		write(user->fd, "\033[0c", 4);
+		user->vt.got_esc = 0;
+		break;
 	case 'h':		/* set modes */
 		switch (user->vt.av[0]) {
 		case 1:	/* keypad "application" mode */
