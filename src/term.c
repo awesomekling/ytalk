@@ -542,16 +542,6 @@ rev_scroll_term(user)
 }
 
 /*
- * Flush window output.
- */
-void
-flush_term(user)
-	register yuser *user;
-{
-	_flush_term(user);
-}
-
-/*
  * Rub one character.
  */
 void

@@ -355,7 +355,6 @@ extern void clreol_term( /* yuser */ );	/* term.c */
 extern void clreos_term( /* yuser */ );	/* term.c */
 extern void scroll_term( /* yuser */ );	/* term.c */
 extern void rev_scroll_term( /* yuser */ );	/* term.c */
-extern void flush_term( /* yuser */ );	/* term.c */
 extern void rub_term( /* yuser */ );	/* term.c */
 extern int word_term( /* yuser */ );	/* term.c */
 extern void kill_term( /* yuser */ );	/* term.c */
@@ -385,6 +384,7 @@ extern void redraw_all_terms();	/* term.c */
 #define update_scroll_term		update_scroll_curses
 #define retitle_all_terms		retitle_all_curses
 #define redraw_all_terms		redisplay_curses
+#define flush_term				flush_curses
 
 extern void init_user();	/* user.c */
 extern yuser *new_user( /* name, host, tty */ );	/* user.c */
