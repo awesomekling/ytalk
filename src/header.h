@@ -376,13 +376,6 @@ extern void set_scroll_region( /* yuser, top, bottom */ );	/* term.c */
 extern void msg_term( /* yuser, str */ );	/* term.c */
 extern void spew_term( /* yuser, fd, rows, cols */ );	/* term.c */
 extern void redraw_all_terms();	/* term.c */
-extern void retitle_all_terms();/* term.c */
-extern void set_raw_term();	/* term.c */
-extern void set_cooked_term();	/* term.c */
-extern int term_does_scrollback();	/* term.c */
-extern void start_scroll_term( /* yuser */ );	/* term.c */
-extern void end_scroll_term( /* yuser */ );	/* term.c */
-extern void update_scroll_term( /* yuser */ );	/* term.c */
 
 #define set_raw_term			set_raw_curses
 #define set_cooked_term			set_cooked_curses
