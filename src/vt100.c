@@ -150,19 +150,23 @@ vt100_process(yuser *user, char data)
 			user->altchar = 0;
 			user->vt.lparen = 0;
 		} else {
-			if (user->vt.av[0] == 0)
-				move_term(user, user->y + 1, user->x);
-			else
-				move_term(user, user->y + user->vt.av[0], user->x);
+			if (user->y != user->rows) {
+				if (user->vt.av[0] == 0)
+					move_term(user, user->y + 1, user->x);
+				else
+					move_term(user, user->y + user->vt.av[0], user->x);
+			}
 		}
 		user->vt.got_esc = 0;
 		break;
 	case 'C':		/* move right */
 		if (user->vt.got_esc == 2) {
-			if (user->vt.av[0] == 0)
-				move_term(user, user->y, user->x + 1);
-			else
-				move_term(user, user->y, user->x + user->vt.av[0]);
+			if (user->x != user->cols) {
+				if (user->vt.av[0] == 0)
+					move_term(user, user->y, user->x + 1);
+				else
+					move_term(user, user->y, user->x + user->vt.av[0]);
+			}
 		}
 		user->vt.got_esc = 0;
 		break;
