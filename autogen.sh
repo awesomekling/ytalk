@@ -7,8 +7,8 @@
 : ${AUTOHEADER="autoheader"}
 : ${AUTOCONF="autoconf"}
 
-tty > /dev/null 2&>1
-isatty=$?
+tty > /dev/null 2>&1
+isatty="$?"
 
 if [ $isatty -eq 0 ] ; then
 	colsrow=`stty -a | grep columns`
@@ -18,28 +18,23 @@ if [ $isatty -eq 0 ] ; then
 		termcols=`echo $colsrow | sed 's/.*columns \([0-9]*\).*/\1/'`
 	fi
 	status_offset=`expr $termcols - 5`
+fi
 
-	smile() {
+smile() {
+	if [ $isatty -eq 0 ] ; then
 		echo -n "[A[$status_offset"
 		echo "G[ [32;01m:)[0m ]"
-	}
+	fi
+}
 
-	frown() {
+frown() {
+	if [ $isatty = 0] ; then
 		echo -n "[A[$status_offset"
 		echo "G[ [31;01m:([0m ]"
 		echo "ERROR: $1"
 		exit 1
-	}
-else
-	smile() {
-		echo -n
-	}
-
-	frown() {
-		echo "ERROR: $1"
-		exit 1
-	}
-fi
+	fi
+}
 
 echo
 echo "* Autogenerating files for YTalk-4.0.0-cvs *"
