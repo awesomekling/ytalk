@@ -10,9 +10,6 @@ void __refresh_ymenu(void);
 
 void init_ymenu(void);
 
-void init_userlist(void);
-void init_usermenu(char);
-
 void redo_ymenu_userlist(void);
 
 int show_message_ymenu(char *);

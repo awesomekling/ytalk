@@ -8,26 +8,28 @@
 #include "ymenu.h"
 #include "cwin.h"
 
-ytk_stack *menu_stack = NULL;
-ytk_thing *main_menu = NULL;
-ytk_thing *options_menu = NULL;
-ytk_thing *usermenu_menu = NULL;
-ytk_thing *userlist_menu = NULL;
-ytk_thing *error_box = NULL;
-ytk_thing *message_box = NULL;
+static ytk_stack *menu_stack = NULL;
+static ytk_thing *main_menu = NULL;
+static ytk_thing *options_menu = NULL;
+static ytk_thing *usermenu_menu = NULL;
+static ytk_thing *userlist_menu = NULL;
+static ytk_thing *error_box = NULL;
+static ytk_thing *message_box = NULL;
 
 #ifdef YTALK_COLOR
-ytk_thing *color_menu = NULL;
+static ytk_thing *color_menu = NULL;
 
 extern int menu_colors;
 extern int menu_attr;
 #endif
 
-char ukey;
+static char ukey;
 
-void do_hidething(ytk_thing *);
+static void do_hidething(ytk_thing *);
+static void init_userlist(void);
+static void init_usermenu(char);
 
-void
+static void
 do_runcmd(ytk_inputbox *b)
 {
 	hide_ymenu();
@@ -35,7 +37,7 @@ do_runcmd(ytk_inputbox *b)
 		execute(b->data);
 }
 
-void
+static void
 do_adduser(ytk_inputbox *b)
 {
 	hide_ymenu();
@@ -43,7 +45,7 @@ do_adduser(ytk_inputbox *b)
 		invite(b->data, 0);
 }
 
-void
+static void
 do_hidething(ytk_thing *t)
 {
 	ytk_pop(menu_stack);
@@ -59,7 +61,7 @@ do_hidething(ytk_thing *t)
 	ytk_sync_display();
 }
 
-void
+static void
 esc_userlist(ytk_thing *t)
 {
 	ytk_menu_item *i = NULL;
@@ -71,7 +73,7 @@ esc_userlist(ytk_thing *t)
 	do_hidething(t);
 }
 
-void
+static void
 handle_main_menu(ytk_menu_item *i)
 {
 	ytk_thing *b;
@@ -112,7 +114,7 @@ handle_main_menu(ytk_menu_item *i)
 	}
 }
 
-void
+static void
 handle_userlist_menu(ytk_menu_item *i)
 {
 	switch (i->hotkey) {
@@ -135,7 +137,7 @@ handle_userlist_menu(ytk_menu_item *i)
 }
 
 #ifdef YTALK_COLOR
-void
+static void
 handle_color(ytk_menu_item *i)
 {
 	char k = i->hotkey;
@@ -177,7 +179,7 @@ set_flags(int togval, ylong mask)
 	def_flags = new_flags;
 }
 
-void
+static void
 handle_options_menu(ytk_menu_item *i) {
 	switch (i->hotkey) {
 	case 's': set_flags(i->value, FL_SCROLL); break;
@@ -248,7 +250,7 @@ init_ymenu()
 #endif
 }
 
-void
+static void
 handle_disconnect_user(ytk_menu_item *i)
 {
 	yuser *u;
@@ -261,7 +263,7 @@ handle_disconnect_user(ytk_menu_item *i)
 		}
 }
 
-void
+static void
 init_usermenu(char k)
 {
 	yuser *u;
@@ -280,7 +282,7 @@ init_usermenu(char k)
 		}
 }
 
-void
+static void
 init_userlist()
 {
 	yuser *u;
@@ -445,13 +447,15 @@ refresh_ymenu()
 	ytk_sync_display();
 }
 
-void
-handle_ebox(ytk_thing *t)
+static void
+handle_embox(ytk_thing *t)
 {
-	(void) t;
 	ytk_pop(menu_stack);
-	ytk_delete_thing(error_box);
-	error_box = NULL;
+	ytk_delete_thing(t);
+	if (t == error_box)
+		error_box = NULL;
+	else if (t == message_box)
+		message_box = NULL;
 	refresh_curses();
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
@@ -470,7 +474,7 @@ show_error_ymenu(char *str, char *syserr)
 	ytk_winch_thing(error_box);
 	if (!ytk_on_stack(menu_stack, error_box))
 		ytk_push(menu_stack, error_box);
-	ytk_set_escape(error_box, handle_ebox);
+	ytk_set_escape(error_box, handle_embox);
 #ifdef YTALK_COLOR
 	ytk_set_colors(error_box, menu_colors);
 	ytk_set_attr(error_box, menu_attr);
@@ -478,18 +482,6 @@ show_error_ymenu(char *str, char *syserr)
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 	return 0;
-}
-
-void
-handle_mbox(ytk_thing *t)
-{
-	(void) t;
-	ytk_pop(menu_stack);
-	ytk_delete_thing(message_box);
-	message_box = NULL;
-	refresh_curses();
-	ytk_display_stack(menu_stack);
-	ytk_sync_display();
 }
 
 int
@@ -501,7 +493,7 @@ show_message_ymenu(char *str)
 		ytk_add_msgbox_separator(YTK_MSGBOX(message_box));
 	ytk_add_msgbox_item(YTK_MSGBOX(message_box), str);
 	ytk_winch_thing(message_box);
-	ytk_set_escape(message_box, handle_ebox);
+	ytk_set_escape(message_box, handle_embox);
 #ifdef YTALK_COLOR
 	ytk_set_colors(message_box, menu_colors);
 	ytk_set_attr(message_box, menu_attr);
