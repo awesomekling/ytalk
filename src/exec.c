@@ -338,7 +338,7 @@ execute(command)
 		(void) ioctl(fd, TIOCSCTTY);
 #endif
 
-#ifdef HAVE_TCSETPGRP
+#ifdef HAVE_TCSETPGRP_MUFFINS
 		if (tcsetpgrp(fd, sid) < 0)
 			perror("tcsetpgrp");
 #endif
@@ -381,9 +381,8 @@ execute(command)
 	}
 	set_win_region(me, prows, pcols);
 
-	if (!(def_flags & FL_INSTANTCMD)) {
-		sleep(1);
-	}
+	/* give the forked process some time to get dressed. */
+	sleep(1);
 
 	/* store `command' for later recollection */
 	last_command = command;

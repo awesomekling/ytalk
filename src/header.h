@@ -205,7 +205,6 @@ typedef struct _yuser {
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
 #define FL_NEWUI	0x00004000L	/* newui on or off */
 #define FL_PROMPTQUIT	0x00008000L	/* prompt before quitting */
-#define FL_INSTANTCMD	0x00010000L	/* don't sleep before executing */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */
