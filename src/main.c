@@ -191,6 +191,7 @@ Options:     -i             --    no auto-invite port\n"
 #endif
 			"             -Y             --    require caps on all y/n answers\n\
              -s             --    start a shell\n\
+             -q             --    prompt before quitting\n\
              -v             --    print program version\n\
              -h host_or_ip  --    select interface or virtual host\n", prog);
 		(void) exit(YTE_INIT);
