@@ -139,9 +139,12 @@ main(int argc, char **argv)
 	char *prog, *c;
 
 #ifdef ENABLE_NLS
-	setlocale(LC_ALL, "");
-	bindtextdomain(PACKAGE, LOCALEDIR);
-	textdomain(PACKAGE);
+	if (setlocale(LC_ALL, "")) {
+		bindtextdomain(PACKAGE, LOCALEDIR);
+		textdomain(PACKAGE);
+	} else {
+		show_error("setlocale() failed");
+	}
 #endif
 
 #ifdef YTALK_DEBUG
