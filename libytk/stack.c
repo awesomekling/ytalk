@@ -125,6 +125,15 @@ ytk_display_stack(ytk_stack *st)
 }
 
 void
+ytk_purge_stack(ytk_stack *st)
+{
+	ytk_thing *t;
+	while ((t = ytk_pop_thing(st)))
+		ytk_delete_thing(t);
+	free_mem(st);
+}
+
+void
 ytk_delete_stack(ytk_stack *st)
 {
 	for (;;) {
