@@ -24,6 +24,7 @@ typedef struct __ytk_menu_item {
 typedef struct {
 	ytk_thing *base;
 	ytk_menu_item *first;
+	ytk_menu_item *last;
 } ytk_menu;
 
 ytk_thing *ytk_new_menu(char *);

@@ -12,6 +12,7 @@ ytk_new_menu(char *title)
 	new_menu->base = new_thing;
 	new_thing->title = title;
 	new_menu->first = NULL;
+	new_menu->last = NULL;
 	new_thing->object = new_menu;
 	new_thing->type = YTK_T_MENU;
 	return new_thing;
@@ -31,18 +32,6 @@ ytk_destroy_menu(ytk_menu *m)
 	}
 	free_mem(it);
 	free_mem(m);
-}
-
-ytk_menu_item *
-ytk_find_last_menu_item(ytk_menu *m)
-{
-	ytk_menu_item *it;
-	if (m->first == NULL)
-		return NULL;
-	it = m->first;
-	while (it->next != NULL)
-		it = it->next;
-	return it;
 }
 
 ytk_menu_item *
@@ -134,14 +123,14 @@ ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (void *
 	new->next = NULL;
 	new->prev = NULL;
 
-	it = ytk_find_last_menu_item(m);
-	if (it == NULL) {
+	if (m->last == NULL) {
 		new->selected = TRUE;
 		m->first = new;
 	} else {
-		it->next = new;
-		it->next->prev = it;
+		m->last->next = new;
+		m->last->next->prev = m->last;
 	}
+	m->last = new;
 	return new;
 }
 
