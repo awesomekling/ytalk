@@ -1470,6 +1470,7 @@ raw_term(user, y, x, str, len)
 	ac.a = raw_attr;
 	ac.b = raw_color;
 	ac.c = 0;
+	ac.v = 0;
 #endif
 
 	if (y < 0 || y >= user->t_rows)
