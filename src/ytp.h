@@ -52,7 +52,7 @@ typedef struct {
 typedef struct {
 	ychar code;		/* V3_YOURWIN, V3_MYWIN, or V3_REGION */
 	char filler[3];
-	u_short rows, cols;	/* window size */
+	unsigned short rows, cols;	/* window size */
 } v3_winch;
 
 #define V3_WINCHLEN	sizeof(v3_winch)

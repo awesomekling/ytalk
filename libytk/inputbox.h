@@ -9,8 +9,8 @@ typedef struct __ytk_inputbox {
 	ytk_thing *base;
 	char *data;
 	char *buf;
-	u_int size;
-	u_int len;
+	unsigned int size;
+	unsigned int len;
 	void (*callback) (struct __ytk_inputbox *);
 } ytk_inputbox;
 

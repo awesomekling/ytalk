@@ -86,20 +86,20 @@ extern char *ptsname(int);
 
 typedef void *yaddr;		/* any pointer address */
 typedef yaddr yterm;		/* terminal cookie */
-typedef u_char ychar;		/* we use unsigned chars */
+typedef unsigned char ychar;		/* we use unsigned chars */
 
 #ifdef YTALK_COLOR
 typedef struct {
-	u_char l;
+	unsigned char l;
 	int a;
-	u_char b, c;
-	u_char v;
+	unsigned char b, c;
+	unsigned char v;
 } yachar;
 #else
-typedef u_char yachar;
+typedef unsigned char yachar;
 #endif
 
-typedef u_int ylong;		/* this should work both on 32-bit and 64-bit
+typedef unsigned int ylong;		/* this should work both on 32-bit and 64-bit
 				 * machines  -Roger */
 
 #ifndef HAVE_SOCKLEN_T
@@ -113,12 +113,12 @@ typedef socklen_t ysocklen_t;
 #endif
 
 typedef struct {
-	u_char w_rows, w_cols;	/* window size FOR PROTOCOL YTP_OLD */
+	unsigned char w_rows, w_cols;	/* window size FOR PROTOCOL YTP_OLD */
 	char protocol;		/* ytalk protocol -- see above */
 	char pad1;		/* zeroed out */
 	short vmajor, vminor;	/* version numbers */
-	u_short rows, cols;	/* his window size over there */
-	u_short my_rows, my_cols;	/* my window size over there */
+	unsigned short rows, cols;	/* his window size over there */
+	unsigned short my_rows, my_cols;	/* my window size over there */
 	ylong pid;		/* my process id */
 	char pad[44];		/* zeroed out */
 } y_parm;
@@ -133,8 +133,8 @@ typedef struct _yuser {
 	ylong flags;		/* active FL_* flags below */
 	ychar edit[4];		/* edit characters */
 	int crlf;		/* 1 if users wants CRLF data */
-	u_short t_rows, t_cols;	/* his rows and cols on window over here */
-	u_short rows, cols;	/* his active region rows and cols over here */
+	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
+	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
 	int scroll;		/* set if currently being scrolled */
 	yachar **scrollback;	/* scrollback buffer */
@@ -169,9 +169,9 @@ typedef struct _yuser {
 	struct sockaddr_in sock;/* communication socket */
 	struct sockaddr_in orig_sock;	/* original socket -- another sick
 					 * hack */
-	u_int av[MAXARG];	/* ESC sequence arguments */
-	u_int ac;		/* ESC sequence arg count */
-	u_int lparen;		/* lparen escape? */
+	unsigned int av[MAXARG];	/* ESC sequence arguments */
+	unsigned int ac;		/* ESC sequence arg count */
+	unsigned int lparen;		/* lparen escape? */
 
 	/* out-of-band data */
 
@@ -364,8 +364,8 @@ extern void rering_all();	/* comm.c */
 /* socket.c */
 extern void init_socket(void);
 extern void close_all(void);
-extern int send_dgram(yuser *, u_char);
-extern int send_auto(u_char);
+extern int send_dgram(yuser *, unsigned char);
+extern int send_auto(unsigned char);
 extern void kill_auto(void);
 extern int newsock(yuser *);
 extern int connect_to(yuser *);
