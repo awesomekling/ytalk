@@ -135,7 +135,7 @@ init_termcap(void)
 	char *term, *tcks;
 	int success;
 	tcbp = get_mem(4096);
-	tcap = get_mem(4096);
+	tcapp = tcap = get_mem(4096);
 	if ((term = getenv("TERM")) == NULL) {
 		fprintf(stderr, "TERM not set.\n");
 		exit(YTE_INIT);
