@@ -1,6 +1,4 @@
 #!/bin/sh
-#
-# A compilation of "borrowed" materials.
 
 : ${ACLOCAL="aclocal"}
 : ${AUTOMAKE="automake"}
@@ -31,52 +29,63 @@ frown() {
 	fi
 }
 
+label() {
+	if [ $isatty -eq 0 ] ; then
+		echo " [34;01m*[0m $1"
+	fi
+}
+
 echo
-echo "* Autogenerating files for YTalk-4.0.0-cvs *"
+if [ $isatty -eq 0 ] ; then
+	echo "[37;01mAutogenerating files for YTalk[0m"
+else
+	echo "Autogenerating files for YTalk *"
+fi
 echo
 
-echo "Cleaning up old files"
+label "Cleaning up old files"
 rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in tmp* \
 	&& smile \
 	|| frown "Couldn't clean up."
 
-echo "Setting up gettext..."
-autopoint -f >/dev/null 2>&1 \
-	&& smile \
-	|| frown "You need GNU gettext to compile YTalk."
-
-echo "Touching ChangeLog..."
+label "Touching ChangeLog..."
 touch ChangeLog
 test -f "ChangeLog" \
 	&& smile \
 	|| frown "Failed to touch ChangeLog"
 
-echo "Running $ACLOCAL..."
+label "Setting up gettext..."
+autopoint -f >/dev/null 2>&1 \
+	&& smile \
+	|| frown "You need GNU gettext to compile YTalk."
+
+
+label "Running $ACLOCAL..."
 WANT_ACLOCAL="1.9" $ACLOCAL -I m4 2>/dev/null || exit 1
 test -f "aclocal.m4" \
 	&& smile \
 	|| frown "Failed to generate aclocal.m4"
 
-echo "Running $AUTOHEADER..."
+label "Running $AUTOHEADER..."
 WANT_AUTOHEADER="2.59" $AUTOHEADER || exit 1
 test -f "config.h.in" \
 	&& smile \
 	|| frown "Failed to generate config.h.in"
 
-echo "Running $AUTOMAKE..."
+label "Running $AUTOMAKE..."
 WANT_AUTOMAKE="1.9" $AUTOMAKE --add-missing --copy --ignore-deps || exit 1
 test -f "Makefile.in" \
 	&& smile \
 	|| frown "Failed to generate Makefile.in"
 
-echo "Running $AUTOCONF..."
+label "Running $AUTOCONF..."
 WANT_AUTOCONF="2.59" $AUTOCONF || exit 1
 test -f configure \
 	&& smile \
 	frown "Failed to generate configure"
 
-echo "Cleaning up temp files"
-rm -rf tmp* \
+label "Cleaning up temp files"
+rm -rf tmp* autom4te.cache \
 	&& smile \
 	|| frown "Couldn't clean up."
 
