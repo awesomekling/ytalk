@@ -1210,10 +1210,7 @@ msg_term(str)
 #ifdef YTALK_COLOR
 	bottom_msg = str;
 	bottom_time = time(NULL);
-	mvaddstr(LINES - 1, 0, str);
-	clrtoeol();
-	move(1, COLS - 1);
-	refresh();
+	update_message_curses();
 	return;
 #else
 	int y;

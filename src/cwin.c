@@ -618,10 +618,8 @@ __redisplay_curses()
 	register ywin *w;
 
 	clear();
-	if (bottom_msg != NULL) {
-		mvaddstr(LINES - 1, 0, bottom_msg);
-		clrtoeol();
-	}
+	if (bottom_msg != NULL)
+		update_message_curses();
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
 		if (w->user->scroll) {
@@ -738,4 +736,13 @@ update_scroll_curses(yuser * user)
 {
 	__update_scroll_curses(user);
 	doupdate();
+}
+
+void
+update_message_curses()
+{
+	mvaddstr(LINES - 1, 0, bottom_msg);
+	clrtoeol();
+	move(1, COLS - 1);
+	refresh();
 }

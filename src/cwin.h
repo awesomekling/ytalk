@@ -38,6 +38,8 @@ extern void end_scroll_curses( /* yuser */ );
 extern void update_scroll_curses(yuser *);
 extern void __update_scroll_curses(yuser *);
 
+extern void update_message_curses();
+
 #ifndef getyx
 #define getyx(w,y,x)	y = w->_cury, x = w->_curx
 #endif
