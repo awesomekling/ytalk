@@ -394,6 +394,18 @@ user_title(char *buf, int size, yuser *user)
 				if ((int) (b - buf) < (size - (int) strlen(user->tty_name)))
 					b += sprintf(b, "%s", user->tty_name);
 				break;
+			case 'U':
+				if (user == me) {
+					if ((int) (b - buf) < (size - (int) strlen(SYSTEM_TYPE)))
+						b += sprintf(b, "%s", SYSTEM_TYPE);
+				} else if (user->gt.system != NULL) {
+					if ((int) (b - buf) < (size - (int) strlen(user->gt.system)))
+						b += sprintf(b, "%s", user->gt.system);
+				} else {
+					if ((int) (b - buf) < (size - 1))
+						b += sprintf(b, "?");
+				}
+				break;
 			case 'v':
 				if ((int) (b - buf) < (size - 4)) {
 					if (user->remote.vmajor > 2)
