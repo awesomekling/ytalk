@@ -300,7 +300,7 @@ update_ymenu()
 		if (!ytk_is_empty_stack(menu_stack)) {
 			ch = *(io_ptr++);
 			io_len--;
-			if (io_len > 0 && ch == 27)
+			if (io_len > 0 && (ch == 27 || ch == ALTESC))
 				for (; io_len > 0; io_ptr++, io_len--);
 			ytk_handle_stack_input(menu_stack, ch);
 			ytk_display_stack(menu_stack);
@@ -416,7 +416,7 @@ yes_no(char *str)
 				out = 'y';
 				break;
 			}
-			if (*io_ptr == 'N' || (*io_ptr == 'n' && !(def_flags & FL_CAPS)) || *io_ptr == 27) {
+			if (*io_ptr == 'N' || (*io_ptr == 'n' && !(def_flags & FL_CAPS)) || (*io_ptr == 27 || *io_ptr == ALTESC)) {
 				out = 'n';
 				break;
 			}

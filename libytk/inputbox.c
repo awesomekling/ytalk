@@ -53,6 +53,7 @@ ytk_handle_inputbox_input(ytk_inputbox *b, int ch)
 		b->data[0] = '\0';
 		b->len = 0;
 		break;
+	case ALTESC:
 	case 27:
 		if (b->base->escape != NULL)
 			b->base->escape(b->base);

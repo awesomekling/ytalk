@@ -225,6 +225,8 @@ typedef struct _yuser {
 #define CLR	edit[3]
 #define RUBDEF	0xfe
 
+#define ALTESC	0x18		/* alternate escape key (^X) */
+
 /* ---- Ytalk version 3.* out-of-band data ---- */
 
 /* see comm.c for a description of Ytalk 3.* OOB protocol */

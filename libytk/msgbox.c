@@ -125,6 +125,7 @@ ytk_handle_msgbox_input(ytk_msgbox *m, int ch)
 		if (m->base->escape != NULL)
 			m->base->escape(m->base);
 		break;
+	case ALTESC:
 	case 27:
 		if (m->base->escape != NULL)
 			m->base->escape(m->base);

@@ -1257,7 +1257,7 @@ my_input(user, buf, len)
 						bail(0);
 					else if (*buf == '\r')	/* CR */
 						*buf = '\n';
-					else if (*buf == 27)	/* Esc */
+					else if (*buf == 27 || *buf == ALTESC)	/* Esc or ALTESC */
 						break;
 					else if ((*buf == 14 || *buf == 6 || *buf == 16) && term_does_scrollback())	/* ^N, ^F or ^P */
 						break;
@@ -1286,6 +1286,13 @@ my_input(user, buf, len)
 						 * char */
 					if (*buf == 27)	/* ESC */
 						break;
+					if (*buf == ALTESC) { /* ALTESC -- alternate menu key */
+						if (!in_ymenu()) {
+							show_ymenu();
+							update_ymenu();
+						}
+						buf++, len--;
+					}
 					else if (*buf == 14 && term_does_scrollback()) {	/* ^N - scroll down */
 						scroll_down(scuser);
 						buf++, len--;

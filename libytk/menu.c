@@ -234,6 +234,7 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 				it->callback((void *) it);
 		}
 		break;
+	case ALTESC:
 	case 27:
 		if (m->base->escape != NULL)
 			m->base->escape(m->base);
