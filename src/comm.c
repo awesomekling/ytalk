@@ -1151,6 +1151,22 @@ process_esc:
 		    move_term(user, user->sy, user->sx);
 		    user->got_esc = 0;
 		    break;
+		case 'h':	/* set modes */
+		    switch(user->av[0]) {
+			case 1:			/* keypad "application" mode */
+			    keypad_term(user, 1);
+			    break;
+		    }
+		    user->got_esc = 0;
+		    break;
+		case 'l':	/* clear modes */
+		    switch(user->av[0]) {
+			case 1:			/* keypad "normal" mode */
+			    keypad_term(user, 0);
+			    break;
+		    }
+		    user->got_esc = 0;
+		    break;
 		case '@':
 		    if(user->got_esc == 2)	/* add char */
 		    {
