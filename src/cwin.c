@@ -448,11 +448,11 @@ close_curses(user)
 	curses_redraw();
 }
 
-#ifdef YTALK_COLOR
 void
 waddyac(WINDOW *w, yachar c)
 {
 	int x, y;
+#ifdef YTALK_COLOR
 	chtype cc = c.l;
 	getyx(w, y, x);
 	if (c.v)
@@ -462,8 +462,13 @@ waddyac(WINDOW *w, yachar c)
 	waddch(w, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
 	if (x >= COLS - 1)
 		wmove(w, y, x);
-}
+#else
+	getyx(w, y, x);
+	waddch(w, c);
+	if (x >= COLS - 1)
+		wmove(w, y, x);
 #endif
+}
 
 void
 addch_curses(user, c)
@@ -723,7 +728,11 @@ __update_scroll_curses(yuser *user)
 			for (i = 0; i < user->cols; i++)
 				waddyac(w->swin, user->scr[r - fb][i]);
 		} else {
+#ifdef YTALK_COLOR
 			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i].l != '\0'); i++)
+#else
+			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i] != '\0'); i++)
+#endif
 				if ((user->scrollpos + r) >= 0)
 					waddyac(w->swin, user->scrollback[user->scrollpos + r][i]);
 		}

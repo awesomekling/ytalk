@@ -475,7 +475,11 @@ scroll_term(user)
 			}
 			user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
 			memcpy(user->scrollback[y], user->scr[0], (user->cols * sizeof(yachar)));
+#ifdef YTALK_COLOR
 			user->scrollback[y][user->cols].l = '\0';
+#else
+			user->scrollback[y][user->cols] = '\0';
+#endif
 			if (!user->scroll)
 				user->scrollpos = y;
 			else
