@@ -56,7 +56,6 @@ ytk_display_inputbox(ytk_thing *t)
 	memset(YTK_INPUTBOX(t)->buf, ' ', t->width - (YTK_WINDOW_HPADDING / 2));
 	YTK_INPUTBOX(t)->buf[t->width - (YTK_WINDOW_HPADDING / 2)] = 0;
 
-	wattroff(t->win, A_REVERSE);
 	mvwaddstr(t->win, 1, 1 + (YTK_WINDOW_HPADDING / 2), YTK_INPUTBOX(t)->buf);
 	mvwaddstr(t->win, 1, 1 + (YTK_WINDOW_HPADDING / 2), YTK_INPUTBOX(t)->data);
 	waddch(t->win, ACS_CKBOARD);
@@ -72,6 +71,8 @@ ytk_display_msgbox(ytk_thing *t)
 	padbuf = get_mem(t->width * sizeof(char) + 1);
 	memset(padbuf, ' ', t->width);
 	padbuf[t->width] = 0;
+
+	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
 	y = 1;
 	while ((it = ytk_next_msgbox_item(YTK_MSGBOX(t), it))) {
@@ -99,6 +100,7 @@ ytk_display_menu(ytk_thing *w)
 	padbuf = get_mem(w->width * sizeof(char) + 1);
 	memset(padbuf, ' ', w->width);
 	padbuf[w->width] = 0;
+	wattron(w->win, COLOR_PAIR(w->colors) | w->attr);
 
 	y = 1;
 	while ((it = ytk_next_menu_item(YTK_MENU(w), it))) {
@@ -109,7 +111,7 @@ ytk_display_menu(ytk_thing *w)
 			y++;
 		} else {
 			if (it->selected)
-				wattroff(w->win, A_REVERSE);
+				wattron(w->win, A_REVERSE);
 			mvwaddstr(w->win, y, 1, padbuf);
 			if (YTK_MENU_ITEM_TOGGLE(it)) {
 				mvwaddch(w->win, y, 1 + (YTK_WINDOW_HPADDING / 2), '[');
@@ -126,7 +128,7 @@ ytk_display_menu(ytk_thing *w)
 			if (it->hotkey)
 				mvwaddch(w->win, y, w->width - (YTK_WINDOW_HPADDING / 2), it->hotkey);
 			if (it->selected)
-				wattron(w->win, A_REVERSE);
+				wattroff(w->win, A_REVERSE);
 			y++;
 		}
 	}
@@ -140,13 +142,13 @@ ytk_display_thing(ytk_thing *t)
 		if (!ytk_create_window(t))
 			bail(YTE_ERROR);
 
-	wattron(t->win, A_REVERSE);
+	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
 	wborder(t->win,
-		ACS_VLINE | A_REVERSE, ACS_VLINE | A_REVERSE,
-		ACS_HLINE | A_REVERSE, ACS_HLINE | A_REVERSE,
-		ACS_ULCORNER | A_REVERSE, ACS_URCORNER | A_REVERSE,
-		ACS_LLCORNER | A_REVERSE, ACS_LRCORNER | A_REVERSE
+		ACS_VLINE, ACS_VLINE,
+		ACS_HLINE, ACS_HLINE,
+		ACS_ULCORNER, ACS_URCORNER,
+		ACS_LLCORNER, ACS_LRCORNER
 	);
 
 	wattron(t->win, A_BOLD);

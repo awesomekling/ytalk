@@ -62,3 +62,15 @@ ytk_visible(ytk_thing *t)
 	else
 		return FALSE;
 }
+
+void
+ytk_set_colors(ytk_thing * t, int colors)
+{
+	t->colors = colors;
+}
+
+void
+ytk_set_attr(ytk_thing * t, int attr)
+{
+	t->attr = attr;
+}
