@@ -46,7 +46,7 @@ do_adduser(ytk_inputbox *b)
 void
 do_hidething(ytk_thing *t)
 {
-	(void) ytk_pop(menu_stack);
+	ytk_pop(menu_stack);
 	if (t == main_menu)
 		hide_ymenu();
 	else if (t != options_menu)
@@ -229,7 +229,7 @@ handle_disconnect_user(void *t)
 			free_user(u);
 			break;
 		}
-	(void) ytk_pop(menu_stack);
+	ytk_pop(menu_stack);
 	hide_ymenu();
 }
 
@@ -493,7 +493,7 @@ yes_no(char *str)
 		}
 	} while (out == 0);
 	ytk_delete_thing(yn);
-	(void) ytk_pop(menu_stack);
+	ytk_pop(menu_stack);
 	if (ytk_is_empty_stack(menu_stack))
 		hide_ymenu();
 	else {

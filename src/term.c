@@ -181,7 +181,7 @@ set_terminal_size(fd, rows, cols)
 
 	winsize.ws_row = rows;
 	winsize.ws_col = cols;
-	(void) ioctl(fd, TIOCSWINSZ, &winsize);
+	ioctl(fd, TIOCSWINSZ, &winsize);
 #endif
 }
 
@@ -193,11 +193,11 @@ set_terminal_flags(fd)
 	int fd;
 {
 #ifdef USE_SGTTY
-	(void) ioctl(fd, TIOCSETD, &line_discipline);
-	(void) ioctl(fd, TIOCLSET, &local_mode);
-	(void) ioctl(fd, TIOCSETP, &sgttyb);
-	(void) ioctl(fd, TIOCSETC, &tchars);
-	(void) ioctl(fd, TIOCSLTC, &ltchars);
+	ioctl(fd, TIOCSETD, &line_discipline);
+	ioctl(fd, TIOCLSET, &local_mode);
+	ioctl(fd, TIOCSETP, &sgttyb);
+	ioctl(fd, TIOCSETC, &tchars);
+	ioctl(fd, TIOCSLTC, &ltchars);
 #else
 	if (tcsetattr(fd, TCSANOW, &tio) < 0)
 		show_error("tcsetattr failed");
@@ -1261,9 +1261,9 @@ spew_line(fd, buf, len)
 		}
 		if (v != buf->v) {
 			if (buf->v)
-				(void) write(fd, &YT_ACS_ON, 1);
+				write(fd, &YT_ACS_ON, 1);
 			else
-				(void) write(fd, &YT_ACS_OFF, 1);
+				write(fd, &YT_ACS_OFF, 1);
 		}
 		v = buf->v;
 
@@ -1331,7 +1331,7 @@ spew_term(user, fd, rows, cols)
 				spew_line(fd, user->scr[y], e - user->scr[y]);
 #else
 			if (e != user->scr[y])
-				(void) write(fd, user->scr[y], e - user->scr[y]);
+				write(fd, user->scr[y], e - user->scr[y]);
 #endif
 			if (++y >= rows)
 				break;
@@ -1343,15 +1343,15 @@ spew_term(user, fd, rows, cols)
 
 		/* move the cursor to the correct place */
 
-		(void) sprintf(tmp, "%c[%d;%dH", 27, user->y + 1, user->x + 1);
-		(void) write(fd, tmp, strlen(tmp));
+		sprintf(tmp, "%c[%d;%dH", 27, user->y + 1, user->x + 1);
+		write(fd, tmp, strlen(tmp));
 
 #ifdef YTALK_COLOR
-		(void) spew_attrs(fd, user->c_at, user->c_fg, user->c_bg);
+		spew_attrs(fd, user->c_at, user->c_fg, user->c_bg);
 		if (user->altchar)
-			(void) write(fd, "[(0", 4);
+			write(fd, "[(0", 4);
 		if (user->csx)
-			(void) write(fd, &YT_ACS_ON, 1);
+			write(fd, &YT_ACS_ON, 1);
 #endif
 
 	} else {
@@ -1363,7 +1363,7 @@ spew_term(user, fd, rows, cols)
 					spew_line(fd, user->scr[y], user->x);
 #else
 				if (user->x > 0)
-					(void) write(fd, user->scr[y], user->x);
+					write(fd, user->scr[y], user->x);
 #endif
 				break;
 			}
@@ -1378,7 +1378,7 @@ spew_term(user, fd, rows, cols)
 #ifdef YTALK_COLOR
 				spew_line(fd, user->scr[y], e - user->scr[y]);
 #else
-				(void) write(fd, user->scr[y], e - user->scr[y]);
+				write(fd, user->scr[y], e - user->scr[y]);
 #endif
 			if (user->crlf)
 				write(fd, "\r\n", 2);

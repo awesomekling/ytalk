@@ -175,7 +175,7 @@ free_mem(addr)
 {
 	mem_list *entry;
 	if((entry = find_area(glist, addr)) != NULL) {
-		(void) memset(entry->addr, '\0', (size_t) entry->size);
+		memset(entry->addr, '\0', (size_t) entry->size);
 		free(entry->addr);
 		glist = del_area(glist, entry);
 	} else {

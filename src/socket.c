@@ -162,7 +162,7 @@ read_autoport(fd)
 #else
 	sprintf(estr, "%s@%s", pack.name, pack.host);
 #endif
-	(void) invite(estr, 1);	/* we should be expected */
+	invite(estr, 1);	/* we should be expected */
 }
 
 /*
@@ -201,7 +201,7 @@ init_autoport()
 		show_error("init_autoport: listen() failed");
 		return;
 	}
-	(void) memset(autoid, 0, (MAXDAEMON + 1) * sizeof(ylong));
+	memset(autoid, 0, (MAXDAEMON + 1) * sizeof(ylong));
 	add_fd(autofd, read_autoport);
 }
 
@@ -354,7 +354,7 @@ sendit(addr, d)
 	 */
 	if (d == otalk && nrsp.type == LOOK_UP && nrsp.answer == 0) {
 		u_short t;
-		(void) memcpy((char *) &t, ((char *) &orsp.addr.sin_family) - 2, sizeof(t));
+		memcpy((char *) &t, ((char *) &orsp.addr.sin_family) - 2, sizeof(t));
 		if (ntohs(t) == AF_INET && ntohs(orsp.addr.sin_family) != AF_INET) {
 			char *c;
 			c = ((char *) &orsp) + sizeof(orsp) - 1;
@@ -532,7 +532,7 @@ init_socket()
 	omsg.ctl_addr.sin_family = nmsg.ctl_addr.sin_family = htons(AF_INET);
 	nmsg.vers = TALK_VERSION;
 
-	(void) find_daemon(me->host_addr);
+	find_daemon(me->host_addr);
 	if (!(def_flags & FL_NOAUTO))
 		init_autoport();
 }
@@ -746,7 +746,7 @@ kill_auto()
 {
 	if (autofd < 0)
 		return;
-	(void) send_auto(DELETE);
+	send_auto(DELETE);
 	remove_fd(autofd);
 	close(autofd);
 	autofd = -1;
@@ -864,7 +864,7 @@ get_host_addr(hostname)
 			show_error(errstr);
 			return (ylong) - 1;
 		}
-		(void) memcpy(&addr, host->h_addr, sizeof(addr));
+		memcpy(&addr, host->h_addr, sizeof(addr));
 	} else if ((addr = (ylong) inet_addr(hostname)) == (ylong) - 1)
 		return (ylong) - 1;
 	return addr;

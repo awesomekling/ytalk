@@ -83,7 +83,7 @@ setsid()
 
 	if ((fd = open("/dev/tty", O_RDWR)) >= 0) {
 		ioctl(fd, TIOCNOTTY);
-		(void) close(fd);
+		close(fd);
 	}
 	return fd;
 #endif
@@ -122,7 +122,7 @@ getpty(name)
 		tt = ptsname(pty);
 		signal(SIGCHLD, sigchld);
 		if (r == 0 && tt != NULL) {
-			(void) strcpy(name, tt);
+			strcpy(name, tt);
 #ifdef YTALK_SUNOS
 			needtopush = 1;
 #endif
@@ -137,25 +137,25 @@ getpty(name)
 
 	if ((pty = open("/dev/ptc", O_RDWR)) >= 0) {
 		if ((tt = ttyname(pty)) != NULL) {
-			(void) strcpy(name, tt);
+			strcpy(name, tt);
 			return pty;
 		}
-		(void) close(pty);
+		close(pty);
 	}
 #endif
 
 	/* scan Berkeley-style */
 
-	(void) strcpy(name, "/dev/ptyp0");
+	strcpy(name, "/dev/ptyp0");
 	while (access(name, 0) == 0) {
 		if ((pty = open(name, O_RDWR)) >= 0) {
 			name[5] = 't';
 			if ((tty = open(name, O_RDWR)) >= 0) {
-				(void) close(tty);
+				close(tty);
 				return pty;
 			}
 			name[5] = 'p';
-			(void) close(pty);
+			close(pty);
 		}
 		/* get next pty name */
 
@@ -292,7 +292,7 @@ execute(command)
 			msg_term("Warning: The pseudo-terminal is world-readable.");
 
 	if ((pid = fork()) == 0) {
-		(void) close(fd);
+		close(fd);
 		close_all();
 #ifdef HAVE_TCSETPGRP
 		if ((sid = setsid()) < 0)
@@ -316,9 +316,9 @@ execute(command)
 #endif
 #endif
 
-		(void) dup2(fd, 0);
-		(void) dup2(fd, 1);
-		(void) dup2(fd, 2);
+		dup2(fd, 0);
+		dup2(fd, 1);
+		dup2(fd, 2);
 
 		/* tricky bit -- ignore WINCH */
 
@@ -341,7 +341,7 @@ execute(command)
 		 * Mark the new pty as a controlling terminal to enable
 		 * BSD-style job control.
 		 */
-		(void) ioctl(fd, TIOCSCTTY);
+		ioctl(fd, TIOCSCTTY);
 #endif
 
 #ifdef HAVE_TCSETPGRP
@@ -356,7 +356,7 @@ execute(command)
 		else
 			execl(shell, shell, (char *) NULL);
 		perror("execl");
-		(void) exit(-1);
+		exit(-1);
 	}
 	/* Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999. */
 #ifdef SIGCHLD
@@ -395,7 +395,7 @@ execute(command)
 void
 update_exec()
 {
-	(void) write(pfd, io_ptr, (size_t) io_len);
+	write(pfd, io_ptr, (size_t) io_len);
 	io_len = 0;
 }
 
@@ -408,7 +408,7 @@ kill_exec()
 	if (!running_process)
 		return;
 	remove_fd(pfd);
-	(void) close(pfd);
+	close(pfd);
 	running_process = 0;
 	unlock_flags();
 	set_cooked_term();
@@ -451,6 +451,6 @@ winch_exec()
 	set_terminal_size(pfd, prows, pcols);
 	set_win_region(me, prows, pcols);
 #ifdef SIGWINCH
-	(void) kill(pid, SIGWINCH);
+	kill(pid, SIGWINCH);
 #endif
 }

@@ -51,7 +51,7 @@ static void
 close_passwd()
 {
 	if (passwd_opened) {
-		(void) endpwent();
+		endpwent();
 		passwd_opened = 0;
 	}
 }
@@ -99,7 +99,7 @@ init_user(vhost)
 	connect_list = NULL;
 	wait_list = NULL;
 	daemon_id = getpid() << 10;
-	(void) memset(fd_to_user, 0, MAX_FILES * sizeof(yuser *));
+	memset(fd_to_user, 0, MAX_FILES * sizeof(yuser *));
 
 	/* get my username */
 
@@ -176,7 +176,7 @@ new_user(name, hostname, tty)
 	/* create the user record */
 
 	out = (yuser *) get_mem(sizeof(yuser));
-	(void) memset(out, 0, sizeof(yuser));
+	memset(out, 0, sizeof(yuser));
 	out->user_name = str_copy(name);
 	out->host_name = str_copy(hostname);
 	if (strchr(hostname, '.'))

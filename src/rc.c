@@ -222,24 +222,24 @@ new_alias(a1, a2)
 	at = strchr(a1, '@');
 	if (at == a1) {
 		a->type = ALIAS_AFTER;
-		(void) strncpy(a->from, a1 + 1, 255);
+		strncpy(a->from, a1 + 1, 255);
 		a->from[254] = 0;
-		(void) strncpy(a->to, (*a2 == '@' ? a2 + 1 : a2), 255);
+		strncpy(a->to, (*a2 == '@' ? a2 + 1 : a2), 255);
 		a->to[254] = 0;
 	} else if (at == a1 + strlen(a1) - 1) {
 		a->type = ALIAS_BEFORE;
 		*at = 0;
-		(void) strncpy(a->from, a1, 255);
+		strncpy(a->from, a1, 255);
 		a->from[254] = 0;
-		(void) strncpy(a->to, a2, 255);
+		strncpy(a->to, a2, 255);
 		a->to[254] = 0;
 		if ((at = strchr(a->to, '@')) != NULL)
 			*at = 0;
 	} else {
 		a->type = ALIAS_ALL;
-		(void) strncpy(a->from, a1, 255);
+		strncpy(a->from, a1, 255);
 		a->from[254] = 0;
-		(void) strncpy(a->to, a2, 255);
+		strncpy(a->to, a2, 255);
 		a->to[254] = 0;
 	}
 	a->next = alias0;
@@ -448,24 +448,24 @@ resolve_alias(uh)
 		if (a->type == ALIAS_ALL && strcmp(uh, a->from) == 0)
 			return a->to;
 
-	(void) strncpy(uh1, uh, 255);
+	strncpy(uh1, uh, 255);
 	uh1[254] = 0;
 	if ((at = strchr(uh1, '@')) != NULL)
 		*at = 0;
 	for (a = alias0; a; a = a->next) {
 		if (a->type == ALIAS_BEFORE && strcmp(uh1, a->from) == 0) {
 			found = 1;
-			(void) strncpy(uh1, a->to, 255);
+			strncpy(uh1, a->to, 255);
 			uh1[254] = 0;
 			if ((at = strchr(uh, '@')) != NULL)
 				if (strlen(uh1) + strlen(at) < 256)
-					(void) strcat(uh1, at);
+					strcat(uh1, at);
 			uh = uh1;
 			break;
 		}
 	}
 	if (!found) {
-		(void) strncpy(uh1, uh, 255);
+		strncpy(uh1, uh, 255);
 		uh1[254] = 0;
 	}
 	at = strchr(uh1, '@');
@@ -475,7 +475,7 @@ resolve_alias(uh)
 			if (a->type == ALIAS_AFTER && strcmp(at, a->from) == 0) {
 				found = 1;
 				if (strlen(a->to) + (at - uh1) < 255)
-					(void) strcpy(at, a->to);
+					strcpy(at, a->to);
 				break;
 			}
 		}

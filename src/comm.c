@@ -122,14 +122,14 @@ send_import(to, from)
 		v3p.code = V3_IMPORT;
 		v3p.host_addr = htonl(from->host_addr);
 		v3p.pid = htonl(from->remote.pid);
-		(void) strncpy(v3p.name, from->user_name, V3_NAMELEN);
-		(void) strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
+		strncpy(v3p.name, from->user_name, V3_NAMELEN);
+		strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
 		send_oob(to->fd, &v3p, V3_PACKLEN);
 	} else if (to->remote.vmajor == 2) {
 		v2p.code = V2_IMPORT;
-		(void) strncpy(v2p.name, from->user_name, V2_NAMELEN);
-		(void) strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
-		(void) write(to->fd, &v2p, V2_PACKLEN);
+		strncpy(v2p.name, from->user_name, V2_NAMELEN);
+		strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
+		write(to->fd, &v2p, V2_PACKLEN);
 	}
 }
 
@@ -144,14 +144,14 @@ send_accept(to, from)
 		v3p.code = V3_ACCEPT;
 		v3p.host_addr = htonl(from->host_addr);
 		v3p.pid = htonl(from->remote.pid);
-		(void) strncpy(v3p.name, from->user_name, V3_NAMELEN);
-		(void) strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
+		strncpy(v3p.name, from->user_name, V3_NAMELEN);
+		strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
 		send_oob(to->fd, &v3p, V3_PACKLEN);
 	} else if (to->remote.vmajor == 2) {
 		v2p.code = V2_ACCEPT;
-		(void) strncpy(v2p.name, from->user_name, V2_NAMELEN);
-		(void) strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
-		(void) write(to->fd, &v2p, V2_PACKLEN);
+		strncpy(v2p.name, from->user_name, V2_NAMELEN);
+		strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
+		write(to->fd, &v2p, V2_PACKLEN);
 	}
 }
 
@@ -173,8 +173,8 @@ v2_process(user, pack)
 	 * Ytalk version 2.* didn't have very clever import/export
 	 * capabilities.  We'll just go with the flow.
 	 */
-	(void) strncpy(name, pack->name, V2_NAMELEN);
-	(void) strncpy(host, pack->host, V2_HOSTLEN);
+	strncpy(name, pack->name, V2_NAMELEN);
+	strncpy(host, pack->host, V2_HOSTLEN);
 	name[V2_NAMELEN] = '\0';
 	host[V2_HOSTLEN] = '\0';
 	if ((host_addr = get_host_addr(host)) == (ylong) - 1) {
@@ -212,12 +212,12 @@ v2_process(user, pack)
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
-		(void) invite(estr, 0);
+		invite(estr, 0);
 
 		/* now tell him to connect to us */
 
 		pack->code = V2_EXPORT;
-		(void) write(user->fd, pack, V2_PACKLEN);
+		write(user->fd, pack, V2_PACKLEN);
 
 		break;
 	case V2_EXPORT:
@@ -236,7 +236,7 @@ v2_process(user, pack)
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
-		(void) invite(estr, 1);	/* we should be expected */
+		invite(estr, 1);	/* we should be expected */
 		break;
 	}
 }
@@ -255,8 +255,8 @@ v3_process_pack(user, pack)
 	static char host[V3_HOSTLEN + 1];
 	static char estr[V3_NAMELEN + V3_HOSTLEN + 20];
 
-	(void) strncpy(name, pack->name, V3_NAMELEN);
-	(void) strncpy(host, pack->host, V3_HOSTLEN);
+	strncpy(name, pack->name, V3_NAMELEN);
+	strncpy(host, pack->host, V3_HOSTLEN);
 	name[V3_NAMELEN] = '\0';
 	host[V3_HOSTLEN] = '\0';
 	if ((host_addr = get_host_addr(host)) == (ylong) - 1)
@@ -320,7 +320,7 @@ v3_process_pack(user, pack)
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
-		(void) invite(estr, 1);	/* we should be expected */
+		invite(estr, 1);	/* we should be expected */
 		break;
 	}
 }
@@ -440,12 +440,12 @@ read_user(fd)
 		if (user->drain > 0) {	/* there is still some OOB data to
 					 * drain */
 			if (rc < user->drain) {
-				(void) memcpy(user->dptr, c, rc);
+				memcpy(user->dptr, c, rc);
 				user->dptr += rc;
 				user->drain -= rc;
 				rc = 0;
 			} else {
-				(void) memcpy(user->dptr, c, user->drain);
+				memcpy(user->dptr, c, user->drain);
 				rc -= user->drain;
 				c += user->drain;
 				user->drain = 0;
@@ -517,7 +517,7 @@ read_user(fd)
 				if (user->output_fd > 0)
 					if (write(user->output_fd, buf, p - buf) <= 0) {
 						show_error("write to user output file failed");
-						(void) close(user->output_fd);
+						close(user->output_fd);
 						user->output_fd = 0;
 					}
 				show_input(user, buf, p - buf);
@@ -549,7 +549,7 @@ ytalk_user(fd)
 	switch (parm.protocol) {
 	case YTP_OLD:
 		cols = parm.w_cols;
-		(void) memset(&parm, 0, sizeof(y_parm));
+		memset(&parm, 0, sizeof(y_parm));
 		parm.vmajor = 2;
 		parm.cols = cols;
 		parm.my_cols = cols;
@@ -652,7 +652,7 @@ connect_user(fd)
 	/* check for ytalk connection */
 
 	if (user->RUB == RUBDEF) {
-		(void) memset(&parm, 0, sizeof(y_parm));
+		memset(&parm, 0, sizeof(y_parm));
 		parm.protocol = YTP_NEW;
 		parm.vmajor = htons(VMAJOR);
 		parm.vminor = htons(VMINOR);
@@ -663,7 +663,7 @@ connect_user(fd)
 		parm.w_rows = parm.rows;
 		parm.w_cols = parm.cols;
 		parm.pid = htonl(me->remote.pid);
-		(void) write(user->fd, &parm, sizeof(y_parm));
+		write(user->fd, &parm, sizeof(y_parm));
 		add_fd(fd, ytalk_user);
 	} else {
 		/* update the lists */
@@ -710,7 +710,7 @@ contact_user(fd)
 		show_error("contact_user: unknown contact");
 		return;
 	}
-	(void) send_dgram(user, DELETE_INVITE);
+	send_dgram(user, DELETE_INVITE);
 	socklen = sizeof(struct sockaddr_in);
 	if ((n = accept(fd, (struct sockaddr *) & (user->sock), &socklen)) < 0) {
 		free_user(user);
@@ -718,7 +718,7 @@ contact_user(fd)
 			show_error("connect_user: accept() failed");
 		return;
 	}
-	(void) close(fd);
+	close(fd);
 	fd_to_user[fd] = NULL;
 
 	/*
@@ -743,7 +743,7 @@ contact_user(fd)
 	user->fd = n;
 	fd_to_user[user->fd] = user;
 	add_fd(user->fd, connect_user);
-	(void) write(user->fd, me->edit, 3);	/* send the edit keys */
+	write(user->fd, me->edit, 3);	/* send the edit keys */
 }
 
 /*
@@ -798,7 +798,7 @@ announce(user)
 				break;
 			if (fd == -2) {	/* connection refused -- they hung
 					 * up! */
-				(void) send_dgram(user, AUTO_DELETE);
+				send_dgram(user, AUTO_DELETE);
 				errno = 0;
 				continue;
 			}
@@ -809,12 +809,12 @@ announce(user)
 		 * packet.
 		 */
 		v2p.code = V2_AUTO;
-		(void) strncpy(v2p.name, me->user_name, V2_NAMELEN);
-		(void) strncpy(v2p.host, me->host_name, V2_HOSTLEN);
+		strncpy(v2p.name, me->user_name, V2_NAMELEN);
+		strncpy(v2p.host, me->host_name, V2_HOSTLEN);
 		v2p.name[V2_NAMELEN - 1] = '\0';
 		v2p.host[V2_HOSTLEN - 1] = '\0';
-		(void) write(fd, &v2p, V2_PACKLEN);
-		(void) close(fd);
+		write(fd, &v2p, V2_PACKLEN);
+		close(fd);
 		return 0;
 	}
 	if (rc == -1)
@@ -903,7 +903,7 @@ invite(name, send_announce)
 					dont_change_my_addr++;
 				}
 			}
-			(void) close(sock);
+			close(sock);
 		}
 	}
 	/* Now send off the invitation */
@@ -918,7 +918,7 @@ invite(name, send_announce)
 				break;
 			if (rc == -2) {	/* connection refused -- they hung
 					 * up! */
-				(void) send_dgram(user, DELETE);
+				send_dgram(user, DELETE);
 				continue;
 			}
 			free_user(user);
@@ -926,7 +926,7 @@ invite(name, send_announce)
 		}
 		user->last_invite = (ylong) time(NULL);
 		add_fd(user->fd, connect_user);
-		(void) write(user->fd, me->edit, 3);	/* send the edit keys */
+		write(user->fd, me->edit, 3);	/* send the edit keys */
 		return user;
 	}
 	if (rc == -1) {
@@ -951,10 +951,10 @@ invite(name, send_announce)
 		free_user(user);
 		return NULL;
 	}
-	(void) send_dgram(user, LEAVE_INVITE);
+	send_dgram(user, LEAVE_INVITE);
 	user->last_invite = (ylong) time(NULL);
 	if (send_announce && (rc = announce(user)) != 0) {
-		(void) send_dgram(user, DELETE_INVITE);
+		send_dgram(user, DELETE_INVITE);
 		if (rc > 0)
 #ifdef HAVE_SNPRINTF
 			snprintf(errstr, MAXERR, "%s refusing messages", user->full_name);
@@ -1006,7 +1006,7 @@ house_clean()
 	for (u = wait_list; u; u = next) {
 		next = u->next;
 		if (t - u->last_invite >= 30) {
-			(void) send_dgram(u, LEAVE_INVITE);
+			send_dgram(u, LEAVE_INVITE);
 			u->last_invite = t = (ylong) time(NULL);
 			if (!(def_flags & FL_RING))
 				continue;
@@ -1030,7 +1030,7 @@ house_clean()
 #endif
 			msg_term(msgstr);
 			if ((rc = announce(u)) != 0) {
-				(void) send_dgram(u, DELETE_INVITE);
+				send_dgram(u, DELETE_INVITE);
 				if (rc > 0)
 #ifdef HAVE_SNPRINTF
 					snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
@@ -1062,10 +1062,10 @@ rering_all()
 	}
 	for (u = wait_list; u; u = next) {
 		next = u->next;
-		(void) send_dgram(u, LEAVE_INVITE);
+		send_dgram(u, LEAVE_INVITE);
 		u->last_invite = (ylong) time(NULL);
 		if ((rc = announce(u)) != 0) {
-			(void) send_dgram(u, DELETE_INVITE);
+			send_dgram(u, DELETE_INVITE);
 			if (rc > 0)
 #ifdef HAVE_SNPRINTF
 				snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
@@ -1164,21 +1164,21 @@ send_users(user, buf, len, cl_buf, cl_len)
 		if (user->fd > 0) {	/* just to be sure... */
 			if (user->remote.vmajor > 2)
 				if (user->crlf)
-					(void) write(user->fd, cl_buf, cl_len);
+					write(user->fd, cl_buf, cl_len);
 				else
-					(void) write(user->fd, o_buf, o - o_buf);
+					write(user->fd, o_buf, o - o_buf);
 			else
-				(void) write(user->fd, buf, b - buf);
+				write(user->fd, buf, b - buf);
 		}
 	} else
 		for (u = connect_list; u; u = u->next)
 			if (u->remote.vmajor > 2)
 				if (u->crlf)
-					(void) write(u->fd, cl_buf, cl_len);
+					write(u->fd, cl_buf, cl_len);
 				else
-					(void) write(u->fd, o_buf, o - o_buf);
+					write(u->fd, o_buf, o - o_buf);
 			else
-				(void) write(u->fd, buf, b - buf);
+				write(u->fd, buf, b - buf);
 
 }
 
@@ -1230,14 +1230,14 @@ process_esc:
 		} else if (*buf == user->RUB && !(user->flags & FL_RAW))
 			rub_term(user);
 		else if (*buf == user->WORD && !(user->flags & FL_RAW))
-			(void) word_term(user);
+			word_term(user);
 		else if (*buf == user->KILL && !(user->flags & FL_RAW))
 			kill_term(user);
 		else {
 			switch (*buf) {
 			case 7:/* Bell */
 				if (def_flags & FL_BEEP)
-					(void) putc(7, stderr);
+					putc(7, stderr);
 				break;
 			case 8:/* Backspace */
 				if (user->x > 0)
@@ -1353,7 +1353,7 @@ my_input(user, buf, len)
 				if ((i = buf - c) > 0) {
 					if (user != NULL && user != me) {
 						if (def_flags & FL_BEEP)
-							(void) putc(7, stderr);
+							putc(7, stderr);
 					} else {
 						for (n = nbuf, j = 0; j < (buf - c); j++, n++) {
 							if (c[j] == '\n') {

@@ -58,7 +58,7 @@ bail(n)
 	if (user_format != NULL)
 		free_mem(user_format);
 	clear_all();
-	(void) exit(n == YTE_SUCCESS_PROMPT ? YTE_SUCCESS : n);
+	exit(n == YTE_SUCCESS_PROMPT ? YTE_SUCCESS : n);
 }
 
 #ifndef HAVE_STRERROR
@@ -110,7 +110,7 @@ str_copy(str)
 		return NULL;
 	len = strlen(str) + 1;
 	out = get_mem(len);
-	(void) memcpy(out, str, len);
+	memcpy(out, str, len);
 	return out;
 }
 
@@ -144,7 +144,7 @@ main(argc, argv)
 		fprintf(stderr, "The definition for ylong in header.h is wrong;\n\
 please change it to an unsigned 32-bit type that works on your computer,\n\
 then type 'make clean' and 'make'.\n");
-		(void) exit(YTE_INIT);
+		exit(YTE_INIT);
 	}
 #endif
 
@@ -173,7 +173,7 @@ then type 'make clean' and 'make'.\n");
 	if (vflg) {
 		/* print version and exit */
 		fprintf(stderr, "YTalk %d.%d.%d\n", VMAJOR, VMINOR, VPATCH);
-		(void) exit(YTE_SUCCESS);
+		exit(YTE_SUCCESS);
 	}
 	/* check for users */
 
@@ -186,7 +186,7 @@ Options:     -i             --    no auto-invite port\n\
              -q             --    prompt before quitting\n\
              -v             --    print program version\n\
              -h             --    show this help message\n", prog);
-		(void) exit(YTE_INIT);
+		exit(YTE_INIT);
 	}
 	/* check that STDIN is a valid tty device */
 
