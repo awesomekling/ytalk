@@ -21,7 +21,7 @@ add_area(mem_list *list, yaddr addr, int size, int line, char *file)
 	mem_list *entry;
 	if (addr == 0)
 		return list;
-	entry = (mem_list *) malloc(sizeof(mem_list));
+	entry = malloc(sizeof(mem_list));
 	entry->addr = addr;
 	entry->size = size;
 	entry->line = line;
@@ -123,7 +123,7 @@ get_mem(int n)
 #endif
 {
 	yaddr out;
-	if ((out = (yaddr) malloc((size_t) n)) == NULL) {
+	if ((out = malloc((size_t) n)) == NULL) {
 		show_error("malloc() failed");
 		bail(YTE_NO_MEM);
 	}
