@@ -40,25 +40,25 @@ extern char *vhost;
 extern char *gshell;
 
 #ifdef YTALK_COLOR
-extern int ui_colors, ui_attr;
-extern int menu_colors, menu_attr;
+extern unsigned long int ui_colors, ui_attr;
+extern unsigned long int menu_colors, menu_attr;
 #endif
 
 static struct alias *alias0 = NULL;
 
 typedef struct {
 	char *option;
-	ylong flag;
+	long int flag;
 } options;
 
 #ifdef YTALK_COLOR
 typedef struct {
 	char *color;
-	short value;
+	unsigned long int value;
 } colors;
 #endif
 
-options opts[] = {
+static options opts[] = {
 	{"scrolling",		FL_SCROLL	},
 	{"wordwrap",		FL_WRAP		},
 	{"auto_import",		FL_IMPORT	},
@@ -74,7 +74,7 @@ options opts[] = {
 };
 
 #ifdef YTALK_COLOR
-colors cols[] = {
+static colors cols[] = {
 	{"black",		COLOR_BLACK	},
 	{"red",			COLOR_RED	},
 	{"green",		COLOR_GREEN	},
@@ -132,7 +132,7 @@ get_word(char **p)
 
 #ifdef YTALK_COLOR
 int
-getcolor(char *color, int *rc, int *ra)
+getcolor(char *color, long unsigned int *rc, long unsigned int *ra)
 {
 	int i = 0, found = 0;
 	char *c = color;
@@ -165,9 +165,9 @@ getcolor(char *color, int *rc, int *ra)
  * 3: background color failed
  */
 static int
-setcolors(char *bg, char *fg, int *ucolors, int *fgattr)
+setcolors(char *bg, char *fg, long unsigned int *ucolors, long unsigned int *fgattr)
 {
-	int bgi, fgi;
+	long unsigned int bgi, fgi;
 
 	if (fg == NULL || bg == NULL)
 		return 1;

@@ -2,7 +2,7 @@
 
 #include "ytk.h"
 
-int
+static int
 ytk_create_window(ytk_thing *t)
 {
 	ylong rows = 0;
@@ -48,7 +48,7 @@ ytk_winch_thing(ytk_thing *t)
 		exit(1);
 }
 
-void
+static void
 ytk_display_inputbox(ytk_thing *t)
 {
 #ifdef HAVE_SNPRINTF
@@ -62,7 +62,7 @@ ytk_display_inputbox(ytk_thing *t)
 	mvwaddch(t->win, 1, strlen(YTK_INPUTBOX(t)->data) + 2, ACS_CKBOARD);
 }
 
-void
+static void
 ytk_display_msgbox(ytk_thing *t)
 {
 	ytk_msgbox_item *it = NULL;
@@ -95,7 +95,7 @@ ytk_display_msgbox(ytk_thing *t)
 	free_mem(linebuf);
 }
 
-void
+static void
 ytk_display_menu(ytk_thing *t)
 {
 	ytk_menu_item *it = NULL;

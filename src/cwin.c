@@ -42,8 +42,8 @@ typedef struct _ywin {
 static ywin *head;		/* head of linked list */
 
 #ifdef YTALK_COLOR
-extern int ui_colors;
-extern int ui_attr;
+extern long unsigned int ui_colors;
+extern long unsigned int ui_attr;
 #endif
 
 /* ---- local functions ---- */

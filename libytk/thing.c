@@ -58,13 +58,13 @@ ytk_visible(ytk_thing *t)
 }
 
 void
-ytk_set_colors(ytk_thing *t, int colors)
+ytk_set_colors(ytk_thing *t, unsigned long int colors)
 {
 	t->colors = colors;
 }
 
 void
-ytk_set_attr(ytk_thing *t, int attr)
+ytk_set_attr(ytk_thing *t, unsigned long int attr)
 {
 	t->attr = attr;
 }

@@ -109,7 +109,7 @@ typedef int socklen_t;
 #ifdef YTALK_OSF1		/* this is to avoid a burst of warnings when */
 typedef int ysocklen_t;		/* compiling on OSF/1 based systems. */
 #else
-typedef socklen_t ysocklen_t;
+#  define ysocklen_t	socklen_t
 #endif
 
 typedef struct {

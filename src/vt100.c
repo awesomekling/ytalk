@@ -6,7 +6,7 @@
 #else
 #  include <curses.h>
 #endif
-int attr_map[10] = {
+static unsigned long int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
 };
 
