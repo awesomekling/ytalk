@@ -52,8 +52,7 @@ extern int ui_attr;
  * Take input from the user.
  */
 static void
-curses_input(fd)
-	int fd;
+curses_input(int fd)
 {
 	register int rc;
 	static ychar buf[MAXBUF];
@@ -78,9 +77,7 @@ new_ywin(yuser *user)
 }
 
 static void
-make_win(w, height, width, row, col)
-	ywin *w;
-	int height, width, row, col;
+make_win(ywin *w, int height, int width, int row, int col)
 {
 	if ((w->win = newwin(height, width, row, col)) == NULL) {
 		w = (ywin *) (me->term);
@@ -152,8 +149,7 @@ draw_title(ywin *w)
  * Return number of lines per window, given "wins" windows.
  */
 static int
-win_size(wins)
-	int wins;
+win_size(int wins)
 {
 	if (wins == 0)
 		return 0;
@@ -164,7 +160,7 @@ win_size(wins)
  * Break down and redraw all user windows.
  */
 static void
-curses_redraw()
+curses_redraw(void)
 {
 	register ywin *w;
 	register int row, wins, wsize;
@@ -230,7 +226,7 @@ curses_redraw()
  * Start curses and set all options.
  */
 static void
-curses_start()
+curses_start(void)
 {
 #ifdef YTALK_COLOR
 	short i, fg, bg;
@@ -279,8 +275,7 @@ curses_start()
  * Restart curses... window size has changed.
  */
 static RETSIGTYPE
-curses_restart(sig)
-	int sig;
+curses_restart(int sig)
 {
 	register ywin *w;
 	(void) sig;
@@ -315,7 +310,7 @@ curses_restart(sig)
 /* ---- global functions ---- */
 
 void
-init_curses()
+init_curses(void)
 {
 	curses_start();
 	refresh();
@@ -330,7 +325,7 @@ init_curses()
 }
 
 void
-end_curses()
+end_curses(void)
 {
 	move(LINES - 1, 0);
 	clrtoeol();
@@ -385,8 +380,7 @@ open_curses(yuser *user)
  * Close a window.
  */
 void
-close_curses(user)
-	yuser *user;
+close_curses(yuser *user)
 {
 	register ywin *w, *p;
 
@@ -454,18 +448,16 @@ waddyac(WINDOW *w, yachar c)
 #endif
 }
 
+#ifdef YTALK_COLOR
 void
-addch_curses(user, c)
-	yuser *user;
-#ifdef YTALK_COLOR
-	register yachar c;
-#else
-	register ylong c;
-#endif
+addch_curses(yuser *user, yachar c)
 {
-#ifdef YTALK_COLOR
 	waddyac(((ywin *) (user->term))->win, c);
+}
 #else
+void
+addch_curses(yuser *user, ylong c)
+{
 	register ywin *w;
 	register int x, y;
 	w = (ywin *) (user->term);
@@ -473,13 +465,11 @@ addch_curses(user, c)
 	waddch(w->win, c);
 	if (x >= COLS - 1)
 		wmove(w->win, y, x);
-#endif
 }
+#endif /* YTALK_COLOR */
 
 void
-move_curses(user, y, x)
-	yuser *user;
-	register int y, x;
+move_curses(yuser *user, int y, int x)
 {
 	register ywin *w;
 
@@ -488,8 +478,7 @@ move_curses(user, y, x)
 }
 
 void
-clreol_curses(user)
-	register yuser *user;
+clreol_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -498,8 +487,7 @@ clreol_curses(user)
 }
 
 void
-clreos_curses(user)
-	register yuser *user;
+clreos_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -508,8 +496,7 @@ clreos_curses(user)
 }
 
 void
-scroll_curses(user)
-	register yuser *user;
+scroll_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -535,9 +522,7 @@ scroll_curses(user)
 
 #ifdef HAVE_KEYPAD
 void
-keypad_curses(user, bf)
-	yuser *user;
-	int bf;
+keypad_curses(yuser *user, int bf)
 {
 	ywin *w;
 	w = (ywin *) (user->term);
@@ -546,8 +531,7 @@ keypad_curses(user, bf)
 #endif /* HAVE_KEYPAD */
 
 void
-flush_curses(user)
-	register yuser *user;
+flush_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -562,7 +546,7 @@ flush_curses(user)
 }
 
 void
-retitle_all_curses()
+retitle_all_curses(void)
 {
 	ywin *w;
 	for (w = head; w; w = w->next) {
@@ -580,7 +564,7 @@ retitle_all_curses()
  *
  */
 void
-refresh_curses()
+refresh_curses(void)
 {
 	register ywin *w;
 	wnoutrefresh(stdscr);
@@ -608,7 +592,7 @@ refresh_curses()
  * Clear and redisplay.
  */
 void
-__redisplay_curses()
+__redisplay_curses(void)
 {
 	register ywin *w;
 
@@ -637,7 +621,7 @@ __redisplay_curses()
 }
 
 void
-redisplay_curses()
+redisplay_curses(void)
 {
 	__redisplay_curses();
 	doupdate();
@@ -646,7 +630,7 @@ redisplay_curses()
  * Set raw mode.
  */
 void
-set_raw_curses()
+set_raw_curses(void)
 {
 	raw();
 }
@@ -655,7 +639,7 @@ set_raw_curses()
  * Set cooked mode.
  */
 void
-set_cooked_curses()
+set_cooked_curses(void)
 {
 	noraw();
 	crmode();
@@ -663,8 +647,7 @@ set_cooked_curses()
 }
 
 void
-start_scroll_curses(user)
-	yuser *user;
+start_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
 	w->swin = dupwin(w->win);
@@ -679,8 +662,7 @@ start_scroll_curses(user)
 }
 
 void
-end_scroll_curses(user)
-	yuser *user;
+end_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
 	if (w->swin != NULL) {
@@ -738,7 +720,7 @@ update_scroll_curses(yuser *user)
 }
 
 void
-update_message_curses()
+update_message_curses(void)
 {
 	mvaddstr(LINES - 1, 0, bottom_msg);
 	clrtoeol();
