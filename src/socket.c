@@ -245,7 +245,7 @@ sendit(addr, d)
   int d;	/* daemon number */
 {
     int n;
-    struct sockaddr_in daemon;
+    struct sockaddr_in remote_daemon;
     struct timeval tv;
     char *rtype, *mtype;
     fd_set sel;
@@ -281,9 +281,9 @@ sendit(addr, d)
 
     /* set up a sockaddr_in for the daemon we're sending to */
 
-    daemon.sin_family = AF_INET;
-    IN_ADDR(daemon) = addr;
-    IN_PORT(daemon) = talkd[d].port;
+    remote_daemon.sin_family = AF_INET;
+    IN_ADDR(remote_daemon) = addr;
+    IN_PORT(remote_daemon) = talkd[d].port;
 
     /* flush any lingering input */
 
@@ -318,7 +318,7 @@ sendit(addr, d)
     	do
 	{
 	    n = sendto(talkd[d].fd, (char *)talkd[d].mptr, talkd[d].mlen,
-		0, (struct sockaddr *) &daemon, sizeof(daemon));
+		0, (struct sockaddr *) &remote_daemon, sizeof(remote_daemon));
 	    if(n != talkd[d].mlen)
 	    {
 		show_error("sendit: sendto() failed");
@@ -406,7 +406,7 @@ find_daemon(addr)
     register int n, i, d;
     CTL_MSG m1;
     CTL_MSG42 m2;
-    struct sockaddr_in daemon;
+    struct sockaddr_in remote_daemon;
     struct timeval tv;
     int out, max;
     fd_set sel;
@@ -419,8 +419,8 @@ find_daemon(addr)
 	if(h->host_addr == addr)
 	    return h->dtype;
 
-    daemon.sin_family = AF_INET;
-    IN_ADDR(daemon) = addr;
+    remote_daemon.sin_family = AF_INET;
+    IN_ADDR(remote_daemon) = addr;
 
     m1 = omsg;
     m2 = nmsg;
@@ -441,15 +441,15 @@ find_daemon(addr)
     out = 0;
     for(i = 0; i < 5; i++)
     {
-	IN_PORT(daemon) = talkd[ntalk].port;
+	IN_PORT(remote_daemon) = talkd[ntalk].port;
 	n = sendto(talkd[ntalk].fd, (char *)&m2, sizeof(m2),
-	    0, (struct sockaddr *) &daemon, sizeof(daemon));
+	    0, (struct sockaddr *) &remote_daemon, sizeof(remote_daemon));
 	if(n != sizeof(m2))
 	    show_error("Warning: cannot write to new talk daemon");
 
-	IN_PORT(daemon) = talkd[otalk].port;
+	IN_PORT(remote_daemon) = talkd[otalk].port;
 	n = sendto(talkd[otalk].fd, (char *)&m1, sizeof(m1),
-	    0, (struct sockaddr *) &daemon, sizeof(daemon));
+	    0, (struct sockaddr *) &remote_daemon, sizeof(remote_daemon));
 	if(n != sizeof(m1))
 	    show_error("Warning: cannot write to old talk daemon");
 
