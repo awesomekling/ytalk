@@ -141,6 +141,7 @@ glist->file, glist->line);
 		free_mem(glist->addr);
 #ifdef YTALK_DEBUG
 		leaked++;
+#endif
 #ifdef YTALK_DEBUG
 	}
 #ifdef YTALK_DEBUG
