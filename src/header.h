@@ -16,10 +16,6 @@
 
 #include "config.h"
 
-#ifdef HAVE_NCURSES_H_FO
-#define YTALK_COLOR
-#endif
-
 #include <sys/types.h>
 #include <sys/param.h>
 
