@@ -46,6 +46,14 @@ do_adduser(ytk_inputbox *b)
 }
 
 static void
+do_save_user_to_file(ytk_inputbox *b)
+{
+	hide_ymenu();
+	if (menu_user && menu_user != me && b && b->len > 0)
+		save_user_to_file(menu_user, b->data);
+}
+
+static void
 do_hidething(ytk_thing *t)
 {
 	ytk_pop(menu_stack);
@@ -271,6 +279,20 @@ handle_disconnect_user(ytk_menu_item *i)
 }
 
 static void
+handle_save_to_file(ytk_menu_item *i)
+{
+	ytk_thing *b;
+	(void) i;
+	b = ytk_new_inputbox(_("Enter filename:"), 60, do_save_user_to_file);
+	ytk_set_escape(b, do_hidething);
+#ifdef YTALK_COLOR
+	ytk_set_colors(b, menu_colors);
+	ytk_set_attr(b, menu_attr);
+#endif
+	ytk_push(menu_stack, b);
+}
+
+static void
 view_extinfo(ytk_menu_item *i)
 {
 	ytk_thing *info_box;
@@ -304,7 +326,7 @@ init_usermenu(char k)
 				ytk_add_menu_item(YTK_MENU(usermenu_menu), _("View information"), 'x', view_extinfo);
 			}
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
-			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', NULL);	/* FIXME: Fix me! */
+			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_save_to_file);
 			ytk_set_escape(usermenu_menu, do_hidething);
 #ifdef YTALK_COLOR
 			ytk_set_colors(usermenu_menu, menu_colors);
