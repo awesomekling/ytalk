@@ -153,6 +153,11 @@ read_autoport(fd)
 		return;
 	}
 	close(fd);
+
+	/* Disarm a remote %s overflow vulnerability. */
+	pack.name[V2_NAMELEN - 1] = '\0';
+	pack.host[V2_HOSTLEN - 1] = '\0';
+
 	if (!(def_flags & FL_INVITE)) {
 		sprintf(estr, "Talk to %s@%s?", pack.name, pack.host);
 		if (yes_no(estr) == 'n')
