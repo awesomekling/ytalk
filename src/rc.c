@@ -18,6 +18,14 @@
 #include "header.h"
 #include "mem.h"
 #include <pwd.h>
+#ifdef HAVE_NCURSES_H
+#include <ncurses.h>
+#else
+#include <curses.h>
+#endif
+
+#include "cwin.h"
+
 
 #define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=' || (c)==',')
 
