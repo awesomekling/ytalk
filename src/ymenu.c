@@ -1,6 +1,7 @@
-/* ymenu.c
- *
- *
+/*
+ * ymenu.c
+ * 
+ * 
  */
 
 #include "ytk.h"
@@ -17,7 +18,7 @@ ytk_thing *message_box = NULL;
 char ukey;
 
 void
-do_adduser(ytk_inputbox *b)
+do_adduser(ytk_inputbox * b)
 {
 	if (b->len > 0)
 		invite(b->data);
@@ -25,14 +26,13 @@ do_adduser(ytk_inputbox *b)
 }
 
 void
-do_hidething(ytk_thing *t)
+do_hidething(ytk_thing * t)
 {
-	(void)ytk_pop_thing(menu_stack);
+	(void) ytk_pop_thing(menu_stack);
 	if (t == main_menu)
 		hide_ymenu();
-	else
-		if (t != options_menu)
-			ytk_delete_thing(t);
+	else if (t != options_menu)
+		ytk_delete_thing(t);
 	refresh_curses();
 	ytk_sync_display();
 }
@@ -49,28 +49,31 @@ handle_adduser()
 void
 handle_shell(void *t)
 {
-	(void)t;
+	(void) t;
 	hide_ymenu();
 	execute(NULL);
 }
 
 void
-handle_usermenu(void *i) {
-	init_usermenu(((ytk_menu_item *)i)->hotkey);
+handle_usermenu(void *i)
+{
+	init_usermenu(((ytk_menu_item *) i)->hotkey);
 	ytk_push_thing(menu_stack, usermenu_menu);
 }
 
 void
-handle_userlist(void *i) {
-	(void)i;
+handle_userlist(void *i)
+{
+	(void) i;
 	init_userlist();
 	ytk_push_thing(menu_stack, userlist_menu);
 }
 
 
 void
-handle_quit(void *i) {
-	(void)i;
+handle_quit(void *i)
+{
+	(void) i;
 	hide_ymenu();
 	bail(YTE_SUCCESS);
 }
@@ -78,14 +81,15 @@ handle_quit(void *i) {
 void
 handle_rering_all(void *i)
 {
-	(void)i;
+	(void) i;
 	hide_ymenu();
 	rering_all();
 }
 
 void
-handle_kill_unconnected(void *t) {
-	(void)t;
+handle_kill_unconnected(void *t)
+{
+	(void) t;
 	hide_ymenu();
 	while (wait_list)
 		free_user(wait_list);
@@ -106,7 +110,7 @@ set_flags(ylong new_flags)
 void
 handle_options(void *i)
 {
-	(void)i;
+	(void) i;
 	ytk_push_thing(menu_stack, options_menu);
 }
 
@@ -125,9 +129,8 @@ DEFAULT_TOGGLE(handle_autoinvite, FL_INVITE)
 DEFAULT_TOGGLE(handle_rering, FL_RING)
 DEFAULT_TOGGLE(handle_promptrering, FL_PROMPTRING)
 DEFAULT_TOGGLE(handle_promptquit, FL_PROMPTQUIT)
-
-void
-init_ymenu()
+	void
+	 init_ymenu()
 {
 	menu_stack = ytk_new_stack();
 
@@ -156,14 +159,14 @@ void
 handle_disconnect_user(void *t)
 {
 	yuser *u;
-	(void)t;
+	(void) t;
 	for (u = user_list; u; u = u->unext)
 		if (u->key == ukey) {
 			free_user(u);
 			break;
 		}
 	redo_ymenu_userlist();
-	(void)ytk_pop_thing(menu_stack);
+	(void) ytk_pop_thing(menu_stack);
 }
 
 void
@@ -192,10 +195,10 @@ init_userlist()
 		if (u != me) {
 			buf = get_mem(54 * sizeof(char));
 			p = buf
-				+ sprintf(buf, "%-24.24s %03dx%03d [%03dx%03d] ",
-					u->full_name, u->remote.cols, u->remote.rows,
-					u->remote.my_cols, u->remote.my_rows
-				);
+			 + sprintf(buf, "%-24.24s %03dx%03d [%03dx%03d] ",
+			       u->full_name, u->remote.cols, u->remote.rows,
+				   u->remote.my_cols, u->remote.my_rows
+			 );
 			if (u->remote.vmajor > 2)
 				p += sprintf(p, "YTalk %d.%d", u->remote.vmajor, u->remote.vminor);
 			else if (u->remote.vmajor == 2)
@@ -210,9 +213,9 @@ init_userlist()
 		if (u != me) {
 			buf = get_mem(54 * sizeof(char));
 			p = buf
-				+ sprintf(buf, "%-24.24s               <unconnected>",
-					u->full_name
-				);
+			 + sprintf(buf, "%-24.24s               <unconnected>",
+				   u->full_name
+			 );
 			u->key = hk++;
 			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_usermenu);
 		}
@@ -269,7 +272,7 @@ update_ymenu()
 			ch = *(io_ptr++);
 			io_len--;
 			if (io_len > 0 && ch == 27)
-				for (; io_len > 0; io_ptr++,io_len--);
+				for (; io_len > 0; io_ptr++, io_len--);
 			ytk_handle_stack_input(menu_stack, ch);
 			ytk_display_stack(menu_stack);
 			ytk_sync_display();
@@ -313,9 +316,9 @@ refresh_ymenu()
 }
 
 void
-handle_ebox(ytk_thing *t)
+handle_ebox(ytk_thing * t)
 {
-	(void)t;
+	(void) t;
 	ytk_pop_thing(menu_stack);
 	ytk_delete_thing(error_box);
 	error_box = NULL;
@@ -341,9 +344,9 @@ show_error_ymenu(char *str, char *syserr)
 }
 
 void
-handle_mbox(ytk_thing *t)
+handle_mbox(ytk_thing * t)
 {
-	(void)t;
+	(void) t;
 	ytk_pop_thing(menu_stack);
 	ytk_delete_thing(message_box);
 	message_box = NULL;
@@ -367,7 +370,8 @@ show_message_ymenu(char *str)
 }
 
 int
-yes_no(char *str) {
+yes_no(char *str)
+{
 	ytk_thing *yn;
 	int out = 0;
 	yn = ytk_new_msgbox("");

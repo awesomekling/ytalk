@@ -199,7 +199,7 @@ clear_all()
 	while (glist != NULL) {
 #ifdef YTALK_DEBUG
 		fprintf(stderr, "0x%lx: %d\t(%s:%d)\n", (long unsigned) glist->addr, glist->size,
-		       glist->file, glist->line
+			glist->file, glist->line
 		 );
 #endif
 		free_mem(glist->addr);

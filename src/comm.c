@@ -1236,7 +1236,6 @@ my_input(user, buf, len)
 			len = io_len;
 			io_len = 0;
 		}
-
 		/* check for a running process */
 
 		if (running_process) {

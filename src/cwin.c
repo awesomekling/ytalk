@@ -580,8 +580,9 @@ retitle_all_curses()
 	doupdate();
 }
 
-/* Refresh all visible windows
- *
+/*
+ * Refresh all visible windows
+ * 
  */
 void
 refresh_curses()
@@ -729,7 +730,7 @@ __update_scroll_curses(user)
 }
 
 void
-update_scroll_curses(yuser *user)
+update_scroll_curses(yuser * user)
 {
 	__update_scroll_curses(user);
 	doupdate();

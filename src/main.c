@@ -143,8 +143,7 @@ then type 'make clean' and 'make'.\n");
 		if (strcmp(*argv, "-Y") == 0) {
 			yflg++;
 			argv++, argc--;
-		}
-		else if (strcmp(*argv, "-i") == 0) {
+		} else if (strcmp(*argv, "-i") == 0) {
 			iflg++;
 			argv++, argc--;
 		} else if (strcmp(*argv, "-v") == 0) {
