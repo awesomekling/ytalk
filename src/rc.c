@@ -37,7 +37,6 @@
 	)
 
 extern char *vhost;
-extern char *gshell;
 
 #ifdef YTALK_COLOR
 extern unsigned long int ui_colors, ui_attr;
