@@ -38,5 +38,5 @@ history_rows	= 1000
 #
 # Foreground colors may be prepended with "bold-"
 #
-ui_colors	= red, black
-menu_colors	= black, red
+#ui_colors	= red, black
+#menu_colors	= black, red
