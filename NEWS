@@ -1,0 +1,9 @@
+New in YTalk 4
+
+General:
+	* Colors in chat and shells.
+	* Scrollback support.
+	* New customizable user interface.
+
+SunOS:
+	* Support for utmpx entries added.
