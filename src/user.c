@@ -19,7 +19,6 @@
 #include "ymenu.h"
 #include "mem.h"
 #include <pwd.h>
-#include <string.h>
 
 extern int dont_change_my_addr;
 
