@@ -63,33 +63,11 @@ if test "x$no_termios" = "x1" ; then
   AC_CHECK_HEADERS(sgtty.h,, AC_MSG_ERROR(Cannot find either termios or sgtty))
 fi
 
-dnl X setup.
-AC_ARG_WITH(x,
-  AC_HELP_STRING([--with-x], [use the X Window System]),
-  no_x=0, no_x=1)
-if test "x$no_x" = "x1"; then
-  AC_DEFINE([X_DISPLAY_MISSING])
-  XLIBS=""
-  XINCS=""
-else
-  AC_PATH_XTRA
-  if test "x$X_LIBS" = "x"; then
-    echo "No X found but --with-x stated, aborting!"
-    exit 1
-  fi
-  XLIBS="$X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
-  XINCS="$X_CFLAGS"
-  AC_LIBOBJ([xwin])
-fi
-AC_SUBST(XLIBS)
-AC_SUBST(XINCS)
-
 dnl Some systems need extra libraries for sockets and dns...
 AC_CHECK_FUNC(socket,,AC_CHECK_LIB(socket, socket,, [AC_MSG_ERROR(Can't compile without socket)]))
 AC_CHECK_FUNC(gethostbyname,,AC_CHECK_LIB(nsl, gethostbyname,, [AC_MSG_ERROR(Can't compile without gethostbyname)]))
 
 dnl Checks for header files.
-AC_PATH_X
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h netdb.h netinet/in.h sys/ioctl.h sys/time.h unistd.h stropts.h)
