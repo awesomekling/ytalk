@@ -45,7 +45,11 @@
 
 static int (*_open_term) (yuser *);		/* open a new terminal */
 static void (*_close_term) (yuser *);		/* close a terminal */
+#ifdef YTALK_COLOR
 static void (*_addch_term) (yuser *, yachar);	/* write a char to a terminal */
+#else
+static void (*_addch_term) (yuser *, ylong);
+#endif
 static void (*_move_term) (yuser *, int, int);	/* move cursor to Y,X position */
 static void (*_clreol_term) (yuser *);		/* clear to end of line */
 static void (*_clreos_term) (yuser *);		/* clear to end of screen */
@@ -123,6 +127,18 @@ init_termios(void)
 	me->WORD = '\027';	/* ^W */
 #endif
 	me->CLR = '\024';	/* ^T */
+}
+#endif
+
+#ifdef YTALK_COLOR
+static void
+user_yac(yuser *user, char c, yachar *ac)
+{
+	ac->l = c;
+	ac->a = user->c_at;
+	ac->b = user->c_fg;
+	ac->c = user->c_bg;
+	ac->v = user->altchar ^ user->csx;
 }
 #endif
 
@@ -286,22 +302,15 @@ close_term(yuser *user)
 void
 addch_term(yuser *user, ychar c)
 {
-#ifdef YTALK_COLOR
 	yachar ac;
-	ac.l = c;
-	ac.a = user->c_at;
-	ac.b = user->c_fg;
-	ac.c = user->c_bg;
-	ac.v = user->altchar ^ user->csx;
+#ifdef YTALK_COLOR
+	user_yac(user, c, &ac);
+#else
+	ac = c;
 #endif
 	if (is_printable(c)) {
-#ifdef YTALK_COLOR
-		user->scr[user->y][user->x] = ac;
 		_addch_term(user, ac);
-#else
-		_addch_term(user, c);
-		user->scr[user->y][user->x] = c;
-#endif
+		user->scr[user->y][user->x] = ac;
 		if (++(user->x) >= user->cols) {
 			user->bump = 1;
 			user->x = user->cols - 1;
@@ -310,18 +319,6 @@ addch_term(yuser *user, ychar c)
 		}
 	}
 }
-
-#ifdef YTALK_COLOR
-void
-user_yac(yuser *user, char c, yachar *ac)
-{
-	ac->l = c;
-	ac->a = user->c_at;
-	ac->b = user->c_fg;
-	ac->c = user->c_bg;
-	ac->v = user->altchar ^ user->csx;
-}
-#endif
 
 /*
  * Move the cursor.
