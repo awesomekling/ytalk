@@ -39,7 +39,7 @@ bail(n)
 {
 	kill_auto();
 	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
-		if (show_message_ymenu("Press any key to quit.", NULL) == 0) {
+		if (show_message_ymenu("Press any key to quit.") == 0) {
 			update_ymenu();
 			bail_loop();
 		}

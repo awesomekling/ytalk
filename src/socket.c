@@ -17,6 +17,7 @@
 
 #include "header.h"
 #include "socket.h"
+#include "ymenu.h"
 #include "mem.h"
 
 #ifdef TIME_WITH_SYS_TIME

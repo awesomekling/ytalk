@@ -16,6 +16,7 @@
 
 
 #include "header.h"
+#include "ymenu.h"
 #include "mem.h"
 #include <pwd.h>
 #include <string.h>

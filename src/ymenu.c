@@ -227,7 +227,6 @@ init_userlist()
 void
 redo_ymenu_userlist()
 {
-	ytk_thing *old;
 	if (ytk_on_stack(menu_stack, userlist_menu) && !ytk_on_stack(menu_stack, usermenu_menu)) {
 		ytk_pop_thing(menu_stack);
 		__redisplay_curses();
@@ -246,7 +245,7 @@ void
 hide_ymenu()
 {
 	ytk_thing *t;
-	while (t = ytk_pop_thing(menu_stack)) {
+	while ((t = ytk_pop_thing(menu_stack))) {
 		delwin(t->win);
 		t->win = NULL;
 	}
@@ -319,7 +318,7 @@ handle_ebox(ytk_thing *t)
 	ytk_sync_display();
 }
 
-void
+int
 show_error_ymenu(char *str, char *syserr)
 {
 	if (error_box == NULL)
@@ -332,6 +331,7 @@ show_error_ymenu(char *str, char *syserr)
 	ytk_set_escape(error_box, handle_ebox);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
+	return 0;
 }
 
 void
@@ -347,7 +347,7 @@ handle_mbox(ytk_thing *t)
 	ytk_sync_display();
 }
 
-void
+int
 show_message_ymenu(char *str)
 {
 	if (message_box == NULL)
@@ -358,6 +358,7 @@ show_message_ymenu(char *str)
 		ytk_push_thing(menu_stack, message_box);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
+	return 0;
 }
 
 int

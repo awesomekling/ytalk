@@ -27,6 +27,7 @@ extern void scroll_curses( /* yuser */ );
 extern void keypad_curses( /* yuser, int */ );
 extern void flush_curses( /* yuser */ );
 extern void redisplay_curses();
+extern void __redisplay_curses(); /* redisplay, but do not sync with remote screen */
 extern void retitle_all_curses();
 extern void set_raw_curses();
 extern void set_cooked_curses();
