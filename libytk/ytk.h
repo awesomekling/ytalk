@@ -43,6 +43,8 @@ typedef struct __ytk_thing {
 	ylong	top, left;
 	char	*title;
 	void	(*escape)(struct __ytk_thing *);
+	int		colors;
+	int		attr;
 } ytk_thing;
 
 ytk_thing *ytk_new_thing();

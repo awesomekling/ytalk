@@ -27,6 +27,8 @@ char *gshell = NULL;		/* global shell */
 #ifdef YTALK_COLOR
 int newui_colors = 40;		/* TODO: change default */
 int newui_attr = 0;		/* newui output attributes */
+int menu_colors = 0;		/* TODO: change default */
+int menu_attr = 0;
 #endif
 
 /*

@@ -25,8 +25,8 @@ extern char *vhost;
 extern char *gshell;
 
 #ifdef YTALK_COLOR
-extern int newui_colors;
-extern int newui_attr;
+extern int newui_colors, newui_attr;
+extern int menu_colors, menu_attr;
 #endif
 
 static struct alias *alias0 = NULL;
@@ -296,6 +296,12 @@ read_rcfile(fname)
 					bail(YTE_INIT);
 				}
 #ifdef YTALK_COLOR
+			} else if (strcmp(cmd, "menu_colors") == 0) {
+				bg = get_word(&ptr);
+				fg = get_word(&ptr);
+				if (setcolors(bg, fg, &menu_colors, &menu_attr) == 0) {
+					found = 1;
+				}
 			} else if(strcmp(cmd, "ui_colors") == 0) {
 				bg = get_word(&ptr);
 				fg = get_word(&ptr);
