@@ -34,13 +34,13 @@
 # endif
 #endif
 
-#include "cwin.h"
-#include "xwin.h"
-#include "menu.h"
-
 #ifdef HAVE_NCURSES_H
 # include <ncurses.h>
 #endif
+
+#include "cwin.h"
+#include "xwin.h"
+#include "menu.h"
 
 static int  (*_open_term)();	/* open a new terminal */
 static void (*_close_term)();	/* close a terminal */
