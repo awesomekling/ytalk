@@ -257,10 +257,8 @@ extern ylong myuid;		/* stores your uid */
 extern char *gshell;		/* stores your shell */
 extern char *title_format;
 extern char *user_format;
-#ifdef YTALK_COLOR
 extern char *bottom_msg;	/* current status message */
 extern ylong bottom_time;	/* timestamp of the above */
-#endif
 
 extern char YT_ACS_ON;		/* activates vt100 acs */
 extern char YT_ACS_OFF;		/* deactivates it */
