@@ -29,8 +29,6 @@
 #include <sys/uio.h>
 #endif
 
-#include <time.h>
-
 #define IN_ADDR(s)	((s).sin_addr.s_addr)
 
 /* oops, some systems don't have this one */
