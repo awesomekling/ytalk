@@ -29,4 +29,4 @@ prompt_rering = on
 #newui = off
 #ui_colors background [bold-]foreground
 #beeps = on
-#ignorebreak = off
+#ignore_break = off

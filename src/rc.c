@@ -54,7 +54,7 @@ options opts[] = {
 	{"rering",		FL_RING		},
 	{"prompt_rering",	FL_PROMPTRING	},
 	{"beeps",		FL_BEEP		},
-	{"ignorebreak",		FL_IGNBRK	},
+	{"ignore_break",	FL_IGNBRK	},
 	{"newui",		FL_NEWUI	},
 	{"require_caps",	FL_CAPS		},
 	{"no_invite", 		FL_NOAUTO	},
