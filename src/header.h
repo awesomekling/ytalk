@@ -303,7 +303,7 @@ extern void clreos_term(yuser *);
 extern void scroll_term(yuser *);
 extern void rev_scroll_term(yuser *);
 extern void rub_term(yuser *);
-extern int word_term(yuser *);
+extern void word_term(yuser *);
 extern void kill_term(yuser *);
 extern void tab_term(yuser *);
 extern void newline_term(yuser *);

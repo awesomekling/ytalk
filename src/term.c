@@ -514,10 +514,10 @@ rub_term(yuser *user)
 /*
  * Rub one word.
  */
-int
+void
 word_term(yuser *user)
 {
-	register int x, out;
+	register int x;
 
 #ifdef YTALK_COLOR
 	for (x = user->x - 1; x >= 0 && user->scr[user->y][x].l == ' '; x--)
@@ -530,12 +530,11 @@ word_term(yuser *user)
 	for (; x >= 0 && user->scr[user->y][x] != ' '; x--)
 		continue;
 #endif
-	out = user->x - (++x);
-	if (out <= 0)
-		return 0;
+	if ((user->x - (++x)) <= 0)
+		return;
 	move_term(user, user->y, x);
 	clreol_term(user);
-	return out;
+	return;
 }
 
 /*
