@@ -218,6 +218,9 @@ execute(char *command)
 {
 	int fd;
 	char name[20], *shell;
+#ifdef HAVE_PUTENV
+	char yvenv[25];
+#endif
 	struct stat sbuf;
 	struct passwd *pw = NULL;
 #ifdef HAVE_OPENPTY
@@ -319,10 +322,12 @@ execute(char *command)
 
 		set_terminal_flags(fd);
 		set_terminal_size(fd, prows, pcols);
-#ifndef NeXT
 #ifdef HAVE_PUTENV
+#  ifndef NeXT
 		putenv("TERM=vt100");
-#endif
+#  endif
+		sprintf(yvenv, "YTALK_VERSION=%s", PACKAGE_VERSION);
+		putenv(yvenv);
 #endif
 
 #ifdef TIOCSCTTY
