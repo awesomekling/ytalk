@@ -39,7 +39,7 @@ extern char *vhost;
 extern char *gshell;
 
 #ifdef YTALK_COLOR
-extern int newui_colors, newui_attr;
+extern int ui_colors, ui_attr;
 extern int menu_colors, menu_attr;
 #endif
 
@@ -66,9 +66,6 @@ options opts[] = {
 	{"prompt_rering",	FL_PROMPTRING	},
 	{"beeps",		FL_BEEP		},
 	{"ignore_break",	FL_IGNBRK	},
-#ifdef YTALK_COLOR
-	{"newui",		FL_NEWUI	},
-#endif
 	{"require_caps",	FL_CAPS		},
 	{"no_invite",		FL_NOAUTO	},
 	{"prompt_quit",		FL_PROMPTQUIT	},
@@ -350,7 +347,7 @@ read_rcfile(fname)
 			} else if (strcmp(cmd, "ui_colors") == 0) {
 				bg = get_word(&ptr);
 				fg = get_word(&ptr);
-				switch (setcolors(bg, fg, &newui_colors, &newui_attr)) {
+				switch (setcolors(bg, fg, &ui_colors, &ui_attr)) {
 				case 0:
 					found = 1;
 					break;

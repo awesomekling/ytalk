@@ -1,11 +1,10 @@
 /* vt100.c - terminal emulation */
 #include "header.h"
 
-#ifdef YTALK_COLOR
-#  ifdef HAVE_NCURSES_H
-#    include <ncurses.h>
-#  else
-#    include <curses.h>
+#ifdef HAVE_NCURSES_H
+#  include <ncurses.h>
+#else
+#  include <curses.h>
 #endif
 int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
@@ -13,7 +12,6 @@ int attr_map[10] = {
 
 char YT_ACS_ON = 0x0E;
 char YT_ACS_OFF = 0x0F;
-#endif
 
 void
 vt100_process(user, data)
@@ -126,9 +124,7 @@ vt100_process(user, data)
 		break;
 	case '0':
 		if (user->lparen) {
-#ifdef YTALK_COLOR
 			user->altchar = 1;
-#endif
 			user->lparen = 0;
 		}
 		user->got_esc = 0;
@@ -146,9 +142,7 @@ vt100_process(user, data)
 		break;
 	case 'B':		/* move down */
 		if (user->lparen) {
-#ifdef YTALK_COLOR
 			user->altchar = 0;
-#endif
 			user->lparen = 0;
 		} else {
 			if (user->av[0] == 0)

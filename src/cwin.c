@@ -40,14 +40,13 @@ typedef struct _ywin {
 	WINDOW *swin;		/* scroll viewport window */
 	int height, width;	/* height and width in characters */
 	int row, col;		/* row and column position on screen */
-	char *title;		/* window title string */
 } ywin;
 
 static ywin *head;		/* head of linked list */
 
 #ifdef YTALK_COLOR
-extern int newui_colors;
-extern int newui_attr;
+extern int ui_colors;
+extern int ui_attr;
 #endif
 
 /* ---- local functions ---- */
@@ -71,17 +70,13 @@ curses_input(fd)
 }
 
 static ywin *
-new_ywin(user, title)
-	yuser *user;
-	char *title;
+new_ywin(yuser *user)
 {
 	register ywin *out;
 
-	out = (ywin *) get_mem(sizeof(ywin) + strlen(title) + 1);
-	(void) memset(out, 0, sizeof(ywin));
+	out = (ywin *) get_mem(sizeof(ywin));
+	memset(out, 0, sizeof(ywin));
 	out->user = user;
-	out->title = ((char *) out) + sizeof(ywin);
-	strcpy(out->title, title);
 	return out;
 }
 
@@ -104,10 +99,8 @@ make_win(w, height, width, row, col)
 	wmove(w->win, 0, 0);
 }
 
-#ifdef YTALK_COLOR
 static void
-new_draw_title(w)
-	ywin *w;
+draw_title(ywin *w)
 {
 	int x;
 	int rl = 0, rj = 0;
@@ -115,7 +108,11 @@ new_draw_title(w)
 	t = ta = (char *) get_mem(COLS * sizeof(char));
 	user_title(t, COLS - 1, w->user);
 	move(w->row - 1, w->col);
-	attron(COLOR_PAIR(newui_colors) | newui_attr);
+#ifdef YTALK_COLOR
+	attron(COLOR_PAIR(ui_colors) | ui_attr);
+#else
+	attron(A_REVERSE);
+#endif
 	for (x = 0; x < w->width; x++) {
 		if (x >= 1 && *t && !rj) {
 			/* Do we want the rest on the right? */
@@ -139,7 +136,11 @@ new_draw_title(w)
 			addch(' ');
 		}
 	}
-	attroff(COLOR_PAIR(newui_colors) | newui_attr);
+#ifdef YTALK_COLOR
+	attroff(COLOR_PAIR(ui_colors) | ui_attr);
+#else
+	attroff(A_REVERSE);
+#endif
 
 	/* Redundant refresh() to work around a bug (?) in newer ncurses
 	 * versions. Without it, the top line in each user window will lose
@@ -148,47 +149,6 @@ new_draw_title(w)
 	refresh();
 
 	free_mem(ta);
-}
-#endif
-
-static void
-old_draw_title(w)
-	ywin *w;
-{
-	register int pad, x;
-	register char *t;
-
-	pad = (w->width - strlen(w->title)) / 2;
-	move(w->row - 1, w->col);
-	x = 0;
-	for (; x < pad - 2; x++)
-		addch('-');
-	if (pad >= 2) {
-		addch('=');
-		addch(' ');
-		x += 2;
-	}
-	for (t = w->title; *t && x < w->width; x++, t++)
-		addch(*t);
-	if (pad >= 2) {
-		addch(' ');
-		addch('=');
-		x += 2;
-	}
-	for (; x < w->width; x++)
-		addch('-');
-}
-
-static void
-draw_title(w)
-	ywin *w;
-{
-#ifdef YTALK_COLOR
-	if (def_flags & FL_NEWUI)
-		new_draw_title(w);
-	else
-#endif
-		old_draw_title(w);
 }
 
 /*
@@ -308,12 +268,9 @@ curses_start()
 		}
 	} else {
 		/*
-		 * We are on a monochrome terminal. Use reverse video for
-		 * NEWUI.
+		 * We are on a monochrome terminal. Use reverse video for title bars.
 		 */
-		if (def_flags & FL_NEWUI) {
-			newui_attr = A_REVERSE;
-		}
+		ui_attr = A_REVERSE;
 	}
 #endif
 	clear();
@@ -386,9 +343,7 @@ end_curses()
  * Open a new window.
  */
 int
-open_curses(user, title)
-	yuser *user;
-	char *title;
+open_curses(yuser *user)
 {
 	register ywin *w;
 	register int wins;
@@ -406,11 +361,11 @@ open_curses(user, title)
 	/* add the new user */
 
 	if (head == NULL)
-		w = head = new_ywin(user, title);
+		w = head = new_ywin(user);
 	else
 		for (w = head; w; w = w->next)
 			if (w->next == NULL) {
-				w->next = new_ywin(user, title);
+				w->next = new_ywin(user);
 				w = w->next;
 				break;
 			}

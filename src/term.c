@@ -132,8 +132,6 @@ init_termios()
 void
 init_term()
 {
-	char tmpstr[64];
-
 #ifdef USE_SGTTY
 	init_sgtty();
 #else
@@ -164,20 +162,7 @@ init_term()
 	}
 	/* set me up a terminal */
 
-	if (def_flags & FL_NEWUI)
-#ifdef HAVE_SNPRINTF
-		snprintf(tmpstr, MAXERR, "%s", me->full_name);
-#else
-		sprintf(tmpstr, "%s", me->full_name);
-#endif
-	else
-#ifdef HAVE_SNPRINTF
-		snprintf(tmpstr, MAXERR, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
-#else
-		sprintf(tmpstr, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
-#endif
-
-	if (open_term(me, tmpstr) < 0) {
+	if (open_term(me) < 0) {
 		end_term();
 		show_error("init_term: open_term() failed");
 		bail(YTE_INIT);
@@ -257,11 +242,9 @@ end_term()
  * Open a new user window.
  */
 int
-open_term(user, title)
-	register yuser *user;
-	register char *title;
+open_term(yuser *user)
 {
-	if (_open_term(user, title) != 0)
+	if (_open_term(user) != 0)
 		return -1;
 	user->x = user->y = 0;
 	if (user->scr == NULL)

@@ -16,7 +16,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_NCURSES_H
+#ifdef HAVE_NCURSES_H_FO
 #define YTALK_COLOR
 #endif
 
@@ -144,9 +144,9 @@ typedef struct _yuser {
 	int sy, sx;		/* saved cursor position */
 	int sc_top, sc_bot;	/* scrolling region */
 	int region_set;		/* set if using a screen region */
-#ifdef YTALK_COLOR
 	int csx;		/* set if in charset crossover mode */
 	int altchar;		/* set if in alternate charset mode */
+#ifdef YTALK_COLOR
 	int c_at, c_bg, c_fg;	/* user colors and attributes */
 	int sc_at, sc_bg, sc_fg;/* saved colors and attributes */
 #endif
@@ -192,7 +192,6 @@ typedef struct _yuser {
 #define FL_PROMPTRING	0x00000100L	/* prompt before reringing */
 #define FL_BEEP		0x00000200L	/* allow ytalk to beep? */
 #define FL_IGNBRK	0x00000400L	/* don't die when ^C is pressed */
-#define FL_NEWUI	0x00000800L	/* newui on or off */
 #define FL_PROMPTQUIT	0x00001000L	/* prompt before quitting */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
