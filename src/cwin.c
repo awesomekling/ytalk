@@ -100,48 +100,29 @@ new_draw_title(w)
 	ywin *w;
 {
 	int x;
-	char *t = w->title;
+	char *ta, *t;
+	t = ta = (char *)get_mem(COLS * sizeof(char));
+	user_title(t, COLS, w->user);
 	move(w->row - 1, w->col);
 	for (x = 0; x < w->width; x++) {
 		if (x >= 1 && *t) {
-			addch(*t | COLOR_PAIR(newui_colors) | newui_attr);
+			/* Convert tabs to spaces. Saves a lot of face. :) */
+			if (*t == 9)
+				*t = 32;
+			if (*t > 31) {
+				addch(*t | COLOR_PAIR(newui_colors) | newui_attr);
+			}
 			t++;
-		} else if (x == (w->width - 7)) {
+		} else if (x == (w->width - 2)) {
 			if (w->user == scuser)
 				addch('*' | COLOR_PAIR(newui_colors) | newui_attr);
 			else
 				addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
-		} else if (x == (w->width - 5)) {
-			/*
-			 * FIXME: This should be optional. Add a
-			 * "show_version" flag to rc.
-			 */
-			if (w->user->remote.vmajor >= 2) {
-				addch('Y' | COLOR_PAIR(newui_colors) | newui_attr);
-				if (w->user->remote.vmajor >= 0 && w->user->remote.vmajor < 10)
-					addch((w->user->remote.vmajor + '0') | COLOR_PAIR(newui_colors) | newui_attr);
-				else
-					addch('?' | COLOR_PAIR(newui_colors) | newui_attr);
-				addch('.' | COLOR_PAIR(newui_colors) | newui_attr);
-				if (w->user->remote.vmajor >= 3) {
-					if (w->user->remote.vminor >= 0 && w->user->remote.vminor < 10)
-						addch((w->user->remote.vminor + '0') | COLOR_PAIR(newui_colors) | newui_attr);
-					else
-						addch('?' | COLOR_PAIR(newui_colors) | newui_attr);
-				} else {
-					addch('?' | COLOR_PAIR(newui_colors) | newui_attr);
-				}
-			} else {
-				addch('U' | COLOR_PAIR(newui_colors) | newui_attr);
-				addch('N' | COLOR_PAIR(newui_colors) | newui_attr);
-				addch('I' | COLOR_PAIR(newui_colors) | newui_attr);
-				addch('X' | COLOR_PAIR(newui_colors) | newui_attr);
-			}
-			x += 3;
 		} else {
 			addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
 		}
 	}
+	free_mem(ta);
 }
 #endif
 
