@@ -713,7 +713,10 @@ end_scroll_curses(user)
 	if (w->swin != NULL) {
 		delwin(w->swin);
 		w->swin = NULL;
-		redisplay_curses();
+		redraw_term(user, 0);
+		draw_title(w);
+		refresh();
+		wrefresh(w->win);
 	}
 }
 
