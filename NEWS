@@ -1,3 +1,11 @@
+from 3.1.4 to 3.1.5
+	. added the prompt-quit patch from Debian again (oops, lost in 3.1.3)
+	. we now use openpty() if available to securely allocate ptys
+	. fixed a problem with the configure script on Slackware
+	. added a missing part of VT100 scrolling support
+	. fixed a small memory leak in terminal tab handling
+	. some documentation fixes and updates
+
 from 3.1.3 to 3.1.4
 	. added "rering all" to main menu (requested by Matthew Vernon in '99)
 	. fixed detection of `socklen_t' type on OpenBSD
