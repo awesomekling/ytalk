@@ -55,10 +55,8 @@ static void (*_flush_term) ();	/* flush pending output */
 
 static int term_type = 0;
 
-#ifdef YTALK_COLOR
 char *bottom_msg = NULL;
 ylong bottom_time = 0;
-#endif
 
 #ifdef USE_SGTTY
 static int line_discipline;
@@ -1220,25 +1218,10 @@ void
 msg_term(str)
 	char *str;
 {
-#ifdef YTALK_COLOR
 	bottom_msg = str;
 	bottom_time = time(NULL);
 	update_message_curses();
 	return;
-#else
-	int y;
-
-	if ((y = me->y + 1) >= me->rows)
-		y = 0;
-	_move_term(me, y, 0);
-	_addch_term(me, '[');
-	while (*str)
-		_addch_term(me, *(str++));
-	_addch_term(me, ']');
-	_clreol_term(me);
-	_move_term(me, me->y, me->x);
-	_flush_term(me);
-#endif /* YTALK_COLOR */
 }
 
 

@@ -30,6 +30,9 @@
 
 #include "cwin.h"
 
+extern char *bottom_msg;
+extern ylong bottom_time;
+
 typedef struct _ywin {
 	struct _ywin *next;	/* next ywin in linked list */
 	yuser *user;		/* user pointer */
@@ -634,10 +637,10 @@ __redisplay_curses()
 	register ywin *w;
 
 	clear();
-#ifdef YTALK_COLOR
+
 	if (bottom_msg != NULL)
 		update_message_curses();
-#endif
+
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
 		if (w->user->scroll) {
@@ -758,7 +761,6 @@ update_scroll_curses(yuser *user)
 	doupdate();
 }
 
-#ifdef YTALK_COLOR
 void
 update_message_curses()
 {
@@ -767,4 +769,3 @@ update_message_curses()
 	move(1, COLS - 1);
 	refresh();
 }
-#endif
