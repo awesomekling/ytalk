@@ -188,7 +188,7 @@ handle_options_menu(ytk_menu_item *i) {
 	case 'v': set_flags(i->value, FL_INVITE); break;
 	case 'r': set_flags(i->value, FL_RING); break;
 	case 'b': set_flags(i->value, FL_BEEP); break;
-	case 'k': set_flags(i->value, FL_IGNBRK); break;
+	case 'g': set_flags(i->value, FL_IGNBRK); break;
 	case 'c': set_flags(i->value, FL_CAPS); break;
 	case 'p': set_flags(i->value, FL_PROMPTRING); break;
 	case 'q': set_flags(i->value, FL_PROMPTQUIT); break;
