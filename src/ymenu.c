@@ -322,6 +322,7 @@ view_user_info(ytk_menu_item *item)
 {
 	static char client_type[128];
 	static char gtalk_version[MAXBUF + 128];
+	static char system_type[MAXBUF + 128];
 	static char user_at_fqdn[128];
 	static char edit_chars[40];
 	ytk_thing *info_box;
@@ -339,25 +340,31 @@ view_user_info(ytk_menu_item *item)
 	sprintf(user_at_fqdn, _("User:            %s"), menu_user->full_name);
 	ytk_add_msgbox_item(YTK_MSGBOX(info_box), user_at_fqdn);
 
-	p = client_type;
-	p += sprintf(p, _("Client type:     "));
-	if (menu_user->remote.vmajor > 2) {
-		p += sprintf(p, "YTalk %d.%d",
-			menu_user->remote.vmajor,
-			menu_user->remote.vminor
-		);
-	} else if (menu_user->remote.vmajor == 2) {
-		p += sprintf(p, "YTalk 2");
-	} else if (menu_user->gt.version) {
-		p += sprintf(p, "GNU Talk");
-	} else {
-		p += sprintf(p, "BSD Talk");
+	if (menu_user->edit[0] && menu_user->edit[1] && menu_user->edit[2]) {
+		p = client_type;
+		p += sprintf(p, _("Client type:     "));
+		if (menu_user->remote.vmajor > 2) {
+			p += sprintf(p, "YTalk %d.%d",
+				menu_user->remote.vmajor,
+				menu_user->remote.vminor
+			);
+		} else if (menu_user->remote.vmajor == 2) {
+			p += sprintf(p, "YTalk 2");
+		} else if (menu_user->gt.version) {
+			p += sprintf(p, "GNU Talk");
+		} else {
+			p += sprintf(p, "BSD Talk");
+		}
+		ytk_add_msgbox_item(YTK_MSGBOX(info_box), client_type);
 	}
-	ytk_add_msgbox_item(YTK_MSGBOX(info_box), client_type);
 
 	if (menu_user->gt.version) {
 		sprintf(gtalk_version, _("Version info:    %s"), menu_user->gt.version);
 		ytk_add_msgbox_item(YTK_MSGBOX(info_box), gtalk_version);
+	}
+	if (menu_user->gt.system) {
+		sprintf(system_type, _("System type:     %s"), menu_user->gt.system);
+		ytk_add_msgbox_item(YTK_MSGBOX(info_box), system_type);
 	}
 	if (menu_user->edit[0] && menu_user->edit[1] && menu_user->edit[2]) {
 		p = edit_chars;
