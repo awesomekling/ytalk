@@ -286,7 +286,6 @@ read_rcfile(fname)
 	FILE *fp;
 	char buf[BUFSIZ];
 	char *ptr, *cmd, *from, *to, *on, *tmp;
-	char *host;
 	int i, line, found;
 #ifdef YTALK_COLOR
 	char *fg, *bg;
@@ -397,13 +396,13 @@ read_rcfile(fname)
 					fprintf(stderr, "Virtualhost already set before line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
-				host = get_word(&ptr);
-				if (host == NULL) {
+				tmp = get_word(&ptr);
+				if (tmp == NULL) {
 					fprintf(stderr, "Missing hostname on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
-				vhost = (char *) get_mem(1 + strlen(host));
-				strcpy(vhost, host);
+				vhost = (char *) get_mem(1 + strlen(tmp));
+				strcpy(vhost, tmp);
 			} else if (strcmp(cmd, "title_format") == 0) {
 				found = 1;
 				tmp = get_string(&ptr);
