@@ -33,6 +33,7 @@ bail(n)
 {
     end_term();
     kill_auto();
+    free_users();
     clear_all();
     (void)exit(n);
 }

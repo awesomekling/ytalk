@@ -329,6 +329,7 @@ extern yuser   *new_user	( /* name, host, tty */ );	/* user.c */
 extern void	free_user	( /* yuser */ );		/* user.c */
 extern yuser   *find_user	( /* name, host_addr, pid */ );	/* user.c */
 extern void	generate_full_name ( /* yuser */ );		/* user.c */
+extern void	free_users	();				/* user.c */
 
 extern void	init_fd		();				/* fd.c */
 extern void	add_fd		( /* fd, func */ );		/* fd.c */

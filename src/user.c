@@ -344,3 +344,26 @@ find_user(name, host_addr, pid)
 
     return NULL;
 }
+
+void
+free_users()
+{
+    yuser *u, *un;
+    unsigned int i;
+
+    for(u = user_list; u != NULL; ) {
+    	un = u->unext;
+	free_mem(u->user_name);
+	free_mem(u->host_name);
+	free_mem(u->host_fqdn);
+	free_mem(u->tty_name);
+	free_mem(u->full_name);
+	if(u->scr != NULL) {
+		for(i = 0; i < u->rows; i++)
+			free_mem(u->scr[i]);
+		free_mem(u->scr);
+	}
+	free_mem(u);
+	u = un;
+    }
+}
