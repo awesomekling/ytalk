@@ -159,6 +159,7 @@ old_draw_title(w)
 		addch('-');
 	if (pad >= 2) {
 		addch('=');
+		addch(' ');
 		x += 2;
 	}
 	for (t = w->title; *t && x < w->width; x++, t++)
