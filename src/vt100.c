@@ -229,12 +229,14 @@ vt100_process(user, data)
 		user->got_esc = 0;
 		break;
 	case 'r':		/* set scroll region */
-		if (user->av[0] > 0)
-			user->av[0]--;
-		if (user->av[1] > 0)
-			user->av[1]--;
-		set_scroll_region(user, user->av[0], user->av[1]);
-		move_term(user, 0, 0);
+		if (user->got_esc == 2) {
+			if (user->av[0] > 0)
+				user->av[0]--;
+			if (user->av[1] > 0)
+				user->av[1]--;
+			set_scroll_region(user, user->av[0], user->av[1]);
+			move_term(user, 0, 0);
+		}
 		user->got_esc = 0;
 		break;
 	case '(':		/* skip over lparens for now */
