@@ -866,7 +866,8 @@ invite(name, send_announce)
     if (!dont_change_my_addr)
     {
     	struct sockaddr_in tmpsock;
-	int sock, i;
+	unsigned int i;
+	int sock;
 
 	sock = socket(PF_INET, SOCK_DGRAM, 0);
 
