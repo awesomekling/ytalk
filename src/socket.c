@@ -88,7 +88,7 @@ init_dgram(sock)
 	bail(YTE_ERROR);
     }
     socklen = sizeof(struct sockaddr_in);
-    if(getsockname(fd, (struct sockaddr *)sock, &socklen) < 0)
+    if(getsockname(fd, (struct sockaddr *)sock, (int *)&socklen) < 0)
     {
 	close(fd);
 	show_error("init_dgram: getsockname() failed");
@@ -142,7 +142,7 @@ read_autoport(fd)
     /* accept the connection */
 
     socklen = sizeof(struct sockaddr_in);
-    if((fd = accept(autofd, (struct sockaddr *) &temp, &socklen)) == -1)
+    if((fd = accept(autofd, (struct sockaddr *) &temp, (int *)&socklen)) == -1)
     {
 	show_error("read_autoport: accept() failed");
 	return;
@@ -193,7 +193,7 @@ init_autoport()
 	return;
     }
     socklen = sizeof(struct sockaddr_in);
-    if(getsockname(autofd, (struct sockaddr *)&autosock, &socklen) < 0)
+    if(getsockname(autofd, (struct sockaddr *)&autosock, (int *)&socklen) < 0)
     {
 	close(autofd);
 	autofd = -1;
@@ -802,7 +802,7 @@ newsock(user)
 	return -1;
     }
     socklen = sizeof(struct sockaddr_in);
-    if(getsockname(fd, (struct sockaddr *)&user->sock, &socklen) < 0)
+    if(getsockname(fd, (struct sockaddr *)&user->sock, (int *)&socklen) < 0)
     {
 	close(fd);
 	show_error("newsock: getsockname() failed");
@@ -860,7 +860,7 @@ connect_to(user)
 	return -1;
     }
     socklen = sizeof(struct sockaddr_in);
-    if(getsockname(fd, (struct sockaddr *)&sock, &socklen) < 0)
+    if(getsockname(fd, (struct sockaddr *)&sock, (int *)&socklen) < 0)
     {
 	close(fd);
 	show_error("connect_to: getsockname() failed");
