@@ -48,6 +48,10 @@
 #endif
 #endif
 
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h>
+#endif
+
 #ifdef HAVE_OPENPTY
 #ifdef HAVE_UTIL_H
 #include <util.h>
@@ -210,6 +214,9 @@ execute(command)
 {
 	int fd;
 	char name[20], *shell;
+#ifdef HAVE_TTYNAME
+	struct stat sbuf;
+#endif
 	struct passwd *pw = NULL;
 #ifdef HAVE_TCSETPGRP
 	pid_t sid;
@@ -326,6 +333,15 @@ execute(command)
 #ifdef HAVE_TCSETPGRP
 		if (tcsetpgrp(fd, sid) < 0)
 			perror("tcsetpgrp");
+#endif
+
+#ifdef HAVE_TTYNAME
+		/* Check pty permissions and warn about possible risks. */
+		if (stat(ttyname(0), &sbuf) == 0) {
+			if (sbuf.st_mode & 0004) {
+				write(1, "Warning: This pseudo-terminal is world-readable.\n", 49);
+			}
+		}
 #endif
 
 		/* execute the command */
