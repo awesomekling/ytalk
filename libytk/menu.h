@@ -7,10 +7,7 @@
 
 #define YTK_MENU_ITEM_NORMAL(a)		(a && a->hotkey && a->text)
 #define YTK_MENU_ITEM_TOGGLE(a)		(YTK_MENU_ITEM_NORMAL(a) && a->value != -1)
-#define YTK_MENU_ITEM_LABEL(a)		(a && !a->hotkey)
 #define YTK_MENU_ITEM_SEPARATOR(a)	(a && !a->text)
-
-#define YTK_ITEM_CHECKED(a)			(a->value == TRUE)
 
 #define ytk_add_menu_separator(a)	ytk_add_menu_item(a, NULL, 0, NULL)
 
