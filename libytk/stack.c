@@ -154,8 +154,8 @@ ytk_handle_stack_input(ytk_stack *st, int ch)
 	case YTK_T_MSGBOX:
 		ytk_handle_msgbox_input(YTK_MSGBOX(st->top->thing), ch);
 		break;
-	default:
 #ifdef YTALK_DEBUG
+	default:
 		fprintf(stderr, "ytk_handle_stack_input(): Got input for unsupported thing type %d.\n", st->top->thing->type);
 #endif
 	}

@@ -38,8 +38,8 @@ ytk_destroy_thing(ytk_thing *t)
 		case YTK_T_MSGBOX:
 			ytk_destroy_msgbox(YTK_MSGBOX(t));
 			break;
-		default:
 #ifdef YTALK_DEBUG
+		default:
 			fprintf(stderr, "ytk_destroy_thing(): Unknown thing type %u\n", t->type);
 #endif
 		}
