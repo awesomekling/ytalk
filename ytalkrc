@@ -1,9 +1,6 @@
-# YTalk runtime configuration
-# This file will be documented after the syntax is reworked.
-#
+# YTalk default runtime configuration
 
 # Aliases
-
 #alias user@ realuser@
 #alias @host @realhost
 #alias friend user@host
@@ -12,22 +9,34 @@
 #localhost hostname-or-IP-address
 
 # Default options
-
-scrolling = on
-rering = on
-prompt_rering = on
+scrolling	= on
+rering		= on
+prompt_rering	= on
 
 # Off by default (tm)
-#wordwrap = off
-#autoimport = off
-#autoinvite = off
-#no_invite off
-#require_caps = off
+wordwrap	= off
+autoimport	= off
+autoinvite	= off
+no_invite	= off
+require_caps	= off
 
-# New things
+# Annoyances
+beeps		= on
+ignore_break	= off
 
-#newui = off
-#ui_colors background [bold-]foreground
-#beeps = on
-#ignore_break = off
-#shell = /bin/tcsh
+# Command shell of preference
+#shell = /bin/csh
+
+# User interface configuration
+newui		= on
+
+# Color configuration
+#
+# Valid colors:
+#   black, red, green, yellow
+#   blue, magenta, cyan, white
+#
+# Foreground colors may be prepended with "bold-"
+#
+ui_colors	= red, black
+menu_colors	= black, red
