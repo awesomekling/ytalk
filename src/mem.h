@@ -11,3 +11,4 @@ void free_mem(yaddr);
 yaddr realloc_mem(yaddr, int);
 void change_area(mem_list *, yaddr, yaddr, int);
 int get_size(mem_list *, yaddr);
+void clear_all(mem_list *);

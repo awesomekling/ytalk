@@ -96,3 +96,12 @@ yaddr realloc_mem(yaddr p, int n) {
 	change_area(glist, p, out, n);
 	return out;
 }
+
+/* Clear all memory
+ */
+void clear_all(mem_list *list) {
+	while(list != NULL) {
+		free_mem(list->addr);
+		list = list->next;
+	}
+}

@@ -32,6 +32,7 @@ bail(n)
 {
     end_term();
     kill_auto();
+    clear_all();
     (void)exit(n);
 }
 
