@@ -194,11 +194,11 @@ void
 clear_all()
 {
 #ifdef YTALK_DEBUG
-	printf("Clearing memory\n");
+	fprintf(stderr, "Clearing memory\n");
 #endif
 	while (glist != NULL) {
 #ifdef YTALK_DEBUG
-		printf("0x%lx: %d\t(%s:%d)\n", (long unsigned) glist->addr, glist->size,
+		fprintf(stderr, "0x%lx: %d\t(%s:%d)\n", (long unsigned) glist->addr, glist->size,
 		       glist->file, glist->line
 		 );
 #endif
@@ -208,10 +208,10 @@ clear_all()
 #endif
 	}
 #ifdef YTALK_DEBUG
-	printf("Statistics:\n");
-	printf("Bad free_mem() calls:    %u\n", bad_free);
-	printf("Bad realloc_mem() calls: %u\n", bad_realloc);
-	printf("realloc_mem(NULL) calls: %u\n", realloc_null);
-	printf("Leaked allocations:      %u\n", leaked);
+	fprintf(stderr, "Statistics:\n");
+	fprintf(stderr, "Bad free_mem() calls:    %u\n", bad_free);
+	fprintf(stderr, "Bad realloc_mem() calls: %u\n", bad_realloc);
+	fprintf(stderr, "realloc_mem(NULL) calls: %u\n", realloc_null);
+	fprintf(stderr, "Leaked allocations:      %u\n", leaked);
 #endif
 }
