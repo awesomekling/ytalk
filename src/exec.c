@@ -95,6 +95,7 @@ int needtopush = 0;
 #define SIGCLD SIGCHLD
 #endif
 
+#ifndef HAVE_OPENPTY
 static int
 getpty(name)
 	char *name;
@@ -166,6 +167,7 @@ getpty(name)
 	errno = ENOENT;
 	return -1;
 }
+#endif /* HAVE_OPENPTY */
 
 static void
 exec_input(fd)
@@ -231,15 +233,17 @@ execute(command)
 		return;
 	}
 #ifdef HAVE_OPENPTY
-	/* Try openpty() first. 666 ttys are no fun. */
 	if (openpty(&fd, &fds, name, NULL, NULL) == 0) {
+		msg_term(me, "cannot get pseudo terminal");
 		close(fds);
-	} else
-#endif
+		return;
+	}
+#else
 	if ((fd = getpty(name)) < 0) {
 		msg_term(me, "cannot get pseudo terminal");
 		return;
 	}
+#endif
 	/* init the pty a bit (inspired from the screen(1) sources, pty.c) */
 
 #if defined(HAVE_TCFLUSH) && defined(TCIOFLUSH)
