@@ -139,7 +139,9 @@ void clear_all() {
 glist->file, glist->line);
 #endif
 		free_mem(glist->addr);
+#ifdef YTALK_DEBUG
 		leaked++;
+#ifdef YTALK_DEBUG
 	}
 #ifdef YTALK_DEBUG
 	printf("Statistics:\n");
