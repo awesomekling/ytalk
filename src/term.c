@@ -308,16 +308,14 @@ addch_term(yuser *user, ychar c)
 }
 
 #ifdef YTALK_COLOR
-static yachar
-uyac(yuser *user, char c)
+void
+user_yac(yuser *user, char c, yachar *ac)
 {
-	yachar ac;
-	ac.l = c;
-	ac.a = user->c_at;
-	ac.b = user->c_fg;
-	ac.c = user->c_bg;
-	ac.v = user->altchar ^ user->csx;
-	return ac;
+	ac->l = c;
+	ac->a = user->c_at;
+	ac->b = user->c_fg;
+	ac->c = user->c_bg;
+	ac->v = user->altchar ^ user->csx;
 }
 #endif
 
@@ -349,12 +347,15 @@ clreol_term(yuser *user)
 {
 	register int j;
 	register yachar *c;
+	yachar nc;
+
+	user_yac(user, ' ', &nc);
 
 	if (user->cols < user->t_cols) {
 		c = user->scr[user->y] + user->x;
 		for (j = user->x; j < user->cols; j++) {
 #ifdef YTALK_COLOR
-			_addch_term(user, *(c++) = uyac(user, ' '));
+			_addch_term(user, *(c++) = nc);
 #else
 			*(c++) = ' ';
 			_addch_term(user, ' ');
@@ -366,7 +367,7 @@ clreol_term(yuser *user)
 		c = user->scr[user->y] + user->x;
 		for (j = user->x; j < user->cols; j++)
 #ifdef YTALK_COLOR
-			*(c++) = uyac(user, ' ');
+			*(c++) = nc;
 #else
 			*(c++) = ' ';
 #endif
