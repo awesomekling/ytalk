@@ -352,7 +352,7 @@ read_rcfile(fname)
 				shell = get_word(&ptr);
 				set_shell(me, shell);
 			} else {
-				fprintf(stderr, "Unknown rc-directive on line %d in %s\n", line, fname);
+				fprintf(stderr, "Unknown option \"%s\" on line %d in %s\n", cmd, line, fname);
 				bail(YTE_INIT);
 			}
 		}
