@@ -81,5 +81,5 @@ rm -rf tmp* \
 	|| frown "Couldn't clean up."
 
 echo
-echo "Ready to build."
+echo "Ready to build ( ./configure ; make ; make install )"
 echo
