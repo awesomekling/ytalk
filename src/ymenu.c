@@ -423,7 +423,11 @@ yes_no(char *str)
 		}
 	} while (out == 0);
 	ytk_delete_thing(yn);
-	hide_ymenu();
+	(void) ytk_pop_thing(menu_stack);
+	if (ytk_is_empty_stack(menu_stack))
+		hide_ymenu();
+	else
+		refresh_ymenu();
 	io_len = 0;
 	return out;
 }
