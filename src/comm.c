@@ -1273,7 +1273,7 @@ my_input(user, buf, len)
 						*buf = '\n';
 					else if (*buf == 27 || *buf == ALTESC)	/* Esc or ALTESC */
 						break;
-					else if ((*buf == 14 || *buf == 6 || *buf == 16) && term_does_scrollback())	/* ^N, ^F or ^P */
+					else if (*buf == 14 || *buf == 6 || *buf == 16)	/* ^N, ^F or ^P */
 						break;
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
 						break;
@@ -1306,18 +1306,20 @@ my_input(user, buf, len)
 							update_ymenu();
 						}
 						buf++, len--;
-					} else if (*buf == 14 && term_does_scrollback()) {	/* ^N - scroll down */
+					} else if (*buf == 14) {	/* ^N - scroll down */
 						scroll_down(scuser);
 						buf++, len--;
-					} else if (*buf == 6 && term_does_scrollback()) {	/* ^F - window forward */
-						do {
-							scuser = scuser->unext;
-						} while (scuser && scuser->scr == NULL);
-						if (scuser == NULL)
-							scuser = me;
-						retitle_all_terms();
+					} else if (*buf == 6) {	/* ^F - window forward */
+						if (scrollback_lines > 0) {
+							do {
+								scuser = scuser->unext;
+							} while (scuser && scuser->scr == NULL);
+							if (scuser == NULL)
+								scuser = me;
+							retitle_all_terms();
+						}
 						buf++, len--;
-					} else if (*buf == 16 && term_does_scrollback()) {	/* ^P - scroll up */
+					} else if (*buf == 16) {	/* ^P - scroll up */
 						scroll_up(scuser);
 						buf++, len--;
 					} else if (*buf == 12 || *buf == 18) {	/* ^L or ^R */
