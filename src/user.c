@@ -360,6 +360,9 @@ user_title(char *buf, int size, yuser *user)
 				}
 				b++;
 				break;
+			case '%':
+				*(b++) ='%';
+				break;
 			case '!':
 				*(b++) = 9;
 				break;
