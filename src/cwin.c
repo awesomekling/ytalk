@@ -403,6 +403,8 @@ close_curses(yuser *user)
 		}
 	}
 	delwin(w->win);
+	if (user->scroll)
+		delwin(w->swin);
 	free_mem(w);
 	w = NULL;
 	curses_redraw();
