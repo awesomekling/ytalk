@@ -190,9 +190,9 @@ init_userlist()
 	userlist_menu = ytk_new_menu("User List");
 	for (u = connect_list; u; u = u->next) {
 		if (u != me) {
-			buf = get_mem(50 * sizeof(char));
+			buf = get_mem(54 * sizeof(char));
 			p = buf
-				+ sprintf(buf, "%-20.20s %03dx%03d [%03dx%03d] ",
+				+ sprintf(buf, "%-24.24s %03dx%03d [%03dx%03d] ",
 					u->full_name, u->remote.cols, u->remote.rows,
 					u->remote.my_cols, u->remote.my_rows
 				);
@@ -208,9 +208,9 @@ init_userlist()
 	}
 	for (u = wait_list; u; u = u->next) {
 		if (u != me) {
-			buf = get_mem(50 * sizeof(char));
+			buf = get_mem(54 * sizeof(char));
 			p = buf
-				+ sprintf(buf, "%-20.20s               <unconnected>",
+				+ sprintf(buf, "%-24.24s               <unconnected>",
 					u->full_name
 				);
 			u->key = hk++;
