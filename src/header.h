@@ -284,9 +284,7 @@ struct alias {
 /* ---- global functions ---- */
 
 extern void	bail		( /* int */ );			/* main.c */
-extern yaddr	get_mem		( /* int */ );			/* main.c */
 extern char    *str_copy	( /* string */ );		/* main.c */
-extern yaddr	realloc_mem	( /* pointer, int */ );		/* main.c */
 extern void	show_error	( /* str */ );			/* main.c */
 
 extern void	init_term	();				/* term.c */
