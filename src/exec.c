@@ -342,7 +342,7 @@ execute(command)
 
 #ifdef HAVE_TTYNAME
 		/* Check pty permissions and warn about potential risks. */
-		if (stat(ttyname(0), &sbuf) == 0) {
+		if (!command && (stat(ttyname(0), &sbuf) == 0)) {
 			if (sbuf.st_mode & 0004) {
 				write(1, "Warning: This pseudo-terminal is world-readable.\n", 49);
 			}
