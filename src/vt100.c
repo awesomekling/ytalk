@@ -2,9 +2,11 @@
 #include "header.h"
 #include "cwin.h"
 
+#ifdef YTALK_COLOR
 static unsigned long int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
 };
+#endif
 
 char YT_ACS_ON = '\xE';
 char YT_ACS_OFF = '\xF';
