@@ -220,9 +220,6 @@ Options:     -i             --    no auto-invite port\n\
     if(iflg)
 	def_flags |= FL_NOAUTO;
 
-    if(!(def_flags & FL_MESG))
-	chmod(ttyname(0) ,600);
-
     init_term();
     init_socket();
     for(; argc > 0; argc--, argv++)
