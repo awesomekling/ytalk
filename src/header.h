@@ -107,6 +107,12 @@ typedef u_int ylong;		/* this should work both on 32-bit and 64-bit
 typedef int socklen_t;
 #endif
 
+#ifdef YTALK_OSF1		/* this is to avoid a burst of warnings when */
+typedef int ysocklen_t;		/* compiling on OSF/1 based systems. */
+#else
+typedef socklen_t ysocklen_t;
+#endif
+
 typedef struct {
 	u_char w_rows, w_cols;	/* window size FOR PROTOCOL YTP_OLD */
 	char protocol;		/* ytalk protocol -- see above */
