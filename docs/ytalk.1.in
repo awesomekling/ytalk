@@ -131,6 +131,8 @@ moment has these options:
 .br
         o: options
 .br
+        r: rering all
+.br
         s: shell
 .br
         u: user list
