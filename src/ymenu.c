@@ -14,7 +14,6 @@ static ytk_thing *options_menu = NULL;
 static ytk_thing *usermenu_menu = NULL;
 static ytk_thing *userlist_menu = NULL;
 static ytk_thing *error_box = NULL;
-static ytk_thing *message_box = NULL;
 
 #ifdef YTALK_COLOR
 static ytk_thing *color_menu = NULL;
@@ -448,14 +447,12 @@ refresh_ymenu()
 }
 
 static void
-handle_embox(ytk_thing *t)
+handle_error_box(ytk_thing *t)
 {
 	ytk_pop(menu_stack);
 	ytk_delete_thing(t);
 	if (t == error_box)
 		error_box = NULL;
-	else if (t == message_box)
-		message_box = NULL;
 	refresh_curses();
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
@@ -474,32 +471,11 @@ show_error_ymenu(char *str, char *syserr)
 	ytk_winch_thing(error_box);
 	if (!ytk_on_stack(menu_stack, error_box))
 		ytk_push(menu_stack, error_box);
-	ytk_set_escape(error_box, handle_embox);
+	ytk_set_escape(error_box, handle_error_box);
 #ifdef YTALK_COLOR
 	ytk_set_colors(error_box, menu_colors);
 	ytk_set_attr(error_box, menu_attr);
 #endif
-	ytk_display_stack(menu_stack);
-	ytk_sync_display();
-	return 0;
-}
-
-int
-show_message_ymenu(char *str)
-{
-	if (message_box == NULL)
-		message_box = ytk_new_msgbox(_("Message"));
-	else
-		ytk_add_msgbox_separator(YTK_MSGBOX(message_box));
-	ytk_add_msgbox_item(YTK_MSGBOX(message_box), str);
-	ytk_winch_thing(message_box);
-	ytk_set_escape(message_box, handle_embox);
-#ifdef YTALK_COLOR
-	ytk_set_colors(message_box, menu_colors);
-	ytk_set_attr(message_box, menu_attr);
-#endif
-	if (!ytk_on_stack(menu_stack, message_box))
-		ytk_push(menu_stack, message_box);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 	return 0;
