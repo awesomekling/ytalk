@@ -735,7 +735,11 @@ update_scroll_curses(user)
 		if (b->prev != NULL && b->line != NULL) {
 			wmove(w->swin, (user->rows - 1) - r, 0);
 			for (i = 0; ((i < user->cols) && (i < b->width)); i++) {
+#ifdef YTALK_COLOR
 				waddch(w->swin, b->line[i].l);
+#else
+				waddch(w->swin, b->line[i]);
+#endif
 			}
 			b = b->prev;
 		} else {
