@@ -41,7 +41,7 @@ INSTALL_DATA	= @INSTALL_DATA@
 RM	= rm -f
 
 OBJ = main.o term.o user.o fd.o comm.o menu.o socket.o rc.o exec.o cwin.o \
-      xwin.o
+      xwin.o mem.o
 
 SRC = $(OBJ:.o=.c)
 

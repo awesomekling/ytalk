@@ -72,21 +72,6 @@ show_error(str)
     }
 }
 
-/* Allocate memory.
- */
-yaddr
-get_mem(n)
-  int n;
-{
-    register yaddr out;
-    if((out = (yaddr)malloc(n)) == NULL)
-    {
-	show_error("malloc() failed");
-	bail(YTE_NO_MEM);
-    }
-    return out;
-}
-
 /* Copy a string.
  */
 char *
@@ -101,24 +86,6 @@ str_copy(str)
     len = strlen(str) + 1;
     out = get_mem(len);
     (void)memcpy(out, str, len);
-    return out;
-}
-
-/* Reallocate memory.
- */
-yaddr
-realloc_mem(p, n)
-  char *p;
-  int n;
-{
-    register yaddr out;
-    if(p == NULL)
-	return get_mem(n);
-    if((out = (yaddr)realloc(p, n)) == NULL)
-    {
-	show_error("realloc() failed");
-	bail(YTE_NO_MEM);
-    }
     return out;
 }
 
