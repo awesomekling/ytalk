@@ -75,6 +75,10 @@ typedef	u_int	ylong;		/* this should work both on 32-bit and 64-bit
 				 * machines  -Roger
 				 */
 
+#ifndef HAVE_SOCKLEN_T
+typedef int	socklen_t;
+#endif
+
 typedef struct {
     u_char w_rows, w_cols;	/* window size FOR PROTOCOL YTP_OLD */
     char protocol;		/* ytalk protocol -- see above */
