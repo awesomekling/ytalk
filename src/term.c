@@ -609,7 +609,7 @@ newline_term(user)
 void
 add_line_term(user, num)
   register yuser *user;
-  int num;
+  unsigned int num;
 {
     register ychar *c;
     register int i;
@@ -722,7 +722,7 @@ copy_text(fr, to, count)
 void
 add_char_term(user, num)
   register yuser *user;
-  int num;
+  unsigned int num;
 {
     register ychar *c;
     register int i;
@@ -758,7 +758,7 @@ add_char_term(user, num)
 void
 del_char_term(user, num)
   register yuser *user;
-  int num;
+  unsigned int num;
 {
     register ychar *c;
     register int i;

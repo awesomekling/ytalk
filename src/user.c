@@ -39,7 +39,7 @@ static int passwd_opened = 0;
 
 static char *
 user_name(uid)
-  int uid;
+  ylong uid;
 {
     register struct passwd *pw;
     passwd_opened = 1;

@@ -123,15 +123,15 @@ send_import(to, from)
 	v3p.code = V3_IMPORT;
 	v3p.host_addr = htonl(from->host_addr);
 	v3p.pid = htonl(from->remote.pid);
-	strncpy(v3p.name, from->user_name, V3_NAMELEN);
-	strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
+	(void)strncpy(v3p.name, from->user_name, V3_NAMELEN);
+	(void)strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
 	send_oob(to->fd, &v3p, V3_PACKLEN);
     }
     else if(to->remote.vmajor == 2)
     {
 	v2p.code = V2_IMPORT;
-	strncpy(v2p.name, from->user_name, V2_NAMELEN);
-	strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
+	(void)strncpy(v2p.name, from->user_name, V2_NAMELEN);
+	(void)strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
 	(void)write(to->fd, &v2p, V2_PACKLEN);
     }
 }
@@ -147,15 +147,15 @@ send_accept(to, from)
 	v3p.code = V3_ACCEPT;
 	v3p.host_addr = htonl(from->host_addr);
 	v3p.pid = htonl(from->remote.pid);
-	strncpy(v3p.name, from->user_name, V3_NAMELEN);
-	strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
+	(void)strncpy(v3p.name, from->user_name, V3_NAMELEN);
+	(void)strncpy(v3p.host, from->host_fqdn, V3_HOSTLEN);
 	send_oob(to->fd, &v3p, V3_PACKLEN);
     }
     else if(to->remote.vmajor == 2)
     {
 	v2p.code = V2_ACCEPT;
-	strncpy(v2p.name, from->user_name, V2_NAMELEN);
-	strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
+	(void)strncpy(v2p.name, from->user_name, V2_NAMELEN);
+	(void)strncpy(v2p.host, from->host_fqdn, V2_HOSTLEN);
 	(void)write(to->fd, &v2p, V2_PACKLEN);
     }
 }
@@ -176,14 +176,14 @@ v2_process(user, pack)
     /* Ytalk version 2.* didn't have very clever import/export
      * capabilities.  We'll just go with the flow.
      */
-    strncpy(name, pack->name, V2_NAMELEN);
-    strncpy(host, pack->host, V2_HOSTLEN);
+    (void)strncpy(name, pack->name, V2_NAMELEN);
+    (void)strncpy(host, pack->host, V2_HOSTLEN);
     name[V2_NAMELEN] = '\0';
     host[V2_HOSTLEN] = '\0';
     if((host_addr = get_host_addr(host)) == (ylong)-1)
     {
 	errno = 0;
-	sprintf(errstr, "unknown host: '%s'", host);
+	(void)sprintf(errstr, "unknown host: '%s'", host);
 	show_error(errstr);
 	show_error("port from ytalk V2.? failed");
 	return;
@@ -198,15 +198,15 @@ v2_process(user, pack)
 		break;
 	    if(!(def_flags & FL_IMPORT))
 	    {
-		sprintf(estr, "Import %s@%s?", name, host);
+		(void)sprintf(estr, "Import %s@%s?", name, host);
 		if(yes_no(estr) == 'n')
 		    break;
 	    }
 
 	    /* invite him but don't ring him */
 
-	    sprintf(estr, "%s@%s", name, host);
-	    invite(estr, 0);
+	    (void)sprintf(estr, "%s@%s", name, host);
+	    (void)invite(estr, 0);
 
 	    /* now tell him to connect to us */
 
@@ -224,8 +224,8 @@ v2_process(user, pack)
 	    send_accept(u, user);
 	    break;
 	case V2_ACCEPT:
-	    sprintf(estr, "%s@%s", name, host);
-	    invite(estr, 1);	/* we should be expected */
+	    (void)sprintf(estr, "%s@%s", name, host);
+	    (void)invite(estr, 1);	/* we should be expected */
 	    break;
     }
 }
@@ -243,8 +243,8 @@ v3_process_pack(user, pack)
     static char host[V3_HOSTLEN + 1];
     static char estr[V3_NAMELEN + V3_HOSTLEN + 20];
 
-    strncpy(name, pack->name, V3_NAMELEN);
-    strncpy(host, pack->host, V3_HOSTLEN);
+    (void)strncpy(name, pack->name, V3_NAMELEN);
+    (void)strncpy(host, pack->host, V3_HOSTLEN);
     name[V3_NAMELEN] = '\0';
     host[V3_HOSTLEN] = '\0';
     if((host_addr = get_host_addr(host)) == (ylong)-1)
@@ -262,14 +262,14 @@ v3_process_pack(user, pack)
 		break;
 	    if(!(def_flags & FL_IMPORT))
 	    {
-		sprintf(estr, "Import %s@%s?", name, host);
+		(void)sprintf(estr, "Import %s@%s?", name, host);
 		if(yes_no(estr) == 'n')
 		    break;
 	    }
 
 	    /* invite him but don't ring him */
 
-	    sprintf(estr, "%s@%s", name, host);
+	    (void)sprintf(estr, "%s@%s", name, host);
 	    u2 = invite(estr, 0);
 
 	    /* fix the pid, so that two quick V3_IMPORT requests of the
@@ -296,8 +296,8 @@ v3_process_pack(user, pack)
 	    send_accept(u, user);
 	    break;
 	case V3_ACCEPT:
-	    sprintf(estr, "%s@%s", name, host);
-	    invite(estr, 1);	/* we should be expected */
+	    (void)sprintf(estr, "%s@%s", name, host);
+	    (void)invite(estr, 1);	/* we should be expected */
 	    break;
     }
 }
@@ -510,7 +510,7 @@ read_user(fd)
 		    if(write(user->output_fd, buf, p - buf) <= 0)
 		    {
 			show_error("write to user output file failed");
-			close(user->output_fd);
+			(void)close(user->output_fd);
 			user->output_fd = 0;
 		    }
 		show_input(user, buf, p - buf);
@@ -710,7 +710,7 @@ contact_user(fd)
 	    show_error("connect_user: accept() failed");
 	return;
     }
-    close(fd);
+    (void)close(fd);
     fd_to_user[fd] = NULL;
 
     /* make sure the connection comes from the right place, else
@@ -778,7 +778,7 @@ announce(user)
     {
 	/* he has an auto-invite port established */
 
-	if((fd = connect_to(NULL)) < 0)
+	if((fd = connect_to((yuser *)0)) < 0)
 	{
 	    if(fd == -3) /* it's one of my sockets... *sigh* */
 		break;
@@ -794,12 +794,12 @@ announce(user)
 	 * packet.
 	 */
 	v2p.code = V2_AUTO;
-	strncpy(v2p.name, me->user_name, V2_NAMELEN);
-	strncpy(v2p.host, me->host_name, V2_HOSTLEN);
+	(void)strncpy(v2p.name, me->user_name, V2_NAMELEN);
+	(void)strncpy(v2p.host, me->host_name, V2_HOSTLEN);
 	v2p.name[V2_NAMELEN-1] = '\0';
 	v2p.host[V2_HOSTLEN-1] = '\0';
 	(void)write(fd, &v2p, V2_PACKLEN);
-	close(fd);
+	(void)close(fd);
 	return 0;
     }
     if(rc == -1)
@@ -889,7 +889,7 @@ invite(name, send_announce)
 		    dont_change_my_addr++;
 		}
 	    }
-	    close(sock);
+	    (void)close(sock);
 	}
     }
 
@@ -932,7 +932,7 @@ invite(name, send_announce)
 
     if(send_announce)
     {
-	sprintf(errstr, "Ringing %s...", user->user_name);
+	(void)sprintf(errstr, "Ringing %s...", user->user_name);
 	msg_term(me, errstr);
     }
     if(newsock(user) != 0)
@@ -946,9 +946,9 @@ invite(name, send_announce)
     {
 	(void)send_dgram(user, DELETE_INVITE);
 	if(rc > 0)
-	    sprintf(errstr, "%s refusing messages", user->full_name);
+	    (void)sprintf(errstr, "%s refusing messages", user->full_name);
 	else
-	    sprintf(errstr, "%s not logged in", user->full_name);
+	    (void)sprintf(errstr, "%s not logged in", user->full_name);
 	show_error(errstr);
 	free_user(user);
 	return NULL;
@@ -993,7 +993,7 @@ house_clean()
 	    {
 		if(input_flag)
 		    continue;
-		sprintf(estr, "Rering %s?", u->full_name);
+		(void)sprintf(estr, "Rering %s?", u->full_name);
 		answer = yes_no(estr);
 		t = (ylong)time(NULL);
 		if(answer == 'n')
@@ -1003,9 +1003,9 @@ house_clean()
 	    {
 		(void)send_dgram(u, DELETE_INVITE);
 		if(rc > 0)
-		    sprintf(errstr, "%s refusing messages", u->full_name);
+		    (void)sprintf(errstr, "%s refusing messages", u->full_name);
 		else
-		    sprintf(errstr, "%s not logged in", u->full_name);
+		    (void)sprintf(errstr, "%s not logged in", u->full_name);
 		show_error(errstr);
 		free_user(u);
 	    }
@@ -1336,7 +1336,7 @@ process_esc:
 	    {
 		case 7:		/* Bell */
 		    if(def_flags & FL_BEEP)
-			putc(7, stderr);
+			(void)putc(7, stderr);
 		    break;
 		case 8:		/* Backspace */
 		    if(user->x > 0)
@@ -1442,7 +1442,7 @@ my_input(user, buf, len)
 		if((i = buf - c) > 0)
 		{
 		    if(user != NULL && user != me && !(def_flags & FL_ASIDE) && def_flags & FL_BEEP)
-			putc(7, stderr);
+			(void)putc(7, stderr);
 		    else
 		    {
 			show_input(me, c, i);
