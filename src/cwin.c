@@ -256,7 +256,9 @@ curses_start()
 
 	if (has_colors()) {
 		start_color();
+#ifdef NCURSES_VERSION
 		use_default_colors();
+#endif
 		for (i = 0; i < 64; i++) {
 			fg = i & 7;
 			bg = i >> 3;
@@ -420,8 +422,28 @@ waddyac(WINDOW *w, yachar c)
 #ifdef YTALK_COLOR
 	chtype cc = c.l;
 	getyx(w, y, x);
-	if (c.v)
-		cc = acs_map[cc];
+	if (c.v) {
+		switch (cc) {
+		case 'l': cc = ACS_ULCORNER; break;
+		case 'm': cc = ACS_LLCORNER; break;
+		case 'k': cc = ACS_URCORNER; break;
+		case 'j': cc = ACS_LRCORNER; break;
+		case 't': cc = ACS_LTEE; break;
+		case 'u': cc = ACS_RTEE; break;
+		case 'v': cc = ACS_BTEE; break;
+		case 'w': cc = ACS_TTEE; break;
+		case 'q': cc = ACS_HLINE; break;
+		case 'x': cc = ACS_VLINE; break;
+		case 'n': cc = ACS_PLUS; break;
+		case 'o': cc = ACS_S1; break;
+		case 's': cc = ACS_S9; break;
+		case '`': cc = ACS_DIAMOND; break;
+		case 'a': cc = ACS_CKBOARD; break;
+		case 'f': cc = ACS_DEGREE; break;
+		case 'g': cc = ACS_PLMINUS; break;
+		case '~': cc = ACS_BULLET; break;
+		}
+	}
 	if (cc == 0)
 		cc = ' ';
 	waddch(w, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
