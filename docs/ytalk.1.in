@@ -12,7 +12,7 @@
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
-.BI "ytalk [-x] [-s] [-Y] [-i] [-v] [-h " hostname_or_ip "] "username...
+.BI "ytalk [-x] [-s] [-Y] [-i] [-v] [-h " hostname_or_ip "] " username...
 .SH DESCRIPTION
 .I YTalk V3.2.0
 .PP
