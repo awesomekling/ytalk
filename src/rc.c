@@ -19,10 +19,6 @@
 #include "mem.h"
 #include <pwd.h>
 
-#ifdef YTALK_COLOR
-#include <ncurses.h>
-#endif
-
 #define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=')
 
 extern char *vhost;
