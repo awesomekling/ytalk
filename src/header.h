@@ -389,4 +389,6 @@ extern void	update_exec	();				/* exec.c */
 extern void	kill_exec	();				/* exec.c */
 extern void	winch_exec	();				/* exec.c */
 
+extern void	vt100_process	( /* yuser, char */ );		/* vt100.c */
+
 /* EOF */
