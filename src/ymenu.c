@@ -19,8 +19,8 @@ static ytk_thing *message_box = NULL;
 #ifdef YTALK_COLOR
 static ytk_thing *color_menu = NULL;
 
-extern int menu_colors;
-extern int menu_attr;
+extern unsigned long int menu_colors;
+extern unsigned long int menu_attr;
 #endif
 
 static char ukey;
