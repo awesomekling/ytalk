@@ -374,7 +374,13 @@ execute(command)
 		show_error("fork() failed");
 		return;
 	}
+
+	/* skip clearing unless spawning interactive shell */
+	if (command) {
+		me->region_set = 1;
+	}
 	set_win_region(me, prows, pcols);
+
 	if (!(def_flags & FL_INSTANTCMD)) {
 		sleep(1);
 	}
