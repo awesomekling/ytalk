@@ -30,8 +30,6 @@ extern char *vhost;
 #ifdef YTALK_COLOR
 extern int newui_colors;
 extern int newui_attr;
-extern int raw_color;
-extern int raw_attr;
 #endif
 
 static struct alias *alias0 = NULL;
