@@ -99,15 +99,14 @@ yaddr realloc_mem(yaddr p, int n) {
 
 /* Clear all memory
  */
-void clear_all(mem_list *list) {
+void clear_all() {
 #ifdef YTALK_DEBUG
 	printf("Clearing memory\n");
 #endif
-	while(list != NULL) {
+	while(glist != NULL) {
 #ifdef YTALK_DEBUG
-		printf("%d: %d\n", list->addr, list->size);
+		printf("%d: %d\n", glist->addr, glist->size);
 #endif
-		free_mem(list->addr);
-		list = list->next;
+		free_mem(glist->addr);
 	}
 }
