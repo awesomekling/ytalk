@@ -17,6 +17,7 @@
 /* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
+#include "mem.h"
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
