@@ -32,7 +32,7 @@ ytk_destroy_inputbox(ytk_inputbox *b)
 }
 
 void
-ytk_handle_inputbox_input(ytk_inputbox *b, char ch)
+ytk_handle_inputbox_input(ytk_inputbox *b, ychar ch)
 {
 	switch (ch) {
 	case '\r':

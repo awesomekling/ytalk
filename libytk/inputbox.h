@@ -16,6 +16,6 @@ typedef struct __ytk_inputbox {
 
 ytk_thing *ytk_new_inputbox(char *, int, void (*callback) (ytk_inputbox *));
 void ytk_destroy_inputbox(ytk_inputbox *);
-void ytk_handle_inputbox_input(ytk_inputbox *, char);
+void ytk_handle_inputbox_input(ytk_inputbox *, ychar);
 
 #endif /* __YTK_INPUTBOX_H__ */

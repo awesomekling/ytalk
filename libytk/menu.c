@@ -34,7 +34,7 @@ ytk_destroy_menu(ytk_menu *m)
 }
 
 ytk_menu_item *
-ytk_find_menu_item_with_hotkey(ytk_menu *m, char k)
+ytk_find_menu_item_with_hotkey(ytk_menu *m, ychar k)
 {
 	ytk_menu_item *it;
 
@@ -187,7 +187,7 @@ ytk_menu_width(ytk_menu *m)
 }
 
 void
-ytk_handle_menu_input(ytk_menu *m, char ch)
+ytk_handle_menu_input(ytk_menu *m, ychar ch)
 {
 	ytk_menu_item *it;
 	switch (ch) {
