@@ -179,6 +179,7 @@ Options:     -i             --    no auto-invite port\n\
              -x             --    do not use the X interface\n\
              -Y             --    require caps on all y/n answers\n\
              -s             --    start a shell\n\
+             -v             --    print program version\n\
              -h host_or_ip  --    select interface or virtual host\n", prog);
 	(void)exit(YTE_INIT);
     }
