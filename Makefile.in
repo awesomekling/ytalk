@@ -31,7 +31,7 @@ CPPFLAGS	= @CPPFLAGS@
 INCLUDES	= @XINCS@
 LIBS		= @LIBS@ @XLIBS@
 LDFLAGS		= @LDFLAGS@
-DEFS		= @DEFS@ -DSYSTEM_YTALKRC=\"$(sysconfdir)/ytalkrc\"
+DEFS		= -DSYSTEM_YTALKRC=\"$(sysconfdir)/ytalkrc\"
 
 COMPILE = $(CC) $(INCLUDES) $(CPPFLAGS) $(DEFS) $(CFLAGS)
 LINK	= $(CC) $(CFLAGS) $(LDFLAGS) -o $@
