@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 #
 # A compilation of "borrowed" materials.
 
@@ -33,7 +33,7 @@ echo "* Autogenerating files for YTalk-4.0.0-cvs *"
 echo
 
 echo "Cleaning up old files"
-rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in \
+rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in tmp* \
 	&& smile \
 	|| frown "Couldn't clean up."
 
@@ -72,4 +72,11 @@ test -f configure \
 	&& smile \
 	frown "Failed to generate configure"
 
-echo "Your stuff is ready."
+echo "Cleaning up temp files"
+rm -rf tmp* \
+	&& smile \
+	|| frown "Couldn't clean up."
+
+echo
+echo "Ready to build."
+echo
