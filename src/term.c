@@ -298,6 +298,25 @@ move_term(yuser *user, int y, int x)
 }
 
 /*
+ * Fill terminal region with char
+ */
+void
+fill_term(yuser *user, int y1, int x1, int y2, int x2, ychar c)
+{
+	int y, x;
+	yachar ac;
+#ifdef YTALK_COLOR
+	user_yac(user, c, &ac);
+#else
+	ac = c;
+#endif
+	for (y = y1; y <= y2; y++)
+		for (x = x1; x <= x2; x++)
+			user->scr[y][x] = ac;
+	return;
+}
+
+/*
  * Clear to EOL.
  */
 void
