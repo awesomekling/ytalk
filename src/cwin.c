@@ -100,28 +100,41 @@ new_draw_title(w)
 	ywin *w;
 {
 	int x;
+	int rl = 0, rj = 0;
 	char *ta, *t;
 	t = ta = (char *)get_mem(COLS * sizeof(char));
 	user_title(t, COLS - 1, w->user);
 	move(w->row - 1, w->col);
+	attron(COLOR_PAIR(newui_colors) | newui_attr);
 	for (x = 0; x < w->width; x++) {
-		if (x >= 1 && *t) {
-			/* Convert tabs to spaces. Saves a lot of face. :) */
-			if (*t == 9)
-				*t = 32;
-			if (*t > 31) {
-				addch(*t | COLOR_PAIR(newui_colors) | newui_attr);
+		if (x >= 1 && *t && !rj) {
+			/* Do we want the rest on the right? */
+			if (*t == 9) {
+				rj = 1;
+				rl = strlen(t);
+				x--;
+			} else if (*t > 31) {
+				addch(*t);
 			}
 			t++;
+		} else if (rj && *t && (x == (w->width - rl - 2))) {
+			for (; *t && (x < w->width - 2); t++) {
+				if (*t > 31) {
+					addch(*t);
+					x++;
+				}
+			}
+			x--;
 		} else if (x == (w->width - 2)) {
 			if (w->user == scuser)
-				addch('*' | COLOR_PAIR(newui_colors) | newui_attr);
+				addch('*');
 			else
-				addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
+				addch(' ');
 		} else {
-			addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
+			addch(' ');
 		}
 	}
+	attroff(COLOR_PAIR(newui_colors) | newui_attr);
 	free_mem(ta);
 }
 #endif

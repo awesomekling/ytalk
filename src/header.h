@@ -415,7 +415,7 @@ extern void free_user( /* yuser */ );	/* user.c */
 extern yuser *find_user( /* name, host_addr, pid */ );	/* user.c */
 extern void generate_full_name( /* yuser */ );	/* user.c */
 extern void free_users();	/* user.c */
-extern void user_title(char *, unsigned int, yuser *);
+extern void user_title(char *, int, yuser *);
 
 extern void init_fd();		/* fd.c */
 extern void add_fd( /* fd, func */ );	/* fd.c */
