@@ -1117,6 +1117,7 @@ show_input(user, buf, len)
   register ychar *buf;
   register int len;
 {
+    unsigned int i;
     if(user->got_esc)
     {
 process_esc:
@@ -1210,12 +1211,26 @@ process_esc:
 		    user->got_esc = 0;
 		    break;
 		case 'H':	/* move */
-		    if(user->av[0] > 0)
-			user->av[0]--;
-		    if(user->av[1] > 0)
-			user->av[1]--;
-		    move_term(user, user->av[0], user->av[1]);
+		    if(user->got_esc == 2) {
+			if(user->av[0] > 0)
+			    user->av[0]--;
+			if(user->av[1] > 0)
+			    user->av[1]--;
+			move_term(user, user->av[0], user->av[1]);
+		    } else {
+			user->scr_tabs[user->x] = 1;
+		    }
 		    user->got_esc = 0;
+		    break;
+		case 'g':
+		    if(user->got_esc == 2) {
+			if(user->av[0] == 3) {			/* clear all tabs */
+			    for(i=0;i<user->t_cols;i++)
+				user->scr_tabs[i] = 0;
+			} else {
+			    user->scr_tabs[user->x] = 0;	/* clear tab at x */
+			}
+		    }
 		    break;
 		case 'J':	/* clear to end of screen */
 		    clreos_term(user);
