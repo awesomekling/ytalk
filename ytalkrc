@@ -28,7 +28,6 @@ ignore_break	= off
 #shell = /bin/csh
 
 # User interface configuration
-newui		= on
 history_rows	= 1000
 
 # Color configuration
