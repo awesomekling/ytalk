@@ -400,6 +400,16 @@ scroll_curses(user)
 }
 
 void
+keypad_curses(user, bf)
+  yuser *user;
+  int *bf;
+{
+    ywin *w;
+    w = (ywin *)(user->term);
+    keypad(w->win, bf);
+}
+
+void
 flush_curses(user)
   register yuser *user;
 {
