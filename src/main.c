@@ -92,7 +92,10 @@ show_error(char *str)
 			update_ymenu();
 		in_error = 0;
 	} else {
-		fprintf(stderr, "%s: %s\n", str, syserr);
+		if (syserr != NULL)
+			fprintf(stderr, "%s: %s\n", str, syserr);
+		else
+			fprintf(stderr, "%s\n", str);
 		sleep(2);
 	}
 }
