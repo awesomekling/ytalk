@@ -43,7 +43,6 @@ ytk_winch_thing(ytk_thing *w)
 {
 	if (w->win) {
 		delwin(w->win);
-		w->win = NULL;		/* Not really necessary. */
 	}
 	if (!ytk_create_window(w))
 		exit(1);
