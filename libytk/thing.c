@@ -15,12 +15,6 @@ ytk_new_thing(void)
 }
 
 void
-ytk_set_escape(ytk_thing *t, void (*f) (ytk_thing *))
-{
-	t->escape = f;
-}
-
-void
 ytk_delete_thing(ytk_thing *t)
 {
 	if (t->win != NULL) {
@@ -55,16 +49,4 @@ ytk_visible(ytk_thing *t)
 		return TRUE;
 	else
 		return FALSE;
-}
-
-void
-ytk_set_colors(ytk_thing *t, unsigned long int colors)
-{
-	t->colors = colors;
-}
-
-void
-ytk_set_attr(ytk_thing *t, unsigned long int attr)
-{
-	t->attr = attr;
 }

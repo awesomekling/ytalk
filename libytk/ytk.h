@@ -29,6 +29,10 @@
 #define YTK_T_INPUTBOX	2
 #define YTK_T_MSGBOX	3
 
+#define ytk_set_escape(t, e)	(t->escape = e)
+#define ytk_set_colors(t, c)	(t->colors = c)
+#define ytk_set_attr(t, a)		(t->attr = a)
+
 typedef struct __ytk_thing {
 	void	*object;
 	int	type;
@@ -43,9 +47,6 @@ typedef struct __ytk_thing {
 
 ytk_thing *ytk_new_thing(void);
 void ytk_delete_thing(ytk_thing *);
-void ytk_set_escape(ytk_thing *, void (*) (ytk_thing *));
-void ytk_set_colors(ytk_thing *, long unsigned int);
-void ytk_set_attr(ytk_thing *, long unsigned int);
 
 #include "stack.h"
 #include "menu.h"
