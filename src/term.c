@@ -38,7 +38,6 @@
 #include <ncurses.h>
 #endif
 
-#include "cwin.h"
 #include "ymenu.h"
 
 static int (*_open_term) ();	/* open a new terminal */
@@ -1498,82 +1497,5 @@ redraw_all_terms()
 			redraw_term(u, 0);
 			flush_term(u);
 		}
-	}
-}
-
-void
-set_raw_term()
-{
-	/* only some terminal systems need to do this */
-
-	switch (term_type) {
-	case 1:		/* curses */
-		set_raw_curses();
-		break;
-	}
-}
-
-void
-set_cooked_term()
-{
-	/* only some terminal systems need to do this */
-
-	switch (term_type) {
-	case 1:		/* curses */
-		set_cooked_curses();
-		break;
-	}
-}
-
-int
-term_does_scrollback()
-{
-	switch (term_type) {
-	case 1:		/* curses */
-		return 1;
-	}
-	return 0;
-}
-
-void
-start_scroll_term(user)
-	yuser *user;
-{
-	switch (term_type) {
-	case 1:
-		start_scroll_curses(user);
-		break;
-	}
-}
-
-void
-end_scroll_term(user)
-	yuser *user;
-{
-	switch (term_type) {
-	case 1:
-		end_scroll_curses(user);
-		break;
-	}
-}
-
-void
-update_scroll_term(user)
-	yuser *user;
-{
-	switch (term_type) {
-	case 1:
-		update_scroll_curses(user);
-		break;
-	}
-}
-
-void
-retitle_all_terms()
-{
-	switch (term_type) {
-	case 1:
-		retitle_all_curses();
-		break;
 	}
 }

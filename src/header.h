@@ -384,6 +384,14 @@ extern void start_scroll_term( /* yuser */ );	/* term.c */
 extern void end_scroll_term( /* yuser */ );	/* term.c */
 extern void update_scroll_term( /* yuser */ );	/* term.c */
 
+#define set_raw_term			set_raw_curses
+#define set_cooked_term			set_cooked_curses
+#define term_does_scrollback()	1
+#define start_scroll_term		start_scroll_curses
+#define end_scroll_term			end_scroll_curses
+#define update_scroll_term		update_scroll_curses
+#define retitle_all_terms		retitle_all_curses
+
 extern void init_user();	/* user.c */
 extern yuser *new_user( /* name, host, tty */ );	/* user.c */
 extern void free_user( /* yuser */ );	/* user.c */
@@ -434,5 +442,7 @@ extern void vt100_process( /* yuser, char */ );	/* vt100.c */
 
 extern void scroll_up( /* yuser */ );	/* scroll.c */
 extern void scroll_down( /* yuser */ );	/* scroll.c */
+
+#include "cwin.h"
 
 /* EOF */

@@ -27,7 +27,6 @@
 /* Some systems, notably Solaris, don't have sys/signal.h */
 #include <signal.h>
 
-#include "cwin.h"
 #include "ymenu.h"
 
 typedef struct _ywin {
