@@ -204,7 +204,7 @@ Options:     -i             --    no auto-invite port\n\
 
     /* set default options */
 
-    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING | FL_BEEP | FL_MESG;
+    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING | FL_BEEP;
 
     /* go for it! */
 
