@@ -208,11 +208,14 @@ vt100_process(yuser *user, char data)
 		break;
 	case 'g':
 		if (user->vt.got_esc == 2) {
-			if (user->vt.av[0] == 3) {	/* clear all tabs */
+			switch (user->vt.av[0]) {
+			case 3:		/* clear all tabs */
 				for (i = 0; i < user->t_cols; i++)
 					user->scr_tabs[i] = 0;
-			} else {
-				user->scr_tabs[user->x] = 0;	/* clear tab at x */
+				break;
+			case 0:		/* clear tab at x */
+				user->scr_tabs[user->x] = 0;
+				break;
 			}
 		}
 		user->vt.got_esc = 0;
