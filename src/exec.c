@@ -233,11 +233,11 @@ execute(command)
 		return;
 	}
 #ifdef HAVE_OPENPTY
-	if (openpty(&fd, &fds, name, NULL, NULL) == 0) {
+	if (openpty(&fd, &fds, name, NULL, NULL) < 0) {
 		msg_term(me, "cannot get pseudo terminal");
-		close(fds);
 		return;
 	}
+	close(fds);
 #else
 	if ((fd = getpty(name)) < 0) {
 		msg_term(me, "cannot get pseudo terminal");
