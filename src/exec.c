@@ -308,6 +308,11 @@ execute(command)
 	(void)ioctl(fd, TIOCSCTTY);
 #endif
 
+#ifdef HAVE_TCSETPGRP
+	if(tcsetpgrp(fd, sid) < 0)
+	    perror("tcsetpgrp");
+#endif
+
 	/* execute the command */
 
 	if(command)
