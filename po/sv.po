@@ -1,5 +1,5 @@
 # Swedish translations for YTalk package
-# Svenska ˆvers‰ttningar fˆr paket YTalk.
+# Svenska √∂vers√§ttningar f√∂r paket YTalk.
 # This file is put in the public domain.
 # Andreas Kling <keso@impul.se>, 2004.
 #
@@ -12,14 +12,14 @@ msgstr ""
 "Last-Translator: Andreas Kling <keso@impul.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/comm.c:175 src/comm.c:177
 #, fuzzy, c-format
 msgid "Unknown host: '%s'"
-msgstr "Ok‰nd v‰rd: '%s'"
+msgstr "Ok√§nd v√§rd: '%s'"
 
 #: src/comm.c:196 src/comm.c:198 src/comm.c:275 src/comm.c:277
 #, c-format
@@ -33,7 +33,7 @@ msgstr "%s ansluten."
 
 #: src/comm.c:735
 msgid "Connection from unexpected host!"
-msgstr "Anslutning frÂn ov‰ntad v‰rd!"
+msgstr "Anslutning fr√•n ov√§ntad v√§rd!"
 
 #: src/comm.c:935 src/comm.c:937
 #, c-format
@@ -44,7 +44,7 @@ msgstr "Ringer %s..."
 #: src/comm.c:1062 src/comm.c:1064
 #, c-format
 msgid "%s refusing messages"
-msgstr "%s v‰grar meddelanden"
+msgstr "%s v√§grar meddelanden"
 
 #: src/comm.c:957 src/comm.c:959 src/comm.c:1033 src/comm.c:1035
 #: src/comm.c:1068 src/comm.c:1070
@@ -72,7 +72,7 @@ msgstr "Kommandot avslutades."
 
 #: src/exec.c:232
 msgid "A command is already executing."
-msgstr "Ett kommando kˆr redan."
+msgstr "Ett kommando k√∂r redan."
 
 #: src/exec.c:237 src/exec.c:243
 msgid "Cannot allocate pseudo-terminal."
@@ -80,7 +80,7 @@ msgstr "Kan inte allokera pseudo-terminal."
 
 #: src/exec.c:288
 msgid "Warning: The pseudo-terminal is world-readable."
-msgstr "Varning: Denna pseudo-terminal ‰r l‰sbar av alla."
+msgstr "Varning: Denna pseudo-terminal √§r l√§sbar av alla."
 
 #: src/exec.c:364
 msgid "fork() failed"
@@ -88,7 +88,7 @@ msgstr "fork() misslyckades"
 
 #: src/main.c:47
 msgid "Press any key to quit."
-msgstr "Tryck valfri tangent fˆr att avsluta."
+msgstr "Tryck valfri tangent f√∂r att avsluta."
 
 #: src/main.c:88
 msgid "Error"
@@ -97,7 +97,7 @@ msgstr "Felmeddelande"
 #: src/main.c:190
 #, c-format
 msgid "Unknown option '%c'\n"
-msgstr "Ok‰nd flagga '%c'\n"
+msgstr "Ok√§nd flagga '%c'\n"
 
 #: src/main.c:206
 #, c-format
@@ -110,66 +110,66 @@ msgid ""
 "             -v             --    print program version\n"
 "             -h             --    show this help message\n"
 msgstr ""
-"Anv‰ndning: %s [flaggor] anv‰ndare[@dator][#tty]...\n"
-"Flaggor:        -i          --    st‰ng av auto-inbjudan\n"
-"                -Y          --    kr‰v versaler i j/n-svar\n"
-"                -s          --    bˆrja i ett skal\n"
-"                -q          --    frÂga innan vi avslutar\n"
+"Anv√§ndning: %s [flaggor] anv√§ndare[@dator][#tty]...\n"
+"Flaggor:        -i          --    st√§ng av auto-inbjudan\n"
+"                -Y          --    kr√§v versaler i j/n-svar\n"
+"                -s          --    b√∂rja i ett skal\n"
+"                -q          --    fr√•ga innan vi avslutar\n"
 "                -v          --    skriv ut programversion\n"
-"                -h          --    visa detta hj‰lpmeddelande\n"
+"                -h          --    visa detta hj√§lpmeddelande\n"
 
 #: src/main.c:218
 #, c-format
 msgid "Standard input is not a valid terminal device.\n"
-msgstr "Standard-input ‰r ej en giltig terminalenhet.\n"
+msgstr "Standard-input √§r ej en giltig terminalenhet.\n"
 
 #: src/main.c:257 src/user.c:281
 msgid "Waiting for connection..."
-msgstr "V‰ntar pÂ anslutning..."
+msgstr "V√§ntar p√• anslutning..."
 
 #: src/rc.c:308
 msgid "Invalid bool option."
-msgstr "Ogiltigt booleskt v‰rde."
+msgstr "Ogiltigt booleskt v√§rde."
 
 #: src/rc.c:324
 msgid "Not enough parameters for alias."
-msgstr "Otillr‰ckligt antal parametrar fˆr alias."
+msgstr "Otillr√§ckligt antal parametrar f√∂r alias."
 
 #: src/rc.c:342
 msgid "You must specify both foreground and background."
-msgstr "Du mÂste specifiera bÂde fˆr- och bakgrund."
+msgstr "Du m√•ste specifiera b√•de f√∂r- och bakgrund."
 
 #: src/rc.c:346
 msgid "Invalid foreground color."
-msgstr "Ogiltig fˆrgrundsf‰rg"
+msgstr "Ogiltig f√∂rgrundsf√§rg"
 
 #: src/rc.c:350
 msgid "Invalid background color."
-msgstr "Ogiltig bakgrundsf‰rg."
+msgstr "Ogiltig bakgrundsf√§rg."
 
 #: src/rc.c:365
 msgid "Cannot resolve \"from\" address."
-msgstr "Kan inte slÂ upp frÂn-adress."
+msgstr "Kan inte sl√• upp fr√•n-adress."
 
 #: src/rc.c:369
 msgid "Cannot resolve \"to\" address."
-msgstr "Kan inte slÂ upp till-adress."
+msgstr "Kan inte sl√• upp till-adress."
 
 #: src/rc.c:373
 msgid "Cannot resolve \"on\" address."
-msgstr "Kan inte slÂ upp pÂ-adress."
+msgstr "Kan inte sl√• upp p√•-adress."
 
 #: src/rc.c:377
 msgid "From and to are the same host."
-msgstr "FrÂn och till ‰r samma v‰rd.n"
+msgstr "Fr√•n och till √§r samma v√§rd.n"
 
 #: src/rc.c:384
 msgid "Virtual host already set."
-msgstr "Virtuell v‰rd redan satt."
+msgstr "Virtuell v√§rd redan satt."
 
 #: src/rc.c:389
 msgid "Missing hostname."
-msgstr "V‰rdnamn saknas."
+msgstr "V√§rdnamn saknas."
 
 #: src/rc.c:408
 msgid "Shell cannot be empty."
@@ -177,7 +177,7 @@ msgstr "Skal kan ej vara tomt."
 
 #: src/rc.c:416
 msgid "Unknown option."
-msgstr "Ok‰nd inst‰llning."
+msgstr "Ok√§nd inst√§llning."
 
 #: src/socket.c:153 src/socket.c:155
 #, c-format
@@ -187,7 +187,7 @@ msgstr "Tala med %s@%s?"
 #: src/socket.c:271 src/socket.c:273
 #, c-format
 msgid "Unkown daemon type: %d"
-msgstr "Ok‰nd servertyp: %d"
+msgstr "Ok√§nd servertyp: %d"
 
 #: src/socket.c:432
 msgid "Warning: cannot write to new talk daemon"
@@ -200,24 +200,24 @@ msgstr "Varning: kan ej skriva till gammal talkserver"
 #: src/socket.c:490 src/socket.c:492
 #, c-format
 msgid "No talk daemon on %s"
-msgstr "Ingen talkserver pÂ %s"
+msgstr "Ingen talkserver p√• %s"
 
 #: src/user.c:111
 msgid "Who are you?"
-msgstr "Vem ‰r du?"
+msgstr "Vem √§r du?"
 
 #: src/user.c:217 src/user.c:219
 #, c-format
 msgid "%s disconnected."
-msgstr "%s kopplade frÂn."
+msgstr "%s kopplade fr√•n."
 
 #: src/user.c:330
 msgid "Couldn't open file for writing."
-msgstr "Kunde inte ˆppna filen fˆr skrivning."
+msgstr "Kunde inte √∂ppna filen f√∂r skrivning."
 
 #: src/user.c:348
 msgid "Couldn't close output file."
-msgstr "Kunde inte st‰nga filen."
+msgstr "Kunde inte st√§nga filen."
 
 #: src/user.c:352 src/user.c:354
 #, c-format
@@ -226,11 +226,11 @@ msgstr "Skrev %lu rader."
 
 #: src/ymenu.c:90
 msgid "Add user"
-msgstr "L‰gg till anv‰ndare"
+msgstr "L√§gg till anv√§ndare"
 
 #: src/ymenu.c:99 src/ymenu.c:226
 msgid "Run command"
-msgstr "Kˆr kommando"
+msgstr "K√∂r kommando"
 
 #: src/ymenu.c:220
 msgid "Main Menu"
@@ -238,15 +238,15 @@ msgstr "Huvudmeny"
 
 #: src/ymenu.c:221
 msgid "Add another user"
-msgstr "L‰gg till anv‰ndare"
+msgstr "L√§gg till anv√§ndare"
 
 #: src/ymenu.c:222
 msgid "User list"
-msgstr "Anv‰ndarlista"
+msgstr "Anv√§ndarlista"
 
 #: src/ymenu.c:224 src/ymenu.c:235
 msgid "Options"
-msgstr "Inst‰llningar"
+msgstr "Inst√§llningar"
 
 #: src/ymenu.c:225
 msgid "Spawn shell"
@@ -274,7 +274,7 @@ msgstr "Auto-inbjudan"
 
 #: src/ymenu.c:240
 msgid "Reringing"
-msgstr "≈teruppringning"
+msgstr "√Öteruppringning"
 
 #: src/ymenu.c:241
 msgid "Beeps"
@@ -286,15 +286,15 @@ msgstr "Ignorera brytsignal"
 
 #: src/ymenu.c:243
 msgid "Require caps"
-msgstr "Kr‰v versaler"
+msgstr "Kr√§v versaler"
 
 #: src/ymenu.c:244
 msgid "Prompt rerings"
-msgstr "FrÂga vid Âteruppringning"
+msgstr "Fr√•ga vid √•teruppringning"
 
 #: src/ymenu.c:245
 msgid "Prompt to quit"
-msgstr "FrÂga vid avslut"
+msgstr "Fr√•ga vid avslut"
 
 #: src/ymenu.c:247
 msgid "Reload ytalkrc"
@@ -302,7 +302,7 @@ msgstr "Ladda om ytalkrc"
 
 #: src/ymenu.c:255
 msgid "Color Menu"
-msgstr "F‰rgmeny"
+msgstr "F√§rgmeny"
 
 #: src/ymenu.c:256
 msgid "Black"
@@ -310,11 +310,11 @@ msgstr "Svart"
 
 #: src/ymenu.c:257
 msgid "Red"
-msgstr "Rˆd"
+msgstr "R√∂d"
 
 #: src/ymenu.c:258
 msgid "Green"
-msgstr "Grˆn"
+msgstr "Gr√∂n"
 
 #: src/ymenu.c:259
 msgid "Yellow"
@@ -322,7 +322,7 @@ msgstr "Gul"
 
 #: src/ymenu.c:260
 msgid "Blue"
-msgstr "BlÂ"
+msgstr "Bl√•"
 
 #: src/ymenu.c:261
 msgid "Magenta"
@@ -350,7 +350,7 @@ msgstr "Visa information"
 
 #: src/ymenu.c:328
 msgid "Disconnect"
-msgstr "Koppla frÂn"
+msgstr "Koppla fr√•n"
 
 #: src/ymenu.c:329
 msgid "Save to file"
@@ -358,7 +358,7 @@ msgstr "Spara till fil"
 
 #: src/ymenu.c:346
 msgid "User List"
-msgstr "Anv‰ndarlista"
+msgstr "Anv√§ndarlista"
 
 #: src/ymenu.c:372
 msgid "<unconnected>"
@@ -370,7 +370,7 @@ msgstr "Ring alla oanslutna"
 
 #: src/ymenu.c:380
 msgid "Kill all unconnected"
-msgstr "Sl‰pp alla oanslutna"
+msgstr "Sl√§pp alla oanslutna"
 
 #~ msgid "Message"
 #~ msgstr "Meddelande"
