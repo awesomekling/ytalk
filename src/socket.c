@@ -116,47 +116,58 @@ static void
 read_autoport(int fd)
 {
 	ysocklen_t socklen;
-	static v2_pack pack;
-	static char estr[V2_NAMELEN + V2_HOSTLEN + 20];
+	v2_pack *pack;
+	char *estr;
 	static struct sockaddr_in temp;
+
+	pack = get_mem(sizeof(v2_pack));
 
 	/* accept the connection */
 
 	socklen = sizeof(struct sockaddr_in);
 	if ((fd = accept(autofd, (struct sockaddr *) & temp, &socklen)) == -1) {
 		show_error("read_autoport: accept() failed");
+		free_mem(pack);
 		return;
 	}
 	/*
 	 * The autoport socket just uses the old Ytalk version 2.? packet.
 	 */
 	errno = 0;
-	if (full_read(fd, (char *) &pack, V2_PACKLEN) < 0 || pack.code != V2_AUTO) {
+	if (full_read(fd, (char *) pack, V2_PACKLEN) < 0 || pack->code != V2_AUTO) {
 		show_error("read_autoport: unknown auto-invite connection");
 		close(fd);
+		free_mem(pack);
 		return;
 	}
 	close(fd);
 
 	/* Disarm a remote %s overflow vulnerability. */
-	pack.name[V2_NAMELEN - 1] = '\0';
-	pack.host[V2_HOSTLEN - 1] = '\0';
+	pack->name[V2_NAMELEN - 1] = '\0';
+	pack->host[V2_HOSTLEN - 1] = '\0';
+
+	estr = get_mem(V2_NAMELEN + V2_HOSTLEN + 20);
 
 	if (!(def_flags & FL_INVITE)) {
 #ifdef HAVE_SNPRINTF
-		snprintf(estr, sizeof(estr), _("Talk to %s@%s?"), pack.name, pack.host);
+		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, _("Talk to %s@%s?"), pack->name, pack->host);
 #else
-		sprintf(estr, _("Talk to %s@%s?"), pack.name, pack.host);
+		sprintf(estr, _("Talk to %s@%s?"), pack->name, pack->host);
 #endif
-		if (yes_no(estr) == 'n')
+		if (yes_no(estr) == 'n') {
+			free_mem(estr);
+			free_mem(pack);
 			return;
+		}
 	}
 #ifdef HAVE_SNPRINTF
-	snprintf(estr, sizeof(estr), "%s@%s", pack.name, pack.host);
+	snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "%s@%s", pack->name, pack->host);
 #else
-	sprintf(estr, "%s@%s", pack.name, pack.host);
+	sprintf(estr, "%s@%s", pack->name, pack->host);
 #endif
 	invite(estr, 1);	/* we should be expected */
+	free_mem(estr);
+	free_mem(pack);
 }
 
 /*

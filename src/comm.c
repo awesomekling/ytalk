@@ -156,9 +156,10 @@ v2_process(yuser *user, v2_pack *pack)
 {
 	register yuser *u;
 	ylong host_addr;
-	static char name[V2_NAMELEN + 1];
-	static char host[V2_HOSTLEN + 1];
-	static char estr[V2_NAMELEN + V2_HOSTLEN + 20];
+	char *estr, *name, *host;
+
+	name = get_mem(V2_NAMELEN + 1);
+	host = get_mem(V2_HOSTLEN + 1);
 
 	/*
 	 * Ytalk version 2.* didn't have very clever import/export
@@ -177,8 +178,11 @@ v2_process(yuser *user, v2_pack *pack)
 #endif
 		show_error(errstr);
 		show_error("port from ytalk V2.? failed");
+		free_mem(host);
+		free_mem(name);
 		return;
 	}
+	estr = get_mem(V2_NAMELEN + V2_HOSTLEN + 20);
 	switch (pack->code) {
 	case V2_IMPORT:
 		/*
@@ -189,7 +193,7 @@ v2_process(yuser *user, v2_pack *pack)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
 #ifdef HAVE_SNPRINTF
-			snprintf(estr, sizeof(estr), _("Import %s@%s?"), name, host);
+			snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, _("Import %s@%s?"), name, host);
 #else
 			sprintf(estr, _("Import %s@%s?"), name, host);
 #endif
@@ -199,7 +203,7 @@ v2_process(yuser *user, v2_pack *pack)
 		/* invite him but don't ring him */
 
 #ifdef HAVE_SNPRINTF
-		snprintf(estr, sizeof(estr), "%s@%s", name, host);
+		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "%s@%s", name, host);
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
@@ -223,13 +227,16 @@ v2_process(yuser *user, v2_pack *pack)
 		break;
 	case V2_ACCEPT:
 #ifdef HAVE_SNPRINTF
-		snprintf(estr, sizeof(estr), "%s@%s", name, host);
+		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "%s@%s", name, host);
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
 		invite(estr, 1);	/* we should be expected */
 		break;
 	}
+	free_mem(host);
+	free_mem(name);
+	free_mem(estr);
 }
 
 /*
@@ -240,9 +247,11 @@ v3_process_pack(yuser *user, v3_pack *pack)
 {
 	register yuser *u, *u2;
 	ylong host_addr, pid;
-	static char name[V3_NAMELEN + 1];
-	static char host[V3_HOSTLEN + 1];
-	static char estr[V3_NAMELEN + V3_HOSTLEN + 20];
+	char *estr, *name, *host;
+
+	estr = get_mem(V3_NAMELEN + V3_HOSTLEN + 20);
+	name = get_mem(V3_NAMELEN + 1);
+	host = get_mem(V3_HOSTLEN + 1);
 
 	strncpy(name, pack->name, V3_NAMELEN);
 	strncpy(host, pack->host, V3_HOSTLEN);
@@ -263,7 +272,7 @@ v3_process_pack(yuser *user, v3_pack *pack)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
 #ifdef HAVE_SNPRINTF
-			snprintf(estr, sizeof(estr), _("Import %s@%s?"), name, host);
+			snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, _("Import %s@%s?"), name, host);
 #else
 			sprintf(estr, _("Import %s@%s?"), name, host);
 #endif
@@ -273,7 +282,7 @@ v3_process_pack(yuser *user, v3_pack *pack)
 		/* invite him but don't ring him */
 
 #ifdef HAVE_SNPRINTF
-		snprintf(estr, sizeof(estr), "%s@%s", name, host);
+		snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, "%s@%s", name, host);
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
@@ -305,13 +314,16 @@ v3_process_pack(yuser *user, v3_pack *pack)
 		break;
 	case V3_ACCEPT:
 #ifdef HAVE_SNPRINTF
-		snprintf(estr, sizeof(estr), "%s@%s", name, host);
+		snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, "%s@%s", name, host);
 #else
 		sprintf(estr, "%s@%s", name, host);
 #endif
 		invite(estr, 1);	/* we should be expected */
 		break;
 	}
+	free_mem(host);
+	free_mem(name);
+	free_mem(estr);
 }
 
 /*
