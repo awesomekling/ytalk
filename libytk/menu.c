@@ -206,6 +206,19 @@ ytk_menu_width(ytk_menu *m)
 }
 
 void
+ytk_handle_menu_key(ytk_menu *m, int key)
+{
+	switch (key) {
+	case YTK_KEYUP:
+		ytk_step_up_menu(m);
+		break;
+	case YTK_KEYDOWN:
+		ytk_step_down_menu(m);
+		break;
+	}
+}
+
+void
 ytk_handle_menu_input(ytk_menu *m, ychar ch)
 {
 	ytk_menu_item *it;

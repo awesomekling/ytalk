@@ -119,6 +119,21 @@ ytk_purge_stack(ytk_stack *st)
 }
 
 int
+ytk_handle_stack_key(ytk_stack *st, int key)
+{
+	if (st->top == NULL)
+		return FALSE;
+	switch (st->top->thing->type) {
+	case YTK_T_MENU:
+		ytk_handle_menu_key(YTK_MENU(st->top->thing), key);
+		break;
+	default:
+		return FALSE;
+	}
+	return TRUE;
+}
+
+int
 ytk_handle_stack_input(ytk_stack *st, char ch)
 {
 	if (st->top == NULL)

@@ -47,6 +47,9 @@
 #define YTK_T_INPUTBOX	2
 #define YTK_T_MSGBOX	3
 
+#define YTK_KEYUP		'A'
+#define YTK_KEYDOWN		'B'
+
 #define ytk_set_escape(t, e)	((t)->escape = (e))
 #define ytk_set_colors(t, c)	((t)->colors = (c))
 #define ytk_set_attr(t, a)		((t)->attr = (a))
