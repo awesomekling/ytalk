@@ -261,12 +261,12 @@ curses_start()
 #ifdef YTALK_COLOR
 	int i, fg, bg;
 #endif
-	/* This little snippet is currently on probation.
-	 * Although the comment implies it would be absolutely
-	 * necessary to keep it around, it seems to cause nothing
-	 * but trouble.
+	/*
+	 * This little snippet is currently on probation. Although the
+	 * comment implies it would be absolutely necessary to keep it
+	 * around, it seems to cause nothing but trouble.
 	 */
-	/*LINES = COLS = 0;*/	/* so resizes will work */
+	/* LINES = COLS = 0; *//* so resizes will work */
 	initscr();
 	noraw();
 	crmode();
