@@ -143,11 +143,11 @@ ytk_add_menu_toggle_item(ytk_menu *m, char *t, char k, void (*c) (ytk_menu_item 
 	return new;
 }
 
-ylong
+int
 ytk_menu_item_count(ytk_menu *m)
 {
 	ytk_menu_item *it;
-	ylong r = 0;
+	int r = 0;
 	if (m->first == NULL)
 		return 0;
 	it = m->first;
@@ -158,11 +158,11 @@ ytk_menu_item_count(ytk_menu *m)
 	return r;
 }
 
-ylong
+int
 ytk_menu_width(ytk_menu *m)
 {
 	ytk_menu_item *it;
-	ylong l, s = 0;
+	int l, s = 0;
 	if (m->first == NULL) {
 		if (m->base->title != NULL)
 			return strlen(m->base->title);

@@ -5,8 +5,8 @@
 static int
 ytk_create_window(ytk_thing *t)
 {
-	ylong rows = 0;
-	ylong cols = 2;
+	int rows = 0;
+	int cols = 2;
 
 	switch (t->type) {
 	case YTK_T_MENU:
@@ -41,7 +41,7 @@ ytk_create_window(ytk_thing *t)
 void
 ytk_winch_thing(ytk_thing *t)
 {
-	if (t->win) {
+	if (t->win != NULL) {
 		delwin(t->win);
 	}
 	if (!ytk_create_window(t))
@@ -67,7 +67,7 @@ ytk_display_msgbox(ytk_thing *t)
 {
 	ytk_msgbox_item *it = NULL;
 	char *linebuf;
-	ylong y;
+	int y = 1;
 
 	linebuf = get_mem(t->width * sizeof(char) + 1);
 
@@ -75,7 +75,6 @@ ytk_display_msgbox(ytk_thing *t)
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 #endif
 
-	y = 1;
 	while ((it = ytk_next_msgbox_item(YTK_MSGBOX(t), it))) {
 		if (YTK_MSGBOX_ITEM_SEPARATOR(it)) {
 			mvwaddch(t->win, y, 0, ACS_LTEE);
@@ -100,14 +99,13 @@ ytk_display_menu(ytk_thing *t)
 {
 	ytk_menu_item *it = NULL;
 	char *linebuf;
-	ylong y;
+	int y = 1;
 
 	linebuf = get_mem(t->width * sizeof(char) + 1);
 #ifdef YTALK_COLOR
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 #endif
 
-	y = 1;
 	while ((it = ytk_next_menu_item(YTK_MENU(t), it))) {
 		if (YTK_MENU_ITEM_SEPARATOR(it)) {
 			mvwaddch(t->win, y, 0, ACS_LTEE);
@@ -143,7 +141,7 @@ ytk_display_menu(ytk_thing *t)
 void
 ytk_display_thing(ytk_thing *t)
 {
-	if (!t->win)
+	if (t->win == NULL)
 		if (!ytk_create_window(t))
 			exit(1);
 

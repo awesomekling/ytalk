@@ -53,11 +53,11 @@ ytk_add_msgbox_item(ytk_msgbox *m, char *text)
 	return new;
 }
 
-ylong
+int
 ytk_msgbox_item_count(ytk_msgbox *m)
 {
 	ytk_msgbox_item *it;
-	ylong r = 0;
+	int r = 0;
 	if (m->first == NULL)
 		return 0;
 	it = m->first;
@@ -68,11 +68,11 @@ ytk_msgbox_item_count(ytk_msgbox *m)
 	return r;
 }
 
-ylong
+int
 ytk_msgbox_width(ytk_msgbox *m)
 {
 	ytk_msgbox_item *it;
-	ylong l, s = 0;
+	int l, s = 0;
 	if (m->first == NULL) {
 		if (m->base->title != NULL)
 			return strlen(m->base->title);

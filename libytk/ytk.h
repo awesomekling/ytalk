@@ -31,10 +31,10 @@
 
 typedef struct __ytk_thing {
 	void	*object;
-	ylong	type;
+	int	type;
 	WINDOW	*win;
-	ylong	height, width;
-	ylong	top, left;
+	int	height, width;
+	int	top, left;
 	char	*title;
 	void	(*escape) (struct __ytk_thing *);
 	long unsigned int colors;
