@@ -216,6 +216,7 @@ DEFAULT_TOGGLE(handle_beeps, FL_BEEP)
 DEFAULT_TOGGLE(handle_ignbrk, FL_IGNBRK)
 DEFAULT_TOGGLE(handle_promptrering, FL_PROMPTRING)
 DEFAULT_TOGGLE(handle_promptquit, FL_PROMPTQUIT)
+DEFAULT_TOGGLE(handle_caps, FL_CAPS)
 
 void
 init_ymenu()
@@ -245,6 +246,7 @@ init_ymenu()
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Reringing"), 'r', handle_rering, (def_flags & FL_RING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Beeps"), 'b', handle_beeps, (def_flags & FL_BEEP));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Ignore break"), 'k', handle_ignbrk, (def_flags & FL_IGNBRK));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Require caps"), 'c', handle_caps, (def_flags & FL_CAPS));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt rerings"), 'p', handle_promptrering, (def_flags & FL_PROMPTRING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt to quit"), 'q', handle_promptquit, (def_flags & FL_PROMPTQUIT));
 	ytk_set_escape(options_menu, do_hidething);
