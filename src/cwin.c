@@ -704,8 +704,8 @@ __update_scroll_curses(yuser *user)
 	werase(w->swin);
 	for (r = 0; r <= (user->rows - 1); r++) {
 		wmove(w->swin, r, 0);
-		if (((user->scrollpos + r) <= 0) ||
-			((user->scrollpos + r ) > scrollback_lines) ||
+		if (((user->scrollpos + r) < 0) ||
+			((user->scrollpos + r ) >= scrollback_lines) ||
 			((user->scrollback[user->scrollpos + r] == NULL)))
 		{
 			/* Borrow lines from active screen */
