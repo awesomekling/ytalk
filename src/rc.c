@@ -90,8 +90,7 @@ colors cols[] = {
 /* ---- local functions ---- */
 
 static char *
-get_string(p)
-	char **p;
+get_string(char **p)
 {
 	register char *c, *out;
 
@@ -113,8 +112,7 @@ get_string(p)
 }
 
 static char *
-get_word(p)
-	char **p;
+get_word(char **p)
 {
 	register char *c, *out;
 
@@ -134,9 +132,7 @@ get_word(p)
 
 #ifdef YTALK_COLOR
 int
-getcolor(color, rc, ra)
-	char *color;
-	int *rc, *ra;
+getcolor(char *color, int *rc, int *ra)
 {
 	int i = 0, found = 0;
 	char *c = color;
@@ -192,8 +188,7 @@ setcolors(char *bg, char *fg, int *ucolors, int *fgattr)
  * else return -1
  */
 static int
-get_bool(value)
-	char *value;
+get_bool(char *value)
 {
 	char ok[8][4] = { "on", "ON", "On", "1", "y", "yes", "YES", "Yes" };
 	char no[8][4] = { "off", "OFF", "Off", "0", "n", "no", "NO", "No" };
@@ -209,8 +204,7 @@ get_bool(value)
 }
 
 static int
-new_alias(a1, a2)
-	char *a1, *a2;
+new_alias(char *a1, char *a2)
 {
 	struct alias *a;
 	char *at;
@@ -281,8 +275,7 @@ set_shell(char *shell)
 }
 
 static void
-read_rcfile(fname)
-	char *fname;
+read_rcfile(char *fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
@@ -438,8 +431,7 @@ read_rcfile(fname)
 /* ---- global functions ---- */
 
 char *
-resolve_alias(uh)
-	char *uh;
+resolve_alias(char *uh)
 {
 	struct alias *a;
 	static char uh1[256], *at;
@@ -488,7 +480,7 @@ resolve_alias(uh)
 }
 
 void
-read_ytalkrc()
+read_ytalkrc(void)
 {
 	yuser *u;
 	char *fname;
