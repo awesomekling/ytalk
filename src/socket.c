@@ -513,7 +513,7 @@ init_socket(void)
 	otalk = init_daemon("talk", 517, &omsg, sizeof(omsg),
 			    &orsp, sizeof(orsp));
 
-	strncpy(nmsg.l_name, me->user_name, NAME_SIZE);
+	strncpy(nmsg.l_name, me->user_name, NTALK_NAME_SIZE);
 
 	/* omsg.ctl_addr = talkd[otalk].sock; */
 	/* nmsg.ctl_addr = talkd[ntalk].sock; */
@@ -658,10 +658,10 @@ send_dgram(yuser *user, unsigned char type)
 	nmsg.pid = htonl(user->d_id);
 	if (type == AUTO_LOOK_UP || type == AUTO_DELETE) {
 		strcpy(nmsg.l_name, "+AUTO");	/* put on my mask... */
-		strncpy(nmsg.r_name, user->user_name, NAME_SIZE);
+		strncpy(nmsg.r_name, user->user_name, NTALK_NAME_SIZE);
 		nmsg.r_tty[0] = '\0';
 	} else {
-		strncpy(nmsg.r_name, user->user_name, NAME_SIZE);
+		strncpy(nmsg.r_name, user->user_name, NTALK_NAME_SIZE);
 		strncpy(nmsg.r_tty, user->tty_name, TTY_SIZE);
 	}
 	/* nmsg.addr = user->sock; */
@@ -669,7 +669,7 @@ send_dgram(yuser *user, unsigned char type)
 	nmsg.addr.sin_family = htons(AF_INET);
 	if (sendit(addr, d) != 0) {
 		if (type == AUTO_LOOK_UP || type == AUTO_DELETE)
-			strncpy(nmsg.l_name, me->user_name, NAME_SIZE);
+			strncpy(nmsg.l_name, me->user_name, NTALK_NAME_SIZE);
 		return -2;
 	}
 	switch (type) {
@@ -680,11 +680,11 @@ send_dgram(yuser *user, unsigned char type)
 		user->r_id = ntohl(nrsp.id_num);
 		break;
 	case AUTO_LOOK_UP:
-		strncpy(nmsg.l_name, me->user_name, NAME_SIZE);
+		strncpy(nmsg.l_name, me->user_name, NTALK_NAME_SIZE);
 		user->r_id = ntohl(nrsp.id_num);
 		break;
 	case AUTO_DELETE:
-		strncpy(nmsg.l_name, me->user_name, NAME_SIZE);
+		strncpy(nmsg.l_name, me->user_name, NTALK_NAME_SIZE);
 		break;
 	}
 	return nrsp.answer;

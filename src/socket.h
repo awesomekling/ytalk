@@ -73,6 +73,8 @@ typedef struct {
 	BSD42_SOCK addr;
 } CTL_RESPONSE;
 
+#define NTALK_NAME_SIZE 12
+
 /*
  * Control Message structure for BSD4.2
  */
@@ -84,10 +86,8 @@ typedef struct {
 	BSD42_SOCK addr;
 	BSD42_SOCK ctl_addr;
 	ylong pid;
-	char l_name[NAME_SIZE];
-	char l_name_filler[3];
-	char r_name[NAME_SIZE];
-	char r_name_filler[3];
+	char l_name[NTALK_NAME_SIZE];
+	char r_name[NTALK_NAME_SIZE];
 	char r_tty[TTY_SIZE];
 } CTL_MSG42;
 
