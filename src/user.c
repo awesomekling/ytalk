@@ -238,6 +238,11 @@ free_user(user)
 {
 	register yuser *u;
 
+	/* make sure we're not stuck scrolling a long gone user */
+
+	if (user == scuser)
+		scuser = me;
+
 	/* remove him from the various blacklists */
 
 	if (user == user_list)
