@@ -306,27 +306,27 @@ user_title(char * buf, unsigned int size, yuser * user)
 			strcpy(buf, user->full_name);
 		return;
 	}
-	for (f=fmt,b=buf; *f && (b-buf)<size; ) {
+	for (f=fmt,b=buf; *f && (unsigned int)(b-buf)<size; ) {
 		if (*f == '%') {
 			switch(*(++f)) {
 			case 'u':
-				if ((b - buf) < (size - strlen(user->user_name)))
+				if ((unsigned int)(b - buf) < (size - strlen(user->user_name)))
 					b += sprintf(b, "%s", user->user_name);
 				break;
 			case 'h':
-				if ((b - buf) < (size - strlen(user->host_name)))
+				if ((unsigned int)(b - buf) < (size - strlen(user->host_name)))
 					b += sprintf(b, "%s", user->host_name);
 				break;
 			case 'f':
-				if ((b - buf) < (size - strlen(user->host_fqdn)))
+				if ((unsigned int)(b - buf) < (size - strlen(user->host_fqdn)))
 					b += sprintf(b, "%s", user->host_fqdn);
 				break;
 			case 't':
-				if ((b - buf) < (size - strlen(user->tty_name)))
+				if ((unsigned int)(b - buf) < (size - strlen(user->tty_name)))
 					b += sprintf(b, "%s", user->tty_name);
 				break;
 			case 'v':
-				if ((b - buf) < (size - 4)) {
+				if ((unsigned int)(b - buf) < (size - 4)) {
 					if (user->remote.vmajor > 2)
 						b += sprintf(b, "Y%d.%d", user->remote.vmajor, user->remote.vminor);
 					else if (user->remote.vmajor == 2)
@@ -336,7 +336,7 @@ user_title(char * buf, unsigned int size, yuser * user)
 				}
 				break;
 			case 'V':
-				if ((b - buf) < (size - 5))
+				if ((unsigned int)(b - buf) < (size - 5))
 					b += sprintf(b, "%d.%d.%d", VMAJOR, VMINOR, VPATCH);
 				break;
 			}
