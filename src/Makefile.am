@@ -10,6 +10,7 @@ ytalk_SOURCES = \
 	socket.c \
 	rc.c \
 	exec.c \
+	getpty.c \
 	cwin.c \
 	mem.c \
 	scroll.c \
