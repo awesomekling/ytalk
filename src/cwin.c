@@ -236,7 +236,7 @@ static void
 curses_start()
 {
 #ifdef YTALK_COLOR
-	int i, fg, bg;
+	short i, fg, bg;
 #endif
 	/*
 	 * This little snippet is currently on probation. Although the
