@@ -1240,15 +1240,15 @@ msg_term(user, str)
 
 /* Toggle attributes */
 #define DO_ATTR(attr, val) \
-    if(buf->a & attr) { \
-	acur |= attr; \
-	if(!(alast & attr)) { \
-	    p += sprintf(esc + p, "%d;", val); \
-	} \
+    if (buf->a & attr) { \
+		acur |= attr; \
+		if (!(alast & attr)) { \
+		    p += sprintf(esc + p, "%d;", val); \
+		} \
     } else { \
-	if(alast & attr) { \
-	    p += sprintf(esc + p, "%d;", val+20); \
-	} \
+		if (alast & attr) { \
+		    p += sprintf(esc + p, "%d;", val+20); \
+		} \
     }
 
 /*
