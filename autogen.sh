@@ -28,7 +28,7 @@ smile() {
 }
 
 frown() {
-	if [ $isatty = 0] ; then
+	if [ $isatty -eq 0 ] ; then
 		echo -n "[A[$status_offset"
 		echo "G[ [31;01m:([0m ]"
 		echo "ERROR: $1"
@@ -46,7 +46,7 @@ rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in tmp* \
 	|| frown "Couldn't clean up."
 
 echo "Setting up gettext..."
-autopoint -f >/dev/null \
+autopoint -f >/dev/null 2>&1 \
 	&& smile \
 	|| frown "You need GNU gettext to compile YTalk."
 
