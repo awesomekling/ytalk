@@ -14,7 +14,6 @@
  * 
  */
 
-/* Mail comments or questions to ytalk@austin.eds.com */
 
 extern void	init_curses	();
 extern void	end_curses	();

@@ -14,7 +14,6 @@
  * 
  */
 
-/* Mail comments or questions to ytalk@austin.eds.com */
 
 /* The following structure defines a menu item.  It will be displayed
  * to the user as the _key_ followed by the _item_.  If an item's _key_

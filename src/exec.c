@@ -14,7 +14,6 @@
  * 
  */
 
-/* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
 #include <pwd.h>

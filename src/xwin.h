@@ -14,7 +14,6 @@
  * 
  */
 
-/* Mail comments or questions to ytalk@austin.eds.com */
 
 #ifdef USE_X11
 
