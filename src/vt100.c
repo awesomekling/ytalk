@@ -2,7 +2,6 @@
 #include "header.h"
 
 #ifdef YTALK_COLOR
-#include <ncurses.h>
 int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
 };

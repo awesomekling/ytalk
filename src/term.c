@@ -34,10 +34,6 @@
 #endif
 #endif
 
-#ifdef HAVE_NCURSES_H
-#include <ncurses.h>
-#endif
-
 #include "ymenu.h"
 
 static int (*_open_term) ();	/* open a new terminal */

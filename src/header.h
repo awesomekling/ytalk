@@ -437,6 +437,12 @@ extern void vt100_process( /* yuser, char */ );	/* vt100.c */
 extern void scroll_up( /* yuser */ );	/* scroll.c */
 extern void scroll_down( /* yuser */ );	/* scroll.c */
 
+#ifdef HAVE_NCURSES_H
+#include <ncurses.h>
+#else
+#include <curses.h>
+#endif
+
 #include "cwin.h"
 
 /* EOF */

@@ -18,12 +18,6 @@
 #include "header.h"
 #include "mem.h"
 
-#ifdef HAVE_NCURSES_H
-#include <ncurses.h>
-#else
-#include <curses.h>
-#endif
-
 /* Some systems, notably Solaris, don't have sys/signal.h */
 #include <signal.h>
 
