@@ -345,6 +345,8 @@ find_user(name, host_addr, pid)
     return NULL;
 }
 
+/* Clear out the user list, freeing memory as we go.
+ */
 void
 free_users()
 {
@@ -358,6 +360,8 @@ free_users()
 	free_mem(u->host_fqdn);
 	free_mem(u->tty_name);
 	free_mem(u->full_name);
+	if(u->term != NULL)
+	    free_mem(u->term);
 	if(u->scr != NULL) {
 		for(i = 0; i < u->rows; i++)
 			free_mem(u->scr[i]);
