@@ -587,6 +587,16 @@ flush_curses(user)
 		wrefresh(w->win);
 }
 
+void
+retitle_all_curses()
+{
+	ywin *w;
+	for (w = head; w; w = w->next) {
+		draw_title(w);
+		refresh();
+	}
+}
+
 /*
  * Clear and redisplay.
  */
