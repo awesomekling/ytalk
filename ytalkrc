@@ -40,3 +40,7 @@ history_rows	= 1000
 #
 #ui_colors	= red, black
 #menu_colors	= black, red
+
+# Healthy defaults
+title_format	= [%s] %S %! %u@%h (%v)
+user_format	= [%s] %S %! %u@%h (%v)
