@@ -316,9 +316,9 @@ bail_loop()
 {
 	fd_set stdin_set;
 	char keypress;
-	
+
 	FD_ZERO(&stdin_set);
 	FD_SET(0, &stdin_set);
 	select(1, &stdin_set, 0, 0, NULL);
-	full_read(0, keypress, 1);
+	full_read(0, &keypress, 1);
 }
