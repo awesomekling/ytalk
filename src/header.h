@@ -354,7 +354,7 @@ extern yuser *find_user(char *, ylong, ylong);
 extern void generate_full_name(yuser *);
 extern void free_users(void);
 extern void user_title(char *, int, yuser *);
-extern void save_user_to_file(yuser *, ychar *);
+extern void save_user_to_file(yuser *, char *);
 
 /* fd.c */
 extern void init_fd(void);

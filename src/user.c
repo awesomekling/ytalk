@@ -316,7 +316,7 @@ find_user(char *name, ylong host_addr, ylong pid)
  * Save a user's entire conversation history to a file.
  */
 void
-save_user_to_file(yuser *user, ychar *filename)
+save_user_to_file(yuser *user, char *filename)
 {
 	yachar **p;
 	int fd;
@@ -325,7 +325,7 @@ save_user_to_file(yuser *user, ychar *filename)
 	unsigned short r;
 
 	/* Let's not overwrite or underprotect */
-	fd = open((char *)filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
+	fd = open(filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
 	if (fd < 0) {
 		show_error(_("Couldn't open file for writing."));
 		return;
