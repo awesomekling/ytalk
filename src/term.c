@@ -187,7 +187,7 @@ init_term()
 	if (open_term(me, tmpstr) < 0) {
 		end_term();
 		show_error("init_term: open_term() failed");
-		bail(0);
+		bail(YTE_SUCCESS);
 	}
 }
 

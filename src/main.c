@@ -37,11 +37,17 @@ void
 bail(n)
 	int n;
 {
-	end_term();
 	kill_auto();
+	if(n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
+		if(show_mesg("Press any key to quit.", NULL) == 0) {
+			update_menu();
+			bail_loop();
+		}
+	}
+	end_term();
 	free_users();
 	clear_all();
-	(void) exit(n);
+	(void) exit(n == YTE_SUCCESS_PROMPT ? YTE_SUCCESS : n);
 }
 
 #ifndef HAVE_STRERROR
@@ -107,7 +113,7 @@ got_sig(n)
 	if (n == SIGINT) {
 		if (def_flags & FL_IGNBRK)
 			return;
-		bail(0);
+		bail(YTE_SUCCESS);
 	}
 	bail(YTE_SIGNAL);
 }
@@ -121,7 +127,7 @@ main(argc, argv)
 #ifdef USE_X11
 	int xflg = 0;
 #endif
-	int sflg = 0, yflg = 0, iflg = 0, vflg = 0;
+	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0;
 	char *prog;
 
 #ifdef YTALK_DEBUG
@@ -161,6 +167,9 @@ then type 'make clean' and 'make'.\n");
 			argc -= 2;
 		} else if (strcmp(*argv, "-s") == 0) {
 			sflg++;	/* immediately start a shell */
+			argv++, argc--;
+		} else if (strcmp(*argv, "-q") == 0) {
+			qflg++; /* prompt quit */
 			argv++, argc--;
 		} else
 			argc = 0;	/* force a Usage error */
@@ -221,6 +230,8 @@ Options:     -i             --    no auto-invite port\n"
 		def_flags |= FL_CAPS;
 	if (iflg)
 		def_flags |= FL_NOAUTO;
+	if (qflg)
+		def_flags |= FL_PROMPTQUIT;
 
 	init_term();
 	init_socket();
@@ -231,7 +242,7 @@ Options:     -i             --    no auto-invite port\n"
 	else
 		msg_term(me, "Waiting for connection...");
 	main_loop();
-	bail(YTE_SUCCESS);
+	bail(YTE_SUCCESS_PROMPT);
 
 	return 0;		/* make lint happy */
 }

@@ -267,7 +267,7 @@ free_user(user)
 	    && wait_list == NULL
 	    && menu_ptr == NULL
 	    && running_process == 0)
-		bail(0);
+		bail(YTE_SUCCESS_PROMPT);
 
 	close_term(user);
 	free_mem(user->full_name);

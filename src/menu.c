@@ -185,7 +185,7 @@ main_menu_sel(key)
 			update_menu();
 		break;
 	case 'q':		/* quit */
-		bail(0);
+		bail(YTE_SUCCESS);
 	}
 }
 
@@ -218,6 +218,9 @@ option_menu_sel(key)
 		break;
 	case 'p':		/* toggle prompting before re-rings */
 		def_flags ^= FL_PROMPTRING;
+		break;
+	case 'q':
+		def_flags ^= FL_PROMPTQUIT;
 		break;
 	}
 
@@ -709,6 +712,14 @@ show_option_menu()
 		option_menu[i].item = "prompt before reringing";
 	option_menu[i].func = option_menu_sel;
 	option_menu[i].key = 'p';
+	i++;
+
+	if(def_flags & FL_PROMPTQUIT)
+		option_menu[i].item = "don't prompt before quitting";
+	else
+		option_menu[i].item = "prompt before quitting";
+	option_menu[i].func = option_menu_sel;
+	option_menu[i].key = 'q';
 	i++;
 
 	if (term_does_asides()) {

@@ -12,7 +12,7 @@
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
-.BI "ytalk [-x] [-s] [-Y] [-i] [-v] [-h " hostname_or_ip "] " username...
+.BI "ytalk [-x] [-s] [-Y] [-i] [-v] [-q] [-h " hostname_or_ip "] " username...
 .SH DESCRIPTION
 .I YTalk V3.2.0
 .PP
@@ -54,6 +54,8 @@ The
 .B -i
 option disables the auto-invite port (meaning you won't see
 "talk to blah@blah.com", but your talk daemon will beep you instead).
+.PP
+The -q option causes YTalk to prompt you before quitting.
 .PP
 The
 .B -v
@@ -198,6 +200,8 @@ to edit the YTalk options.  The current options are:
 .br
 	p: [don't] prompt before rerings
 .br
+	q: [don't] prompt before quitting
+.br
 	a: turn asides [off/on]
 .PP
 If
@@ -233,6 +237,10 @@ If
 is turned on, then YTalk will ask you before re-ringing a user.
 .PP
 If
+.I prompt-quit
+is turned on, then YTalk will wait for keyboard input before quitting.
+.PP
+If
 .I asides
 is turned on (it may not be available), then keyboard input received while
 the input focus is in a specific users' window will only be sent to that
@@ -260,6 +268,7 @@ is one of
 .I auto-invite ,
 .I rering ,
 .I prompt-rering ,
+.I prompt-quit ,
 .I caps ,
 .I noinvite ,
 .I asides ,

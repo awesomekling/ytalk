@@ -199,6 +199,7 @@ typedef struct _yuser {
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
 #define FL_VT100	0x00002000L	/* VT100 enhanced menus and such */
 #define FL_NEWUI	0x00004000L	/* newui on or off */
+#define FL_PROMPTQUIT	0x00008000L	/* prompt before quitting */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */
@@ -283,6 +284,7 @@ typedef struct {
 
 /* ---- exit codes ---- */
 
+#define YTE_SUCCESS_PROMPT -1	/* successful completion, prompt, return 0 */
 #define YTE_SUCCESS	0	/* successful completion */
 #define YTE_INIT	1	/* initialization error */
 #define YTE_NO_MEM	2	/* out of memory */
@@ -386,6 +388,7 @@ extern void remove_fd( /* fd */ );	/* fd.c */
 extern int full_read( /* fd, buf, len */ );	/* fd.c */
 extern void main_loop();	/* fd.c */
 extern void input_loop();	/* fd.c */
+extern void bail_loop();	/* fd.c */
 
 extern yuser *invite( /* username, announce */ );	/* comm.c */
 extern void house_clean();	/* comm.c */
