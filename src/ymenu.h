@@ -1,25 +1,25 @@
 /* ymenu.h */
 
-void update_ymenu();
-void show_ymenu();
-void hide_ymenu();
-void resize_ymenu();
+void update_ymenu(void);
+void show_ymenu(void);
+void hide_ymenu(void);
+void resize_ymenu(void);
 
-void refresh_ymenu();
-void __refresh_ymenu();
+void refresh_ymenu(void);
+void __refresh_ymenu(void);
 
-void init_ymenu();
+void init_ymenu(void);
 
-void init_userlist();
+void init_userlist(void);
 void init_usermenu(char);
 
-void redo_ymenu_userlist();
+void redo_ymenu_userlist(void);
 
 int show_message_ymenu(char *);
 int show_error_ymenu(char *, char *);
 
-void show_colormenu();
+void show_colormenu(void);
 
-int can_ymenu();
-int in_ymenu();
+int can_ymenu(void);
+int in_ymenu(void);
 int yes_no(char *);

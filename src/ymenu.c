@@ -74,9 +74,10 @@ esc_userlist(ytk_thing *t)
 }
 
 void
-handle_runcmd()
+handle_runcmd(void *item)
 {
 	ytk_thing *c;
+	(void) item;
 	c = ytk_new_inputbox(_("Run command"), 60, do_runcmd);
 	ytk_set_escape(c, do_hidething);
 #ifdef YTALK_COLOR
@@ -87,9 +88,10 @@ handle_runcmd()
 }
 
 void
-handle_adduser()
+handle_adduser(void *item)
 {
 	ytk_thing *a;
+	(void) item;
 	a = ytk_new_inputbox(_("Add user"), 60, do_adduser);
 	ytk_set_escape(a, do_hidething);
 #ifdef YTALK_COLOR
@@ -232,7 +234,7 @@ init_ymenu()
 	ytk_add_menu_item(YTK_MENU(main_menu), _("Run command"), 'c', handle_runcmd);
 	ytk_add_menu_separator(YTK_MENU(main_menu));
 	ytk_add_menu_item(YTK_MENU(main_menu), _("Quit"), 'q', handle_quit);
-	ytk_set_escape(main_menu, hide_ymenu);
+	ytk_set_escape(main_menu, do_hidething);
 #ifdef YTALK_COLOR
 	ytk_set_colors(main_menu, menu_colors);
 	ytk_set_attr(main_menu, menu_attr);
