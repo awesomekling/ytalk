@@ -135,6 +135,15 @@ handle_userlist_menu(ytk_menu_item *i)
 	}
 }
 
+static void
+do_reloadrc(ytk_menu_item *i)
+{
+	(void) i;
+	hide_ymenu();
+	read_ytalkrc();
+	redraw_all_terms();
+}
+
 #ifdef YTALK_COLOR
 static void
 handle_color(ytk_menu_item *i)
@@ -225,6 +234,8 @@ init_ymenu()
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Require caps"), 'c', handle_options_menu, (def_flags & FL_CAPS));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt rerings"), 'p', handle_options_menu, (def_flags & FL_PROMPTRING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt to quit"), 'q', handle_options_menu, (def_flags & FL_PROMPTQUIT));
+	ytk_add_menu_separator(YTK_MENU(options_menu));
+	ytk_add_menu_item(YTK_MENU(options_menu), _("Reload ytalkrc"), 'R', do_reloadrc);
 	ytk_set_escape(options_menu, do_hidething);
 #ifdef YTALK_COLOR
 	ytk_set_colors(options_menu, menu_colors);
