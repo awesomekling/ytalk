@@ -1292,6 +1292,11 @@ my_input(user, buf, len)
 					}
 					else if (*buf == 6 && term_does_scrollback()) {		/* ^F - window forward */
 						scuser = scuser->unext;
+						while (scuser != NULL) {
+							if (scuser->scr != NULL && scuser != me)
+								break;
+							scuser = scuser->unext;
+						}
 						if (scuser == NULL)
 							scuser = me;
 						retitle_all_terms();
