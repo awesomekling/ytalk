@@ -26,7 +26,7 @@ test -f config.h.in || \
 	{ echo "FATAL: Failed to generate config.h.in" 2>&1; exit 1; }
 
 echo "Running $AUTOMAKE..."
-WANT_AUTOMAKE="1.8" $AUTOMAKE --add-missing || exit 1
+WANT_AUTOMAKE="1.8" $AUTOMAKE --add-missing --copy || exit 1
 test -f Makefile.in || \
 	{ echo "FATAL: Failed to generate Makefile.in" 2>&1; exit 1; }
 
