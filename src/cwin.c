@@ -264,7 +264,7 @@ curses_redraw()
 	}
 	if (in_ymenu()) {
 		resize_ymenu();
-		refresh_ymenu();
+		__refresh_ymenu();
 	}
 	doupdate();
 }
@@ -569,7 +569,7 @@ flush_curses(user)
 	else
 		wnoutrefresh(w->win);
 	if (in_ymenu())
-		refresh_ymenu();
+		__refresh_ymenu();
 	doupdate();
 }
 
@@ -581,9 +581,10 @@ retitle_all_curses()
 		draw_title(w);
 	}
 	if (in_ymenu())
-		refresh_ymenu();
+		__refresh_ymenu();
 	move(LINES - 1, COLS - 1);
-	refresh();
+	wnoutrefresh(stdscr);
+	doupdate();
 }
 
 /*
@@ -665,10 +666,11 @@ end_scroll_curses(user)
 		w->swin = NULL;
 		redraw_term(user, 0);
 		draw_title(w);
-		refresh();
-		wrefresh(w->win);
+		wnoutrefresh(stdscr);
+		wnoutrefresh(w->win);
 		if (in_ymenu())
-			refresh_ymenu();
+			__refresh_ymenu();
+		doupdate();
 	}
 }
 
@@ -697,9 +699,10 @@ update_scroll_curses(user)
 			break;
 		}
 	}
-	wrefresh(w->swin);
+	wnoutrefresh(w->swin);
 	move(LINES - 1, COLS - 1);
-	refresh();
+	wnoutrefresh(stdscr);
 	if (in_ymenu())
-		refresh_ymenu();
+		__refresh_ymenu();
+	doupdate();
 }
