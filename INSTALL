@@ -29,12 +29,7 @@ take.  The most important ones are:
   --infodir=DIR           info documentation in DIR [PREFIX/info]
   --mandir=DIR            man documentation in DIR [PREFIX/man]
 
-  --with-x		  use the X11 interface (default)
-  --without-x		  do not use the X11 interface; use text only
-
-  --x-includes=DIR	  specify where X11's include files are
-  --x-libraries=DIR	  specify where X11's libraries are
-
+  --with-curses=DIR       Where ncurses is installed
 
 The `./configure' script also understands a number of environment variables:
 
