@@ -250,22 +250,22 @@ curses_start()
 	noecho();
 #ifdef YTALK_COLOR
 
-#ifndef COLOR_DEFAULT
-#define COLOR_DEFAULT (-1)
-#endif
+#  ifndef COLOR_DEFAULT
+#    define COLOR_DEFAULT (-1)
+#  endif
 
 	if (has_colors()) {
 		start_color();
-#ifdef NCURSES_VERSION
+#  ifdef NCURSES_VERSION
 		use_default_colors();
-#endif
+#  endif
 		for (i = 0; i < 64; i++) {
 			fg = i & 7;
 			bg = i >> 3;
-			if (fg == COLOR_WHITE)
-				fg = COLOR_DEFAULT;
-			if (bg == COLOR_BLACK)
-				bg = COLOR_DEFAULT;
+#  ifdef NCURSES_VERSION
+			if (fg == COLOR_WHITE) fg = COLOR_DEFAULT;
+			if (bg == COLOR_BLACK) bg = COLOR_DEFAULT;
+#  endif
 			init_pair(i + 1, fg, bg);
 		}
 	} else {
