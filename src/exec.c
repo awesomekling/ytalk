@@ -375,7 +375,9 @@ execute(command)
 		return;
 	}
 	set_win_region(me, prows, pcols);
-	sleep(1);
+	if (!(def_flags & FL_INSTANTCMD)) {
+		sleep(1);
+	}
 
 	/* store `command' for later recollection */
 	last_command = command;
