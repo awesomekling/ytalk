@@ -16,6 +16,7 @@
 
 
 #include "header.h"
+#include "ytp.h"
 #include "socket.h"
 #include "ymenu.h"
 #include "mem.h"
