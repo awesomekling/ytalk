@@ -1065,7 +1065,13 @@ msg_term(char *str)
 }
 
 
-#ifdef YTALK_COLOR
+#ifndef YTALK_COLOR
+void
+spew_line(int fd, yachar *buf, int len)
+{
+	write(fd, (char *)buf, len);
+}
+#else
 
 /* Toggle attributes */
 #define DO_ATTR(attr, val) \
@@ -1161,7 +1167,7 @@ spew_attrs(int fd, unsigned char at, unsigned char bg, unsigned char fg)
 	/* Send our attributes */
 	write(fd, esc, p);
 }
-#endif
+#endif /* YTALK_COLOR */
 
 /*
  * Spew terminal contents to a file descriptor.
