@@ -20,49 +20,49 @@
 #include <pwd.h>
 
 #ifdef HAVE_SYS_IOCTL_H
-#include <sys/ioctl.h>
+#  include <sys/ioctl.h>
 #endif
 
 #ifdef HAVE_FCNTL_H
-#include <fcntl.h>
+#  include <fcntl.h>
 #endif
 
 #include <signal.h>
 #include <sys/wait.h>
 
 #ifdef HAVE_STROPTS_H
-#include <stropts.h>
+#  include <stropts.h>
 #endif
 
 #ifdef HAVE_SYS_CONF_H
-#include <sys/conf.h>
+#  include <sys/conf.h>
 #endif
 
 #ifdef HAVE_TERMIOS_H
-#include <termios.h>
+#  include <termios.h>
 #else
-#ifdef HAVE_SGTTY_H
-#include <sgtty.h>
-#ifdef hpux
-#include <sys/bsdtty.h>
-#endif
-#endif
+#  ifdef HAVE_SGTTY_H
+#    include <sgtty.h>
+#    ifdef hpux
+#      include <sys/bsdtty.h>
+#    endif
+#  endif
 #endif
 
 #ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
+#  include <sys/stat.h>
 #endif
 
 #ifdef HAVE_OPENPTY
-#ifdef HAVE_UTIL_H
-#include <util.h>
-#else
+#  ifdef HAVE_UTIL_H
+#    include <util.h>
+#  else
 int openpty(int *, int *, char *, struct termios *, struct winsize *);
-#endif
+#  endif
 #endif
 
 #if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-#define USE_DEV_PTMX
+#  define USE_DEV_PTMX
 #endif
 
 int running_process = 0;	/* flag: is process running? */
@@ -95,7 +95,7 @@ int needtopush = 0;
 #endif
 
 #ifndef SIGCHLD
-#define SIGCLD SIGCHLD
+#  define SIGCLD SIGCHLD
 #endif
 
 #ifndef HAVE_OPENPTY
@@ -249,13 +249,13 @@ execute(char *command)
 #if defined(HAVE_TCFLUSH) && defined(TCIOFLUSH)
 	tcflush(fd, TCIOFLUSH);
 #else
-#ifdef TIOCFLUSH
+#  ifdef TIOCFLUSH
 	ioctl(fd, TIOCFLUSH, NULL);
-#else
-#ifdef TIOCEXCL
+#  else
+#    ifdef TIOCEXCL
 	ioctl(fd, TIOCEXCL, NULL);
-#endif
-#endif
+#    endif
+#  endif
 #endif
 
 	pw = getpwuid(myuid);
@@ -277,9 +277,9 @@ execute(char *command)
 	 */
 	signal(SIGCHLD, SIG_DFL);
 #else
-#ifdef SIGCLD
+#  ifdef SIGCLD
 	signal(SIGCLD, SIG_DFL);
-#endif
+#  endif
 #endif
 
 	/* Check pty permissions and warn about potential risks. */
@@ -351,9 +351,9 @@ execute(char *command)
 #ifdef SIGCHLD
 	signal(SIGCHLD, SIG_IGN);
 #else
-#ifdef SIGCLD
+#  ifdef SIGCLD
 	signal(SIGCLD, SIG_IGN);
-#endif
+#  endif
 #endif
 
 	if (pid < 0) {

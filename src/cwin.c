@@ -18,11 +18,10 @@
 #include "header.h"
 #include "mem.h"
 #include "ymenu.h"
+#include "cwin.h"
 
 /* Some systems, notably Solaris, don't have sys/signal.h */
 #include <signal.h>
-
-#include "cwin.h"
 
 typedef struct _ywin {
 	struct _ywin *next;	/* next ywin in linked list */

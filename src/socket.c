@@ -22,14 +22,14 @@
 #include "mem.h"
 
 #ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
+#  include <arpa/inet.h>
 #else
 ylong inet_addr();
 char *inet_ntoa();
 #endif
 
 #ifdef _AIX
-#include <sys/select.h>
+#  include <sys/select.h>
 #endif
 
 struct _talkd talkd[MAXDAEMON + 1];

@@ -16,10 +16,11 @@
 
 
 #include "header.h"
-#include <signal.h>
 #include "cwin.h"
 #include "ymenu.h"
 #include "mem.h"
+
+#include <signal.h>
 
 char errstr[MAXERR];		/* temporary string for errors */
 char msgstr[MAXERR];		/* temporary string for bottom messages */
