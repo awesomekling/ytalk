@@ -227,6 +227,19 @@ what_term()
     return term_type;
 }
 
+/* Change terminal keypad mode (only for me, only with curses)
+ */
+void
+keypad_term(user, bf)
+  yuser *user;
+  int bf;
+{
+    if(user != me)
+	return;
+    if(term_type == 1)
+	keypad_curses(user, bf);
+}
+
 /* Abort all terminal processing.
  */
 void

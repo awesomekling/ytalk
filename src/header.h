@@ -310,6 +310,7 @@ extern void	del_line_term	( /* yuser, num */ );		/* term.c */
 extern void	add_char_term	( /* yuser, num */ );		/* term.c */
 extern void	del_char_term	( /* yuser, num */ );		/* term.c */
 extern void	redraw_term	( /* yuser, start_row */ );	/* term.c */
+extern void	keypad_term	( /* yuser, int */ );		/* term.c */
 extern void	resize_win	( /* yuser, h, w */ );		/* term.c */
 extern void	set_win_region	( /* yuser, h, w */ );		/* term.c */
 extern void	end_win_region	( /* yuser */ );		/* term.c */
