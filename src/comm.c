@@ -1269,7 +1269,8 @@ my_input(yuser *user, ychar *buf, int len)
 {
 	register ychar *c, *n;
 	register int i, j;
-	ychar *nbuf = NULL;
+	static ychar *nbuf = NULL;
+	static int nlen = 0;
 
 	/* If someone's waiting for input, give it to them! */
 
@@ -1278,9 +1279,12 @@ my_input(yuser *user, ychar *buf, int len)
 		io_len = len;
 		return;
 	}
+
 	/* Substitution buffer for LF -> CRLF */
-	if (len > 0)
-		nbuf = get_mem(len * 2 * sizeof(ychar));
+	if ((len << 1) > nlen) {
+		nlen = (len << 1) + 512;
+		nbuf = realloc_mem(nbuf, nlen);
+	}
 
 	/* Process input normally */
 
@@ -1407,9 +1411,6 @@ my_input(yuser *user, ychar *buf, int len)
 			}
 		}
 	}
-
-	if (nbuf != NULL)
-		free_mem(nbuf);
 }
 
 void
