@@ -179,7 +179,7 @@ v2_process(user, pack)
 	host[V2_HOSTLEN] = '\0';
 	if ((host_addr = get_host_addr(host)) == (ylong) - 1) {
 		errno = 0;
-		(void) sprintf(errstr, "unknown host: '%s'", host);
+		(void) snprintf(errstr, MAXERR, "unknown host: '%s'", host);
 		show_error(errstr);
 		show_error("port from ytalk V2.? failed");
 		return;
@@ -193,13 +193,13 @@ v2_process(user, pack)
 		if (find_user(name, host_addr, (ylong) - 1) != NULL)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
-			(void) sprintf(estr, "Import %s@%s?", name, host);
+			(void) snprintf(estr, sizeof(estr), "Import %s@%s?", name, host);
 			if (yes_no(estr) == 'n')
 				break;
 		}
 		/* invite him but don't ring him */
 
-		(void) sprintf(estr, "%s@%s", name, host);
+		(void) snprintf(estr, sizeof(estr), "%s@%s", name, host);
 		(void) invite(estr, 0);
 
 		/* now tell him to connect to us */
@@ -219,7 +219,7 @@ v2_process(user, pack)
 		send_accept(u, user);
 		break;
 	case V2_ACCEPT:
-		(void) sprintf(estr, "%s@%s", name, host);
+		(void) snprintf(estr, sizeof(estr), "%s@%s", name, host);
 		(void) invite(estr, 1);	/* we should be expected */
 		break;
 	}
@@ -257,13 +257,13 @@ v3_process_pack(user, pack)
 		if (find_user(name, host_addr, pid) != NULL)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
-			(void) sprintf(estr, "Import %s@%s?", name, host);
+			(void) snprintf(estr, sizeof(estr), "Import %s@%s?", name, host);
 			if (yes_no(estr) == 'n')
 				break;
 		}
 		/* invite him but don't ring him */
 
-		(void) sprintf(estr, "%s@%s", name, host);
+		(void) snprintf(estr, sizeof(estr), "%s@%s", name, host);
 		u2 = invite(estr, 0);
 
 		/*
@@ -291,7 +291,7 @@ v3_process_pack(user, pack)
 		send_accept(u, user);
 		break;
 	case V3_ACCEPT:
-		(void) sprintf(estr, "%s@%s", name, host);
+		(void) snprintf(estr, sizeof(estr), "%s@%s", name, host);
 		(void) invite(estr, 1);	/* we should be expected */
 		break;
 	}
@@ -655,7 +655,7 @@ connect_user(fd)
 		user_winch = 1;
 		add_fd(fd, read_user);
 	}
-	sprintf(msgstr, "%s connected.", user->full_name);
+	snprintf(msgstr, MAXERR, "%s connected.", user->full_name);
 	msg_term(msgstr);
 }
 
@@ -904,7 +904,7 @@ invite(name, send_announce)
 	/* Leave an invitation for him, and announce ourselves. */
 
 	if (send_announce) {
-		(void) sprintf(msgstr, "Ringing %s...", user->full_name);
+		(void) snprintf(msgstr, MAXERR, "Ringing %s...", user->full_name);
 		msg_term(msgstr);
 	}
 	if (newsock(user) != 0) {
@@ -916,9 +916,9 @@ invite(name, send_announce)
 	if (send_announce && (rc = announce(user)) != 0) {
 		(void) send_dgram(user, DELETE_INVITE);
 		if (rc > 0)
-			(void) sprintf(errstr, "%s refusing messages", user->full_name);
+			(void) snprintf(errstr, MAXERR, "%s refusing messages", user->full_name);
 		else
-			(void) sprintf(errstr, "%s not logged in", user->full_name);
+			(void) snprintf(errstr, MAXERR, "%s not logged in", user->full_name);
 		show_error(errstr);
 		free_user(user);
 		return NULL;
@@ -965,20 +965,20 @@ house_clean()
 			if (def_flags & FL_PROMPTRING) {
 				if (input_flag)
 					continue;
-				(void) sprintf(estr, "Rering %s?", u->full_name);
+				(void) snprintf(estr, sizeof(estr), "Rering %s?", u->full_name);
 				answer = yes_no(estr);
 				t = (ylong) time(NULL);
 				if (answer == 'n')
 					continue;
 			}
-			sprintf(msgstr, "Reringing %s\n", u->full_name);
+			(void) snprintf(msgstr, MAXERR, "Reringing %s\n", u->full_name);
 			msg_term(msgstr);
 			if ((rc = announce(u)) != 0) {
 				(void) send_dgram(u, DELETE_INVITE);
 				if (rc > 0)
-					(void) sprintf(errstr, "%s refusing messages", u->full_name);
+					(void) snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
 				else
-					(void) sprintf(errstr, "%s not logged in", u->full_name);
+					(void) snprintf(errstr, MAXERR, "%s not logged in", u->full_name);
 				show_error(errstr);
 				free_user(u);
 			}
@@ -1003,9 +1003,9 @@ rering_all()
 		if ((rc = announce(u)) != 0) {
 			(void) send_dgram(u, DELETE_INVITE);
 			if (rc > 0)
-				(void) sprintf(errstr, "%s refusing messages", u->full_name);
+				(void) snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
 			else
-				(void) sprintf(errstr, "%s not logged in", u->full_name);
+				(void) snprintf(errstr, MAXERR, "%s not logged in", u->full_name);
 			show_error(errstr);
 			free_user(u);
 		}

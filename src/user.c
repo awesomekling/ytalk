@@ -165,7 +165,7 @@ new_user(name, hostname, tty)
 		hostname = me->host_name;
 		addr = me->host_addr;
 	} else if ((addr = get_host_addr(hostname)) == (ylong) - 1) {
-		sprintf(errstr, "new_user: bad host: '%s'", hostname);
+		snprintf(errstr, MAXERR, "new_user: bad host: '%s'", hostname);
 		show_error(errstr);
 		return NULL;
 	}
@@ -208,7 +208,7 @@ free_user(user)
 
 	/* print a disco message */
 
-	sprintf(msgstr, "%s disconnected.", user->full_name);
+	snprintf(msgstr, MAXERR, "%s disconnected.", user->full_name);
 	msg_term(msgstr);
 
 	/* make sure we're not stuck scrolling a long gone user */
