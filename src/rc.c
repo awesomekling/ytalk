@@ -14,20 +14,68 @@
  *
  */
 
+
 #include "header.h"
 #include "mem.h"
 #include <pwd.h>
 
-#define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n')
+#ifdef YTALK_COLOR
+#include <ncurses.h>
+#endif
+
+#define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=')
 
 extern char *vhost;
 
 #ifdef YTALK_COLOR
 extern int newui_colors;
 extern int newui_attr;
+extern int raw_color;
+extern int raw_attr;
 #endif
 
 static struct alias *alias0 = NULL;
+
+typedef struct {
+	char *option;
+	short flag;
+} options;
+
+#ifdef YTALK_COLOR
+typedef struct {
+	char *color;
+	short value;
+} colors;
+#endif
+
+options opts[] = {
+	{"scrolling",		FL_SCROLL	},
+	{"wordwrap",		FL_WRAP		},
+	{"autoimport",		FL_IMPORT	},
+	{"autoinvite",		FL_INVITE	},
+	{"rering",		FL_RING		},
+	{"prompt_rering",	FL_PROMPTRING	},
+	{"beeps",		FL_BEEP		},
+	{"ignorebreak",		FL_IGNBRK	},
+	{"newui",		FL_NEWUI	},
+	{"require_caps",	FL_CAPS		},
+	{"no_invite", 		FL_NOAUTO	},
+	{(char *)NULL,		0		}
+};
+
+#ifdef YTALK_COLOR
+colors cols[] = {
+	{"black",		COLOR_BLACK	},
+	{"red",			COLOR_RED	},
+	{"green",		COLOR_GREEN	},
+	{"yellow",		COLOR_YELLOW	},
+	{"blue",		COLOR_BLUE	},
+	{"magenta",		COLOR_MAGENTA	},
+	{"cyan",		COLOR_CYAN	},
+	{"white",		COLOR_WHITE	},
+	{(char *)NULL,		0		}
+};
+#endif
 
 /* ---- local functions ---- */
 
@@ -57,6 +105,7 @@ getcolor(color, rc, ra)
 	char *color;
 	int *rc, *ra;
 {
+	int i = 0, found = 0;
 	char *c = color;
 
 	if (ra != NULL)
@@ -67,131 +116,103 @@ getcolor(color, rc, ra)
 		if (ra != NULL)
 			*ra = A_BOLD;
 	}
-	if (strcmp(c, "black") == 0)
-		*rc = COLOR_BLACK;
-	else if (strcmp(c, "red") == 0)
-		*rc = COLOR_RED;
-	else if (strcmp(c, "green") == 0)
-		*rc = COLOR_GREEN;
-	else if (strcmp(c, "yellow") == 0)
-		*rc = COLOR_YELLOW;
-	else if (strcmp(c, "blue") == 0)
-		*rc = COLOR_BLUE;
-	else if (strcmp(c, "magenta") == 0)
-		*rc = COLOR_MAGENTA;
-	else if (strcmp(c, "cyan") == 0)
-		*rc = COLOR_CYAN;
-	else if (strcmp(c, "white") == 0)
-		*rc = COLOR_WHITE;
-	else
-		return -1;
-	return 0;
+
+	while(cols[i].color != NULL && !found) {
+		if(strcmp(c, cols[i].color) == 0) {
+			found = 1;
+			*rc = cols[i].value;
+		}
+		i++;
+	}
+
+	return found;
 }
 
+/*
+ * Sets colorvalues and returns a value from 0 to 3 depending on the status.
+ * 0: success
+ * 1: not enough params
+ * 2: foreground color failed
+ * 3: background color failed
+ */
 static int
-setcolors(bg, fg, fgattr)
-	char *bg, *fg;
-	int *fgattr;
+setcolors(char *bg, char *fg, int *colors, int *fgattr)
 {
 	int bgi, fgi;
 
-	(void) getcolor(bg, &bgi, NULL);
-	(void) getcolor(fg, &fgi, fgattr);
+	if(fg == NULL || bg == NULL)
+		return 1;
 
-	return bgi * 8 + fgi + 1;
+	if(!getcolor(bg, &bgi, NULL))
+		return 2;
+	if(!getcolor(fg, &fgi, fgattr))
+		return 3;
+
+	*colors = bgi * 8 + fgi + 1;
+
+	return 0;
 }
 #endif				/* YTALK_COLOR */
 
+/*
+ * Returns 1 for on,y,yes or 1 and 0 for off, n, no or 0.
+ * else return -1
+ */
 static int
-set_option(opt, value)
-	char *opt, *value;
+get_bool(value)
+	char *value;
 {
-	ylong mask = 0;
-	int set_it;
+	char ok[8][4] = { "on", "ON", "On", "1", "y", "yes", "YES", "Yes" };
+	char no[8][4] = { "off", "OFF", "Off", "0", "n", "no", "NO", "No" };
+	int i;
+	for(i = 0; i < 8; i++) {
+		if(strcmp(ok[i], value) == 0) {
+			return 1;
+		} else if(strcmp(no[i], value) == 0) {
+			return 0;
+		}
+	}
+	return -1;
+}
 
-	if (strcmp(value, "true") == 0 || strcmp(value, "on") == 0)
-		set_it = 1;
-	else if (strcmp(value, "false") == 0 || strcmp(value, "off") == 0)
-		set_it = 0;
-	else
-		return -1;
+static int
+new_alias(a1, a2)
+	char *a1, *a2;
+{
+	struct alias *a;
+	char *at;
 
-	if (strcmp(opt, "scroll") == 0
-	    || strcmp(opt, "scrolling") == 0
-	    || strcmp(opt, "sc") == 0)
-		mask |= FL_SCROLL;
+	/* if a1 is null a2 is too, and we need both */
+	if(a2 == NULL)
+		return 0;
 
-	else if (strcmp(opt, "wrap") == 0
-		 || strcmp(opt, "word-wrap") == 0
-		 || strcmp(opt, "wordwrap") == 0
-		 || strcmp(opt, "wrapping") == 0
-		 || strcmp(opt, "ww") == 0)
-		mask |= FL_WRAP;
-
-	else if (strcmp(opt, "import") == 0
-		 || strcmp(opt, "auto-import") == 0
-		 || strcmp(opt, "autoimport") == 0
-		 || strcmp(opt, "importing") == 0
-		 || strcmp(opt, "aip") == 0
-		 || strcmp(opt, "ai") == 0)
-		mask |= FL_IMPORT;
-
-	else if (strcmp(opt, "invite") == 0
-		 || strcmp(opt, "auto-invite") == 0
-		 || strcmp(opt, "autoinvite") == 0
-		 || strcmp(opt, "aiv") == 0
-		 || strcmp(opt, "av") == 0)
-		mask |= FL_INVITE;
-
-	else if (strcmp(opt, "ring") == 0
-		 || strcmp(opt, "rering") == 0
-		 || strcmp(opt, "r") == 0)
-		mask |= FL_RING;
-
-	else if (strcmp(opt, "prompt-ring") == 0
-		 || strcmp(opt, "prompt-rering") == 0
-		 || strcmp(opt, "promptring") == 0
-		 || strcmp(opt, "promptrering") == 0
-		 || strcmp(opt, "pr") == 0)
-		mask |= FL_PROMPTRING;
-
-	else if (strcmp(opt, "prompt-quit") == 0
-		 || strcmp(opt, "promptquit") == 0
-		 || strcmp(opt, "pq") == 0)
-		mask |= FL_PROMPTQUIT;
-
-	else if (strcmp(opt, "beeps") == 0)
-		mask |= FL_BEEP;
-
-	else if (strcmp(opt, "ignorebreak") == 0)
-		mask |= FL_IGNBRK;
-
-#ifdef YTALK_COLOR
-	else if (strcmp(opt, "newui") == 0)
-		mask |= FL_NEWUI;
-#endif
-
-	else if (strcmp(opt, "caps") == 0
-		 || strcmp(opt, "CAPS") == 0
-		 || strcmp(opt, "ca") == 0
-		 || strcmp(opt, "CA") == 0)
-		mask |= FL_CAPS;
-
-	else if (strcmp(opt, "noinvite") == 0
-		 || strcmp(opt, "no-invite") == 0
-		 || strcmp(opt, "noinv") == 0
-		 || strcmp(opt, "ni") == 0)
-		mask |= FL_NOAUTO;
-
-	if (!mask)
-		return -1;
-
-	if (set_it)
-		def_flags |= mask;
-	else
-		def_flags &= ~mask;
-
-	return 0;
+	a = get_mem(sizeof(struct alias));
+	at = strchr(a1, '@');
+	if (at == a1) {
+		a->type = ALIAS_AFTER;
+		(void) strncpy(a->from, a1 + 1, 255);
+		a->from[254] = 0;
+		(void) strncpy(a->to, (*a2 == '@' ? a2 + 1 : a2), 255);
+		a->to[254] = 0;
+	} else if (at == a1 + strlen(a1) - 1) {
+		a->type = ALIAS_BEFORE;
+		*at = 0;
+		(void) strncpy(a->from, a1, 255);
+		a->from[254] = 0;
+		(void) strncpy(a->to, a2, 255);
+		a->to[254] = 0;
+		if ((at = strchr(a->to, '@')) != NULL)
+			*at = 0;
+	} else {
+		a->type = ALIAS_ALL;
+		(void) strncpy(a->from, a1, 255);
+		a->from[254] = 0;
+		(void) strncpy(a->to, a2, 255);
+		a->to[254] = 0;
+	}
+	a->next = alias0;
+	alias0 = a;
+	return 1; /* success */
 }
 
 static void
@@ -199,121 +220,108 @@ read_rcfile(fname)
 	char *fname;
 {
 	FILE *fp;
-	char *buf, *ptr;
-	char *w, *arg1, *arg2, *arg3, *at;
-	int line_no, errline;
-	struct alias *a;
-#ifdef YTALK_COLOR
-	int uicolor, uiattr;
-#endif
+	char buf[BUFSIZ];
+	char *ptr, *cmd, *from, *to, *on;
+	char *host;
+	int i, line, found;
 
-	if ((fp = fopen(fname, "r")) == NULL) {
-		if (errno != ENOENT)
-			show_error(fname);
+	if ((fp = fopen(fname, "r")) == NULL)
 		return;
-	}
-	buf = get_mem(BUFSIZ);
-
-	line_no = errline = 0;
-	while (fgets(buf, BUFSIZ, fp) != NULL) {
-		line_no++;
+	
+	line = 0;
+	while(fgets(buf, BUFSIZ, fp)) {
 		ptr = buf;
-		w = get_word(&ptr);
-		if (w == NULL || *w == '#')
-			continue;
+		found = 0;
+		i = 0;
+		line++;
 
-		if (strcmp(w, "readdress") == 0) {
-			arg1 = get_word(&ptr);
-			arg2 = get_word(&ptr);
-			arg3 = get_word(&ptr);
-			if (arg3 == NULL) {
-				errline = line_no;
-				break;
+		cmd = get_word(&ptr);
+
+		while(opts[i].option != NULL) {
+			if (strcmp(cmd, opts[i].option) == 0) {
+				found = 1;
+				switch(get_bool(get_word(&ptr))) {
+				case 1:
+					def_flags |= opts[i].flag;
+					break;
+				case -1:
+					printf("Invalid bool option on line %d\n", line);
+					bail(YTE_INIT);
+					break;
+				case 0:
+					def_flags &= ~opts[i].flag;
+					break;
+				}
 			}
-			readdress_host(arg1, arg2, arg3);
-#ifdef YTALK_COLOR
-		} else if (strcmp(w, "set-colors") == 0) {
-			arg1 = get_word(&ptr);
-			arg2 = get_word(&ptr);
-			if (arg2 == NULL) {
-				errline = line_no;
-				break;
-			}
-			if ((uicolor = setcolors(arg1, arg2, &uiattr)) < 0) {
-				errline = line_no;
-				break;
+			i++;
+		}
+		if (!found) {
+			if(strcmp(cmd, "alias") == 0) {
+				found = 1;
+				new_alias(get_word(&ptr), get_word(&ptr));
+			} else if(strcmp(cmd, "ui_colors") == 0) {
+				switch(setcolors(get_word(&ptr), get_word(&ptr), &newui_colors, &newui_attr)) {
+				case 0:
+					found = 1;
+					break;
+				case 1:
+					printf("You must specify both foreground and background on line %d\n", line);
+					bail(YTE_INIT);
+					break;
+				case 2:
+					printf("Foreground color on line %d is invalid\n", line);
+					bail(YTE_INIT);
+					break;
+				case 3:
+					printf("Background color on line %d is invalid\n", line);
+					bail(YTE_INIT);
+					break;
+				}
+			} else if(strcmp(cmd, "readdress") == 0) {
+				from = get_word(&ptr);
+				to   = get_word(&ptr);
+				on   = get_word(&ptr);
+				switch(readdress_host(from, to, on)) {
+				case 0:
+					found = 1;
+					break;
+				case 1:
+					printf("Can't resolve %s on line %d\n", from, line);
+					bail(YTE_INIT);
+					break;
+				case 2:
+					printf("Can't resolve %s on line %d\n", to, line);
+					bail(YTE_INIT);
+					break;
+				case 3:
+					printf("Can't resolve %s on line %d\n", on, line);
+					bail(YTE_INIT);
+					break;
+				case 4:
+					printf("From and to are the same host on line %d\n", line);
+					bail(YTE_INIT);
+					break;
+				}
+			} else if(strcmp(cmd, "localhost") == 0) {
+				if(vhost != NULL) {
+					printf("Virtualhost already set before line %d\n", line);
+					bail(YTE_INIT);
+				}
+				host = get_word(&ptr);
+				if(host == NULL) {
+					printf("Missing hostname on line %d\n", line);
+					bail(YTE_INIT);
+				}
+				vhost = (char *)get_mem(1 + strlen(host));
+				strcpy(vhost, host);
 			} else {
-				newui_colors = uicolor;
-				newui_attr = uiattr;
+				printf("Unknown rc-directive on line %d\n", line);
+				bail(YTE_INIT);
 			}
-#endif
-		} else if (strcmp(w, "set") == 0 || strcmp(w, "turn") == 0) {
-			arg1 = get_word(&ptr);
-			arg2 = get_word(&ptr);
-			if (arg2 == NULL) {
-				errline = line_no;
-				break;
-			}
-			if (set_option(arg1, arg2) < 0) {
-				errline = line_no;
-				break;
-			}
-		} else if (strcmp(w, "localhost") == 0) {
-			arg1 = get_word(&ptr);
-			if (arg1 == NULL) {
-				errline = line_no;
-				break;
-			}
-			if (vhost == NULL) {
-				vhost = malloc(1 + strlen(arg1));
-				if (vhost != NULL)
-					(void) strcpy(vhost, arg1);
-			}
-		} else if (strcmp(w, "alias") == 0) {
-			arg1 = get_word(&ptr);
-			arg2 = get_word(&ptr);
-			if (arg2 == NULL) {
-				errline = line_no;
-				break;
-			}
-			a = get_mem(sizeof(struct alias));
-			at = strchr(arg1, '@');
-			if (at == arg1) {
-				a->type = ALIAS_AFTER;
-				(void) strncpy(a->from, arg1 + 1, 255);
-				a->from[254] = 0;
-				(void) strncpy(a->to, (*arg2 == '@' ? arg2 + 1 : arg2), 255);
-				a->to[254] = 0;
-			} else if (at == arg1 + strlen(arg1) - 1) {
-				a->type = ALIAS_BEFORE;
-				*at = 0;
-				(void) strncpy(a->from, arg1, 255);
-				a->from[254] = 0;
-				(void) strncpy(a->to, arg2, 255);
-				a->to[254] = 0;
-				if ((at = strchr(a->to, '@')) != NULL)
-					*at = 0;
-			} else {
-				a->type = ALIAS_ALL;
-				(void) strncpy(a->from, arg1, 255);
-				a->from[254] = 0;
-				(void) strncpy(a->to, arg2, 255);
-				a->to[254] = 0;
-			}
-			a->next = alias0;
-			alias0 = a;
-		} else {
-			errline = line_no;
-			break;
 		}
 	}
-	if (errline) {
-		(void) sprintf(errstr, "%s: syntax error at line %d", fname, errline);
-		errno = 0;
-		show_error(errstr);
-	}
-	free_mem(buf);
-	(void) fclose(fp);
+
+	fclose(fp);
 }
 
 /* ---- global functions ---- */
