@@ -133,7 +133,6 @@ init_user(vhost)
 
 	if ((me = new_user(my_name, my_host, NULL)) == NULL)
 		bail(YTE_ERROR);
-	me->key = '@';
 	me->remote.protocol = YTP_NEW;
 	me->remote.vmajor = VMAJOR;
 	me->remote.vminor = VMINOR;
@@ -155,7 +154,7 @@ yuser *
 new_user(name, hostname, tty)
 	char *name, *hostname, *tty;
 {
-	register yuser *out, *u;
+	register yuser *out;
 	ylong addr;
 
 	/* find the host address */
@@ -187,17 +186,12 @@ new_user(name, hostname, tty)
 	generate_full_name(out);
 	out->flags = def_flags;
 
-	/* Actually make an effort to keep the user list in order */
-
-	if (user_list == NULL || out->key <= user_list->key) {
+	if (user_list == NULL) {
 		out->unext = user_list;
 		user_list = out;
 	} else {
-		for (u = user_list; u->unext != NULL; u = u->unext)
-			if (out->key <= u->unext->key)
-				break;
-		out->unext = u->unext;
-		u->unext = out;
+		out->unext = user_list->unext;
+		user_list->unext = out;
 	}
 	return out;
 }
