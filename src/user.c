@@ -37,8 +37,7 @@ static ylong daemon_id;		/* running daemon ID counter */
 static int passwd_opened = 0;
 
 static char *
-user_name(uid)
-	ylong uid;
+user_name(ylong uid)
 {
 	register struct passwd *pw;
 	passwd_opened = 1;
@@ -48,7 +47,7 @@ user_name(uid)
 }
 
 static void
-close_passwd()
+close_passwd(void)
 {
 	if (passwd_opened) {
 		endpwent();
@@ -57,8 +56,7 @@ close_passwd()
 }
 
 void
-generate_full_name(user)
-	yuser *user;
+generate_full_name(yuser *user)
 {
 	register char *c, *d, *ce;
 
@@ -89,8 +87,7 @@ generate_full_name(user)
  * Initialize user data structures.
  */
 void
-init_user(vhost)
-	char *vhost;
+init_user(char *vhost)
 {
 	char *my_name, *my_vhost;
 	char my_host[100];
@@ -153,8 +150,7 @@ init_user(vhost)
  * Create a new user record.
  */
 yuser *
-new_user(name, hostname, tty)
-	char *name, *hostname, *tty;
+new_user(char *name, char *hostname, char *tty)
 {
 	register yuser *out;
 	ylong addr;
@@ -205,8 +201,7 @@ new_user(name, hostname, tty)
 }
 
 void
-free_user(user)
-	yuser *user;
+free_user(yuser *user)
 {
 	register yuser *u;
 
@@ -286,9 +281,7 @@ free_user(user)
  * it is not checked.
  */
 yuser *
-find_user(name, host_addr, pid)
-	char *name;
-	ylong host_addr, pid;
+find_user(char *name, ylong host_addr, ylong pid)
 {
 	register yuser *u;
 
@@ -399,7 +392,7 @@ user_title(char *buf, int size, yuser *user)
  * Clear out the user list, freeing memory as we go.
  */
 void
-free_users()
+free_users(void)
 {
 	yuser *u, *un;
 	unsigned int i;
