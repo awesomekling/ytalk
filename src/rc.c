@@ -246,7 +246,7 @@ read_rcfile(fname)
 					def_flags |= opts[i].flag;
 					break;
 				case -1:
-					printf("Invalid bool option on line %d\n", line);
+					fprintf(stderr, "Invalid bool option on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 					break;
 				case 0:
@@ -259,7 +259,12 @@ read_rcfile(fname)
 		if (!found) {
 			if(strcmp(cmd, "alias") == 0) {
 				found = 1;
-				new_alias(get_word(&ptr), get_word(&ptr));
+				from = get_word(&ptr);
+				to   = get_word(&ptr);
+				if(!new_alias(from, to)) {
+					fprintf(stderr, "Not enough parameters for alias on line %d in %s\n", line, fname);
+					bail(YTE_INIT);
+				}
 			} else if(strcmp(cmd, "ui_colors") == 0) {
 				bg = get_word(&ptr);
 				fg = get_word(&ptr);
@@ -268,15 +273,15 @@ read_rcfile(fname)
 					found = 1;
 					break;
 				case 1:
-					printf("You must specify both foreground and background on line %d\n", line);
+					fprintf(stderr, "You must specify both foreground and background on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 					break;
 				case 2:
-					printf("Foreground color on line %d is invalid\n", line);
+					fprintf(stderr, "Foreground color on line %d (%s) is invalid\n", line, fname);
 					bail(YTE_INIT);
 					break;
 				case 3:
-					printf("Background color on line %d is invalid\n", line);
+					fprintf(stderr, "Background color on line %d (%s) is invalid\n", line, fname);
 					bail(YTE_INIT);
 					break;
 				}
@@ -289,36 +294,36 @@ read_rcfile(fname)
 					found = 1;
 					break;
 				case 1:
-					printf("Can't resolve %s on line %d\n", from, line);
+					fprintf(stderr, "Can't resolve %s on line %d in %s\n", from, line, fname);
 					bail(YTE_INIT);
 					break;
 				case 2:
-					printf("Can't resolve %s on line %d\n", to, line);
+					fprintf(stderr, "Can't resolve %s on line %d in %s\n", to, line, fname);
 					bail(YTE_INIT);
 					break;
 				case 3:
-					printf("Can't resolve %s on line %d\n", on, line);
+					fprintf(stderr, "Can't resolve %s on line %d in %s\n", on, line, fname);
 					bail(YTE_INIT);
 					break;
 				case 4:
-					printf("From and to are the same host on line %d\n", line);
+					fprintf(stderr, "From and to are the same host on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 					break;
 				}
 			} else if(strcmp(cmd, "localhost") == 0) {
 				if(vhost != NULL) {
-					printf("Virtualhost already set before line %d\n", line);
+					fprintf(stderr, "Virtualhost already set before line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
 				host = get_word(&ptr);
 				if(host == NULL) {
-					printf("Missing hostname on line %d\n", line);
+					fprintf(stderr, "Missing hostname on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
 				vhost = (char *)get_mem(1 + strlen(host));
 				strcpy(vhost, host);
 			} else {
-				printf("Unknown rc-directive on line %d\n", line);
+				fprintf(stderr, "Unknown rc-directive on line %d in %s\n", line, fname);
 				bail(YTE_INIT);
 			}
 		}
