@@ -25,12 +25,11 @@ ytk_destroy_menu(ytk_menu *m)
 	if (m->first == NULL)
 		return;
 	it = m->first;
-	while (it->next != NULL) {
+	while (it != NULL) {
 		itn = it->next;
 		free_mem(it);
 		it = itn;
 	}
-	free_mem(it);
 	free_mem(m);
 }
 
