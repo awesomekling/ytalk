@@ -228,8 +228,7 @@ open_term(yuser *user)
 {
 	if (open_curses(user) != 0)
 		return -1;
-	user->x = 0;
-	user->y = user->rows - 1;
+	user->x = user->y = 0;
 	if (user->scr == NULL)
 		resize_win(user, 24, 80);
 	return 0;
@@ -857,7 +856,6 @@ resize_win(yuser *user, int height, int width)
 		/* shift all recent lines to top of screen */
 
 		j = first_interesting_row(user, height, width);
-		j = 0;
 		for (i = 0; i < height; i++) {
 			new_scr[++new_y] = user->scr[j];
 			if (j == user->y)
