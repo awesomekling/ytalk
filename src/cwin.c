@@ -190,10 +190,9 @@ curses_redraw(void)
 	clear();
 	wnoutrefresh(stdscr);
 
-	if (in_ymenu()) {
-		resize_ymenu();
+	resize_ymenu();
+	if (in_ymenu())
 		__refresh_ymenu();
-	}
 
 	row = 0;
 	for (w = head; w; w = w->next) {
