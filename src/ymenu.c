@@ -115,29 +115,25 @@ handle_main_menu(ytk_menu_item *i)
 }
 
 void
-handle_usermenu(ytk_menu_item *i)
+handle_userlist_menu(ytk_menu_item *i)
 {
-	init_usermenu(((ytk_menu_item *) i)->hotkey);
-	ytk_push(menu_stack, usermenu_menu);
-}
-
-void
-handle_rering_all(ytk_menu_item *i)
-{
-	(void) i;
-	esc_userlist(userlist_menu);
-	hide_ymenu();
-	rering_all();
-}
-
-void
-handle_kill_unconnected(ytk_menu_item *i)
-{
-	(void) i;
-	esc_userlist(userlist_menu);
-	hide_ymenu();
-	while (wait_list)
-		free_user(wait_list);
+	switch (i->hotkey) {
+	case 'R':
+		esc_userlist(userlist_menu);
+		hide_ymenu();
+		rering_all();
+		break;
+	case 'K':
+		esc_userlist(userlist_menu);
+		hide_ymenu();
+		while (wait_list)
+			free_user(wait_list);
+		break;
+	default:
+		init_usermenu(i->hotkey);
+		ytk_push(menu_stack, usermenu_menu);
+		break;
+	}
 }
 
 #ifdef YTALK_COLOR
@@ -310,7 +306,7 @@ init_userlist()
 			else
 				p += sprintf(p, "UNIX talk");
 			u->key = hk++;
-			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_usermenu);
+			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_userlist_menu);
 		}
 	}
 	for (u = wait_list; u; u = u->next) {
@@ -321,12 +317,12 @@ init_userlist()
 				   u->full_name, _("<unconnected>")
 			 );
 			u->key = hk++;
-			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_usermenu);
+			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_userlist_menu);
 		}
 	}
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
-	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Rering all unconnected"), 'R', handle_rering_all);
-	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Kill all unconnected"), 'K', handle_kill_unconnected);
+	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Rering all unconnected"), 'R', handle_userlist_menu);
+	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Kill all unconnected"), 'K', handle_userlist_menu);
 	ytk_set_escape(userlist_menu, esc_userlist);
 #ifdef YTALK_COLOR
 	ytk_set_colors(userlist_menu, menu_colors);
