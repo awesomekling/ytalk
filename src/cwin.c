@@ -458,20 +458,6 @@ close_curses(user)
 	curses_redraw();
 }
 
-static void
-raw_addch_curses(user, c)
-	yuser *user;
-	register ylong c;
-{
-	register ywin *w;
-	register int x, y;
-	w = (ywin *) (user->term);
-	getyx(w->win, y, x);
-	waddch(w->win, c);
-	if (x >= COLS - 1)
-		wmove(w->win, y, x);
-}
-
 void
 addch_curses(user, c)
 	yuser *user;
