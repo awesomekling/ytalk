@@ -31,6 +31,13 @@
 # endif
 #endif
 
+#ifdef HAVE_ARPA_INET_H
+# include <arpa/inet.h> 
+#else
+ylong inet_addr();
+char *inet_ntoa();
+#endif
+
 #ifdef _AIX
 # include <sys/select.h>
 #endif
@@ -876,7 +883,6 @@ get_host_addr(hostname)
 {
     struct hostent *host;
     ylong addr;
-    ylong inet_addr();
 
     errno = 0;
     if((host = (struct hostent *) gethostbyname(hostname)) != NULL)
@@ -902,7 +908,6 @@ host_name(addr)
   ylong addr;
 {
     struct hostent *host;
-    char *inet_ntoa();
     char **s;
 
     if((host = gethostbyaddr((char *) &addr, sizeof(addr), AF_INET)) == NULL)
