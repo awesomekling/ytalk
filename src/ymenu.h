@@ -4,7 +4,9 @@ void update_ymenu();
 void show_ymenu();
 void hide_ymenu();
 void resize_ymenu();
+
 void refresh_ymenu();
+void __refresh_ymenu();
 
 void init_ymenu();
 

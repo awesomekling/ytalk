@@ -610,7 +610,7 @@ __redisplay_curses()
 		}
 	}
 	if (in_ymenu()) {
-		refresh_ymenu();
+		__refresh_ymenu();
 	}
 }
 

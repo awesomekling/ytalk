@@ -298,10 +298,18 @@ resize_ymenu()
 }
 
 void
-refresh_ymenu()
+__refresh_ymenu()
 {
 	if (!ytk_is_empty_stack(menu_stack)) {
 		ytk_display_stack(menu_stack);
+	}
+}
+
+void
+refresh_ymenu()
+{
+	if (!ytk_is_empty_stack(menu_stack)) {
+		__refresh_ymenu();
 		ytk_sync_display();
 	}
 }
