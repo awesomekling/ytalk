@@ -17,6 +17,7 @@
 
 #include "header.h"
 #include "ytp.h"
+#include "cwin.h"
 #include "ymenu.h"
 #include "mem.h"
 #include <pwd.h>

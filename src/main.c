@@ -17,6 +17,7 @@
 
 #include "header.h"
 #include <signal.h>
+#include "cwin.h"
 #include "ymenu.h"
 #include "mem.h"
 

@@ -16,6 +16,7 @@
 
 
 #include "header.h"
+#include "cwin.h"
 #include <pwd.h>
 
 #ifdef HAVE_SYS_IOCTL_H

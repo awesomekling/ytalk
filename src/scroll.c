@@ -1,5 +1,6 @@
 /* scroll.c - scrollback functions */
 #include "header.h"
+#include "cwin.h"
 #include "mem.h"
 
 yuser *scuser;

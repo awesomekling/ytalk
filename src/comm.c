@@ -19,6 +19,7 @@
 #include "ytp.h"
 #include "socket.h"
 #include "ymenu.h"
+#include "cwin.h"
 #include "mem.h"
 
 #ifdef HAVE_IOVEC_H

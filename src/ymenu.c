@@ -6,6 +6,7 @@
 
 #include "ytk.h"
 #include "ymenu.h"
+#include "cwin.h"
 
 #ifdef YTALK_COLOR
 extern int menu_colors;
