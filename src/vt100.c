@@ -175,6 +175,14 @@ vt100_process(user, data)
 		}
 		user->got_esc = 0;
 		break;
+	case 'G':		/* move horizontally */
+		if (user->got_esc == 2) {
+			if (user->av[0] > 0)
+				user->av[0]--;
+			move_term(user, user->y, user->av[0]);
+		}
+		user->got_esc = 0;
+		break;
 	case 'g':
 		if (user->got_esc == 2) {
 			if (user->av[0] == 3) {	/* clear all tabs */
