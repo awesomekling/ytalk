@@ -43,14 +43,14 @@
 
 #include "cwin.h"
 
-static int (*_open_term) ();	/* open a new terminal */
-static void (*_close_term) ();	/* close a terminal */
-static void (*_addch_term) ();	/* write a char to a terminal */
-static void (*_move_term) ();	/* move cursor to Y,X position */
-static void (*_clreol_term) ();	/* clear to end of line */
-static void (*_clreos_term) ();	/* clear to end of screen */
-static void (*_scroll_term) ();	/* scroll up one line */
-static void (*_rev_scroll_term) ();	/* scroll down one line */
+static int (*_open_term) (yuser *);		/* open a new terminal */
+static void (*_close_term) (yuser *);		/* close a terminal */
+static void (*_addch_term) (yuser *, yachar);	/* write a char to a terminal */
+static void (*_move_term) (yuser *, int, int);	/* move cursor to Y,X position */
+static void (*_clreol_term) (yuser *);		/* clear to end of line */
+static void (*_clreos_term) (yuser *);		/* clear to end of screen */
+static void (*_scroll_term) (yuser *);		/* scroll up one line */
+static void (*_rev_scroll_term) (yuser *);	/* scroll down one line */
 
 static int term_type = 0;
 
@@ -69,7 +69,7 @@ static struct termios tio;
 
 #ifdef USE_SGTTY
 static void
-init_sgtty()
+init_sgtty(void)
 {
 	if (ioctl(0, TIOCGETD, &line_discipline) < 0) {
 		show_error("TIOCGETD");
@@ -99,7 +99,7 @@ init_sgtty()
 }
 #else
 static void
-init_termios()
+init_termios(void)
 {
 	/* get edit chars */
 
@@ -129,7 +129,7 @@ init_termios()
  * Initialize terminal and input characteristics.
  */
 void
-init_term()
+init_term(void)
 {
 #ifdef USE_SGTTY
 	init_sgtty();
@@ -171,8 +171,7 @@ init_term()
  * Set terminal size.
  */
 void
-set_terminal_size(fd, rows, cols)
-	int fd, rows, cols;
+set_terminal_size(int fd, int rows, int cols)
 {
 #ifdef TIOCSWINSZ
 	struct winsize winsize;
@@ -187,8 +186,7 @@ set_terminal_size(fd, rows, cols)
  * Set terminal and input characteristics for slave terminals.
  */
 void
-set_terminal_flags(fd)
-	int fd;
+set_terminal_flags(int fd)
 {
 #ifdef USE_SGTTY
 	ioctl(fd, TIOCSETD, &line_discipline);
@@ -203,7 +201,7 @@ set_terminal_flags(fd)
 }
 
 int
-what_term()
+what_term(void)
 {
 	return term_type;
 }
@@ -213,9 +211,7 @@ what_term()
  * Change terminal keypad mode (only for me, only with curses)
  */
 void
-keypad_term(user, bf)
-	yuser *user;
-	int bf;
+keypad_term(yuser *user, int bf)
 {
 	if (user != me)
 		return;
@@ -228,7 +224,7 @@ keypad_term(user, bf)
  * Abort all terminal processing.
  */
 void
-end_term()
+end_term(void)
 {
 	switch (term_type) {
 	case 1:		/* curses */
@@ -306,8 +302,7 @@ addch_term(yuser *user, ychar c)
 
 #ifdef YTALK_COLOR
 static yachar
-yac(c)
-	char c;
+yac(char c)
 {
 	yachar ac;
 	ac.l = c;
@@ -318,9 +313,7 @@ yac(c)
 }
 
 static yachar
-uyac(user, c)
-	yuser *user;
-	char c;
+uyac(yuser *user, char c)
 {
 	yachar ac;
 	ac.l = c;
@@ -336,9 +329,7 @@ uyac(user, c)
  * Move the cursor.
  */
 void
-move_term(user, y, x)
-	register yuser *user;
-	register int y, x;
+move_term(yuser *user, int y, int x)
 {
 	if (y < 0 || y > user->sc_bot)
 		y = user->sc_bot;
@@ -358,8 +349,7 @@ move_term(user, y, x)
  * Clear to EOL.
  */
 void
-clreol_term(user)
-	register yuser *user;
+clreol_term(yuser *user)
 {
 	register int j;
 	register yachar *c;
@@ -391,8 +381,7 @@ clreol_term(user)
  * Clear to EOS.
  */
 void
-clreos_term(user)
-	register yuser *user;
+clreos_term(yuser *user)
 {
 	register int j, i;
 	register yachar *c;
@@ -427,8 +416,7 @@ clreos_term(user)
  * Scroll window.
  */
 void
-scroll_term(user)
-	register yuser *user;
+scroll_term(yuser *user)
 {
 	register int i;
 	register yachar *c;
@@ -495,8 +483,7 @@ scroll_term(user)
  * Reverse-scroll window.
  */
 void
-rev_scroll_term(user)
-	register yuser *user;
+rev_scroll_term(yuser *user)
 {
 	register int i;
 	register yachar *c;
@@ -534,8 +521,7 @@ rev_scroll_term(user)
  * Rub one character.
  */
 void
-rub_term(user)
-	register yuser *user;
+rub_term(yuser *user)
 {
 	if (user->x > 0) {
 		if (user->x == user->cols - 1)
@@ -556,8 +542,7 @@ rub_term(user)
  * Rub one word.
  */
 int
-word_term(user)
-	register yuser *user;
+word_term(yuser *user)
 {
 	register int x, out;
 
@@ -584,8 +569,7 @@ word_term(user)
  * Kill current line.
  */
 void
-kill_term(user)
-	register yuser *user;
+kill_term(yuser *user)
 {
 	if (user->x > 0) {
 		move_term(user, user->y, 0);
@@ -597,8 +581,7 @@ kill_term(user)
  * Expand a tab.  We use non-destructive tabs.
  */
 void
-tab_term(user)
-	register yuser *user;
+tab_term(yuser *user)
 {
 	int i;
 	/* Find nearest tab and jump to it. */
@@ -616,8 +599,7 @@ tab_term(user)
  * Process a carriage return.
  */
 void
-cr_term(user)
-	register yuser *user;
+cr_term(yuser *user)
 {
 	move_term(user, user->y, 0);
 	return;
@@ -627,8 +609,7 @@ cr_term(user)
  * Process a line feed.
  */
 void
-lf_term(user)
-	register yuser *user;
+lf_term(yuser *user)
 {
 	register int new_y, next_y;
 
@@ -663,8 +644,7 @@ lf_term(user)
  * Process a newline.
  */
 void
-newline_term(user)
-	register yuser *user;
+newline_term(yuser *user)
 {
 	register int new_y, next_y;
 
@@ -700,9 +680,7 @@ newline_term(user)
  * Insert lines.
  */
 void
-add_line_term(user, num)
-	register yuser *user;
-	int num;
+add_line_term(yuser *user, int num)
 {
 	register yachar *c;
 	register int i;
@@ -747,9 +725,7 @@ add_line_term(user, num)
  * Delete lines.
  */
 void
-del_line_term(user, num)
-	register yuser *user;
-	int num;
+del_line_term(yuser *user, int num)
 {
 	register yachar *c;
 	register int i;
@@ -791,9 +767,7 @@ del_line_term(user, num)
 }
 
 static void
-copy_text(fr, to, count)
-	register yachar *fr, *to;
-	register int count;
+copy_text(yachar *fr, yachar *to, int count)
 {
 	if (to < fr) {
 		for (; count > 0; count--)
@@ -810,9 +784,7 @@ copy_text(fr, to, count)
  * Add chars.
  */
 void
-add_char_term(user, num)
-	register yuser *user;
-	int num;
+add_char_term(yuser *user, int num)
 {
 	register yachar *c;
 	register int i;
@@ -852,9 +824,7 @@ add_char_term(user, num)
  * Delete chars.
  */
 void
-del_char_term(user, num)
-	register yuser *user;
-	int num;
+del_char_term(yuser *user, int num)
 {
 	register yachar *c;
 	register int i;
@@ -894,9 +864,7 @@ del_char_term(user, num)
  * Redraw a user's window.
  */
 void
-redraw_term(user, y)
-	register yuser *user;
-	register int y;
+redraw_term(yuser *user, int y)
 {
 	register int x;
 	register yachar *c;
@@ -922,9 +890,7 @@ redraw_term(user, y)
  * height and width.
  */
 static int
-first_interesting_row(user, height, width)
-	yuser *user;
-	int height, width;
+first_interesting_row(yuser *user, int height, int width)
 {
 	register int j, i;
 	register yachar *c;
@@ -959,9 +925,7 @@ first_interesting_row(user, height, width)
  * Called when a user's window has been resized.
  */
 void
-resize_win(user, height, width)
-	yuser *user;
-	int height, width;
+resize_win(yuser *user, int height, int width)
 {
 	register int j, i;
 	register yachar *c, **new_scr;
@@ -1062,10 +1026,7 @@ resize_win(user, height, width)
  * Draw a nice box.
  */
 static void
-draw_box(user, height, width, c)
-	yuser *user;
-	int height, width;
-	char c;
+draw_box(yuser *user, int height, int width, char c)
 {
 	register int i;
 
@@ -1096,9 +1057,7 @@ draw_box(user, height, width, c)
  * Set the virtual terminal size, ie: the display region.
  */
 void
-set_win_region(user, height, width)
-	yuser *user;
-	int height, width;
+set_win_region(yuser *user, int height, int width)
 {
 	register int x, y;
 	int old_height, old_width;
@@ -1148,8 +1107,7 @@ set_win_region(user, height, width)
  * Set the virtual terminal size, ie: the display region.
  */
 void
-end_win_region(user)
-	yuser *user;
+end_win_region(yuser *user)
 {
 	int old_height, old_width;
 
@@ -1170,9 +1128,7 @@ end_win_region(user)
  * Set the scrolling region.
  */
 void
-set_scroll_region(user, top, bottom)
-	yuser *user;
-	int top, bottom;
+set_scroll_region(yuser *user, int top, int bottom)
 {
 	if (top < 0 || top >= user->rows || bottom >= user->rows || bottom < top
 	    || (bottom <= 0 && top <= 0)) {
@@ -1188,8 +1144,7 @@ set_scroll_region(user, top, bottom)
  * Send a message to the terminal.
  */
 void
-msg_term(str)
-	char *str;
+msg_term(char *str)
 {
 	bottom_msg = str;
 	bottom_time = time(NULL);
@@ -1217,9 +1172,7 @@ msg_term(str)
  * Spew terminal line contents to a file descriptor.
  */
 void
-spew_line(fd, buf, len)
-	int fd, len;
-	yachar *buf;
+spew_line(int fd, yachar *buf, int len)
 {
 	int a, b, c, v, p;
 	int alast, acur;
@@ -1272,8 +1225,7 @@ spew_line(fd, buf, len)
 }
 
 void
-spew_attrs(fd, at, bg, fg)
-	int fd, at, bg, fg;
+spew_attrs(int fd, int at, int bg, int fg)
 {
 	char esc[30];
 	int p = 2;
@@ -1303,9 +1255,7 @@ spew_attrs(fd, at, bg, fg)
  * Spew terminal contents to a file descriptor.
  */
 void
-spew_term(user, fd, rows, cols)
-	yuser *user;
-	int fd, rows, cols;
+spew_term(yuser *user, int fd, int rows, int cols)
 {
 	register yachar *c, *e;
 	register int len;
