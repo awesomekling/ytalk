@@ -7,6 +7,7 @@
 #include "ytk.h"
 #include "ymenu.h"
 #include "cwin.h"
+#include "gtalk.h"
 
 static ytk_stack *menu_stack = NULL;
 static ytk_thing *main_menu = NULL;
@@ -272,7 +273,6 @@ init_ymenu()
 static void
 handle_disconnect_user(ytk_menu_item *i)
 {
-	yuser *u;
 	(void) i;
 	hide_ymenu();
 	if (menu_user && menu_user != me)
@@ -307,6 +307,7 @@ handle_privatemessage(ytk_menu_item *i)
 {
 	ytk_thing *b;
 	char *titlebuf;
+	(void) i;
 
 	if (menu_user == NULL ||  menu_user == me)
 		return;
