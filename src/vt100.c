@@ -186,6 +186,7 @@ vt100_process(yuser *user, char data)
 		}
 		user->vt.got_esc = 0;
 		break;
+	case 'f':		/* force cursor */
 	case 'H':		/* move */
 		if (user->vt.got_esc == 2) {
 			if (user->vt.av[0] > 0)
@@ -194,7 +195,8 @@ vt100_process(yuser *user, char data)
 				user->vt.av[1]--;
 			move_term(user, user->vt.av[0], user->vt.av[1]);
 		} else {
-			user->scr_tabs[user->x] = 1;
+			if (data == 'H')	/* <esc>H is set tab */
+				user->scr_tabs[user->x] = 1;
 		}
 		user->vt.got_esc = 0;
 		break;
