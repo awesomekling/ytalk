@@ -26,6 +26,7 @@
 
 #include "cwin.h"
 
+#define YTRC_ERROR(a)	fprintf(stderr, "(%s:%d) %s\n", fname, line, a)
 
 #define IS_WHITE(c)	\
 	((c)==' '  ||	\
@@ -317,7 +318,7 @@ read_rcfile(fname)
 					def_flags |= opts[i].flag;
 					break;
 				case -1:
-					fprintf(stderr, "Invalid bool option on line %d in %s\n", line, fname);
+					YTRC_ERROR("Invalid bool option.");
 					bail(YTE_INIT);
 					break;
 				case 0:
@@ -333,7 +334,7 @@ read_rcfile(fname)
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				if (!new_alias(from, to)) {
-					fprintf(stderr, "Not enough parameters for alias on line %d in %s\n", line, fname);
+					YTRC_ERROR("Not enough parameters for alias.");
 					bail(YTE_INIT);
 				}
 #ifdef YTALK_COLOR
@@ -351,15 +352,15 @@ read_rcfile(fname)
 					found = 1;
 					break;
 				case 1:
-					fprintf(stderr, "You must specify both foreground and background on line %d in %s\n", line, fname);
+					YTRC_ERROR("You must specify both foreground and background.");
 					bail(YTE_INIT);
 					break;
 				case 2:
-					fprintf(stderr, "Foreground color on line %d (%s) is invalid\n", line, fname);
+					YTRC_ERROR("Invalid foreground color.");
 					bail(YTE_INIT);
 					break;
 				case 3:
-					fprintf(stderr, "Background color on line %d (%s) is invalid\n", line, fname);
+					YTRC_ERROR("Invalid background color.");
 					bail(YTE_INIT);
 					break;
 				}
@@ -374,31 +375,31 @@ read_rcfile(fname)
 					found = 1;
 					break;
 				case 1:
-					fprintf(stderr, "Can't resolve %s on line %d in %s\n", from, line, fname);
+					YTRC_ERROR("Cannot resolve \"from\" address.");
 					bail(YTE_INIT);
 					break;
 				case 2:
-					fprintf(stderr, "Can't resolve %s on line %d in %s\n", to, line, fname);
+					YTRC_ERROR("Cannot resolve \"to\" address.");
 					bail(YTE_INIT);
 					break;
 				case 3:
-					fprintf(stderr, "Can't resolve %s on line %d in %s\n", on, line, fname);
+					YTRC_ERROR("Cannot resolve \"on\" address.");
 					bail(YTE_INIT);
 					break;
 				case 4:
-					fprintf(stderr, "From and to are the same host on line %d in %s\n", line, fname);
+					YTRC_ERROR("From and to are the same host.");
 					bail(YTE_INIT);
 					break;
 				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
 				if (vhost != NULL) {
-					fprintf(stderr, "Virtualhost already set before line %d in %s\n", line, fname);
+					YTRC_ERROR("Virtual host already set.");
 					bail(YTE_INIT);
 				}
 				tmp = get_word(&ptr);
 				if (tmp == NULL) {
-					fprintf(stderr, "Missing hostname on line %d in %s\n", line, fname);
+					YTRC_ERROR("Missing hostname.");
 					bail(YTE_INIT);
 				}
 				vhost = (char *) get_mem(1 + strlen(tmp));
@@ -417,7 +418,7 @@ read_rcfile(fname)
 				found = 1;
 				tmp = get_word(&ptr);
 				if (!set_shell(tmp)) {
-					fprintf(stderr, "Shell can't be set to nothing on line %d in %s\n", line, fname);
+					YTRC_ERROR("Shell cannot be empty.");
 				}
 			} else if (strcmp(cmd, "history_rows") == 0) {
 				found = 1;
@@ -425,7 +426,7 @@ read_rcfile(fname)
 				if (tmp != NULL)
 					scrollback_lines = strtol(tmp, NULL, 10);
 			} else {
-				fprintf(stderr, "Unknown option \"%s\" on line %d in %s\n", cmd, line, fname);
+				YTRC_ERROR("Unknown option.");
 				bail(YTE_INIT);
 			}
 		}
