@@ -62,30 +62,11 @@ vt100_process(yuser *user, char data)
 		user->vt.got_esc = 0;
 		break;
 #endif
-	case '7':		/* save cursor and attributes */
-#ifdef YTALK_COLOR
-		user->sc_at = user->c_at;
-		user->sc_bg = user->c_bg;
-		user->sc_fg = user->c_fg;
-#endif
-		user->sy = user->y;
-		user->sx = user->x;
-		user->vt.got_esc = 0;
-		break;
 	case 's':		/* save cursor */
 		if (user->vt.got_esc == 2) {
 			user->sy = user->y;
 			user->sx = user->x;
 		}
-		user->vt.got_esc = 0;
-		break;
-	case '8':		/* restore cursor and attributes */
-#ifdef YTALK_COLOR
-		user->c_at = user->sc_at;
-		user->c_fg = user->sc_fg;
-		user->c_bg = user->sc_bg;
-#endif
-		move_term(user, user->sy, user->sx);
 		user->vt.got_esc = 0;
 		break;
 	case 'u':		/* restore cursor */
@@ -124,13 +105,6 @@ vt100_process(yuser *user, char data)
 				add_char_term(user, 1);
 			else
 				add_char_term(user, user->vt.av[0]);
-		}
-		user->vt.got_esc = 0;
-		break;
-	case '0':
-		if (user->vt.lparen == 1) {
-			user->altchar = 1;
-			user->vt.lparen = 0;
 		}
 		user->vt.got_esc = 0;
 		break;
@@ -184,6 +158,10 @@ vt100_process(yuser *user, char data)
 			else
 				scroll_term(user);
 		}
+		user->vt.got_esc = 0;
+		break;
+	case 'E':
+		newline_term(user);
 		user->vt.got_esc = 0;
 		break;
 	case 'f':		/* force cursor */
@@ -308,6 +286,32 @@ vt100_process(yuser *user, char data)
 		break;
 	case '(':
 		user->vt.lparen = 1;
+		break;
+	case '0':
+		if (user->vt.lparen == 1) {
+			user->altchar = 1;
+			user->vt.lparen = 0;
+		}
+		user->vt.got_esc = 0;
+		break;
+	case '7':		/* save cursor and attributes */
+#ifdef YTALK_COLOR
+		user->sc_at = user->c_at;
+		user->sc_bg = user->c_bg;
+		user->sc_fg = user->c_fg;
+#endif
+		user->sy = user->y;
+		user->sx = user->x;
+		user->vt.got_esc = 0;
+		break;
+	case '8':		/* restore cursor and attributes */
+#ifdef YTALK_COLOR
+		user->c_at = user->sc_at;
+		user->c_fg = user->sc_fg;
+		user->c_bg = user->sc_bg;
+#endif
+		move_term(user, user->sy, user->sx);
+		user->vt.got_esc = 0;
 		break;
 	default:
 		user->vt.got_esc = 0;
