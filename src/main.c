@@ -114,8 +114,8 @@ main(argc, argv)
     int xflg = 0, sflg = 0, yflg = 0, iflg = 0, vflg = 0;
     char *prog;
 
+#ifdef YTALK_DEBUG
     /* check for a 64-bit mis-compile */
-
     if(sizeof(ylong) != 4)
     {
     	fprintf(stderr, "The definition for ylong in header.h is wrong;\n\
@@ -123,6 +123,7 @@ please change it to an unsigned 32-bit type that works on your computer,\n\
 then type 'make clean' and 'make'.\n");
 	(void)exit(YTE_INIT);
     }
+#endif
 
     /* search for options */
 
