@@ -57,8 +57,7 @@ static readdr *readdr_list = NULL;	/* list of re-addresses */
  * Create a datagram socket.
  */
 static int
-init_dgram(sock)
-	struct sockaddr_in *sock;
+init_dgram(struct sockaddr_in *sock)
 {
 	int fd;
 	ysocklen_t socklen;
@@ -89,11 +88,7 @@ init_dgram(sock)
  * Initialize a new daemon structure.
  */
 static int
-init_daemon(name, port, mptr, mlen, rptr, rlen)
-	char *name;
-	short port;
-	yaddr mptr, rptr;
-	int mlen, rlen;
+init_daemon(char *name, short port, yaddr mptr, int mlen, yaddr rptr, int rlen)
 {
 	struct servent *serv;
 	int d;
@@ -118,8 +113,7 @@ init_daemon(name, port, mptr, mlen, rptr, rlen)
 }
 
 static void
-read_autoport(fd)
-	int fd;
+read_autoport(int fd)
 {
 	ysocklen_t socklen;
 	static v2_pack pack;
@@ -169,7 +163,7 @@ read_autoport(fd)
  * Create and initialize the auto-invitation socket.
  */
 static void
-init_autoport()
+init_autoport(void)
 {
 	ysocklen_t socklen;
 
@@ -210,9 +204,7 @@ init_autoport()
  * host I'm sending to.
  */
 static void
-place_my_address(sock, addr)
-	BSD42_SOCK *sock;
-	register ylong addr;
+place_my_address(BSD42_SOCK *sock, ylong addr)
 {
 	register readdr *r;
 
@@ -232,11 +224,12 @@ place_my_address(sock, addr)
 /*
  * sendit() sends the completed message to the talk daemon at the given
  * hostname, then reads a response packet.
+ *
+ * addr = host internet address
+ * d = daemon number
  */
 static int
-sendit(addr, d)
-	ylong addr;		/* host internet address */
-	int d;			/* daemon number */
+sendit(ylong addr, int d)
 {
 	int n;
 	struct sockaddr_in remote_daemon;
@@ -380,8 +373,7 @@ sendit(addr, d)
  * version(s) of the daemon are running.
  */
 static int
-find_daemon(addr)
-	ylong addr;
+find_daemon(ylong addr)
 {
 	register hostinfo *h;
 	register int n, i, d;
@@ -493,8 +485,7 @@ find_daemon(addr)
 }
 
 static ylong
-make_net_mask(addr)
-	ylong addr;
+make_net_mask(ylong addr)
 {
 	if (addr & (ylong) 0xff)
 		return (ylong) 0xffffffff;
@@ -513,7 +504,7 @@ make_net_mask(addr)
  * Initialize sockets and message parameters.
  */
 void
-init_socket()
+init_socket(void)
 {
 	/* init daemons in order of preference */
 
@@ -542,7 +533,7 @@ init_socket()
  * it does not gracefully shut systems down.
  */
 void
-close_all()
+close_all(void)
 {
 	register yuser *u;
 	register int d;
@@ -568,9 +559,7 @@ close_all()
  * First, a quick and easy interface for the user sockets.
  */
 int
-send_dgram(user, type)
-	yuser *user;
-	u_char type;
+send_dgram(yuser *user, u_char type)
 {
 	ylong addr;
 	int d;
@@ -706,8 +695,7 @@ send_dgram(user, type)
  * always sends to the caller's host, and always does just an invite.
  */
 int
-send_auto(type)
-	u_char type;
+send_auto(u_char type)
 {
 	int dtype, d, rc;
 
@@ -742,7 +730,7 @@ send_auto(type)
  * Shut down the auto-invitation system.
  */
 void
-kill_auto()
+kill_auto(void)
 {
 	if (autofd < 0)
 		return;
@@ -756,8 +744,7 @@ kill_auto()
  * Create a TCP socket for communication with other talk users.
  */
 int
-newsock(user)
-	yuser *user;
+newsock(yuser *user)
 {
 	int fd;
 	ysocklen_t socklen;
@@ -796,8 +783,7 @@ newsock(user)
  * Connect to another user's communication socket.
  */
 int
-connect_to(user)
-	yuser *user;
+connect_to(yuser *user)
 {
 	register yuser *u;
 	int fd;
@@ -847,8 +833,7 @@ connect_to(user)
  * Find a host's address.
  */
 ylong
-get_host_addr(hostname)
-	char *hostname;
+get_host_addr(char *hostname)
 {
 	struct hostent *host;
 	ylong addr;
@@ -875,8 +860,7 @@ get_host_addr(hostname)
  * (1st alias with a dot)
  */
 char *
-host_name(addr)
-	ylong addr;
+host_name(ylong addr)
 {
 	struct hostent *host;
 	char **s;
@@ -903,8 +887,7 @@ host_name(addr)
  * differently-addressed "bar.com" to host "xyzzy.com".
  */
 int
-readdress_host(from_id, to_id, on_id)
-	char *from_id, *to_id, *on_id;
+readdress_host(char *from_id, char *to_id, char *on_id)
 {
 	register readdr *new;
 	ylong from_addr, to_addr, on_addr;

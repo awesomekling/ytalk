@@ -283,43 +283,45 @@ struct alias {
 
 /* ---- global functions ---- */
 
-extern void bail( /* int */ );	/* main.c */
-extern char *str_copy( /* string */ );	/* main.c */
-extern void show_error( /* str */ );	/* main.c */
+/* main.c */
+extern void bail(int);
+extern char *str_copy(char *);
+extern void show_error(char *);
 
-extern void init_term();	/* term.c */
-extern void set_terminal_size( /* fd, rows, cols */ );	/* term.c */
-extern void set_terminal_flags( /* fd */ );	/* term.c */
-extern int what_term();		/* term.c */
-extern void end_term();		/* term.c */
+/* term.c */
+extern void init_term(void);
+extern void set_terminal_size(int, int, int);
+extern void set_terminal_flags(int);
+extern int what_term(void);
+extern void end_term(void);
 extern int open_term(yuser *);
 extern void close_term(yuser *);
 extern void addch_term(yuser *, ychar);
-extern void move_term( /* yuser, y, x */ );	/* term.c */
-extern void clreol_term( /* yuser */ );	/* term.c */
-extern void clreos_term( /* yuser */ );	/* term.c */
-extern void scroll_term( /* yuser */ );	/* term.c */
-extern void rev_scroll_term( /* yuser */ );	/* term.c */
-extern void rub_term( /* yuser */ );	/* term.c */
-extern int word_term( /* yuser */ );	/* term.c */
-extern void kill_term( /* yuser */ );	/* term.c */
-extern void tab_term( /* yuser */ );	/* term.c */
-extern void newline_term( /* yuser */ );	/* term.c */
-extern void cr_term( /* yuser */ );	/* term.c */
-extern void lf_term( /* yuser */ );	/* term.c */
-extern void add_line_term( /* yuser, num */ );	/* term.c */
-extern void del_line_term( /* yuser, num */ );	/* term.c */
-extern void add_char_term( /* yuser, num */ );	/* term.c */
-extern void del_char_term( /* yuser, num */ );	/* term.c */
-extern void redraw_term( /* yuser, start_row */ );	/* term.c */
-extern void keypad_term( /* yuser, int */ );	/* term.c */
-extern void resize_win( /* yuser, h, w */ );	/* term.c */
-extern void set_win_region( /* yuser, h, w */ );	/* term.c */
-extern void end_win_region( /* yuser */ );	/* term.c */
-extern void set_scroll_region( /* yuser, top, bottom */ );	/* term.c */
-extern void msg_term( /* yuser, str */ );	/* term.c */
-extern void spew_term( /* yuser, fd, rows, cols */ );	/* term.c */
-extern void redraw_all_terms();	/* term.c */
+extern void move_term(yuser *, int, int);
+extern void clreol_term(yuser *);
+extern void clreos_term(yuser *);
+extern void scroll_term(yuser *);
+extern void rev_scroll_term(yuser *);
+extern void rub_term(yuser *);
+extern int word_term(yuser *);
+extern void kill_term(yuser *);
+extern void tab_term(yuser *);
+extern void newline_term(yuser *);
+extern void cr_term(yuser *);
+extern void lf_term(yuser *);
+extern void add_line_term(yuser *, int);
+extern void del_line_term(yuser *, int);
+extern void add_char_term(yuser *, int);
+extern void del_char_term(yuser *, int);
+extern void redraw_term(yuser *, int);
+extern void keypad_term(yuser *, int);
+extern void resize_win(yuser *, int, int);
+extern void set_win_region(yuser *, int, int);
+extern void end_win_region(yuser *);
+extern void set_scroll_region(yuser *, int, int);
+extern void msg_term(char *);
+extern void spew_term(yuser *, int, int, int);
+extern void redraw_all_terms(void);
 
 #define set_raw_term			set_raw_curses
 #define set_cooked_term			set_cooked_curses
@@ -328,14 +330,15 @@ extern void redraw_all_terms();	/* term.c */
 #define update_scroll_term		update_scroll_curses
 #define retitle_all_terms		retitle_all_curses
 #define redraw_all_terms		redisplay_curses
-#define flush_term				flush_curses
+#define flush_term			flush_curses
 
-extern void init_user();	/* user.c */
-extern yuser *new_user( /* name, host, tty */ );	/* user.c */
-extern void free_user( /* yuser */ );	/* user.c */
-extern yuser *find_user( /* name, host_addr, pid */ );	/* user.c */
-extern void generate_full_name( /* yuser */ );	/* user.c */
-extern void free_users();	/* user.c */
+/* user.c */
+extern void init_user(char *);
+extern yuser *new_user(char *, char *, char *);
+extern void free_user(yuser *);
+extern yuser *find_user(char *, ylong, ylong);
+extern void generate_full_name(yuser *);
+extern void free_users(void);
 extern void user_title(char *, int, yuser *);
 
 extern void init_fd();		/* fd.c */
@@ -358,30 +361,35 @@ extern void lock_flags( /* flags */ );	/* comm.c */
 extern void unlock_flags();	/* comm.c */
 extern void rering_all();	/* comm.c */
 
-extern void init_socket();	/* socket.c */
-extern void close_all();	/* socket.c */
-extern int send_dgram( /* user, type */ );	/* socket.c */
-extern int send_auto( /* type */ );	/* socket.c */
-extern void kill_auto();	/* socket.c */
-extern int newsock( /* yuser */ );	/* socket.c */
-extern int connect_to( /* yuser */ );	/* socket.c */
-extern ylong get_host_addr( /* hostname */ );	/* socket.c */
-extern char *host_name( /* addr */ );	/* socket.c */
-extern int readdress_host( /* from, to, on */ );	/* socket.c */
+/* socket.c */
+extern void init_socket(void);
+extern void close_all(void);
+extern int send_dgram(yuser *, u_char);
+extern int send_auto(u_char);
+extern void kill_auto(void);
+extern int newsock(yuser *);
+extern int connect_to(yuser *);
+extern ylong get_host_addr(char *);
+extern char *host_name(ylong);
+extern int readdress_host(char *, char *, char *);
 
-extern void read_ytalkrc(void);			/* rc.c */
-extern char *resolve_alias(char *);		/* rc.c */
+/* rc.c */
+extern void read_ytalkrc(void);
+extern char *resolve_alias(char *);
 
-extern void execute(char *);			/* exec.c */
-extern void update_exec(void);			/* exec.c */
-extern void kill_exec(void);			/* exec.c */
-extern void winch_exec(void);			/* exec.c */
+/* exec.c */
+extern void execute(char *);
+extern void update_exec(void);
+extern void kill_exec(void);
+extern void winch_exec(void);
 
-extern void vt100_process(yuser *, char);	/* vt100.c */
+/* vt100.c */
+extern void vt100_process(yuser *, char);
 
-extern void init_scroll(yuser *);		/* scroll.c */
-extern void free_scroll(yuser *);		/* scroll.c */
-extern void scroll_up(yuser *);			/* scroll.c */
-extern void scroll_down(yuser *);		/* scroll.c */
+/* scroll.c */
+extern void init_scroll(yuser *);
+extern void free_scroll(yuser *);
+extern void scroll_up(yuser *);
+extern void scroll_down(yuser *);
 
 /* EOF */
