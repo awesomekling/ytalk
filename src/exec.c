@@ -182,7 +182,9 @@ exec_input(fd)
 		kill_exec();
 		errno = 0;
 		if (!last_command)
-			show_error("Command shell terminated");
+			msg_term("Command shell terminated.");
+		else
+			msg_term("Command execution finished.");
 		return;
 	}
 	show_input(me, buf, rc);
@@ -232,18 +234,18 @@ execute(command)
 
 	if (me->flags & FL_LOCKED) {
 		errno = 0;
-		show_error("alternate mode already running");
+		show_error("A command is already executing.");
 		return;
 	}
 #ifdef HAVE_OPENPTY
 	if (openpty(&fd, &fds, name, NULL, NULL) < 0) {
-		msg_term("cannot get pseudo terminal");
+		msg_term("Cannot allocate pseudo-terminal.");
 		return;
 	}
 	close(fds);
 #else
 	if ((fd = getpty(name)) < 0) {
-		msg_term("cannot get pseudo terminal");
+		msg_term("Cannot allocate pseudo-terminal.");
 		return;
 	}
 #endif
