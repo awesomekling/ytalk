@@ -208,7 +208,7 @@ read_rcfile(fname)
 	    {
 		vhost = malloc(1+strlen(arg1));
 		if (vhost != NULL)
-		    strcpy(vhost, arg1);
+		    (void)strcpy(vhost, arg1);
 	    }
 	}
 	else if (strcmp(w, "alias") == 0)
@@ -224,24 +224,24 @@ read_rcfile(fname)
 	    at = strchr(arg1, '@');
 	    if (at == arg1) {
 	      a->type = ALIAS_AFTER;
-	      strncpy(a->from, arg1+1, 255);
+	      (void)strncpy(a->from, arg1+1, 255);
 	      a->from[254] = 0;
-	      strncpy(a->to, (*arg2=='@' ? arg2+1 : arg2), 255);
+	      (void)strncpy(a->to, (*arg2=='@' ? arg2+1 : arg2), 255);
 	      a->to[254] = 0;
 	    } else if (at == arg1 + strlen(arg1) - 1) {
 	      a->type = ALIAS_BEFORE;
 	      *at = 0;
-	      strncpy(a->from, arg1, 255);
+	      (void)strncpy(a->from, arg1, 255);
 	      a->from[254] = 0;
-	      strncpy(a->to, arg2, 255);
+	      (void)strncpy(a->to, arg2, 255);
 	      a->to[254] = 0;
 	      if ((at = strchr(a->to, '@')) != NULL)
 		*at = 0;
 	    } else {
 	      a->type = ALIAS_ALL;
-	      strncpy(a->from, arg1, 255);
+	      (void)strncpy(a->from, arg1, 255);
 	      a->from[254] = 0;
-	      strncpy(a->to, arg2, 255);
+	      (void)strncpy(a->to, arg2, 255);
 	      a->to[254] = 0;
 	    }
 	    a->next = alias0;
@@ -255,13 +255,13 @@ read_rcfile(fname)
     }
     if(errline)
     {
-	sprintf(errstr, "%s: syntax error at line %d", fname, errline);
+	(void)sprintf(errstr, "%s: syntax error at line %d", fname, errline);
 	errno = 0;
 	show_error(errstr);
     }
 
     free_mem(buf);
-    fclose(fp);
+    (void)fclose(fp);
 }
 
 /* ---- global functions ---- */
@@ -278,24 +278,24 @@ resolve_alias(uh)
     if (a->type == ALIAS_ALL && strcmp(uh, a->from) == 0)
       return a->to;
 
-  strncpy(uh1, uh, 255);
+  (void)strncpy(uh1, uh, 255);
   uh1[254] = 0;
   if ((at = strchr(uh1, '@')) != NULL)
     *at = 0;
   for (a=alias0; a; a=a->next) {
     if (a->type == ALIAS_BEFORE && strcmp(uh1, a->from) == 0) {
       found = 1;
-      strncpy(uh1, a->to, 255);
+      (void)strncpy(uh1, a->to, 255);
       uh1[254] = 0;
       if ((at = strchr(uh, '@')) != NULL)
         if (strlen(uh1) + strlen(at) < 256)
-          strcat(uh1, at);
+          (void)strcat(uh1, at);
       uh = uh1;
       break;
     }
   }
   if (!found) {
-    strncpy(uh1, uh, 255);
+    (void)strncpy(uh1, uh, 255);
     uh1[254] = 0;
   }
   at = strchr(uh1, '@');
@@ -305,7 +305,7 @@ resolve_alias(uh)
       if (a->type == ALIAS_AFTER && strcmp(at, a->from) == 0) {
         found = 1;
         if (strlen(a->to) + (at - uh1) < 255)
-          strcpy(at, a->to);
+          (void)strcpy(at, a->to);
         break;
       }
     }
@@ -335,7 +335,7 @@ read_ytalkrc()
     if(pw != NULL) 
     {
 	fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
-	sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
+	(void)sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
 	read_rcfile(fname);
 	free_mem(fname);
     }

@@ -70,7 +70,7 @@ setsid()
     if((fd = open("/dev/tty", O_RDWR)) >= 0)
     {
 	ioctl(fd, TIOCNOTTY);
-	close(fd);
+	(void)close(fd);
     }
     return fd;
 # endif
@@ -110,7 +110,7 @@ getpty(name)
 	signal(SIGCHLD, sigchld);
 	if (r == 0 && tt != NULL)
 	{
-	    strcpy(name, tt);
+	    (void)strcpy(name, tt);
 #ifdef YTALK_SUNOS
 	    needtopush=1;
 #endif
@@ -127,17 +127,17 @@ getpty(name)
     {
 	if((tt = ttyname(pty)) != NULL)
 	{
-	    strcpy(name, tt);
+	    (void)strcpy(name, tt);
 	    return pty;
 	}
-	close(pty);
+	(void)close(pty);
     }
 
 #endif
 
     /* scan Berkeley-style */
 
-    strcpy(name, "/dev/ptyp0");
+    (void)strcpy(name, "/dev/ptyp0");
     while(access(name, 0) == 0)
     {
 	if((pty = open(name, O_RDWR)) >= 0)
@@ -145,11 +145,11 @@ getpty(name)
 	    name[5] = 't';
 	    if((tty = open(name, O_RDWR)) >= 0)
 	    {
-		close(tty);
+		(void)close(tty);
 		return pty;
 	    }
 	    name[5] = 'p';
-	    close(pty);
+	    (void)close(pty);
 	}
 
 	/* get next pty name */
@@ -270,7 +270,7 @@ execute(command)
 
     if((pid = fork()) == 0)
     {
-	close(fd);
+	(void)close(fd);
 	close_all();
 #ifdef HAVE_TCSETPGRP
         if((sid = setsid()) < 0)
@@ -294,9 +294,9 @@ execute(command)
 # endif
 #endif
 
-        dup2(fd, 0);
-        dup2(fd, 1);
-        dup2(fd, 2);
+        (void)dup2(fd, 0);
+        (void)dup2(fd, 1);
+        (void)dup2(fd, 2);
 
 	/* tricky bit -- ignore WINCH */
 
@@ -364,7 +364,7 @@ execute(command)
 void
 update_exec()
 {
-    (void)write(pfd, io_ptr, io_len);
+    (void)write(pfd, io_ptr, (size_t)io_len);
     io_len = 0;
 }
 
@@ -376,7 +376,7 @@ kill_exec()
     if(!running_process)
 	return;
     remove_fd(pfd);
-    close(pfd);
+    (void)close(pfd);
     running_process = 0;
     unlock_flags();
     set_cooked_term();
@@ -410,6 +410,6 @@ winch_exec()
     set_terminal_size(pfd, prows, pcols);
     set_win_region(me, prows, pcols);
 #ifdef SIGWINCH
-    kill(pid, SIGWINCH);
+    (void)kill(pid, SIGWINCH);
 #endif
 }

@@ -180,7 +180,7 @@ init_term()
 
     /* set me up a terminal */
 
-    sprintf(tmpstr, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
+    (void)sprintf(tmpstr, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
     if(open_term(me, tmpstr) < 0)
     {
 	end_term();
@@ -200,7 +200,7 @@ set_terminal_size(fd, rows, cols)
 
     winsize.ws_row = rows;
     winsize.ws_col = cols;
-    ioctl(fd, TIOCSWINSZ, &winsize);
+    (void)ioctl(fd, TIOCSWINSZ, &winsize);
 #endif
 }
 
@@ -1159,7 +1159,7 @@ spew_term(user, fd, rows, cols)
 
 	/* move the cursor to the correct place */
 
-	sprintf(tmp, "%c[%d;%dH", 27, user->y + 1, user->x + 1);
+	(void)sprintf(tmp, "%c[%d;%dH", 27, user->y + 1, user->x + 1);
 	(void)write(fd, tmp, strlen(tmp));
     }
     else

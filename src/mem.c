@@ -85,7 +85,7 @@ int get_size(mem_list *list, yaddr addr) {
  */
 yaddr real_get_mem(int n, int line, char *file) {
 	yaddr out;
-	if((out = (yaddr)malloc(n)) == NULL) {
+	if((out = (yaddr)malloc((size_t)n)) == NULL) {
 		show_error("malloc() failed");
 		bail(YTE_NO_MEM);
 	}
@@ -98,7 +98,7 @@ yaddr real_get_mem(int n, int line, char *file) {
 void free_mem(yaddr addr) {
 	int size;
 	if((size = get_size(glist, addr)) > 0) {
-		memset(addr, '\0', size);
+		(void)memset(addr, '\0', (size_t)size);
 		free(addr);
 		glist = del_area(glist, addr);
 	} else {
@@ -119,7 +119,7 @@ yaddr realloc_mem(yaddr p, int n) {
 #endif
 		return get_mem(n);
 	}
-	if((out = (yaddr)realloc(p, n)) == NULL) {
+	if((out = (yaddr)realloc(p, (size_t)n)) == NULL) {
 		show_error("realloc() failed");
 		bail(YTE_NO_MEM);
 	}
