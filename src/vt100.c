@@ -158,6 +158,8 @@ vt100_process(user, data)
 				move_term(user, user->y, 0);
 			else
 				move_term(user, user->y, user->x - user->av[0]);
+		} else {
+			scroll_term(user);
 		}
 		user->got_esc = 0;
 		break;
