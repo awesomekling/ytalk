@@ -422,6 +422,8 @@ update_ymenu()
 			ytk_handle_stack_input(menu_stack, ch);
 			ytk_display_stack(menu_stack);
 			ytk_sync_display();
+		} else {
+			break;
 		}
 	}
 }
