@@ -107,14 +107,16 @@ new_draw_title(w)
 {
 	int x;
 	char *t = w->title;
-	if(w->user == scuser) {
-		newui_attr |= A_BOLD;
-	}
 	move(w->row - 1, w->col);
 	for (x = 0; x < w->width; x++) {
 		if (x >= 1 && *t) {
 			addch(*t | COLOR_PAIR(newui_colors) | newui_attr);
 			t++;
+		} else if (x == (w->width - 7)) {
+			if (w->user == scuser)
+				addch('*' | COLOR_PAIR(newui_colors) | newui_attr);
+			else
+				addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
 		} else if (x == (w->width - 5)) {
 			/*
 			 * FIXME: This should be optional. Add a
@@ -145,9 +147,6 @@ new_draw_title(w)
 		} else {
 			addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
 		}
-	}
-	if(w->user == scuser) {
-		newui_attr &= ~A_BOLD;
 	}
 }
 #endif
