@@ -99,7 +99,7 @@ int
 full_read(fd, buf, len)
   int fd;
   register char *buf;
-  register int len;
+  register size_t len;
 {
     register int rc;
 
