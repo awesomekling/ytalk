@@ -24,7 +24,15 @@
 
 #include <sys/types.h>
 #include <sys/param.h>
-#include <sys/socket.h>
+
+#ifdef YTALK_HPUX
+# define _XOPEN_SOURCE_EXTENDED
+# include <sys/socket.h>
+# undef _XOPEN_SOURCE_EXTENDED
+#else
+# include <sys/socket.h>
+#endif
+
 #include <netinet/in.h>
 #include <errno.h>
 #include <stdlib.h>
