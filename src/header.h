@@ -144,7 +144,7 @@ typedef struct _yuser {
 	char bump;		/* set if at far right */
 	int onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
-	char got_esc;		/* received an ESC */
+	short int got_esc;	/* received an ESC */
 	char key;		/* this user's ident letter for menus */
 	int y, x;		/* current cursor position */
 	int sy, sx;		/* saved cursor position */
@@ -169,7 +169,7 @@ typedef struct _yuser {
 	struct sockaddr_in sock;/* communication socket */
 	struct sockaddr_in orig_sock;	/* original socket -- another sick
 					 * hack */
-	unsigned int av[MAXARG];	/* ESC sequence arguments */
+	short int av[MAXARG];	/* ESC sequence arguments */
 	unsigned int ac;		/* ESC sequence arg count */
 	unsigned int lparen;		/* lparen escape? */
 

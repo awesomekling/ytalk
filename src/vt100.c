@@ -10,8 +10,8 @@ static unsigned long int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
 };
 
-char YT_ACS_ON = 0x0E;
-char YT_ACS_OFF = 0x0F;
+char YT_ACS_ON = '\xE';
+char YT_ACS_OFF = '\xF';
 
 void
 vt100_process(yuser *user, char data)
@@ -19,7 +19,7 @@ vt100_process(yuser *user, char data)
 	unsigned int i;
 
 	if (data >= '0' && data <= '9' && user->got_esc > 1) {
-		user->av[user->ac] = (user->av[user->ac] * 10) + (data - '0');
+		user->av[user->ac] = (user->av[user->ac] * 10) + (int) (data - '0');
 		return;
 	}
 	switch (data) {
@@ -123,7 +123,7 @@ vt100_process(yuser *user, char data)
 		user->got_esc = 0;
 		break;
 	case '0':
-		if (user->lparen) {
+		if (user->lparen == 1) {
 			user->altchar = 1;
 			user->lparen = 0;
 		}
@@ -141,7 +141,7 @@ vt100_process(yuser *user, char data)
 		user->got_esc = 0;
 		break;
 	case 'B':		/* move down */
-		if (user->lparen) {
+		if (user->lparen == 1) {
 			user->altchar = 0;
 			user->lparen = 0;
 		} else {
