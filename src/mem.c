@@ -22,8 +22,11 @@ mem_list *add_area(mem_list *list, yaddr addr, int size) {
  */
 mem_list *del_area(mem_list *list, yaddr addr) {
 	mem_list *it = list, *backup = list;
-	if(it->addr == addr)
-		return it->next;
+	if(it->addr == addr) {
+		list = it->next;
+		free(it);
+		return list;
+	}
 	while(it != NULL) {
 		if(it->addr == addr)
 			break;
