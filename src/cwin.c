@@ -17,6 +17,7 @@
 /* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
+#include "mem.h"
 
 #if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
 # include <ncurses.h>

@@ -17,6 +17,7 @@
 /* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
+#include "mem.h"
 #include <pwd.h>
 
 #define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n')

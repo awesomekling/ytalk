@@ -19,6 +19,7 @@
 #include "header.h"
 #include "socket.h"
 #include "menu.h"
+#include "mem.h"
 
 #ifdef HAVE_IOVEC_H
 # include <iovec.h>

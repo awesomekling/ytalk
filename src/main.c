@@ -19,6 +19,7 @@
 #include "header.h"
 #include <signal.h>
 #include "menu.h"
+#include "mem.h"
 
 char errstr[132];	/* temporary string for errors */
 char *vhost = NULL;	/* specified virtual host */

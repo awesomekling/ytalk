@@ -17,6 +17,7 @@
 /* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
+#include "mem.h"
 
 #ifdef HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>

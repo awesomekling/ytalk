@@ -18,6 +18,7 @@
 
 #include "header.h"
 #include "menu.h"
+#include "mem.h"
 #include <pwd.h>
 #include <string.h>
 
