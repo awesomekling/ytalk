@@ -167,7 +167,7 @@ clear_all()
 #endif
     while(glist != NULL) {
 #ifdef YTALK_DEBUG
-	printf("0x%lx: %d\t(%s:%d)\n", glist->addr, glist->size,
+	printf("0x%lx: %d\t(%s:%d)\n", (long unsigned)glist->addr, glist->size,
 				       glist->file, glist->line
 	);
 #endif
