@@ -17,7 +17,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_NCURSES_H_MU
+#ifdef HAVE_NCURSES_H
 #define YTALK_COLOR
 #endif
 
