@@ -518,7 +518,9 @@ int
 yes_no(char *str)
 {
 	ytk_thing *yn;
+	char *p;
 	int out = 0;
+	p = str_copy(str);
 	yn = ytk_new_msgbox(NULL);
 	ytk_add_msgbox_item(YTK_MSGBOX(yn), str);
 #ifdef YTALK_COLOR
@@ -551,5 +553,6 @@ yes_no(char *str)
 		refresh_ymenu();
 	}
 	io_len = 0;
+	free_mem(p);
 	return out;
 }
