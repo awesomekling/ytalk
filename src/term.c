@@ -940,10 +940,6 @@ redraw_term(user, y)
 
 	/* redisplay any active menu */
 
-#if 0
-	if (menu_ptr != NULL)
-		update_menu();
-#endif
 	if (in_ymenu())
 		update_ymenu();
 	_move_term(user, user->y, user->x);
