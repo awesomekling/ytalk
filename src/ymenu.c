@@ -33,7 +33,6 @@ do_runcmd(ytk_inputbox *b)
 	hide_ymenu();
 	if (b->len > 0)
 		execute(b->data);
-	do_hidething(YTK_THING(b));
 }
 
 void
@@ -42,7 +41,6 @@ do_adduser(ytk_inputbox *b)
 	hide_ymenu();
 	if (b->len > 0)
 		invite(b->data, 0);
-	do_hidething(YTK_THING(b));
 }
 
 void
