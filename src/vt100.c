@@ -61,19 +61,28 @@ vt100_process(user, data)
 	    user->sc_at = user->c_at;
 	    user->sc_bg = user->c_bg;
 	    user->sc_fg = user->c_fg;
-	    /* fall through */
-	case 's':	/* save cursor */
 	    user->sy = user->y;
 	    user->sx = user->x;
+	    user->got_esc = 0;
+	    break;
+	case 's':	/* save cursor */
+	    if(user->got_esc == 2) {
+		user->sy = user->y;
+		user->sx = user->x;
+	    }
 	    user->got_esc = 0;
 	    break;
 	case '8':	/* restore cursor and attributes */
 	    user->c_at = user->sc_at;
 	    user->c_fg = user->sc_fg;
 	    user->c_bg = user->sc_bg;
-	    /* fall through */
-	case 'u':	/* restore cursor */
 	    move_term(user, user->sy, user->sx);
+	    user->got_esc = 0;
+	    break;
+	case 'u':	/* restore cursor */
+	    if(user->got_esc == 2) {
+		move_term(user, user->sy, user->sx);
+	    }
 	    user->got_esc = 0;
 	    break;
 	case 'h':	/* set modes */
