@@ -274,22 +274,6 @@ close_term(user)
 	}
 }
 
-#ifdef YTALK_COLOR
-void
-_addch_termc(user, c)
-	register yuser *user;
-	register ychar c;
-{
-	yachar ac;
-	ac.l = c;
-	ac.a = user->c_at;
-	ac.b = user->c_fg;
-	ac.c = user->c_bg;
-	ac.v = user->altchar ^ user->csx;
-	_addch_term(user, ac);
-}
-#endif
-
 /*
  * Place a character.
  */
