@@ -24,6 +24,10 @@
 #include <stdio.h>
 #include <pwd.h>
 
+#ifdef HAVE_FCNTL_H
+#  include <fcntl.h>
+#endif
+
 extern int dont_change_my_addr;
 
 yuser *me;			/* my user information */
@@ -306,6 +310,50 @@ find_user(char *name, ylong host_addr, ylong pid)
 	/* nobody I know */
 
 	return NULL;
+}
+
+/*
+ * Save a user's entire conversation history to a file.
+ */
+void
+save_user_to_file(yuser *user, ychar *filename)
+{
+	yachar **p;
+	int fd;
+	char msgbuf[80];
+	unsigned long lines = 0;
+	unsigned short r;
+
+	/* Let's not overwrite or underprotect */
+	fd = open(filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
+	if (fd < 0) {
+		show_error(_("Couldn't open file for writing."));
+		return;
+	}
+	/* If user has scrollback history, dump 'em all! */
+	if (user->scrollback != NULL) {
+		for (p = user->scrollback; *p; p++, lines++) {
+			spew_line(fd, *p, ya_strlen(*p));
+			write(fd, "\n", 1);
+		}
+	}
+	/* Dump his currently visible lines */
+	if (user->scr && user->scr[0]) {
+		for (r = 0; r < user->rows; r++, lines++) {
+			spew_line(fd, user->scr[r], user->cols);
+			write(fd, "\n", 1);
+		}
+	}
+	if (close(fd) < 0) {
+		show_error(_("Couldn't close output file."));
+		return;
+	}
+#ifdef HAVE_SNPRINTF
+	snprintf(msgbuf, sizeof(msgbuf), _("Wrote %lu lines."), lines);
+#else
+	sprintf(msgbuf, _("Wrote %lu lines."), lines);
+#endif
+	msg_term(msgbuf);
 }
 
 void
