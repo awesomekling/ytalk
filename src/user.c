@@ -363,9 +363,9 @@ free_users()
 	if(u->term != NULL)
 	    free_mem(u->term);
 	if(u->scr != NULL) {
-		for(i = 0; i < u->rows; i++)
-			free_mem(u->scr[i]);
-		free_mem(u->scr);
+	    for(i = 0; i < u->rows; i++)
+		free_mem(u->scr[i]);
+	    free_mem(u->scr);
 	}
 	free_mem(u);
 	u = un;
