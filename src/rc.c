@@ -178,11 +178,6 @@ set_option(opt, value)
 		mask |= FL_NEWUI;
 #endif
 
-	else if (strcmp(opt, "asides") == 0
-		 || strcmp(opt, "aside") == 0
-		 || strcmp(opt, "as") == 0)
-		mask |= FL_ASIDE;
-
 	else if (strcmp(opt, "caps") == 0
 		 || strcmp(opt, "CAPS") == 0
 		 || strcmp(opt, "ca") == 0

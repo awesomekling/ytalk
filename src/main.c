@@ -124,9 +124,6 @@ main(argc, argv)
 	int argc;
 	char **argv;
 {
-#ifdef USE_X11
-	int xflg = 0;
-#endif
 	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0;
 	char *prog;
 
@@ -149,12 +146,6 @@ then type 'make clean' and 'make'.\n");
 			yflg++;
 			argv++, argc--;
 		}
-#ifdef USE_X11
-		else if (strcmp(*argv, "-x") == 0) {
-			xflg++;	/* enable X from the command line */
-			argv++, argc--;
-		}
-#endif
 		else if (strcmp(*argv, "-i") == 0) {
 			iflg++;
 			argv++, argc--;
@@ -185,11 +176,8 @@ then type 'make clean' and 'make'.\n");
 	if (argc <= 0) {
 		fprintf(stderr,
 			"Usage:    %s [options] user[@host][#tty]...\n\
-Options:     -i             --    no auto-invite port\n"
-#ifdef USE_X11
-		   "             -x             --    use the X interface\n"
-#endif
-			"             -Y             --    require caps on all y/n answers\n\
+Options:     -i             --    no auto-invite port\n\
+             -Y             --    require caps on all y/n answers\n\
              -s             --    start a shell\n\
              -q             --    prompt before quitting\n\
              -v             --    print program version\n\
@@ -223,10 +211,6 @@ Options:     -i             --    no auto-invite port\n"
 	init_fd();
 	read_ytalkrc();
 	init_user(vhost);
-#ifdef USE_X11
-	if (xflg)
-		def_flags |= FL_XWIN;
-#endif
 	if (yflg)
 		def_flags |= FL_CAPS;
 	if (iflg)

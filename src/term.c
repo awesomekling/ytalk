@@ -1539,18 +1539,6 @@ set_cooked_term()
 }
 
 int
-term_does_asides()
-{
-	/* only some terminal systems can do this */
-
-	switch (term_type) {
-	case 2:		/* X11 */
-		return 1;
-	}
-	return 0;
-}
-
-int
 term_does_scrollback()
 {
 	switch (term_type) {

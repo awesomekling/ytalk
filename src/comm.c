@@ -1266,7 +1266,7 @@ my_input(user, buf, len)
 						break;
 				}
 				if ((i = buf - c) > 0) {
-					if (user != NULL && user != me && !(def_flags & FL_ASIDE)) {
+					if (user != NULL && user != me) {
 						if (def_flags & FL_BEEP)
 							(void) putc(7, stderr);
 					} else {

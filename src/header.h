@@ -195,8 +195,6 @@ typedef struct _yuser {
 #define FL_IMPORT	0x00000008L	/* auto-import enabled */
 #define FL_INVITE	0x00000010L	/* auto-invite enabled */
 #define FL_RING		0x00000020L	/* rering at all */
-#define FL_XWIN		0x00000040L	/* X Windows enabled (startup opt) */
-#define FL_ASIDE	0x00000080L	/* multiple window input/asides */
 #define FL_CAPS		0x00000100L	/* want caps as answers */
 #define FL_NOAUTO       0x00000200L	/* no auto-invite port */
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
@@ -382,7 +380,6 @@ extern void redraw_all_terms();	/* term.c */
 extern void retitle_all_terms();/* term.c */
 extern void set_raw_term();	/* term.c */
 extern void set_cooked_term();	/* term.c */
-extern int term_does_asides();	/* term.c */
 extern int term_does_scrollback();	/* term.c */
 extern void start_scroll_term( /* yuser */ );	/* term.c */
 extern void end_scroll_term( /* yuser */ );	/* term.c */
