@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: YTalk 4.0.0\n"
-"POT-Creation-Date: 2004-12-05 18:16+0100\n"
+"Report-Msgid-Bugs-To: ytalk@impul.se\n"
+"POT-Creation-Date: 2004-12-06 14:01+0100\n"
 "PO-Revision-Date: 2004-12-05 14:52+0100\n"
 "Last-Translator: Andreas Kling <keso@impul.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: ytalk@impul.se\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/comm.c:189 src/comm.c:191
@@ -115,6 +115,7 @@ msgstr ""
 "                -h          --    visa detta hjälpmeddelande\n"
 
 #: src/main.c:202
+#, c-format
 msgid "Standard input is not a valid terminal device.\n"
 msgstr "Standard-input är ej en giltig terminalenhet.\n"
 
@@ -206,7 +207,7 @@ msgstr "Vem är du?"
 msgid "%s disconnected."
 msgstr "%s kopplade från."
 
-#: src/ymenu.c:80 src/ymenu.c:231
+#: src/ymenu.c:80 src/ymenu.c:232
 msgid "Run command"
 msgstr "Kör kommando"
 
@@ -214,134 +215,138 @@ msgstr "Kör kommando"
 msgid "Add user"
 msgstr "Lägg till användare"
 
-#: src/ymenu.c:225
+#: src/ymenu.c:226
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
-#: src/ymenu.c:226
+#: src/ymenu.c:227
 msgid "Add another user"
 msgstr "Lägg till användare"
 
-#: src/ymenu.c:227
+#: src/ymenu.c:228
 msgid "User list"
 msgstr "Användarlista"
 
-#: src/ymenu.c:229 src/ymenu.c:240
+#: src/ymenu.c:230 src/ymenu.c:241
 msgid "Options"
 msgstr "Inställningar"
 
-#: src/ymenu.c:230
+#: src/ymenu.c:231
 msgid "Spawn shell"
 msgstr "Starta skal"
 
-#: src/ymenu.c:233
+#: src/ymenu.c:234
 msgid "Quit"
 msgstr "Avsluta"
 
-#: src/ymenu.c:241
+#: src/ymenu.c:242
 msgid "Scrolling"
 msgstr "Skrollning"
 
-#: src/ymenu.c:242
+#: src/ymenu.c:243
 msgid "Word-wrap"
 msgstr "Word-wrap"
 
-#: src/ymenu.c:243
+#: src/ymenu.c:244
 msgid "Auto-import"
 msgstr "Auto-import"
 
-#: src/ymenu.c:244
+#: src/ymenu.c:245
 msgid "Auto-invite"
 msgstr "Auto-inbjudan"
 
-#: src/ymenu.c:245
+#: src/ymenu.c:246
 msgid "Reringing"
 msgstr "Återuppringning"
 
-#: src/ymenu.c:246
+#: src/ymenu.c:247
 msgid "Beeps"
 msgstr "Pip"
 
-#: src/ymenu.c:247
+#: src/ymenu.c:248
 msgid "Ignore break"
 msgstr "Ignorera brytsignal"
 
-#: src/ymenu.c:248
+#: src/ymenu.c:249
+msgid "Require caps"
+msgstr "Kräv versaler"
+
+#: src/ymenu.c:250
 msgid "Prompt rerings"
 msgstr "Fråga vid återuppringning"
 
-#: src/ymenu.c:249
+#: src/ymenu.c:251
 msgid "Prompt to quit"
 msgstr "Fråga vid avslut"
 
-#: src/ymenu.c:257
+#: src/ymenu.c:259
 msgid "Color Menu"
 msgstr "Färgmeny"
 
-#: src/ymenu.c:258
+#: src/ymenu.c:260
 msgid "Black"
 msgstr "Svart"
 
-#: src/ymenu.c:259
+#: src/ymenu.c:261
 msgid "Red"
 msgstr "Röd"
 
-#: src/ymenu.c:260
+#: src/ymenu.c:262
 msgid "Green"
 msgstr "Grön"
 
-#: src/ymenu.c:261
+#: src/ymenu.c:263
 msgid "Yellow"
 msgstr "Gul"
 
-#: src/ymenu.c:262
+#: src/ymenu.c:264
 msgid "Blue"
 msgstr "Blå"
 
-#: src/ymenu.c:263
+#: src/ymenu.c:265
 msgid "Magenta"
 msgstr "Magenta"
 
-#: src/ymenu.c:264
+#: src/ymenu.c:266
 msgid "Cyan"
 msgstr "Cyan"
 
-#: src/ymenu.c:265
+#: src/ymenu.c:267
 msgid "White"
 msgstr "Vit"
 
-#: src/ymenu.c:267
+#: src/ymenu.c:269
 msgid "Bold"
 msgstr "Fet"
 
-#: src/ymenu.c:295
+#: src/ymenu.c:297
 msgid "Disconnect"
 msgstr "Koppla från"
 
-#: src/ymenu.c:296
+#: src/ymenu.c:298
 msgid "Save to file"
 msgstr "Spara till fil"
 
-#: src/ymenu.c:313
+#: src/ymenu.c:315
 msgid "User List"
 msgstr "Användarlista"
 
-#: src/ymenu.c:337
+#: src/ymenu.c:339
 msgid "<unconnected>"
 msgstr "<ej ansluten>"
 
-#: src/ymenu.c:344
+#: src/ymenu.c:346
 msgid "Rering all unconnected"
 msgstr "Ring alla oanslutna"
 
-#: src/ymenu.c:345
+#: src/ymenu.c:347
 msgid "Kill all unconnected"
 msgstr "Släpp alla oanslutna"
 
-#: src/ymenu.c:485
+#: src/ymenu.c:487
 msgid "Error"
 msgstr "Felmeddelande"
 
-#: src/ymenu.c:520
+#: src/ymenu.c:522
 msgid "Message"
 msgstr "Meddelande"
