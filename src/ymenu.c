@@ -28,9 +28,9 @@ do_runcmd(ytk_inputbox * b)
 void
 do_adduser(ytk_inputbox * b)
 {
+	hide_ymenu();
 	if (b->len > 0)
 		invite(b->data);
-	hide_ymenu();
 }
 
 void
