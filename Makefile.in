@@ -1,0 +1,89 @@
+#			   NOTICE
+#
+# Copyright (c) 1990,1992,1993 Britt Yenne.  All rights reserved.
+# 
+# This software is provided AS-IS.  The author gives no warranty,
+# real or assumed, and takes no responsibility whatsoever for any 
+# use or misuse of this software, or any damage created by its use
+# or misuse.
+# 
+# This software may be freely copied and distributed provided that
+# no part of this NOTICE is deleted or edited in any manner.
+# 
+
+# This version of YTalk is maintained by Roger Espel Llima
+# <roger.espel.llima@pobox.com>, and provided under the same 
+# conditions; see the file README for details.
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+sysconfdir	= @sysconfdir@
+mandir		= @mandir@
+manext		= 1
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+CPPFLAGS	= @CPPFLAGS@
+INCLUDES	= @XINCS@
+LIBS		= @LIBS@ @XLIBS@
+LDFLAGS		= @LDFLAGS@
+DEFS		= @DEFS@ -DSYSTEM_YTALKRC=\"$(sysconfdir)/ytalkrc\"
+
+COMPILE = $(CC) $(INCLUDES) $(CPPFLAGS) $(DEFS) $(CFLAGS)
+LINK	= $(CC) $(CFLAGS) $(LDFLAGS) -o $@
+INSTALL	= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+RM	= rm -f
+
+OBJ = main.o term.o user.o fd.o comm.o menu.o socket.o rc.o exec.o cwin.o \
+      xwin.o
+
+SRC = $(OBJ:.o=.c)
+
+MAN = ytalk.1
+PRG = ytalk
+RC  = ytalkrc
+
+.c.o:
+	$(COMPILE) -c $<
+
+all:	$(PRG)
+
+$(PRG):	$(OBJ)
+	$(LINK) $(OBJ) $(LIBS)
+    
+clean:
+	$(RM) *.o $(PRG) *~ *.bak core
+
+distclean:	clean
+	$(RM) Makefile config.status config.log config.cache config.h
+
+realclean:	distclean
+
+install.bin:	$(PRG)
+	$(srcdir)/mkinstalldirs $(bindir)
+	$(INSTALL_PROGRAM) $(PRG) $(bindir)/$(PRG)
+
+install.man:
+	$(srcdir)/mkinstalldirs $(mandir)/man$(manext)
+	$(INSTALL_DATA) $(MAN) $(mandir)/man$(manext)/$(MAN)
+
+install.rc:
+	$(srcdir)/mkinstalldirs $(sysconfdir)
+	$(INSTALL_DATA) $(RC) $(sysconfdir)/$(RC)
+
+install:	install.bin install.man install.rc
+	@echo "Ytalk installation complete."
+
+uninstall:
+	$(RM) $(bindir)/$(PRG) $(mandir)/man$(manext)/$(MAN) $(sysconfdir)/$(RC)
+	@echo "Ytalk uninstalled."
+
+depend:
+	makedepend -- $(CFLAGS) -- $(SRC)
+

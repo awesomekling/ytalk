@@ -1,0 +1,79 @@
+dnl configure.in for Ytalk; started 14NOV98 by Roger Espel Llima
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(comm.c)
+AC_CONFIG_HEADER(config.h)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+
+dnl Checks for libraries.
+AC_CHECK_LIB(ncurses, initscr,, no_ncurses=1)
+
+dnl Curses is tricky; some systems have ncurses, others have curses, and
+dnl yet others require -ltermcap with -lcurses.  And using AC_CHECK_LIB
+dnl twice w/ the same arguments will use the cache value even if we give
+dnl it an "extralibs" argument, so we have to be creative with the function
+dnl to look for...
+if test "x$no_ncurses" = "x1" ; then
+  AC_CHECK_LIB(curses, initscr,, [\
+    AC_CHECK_LIB(termcap, tgetstr,, AC_MSG_ERROR(Can't find termcap library))
+    AC_CHECK_LIB(curses, endwin,, [\
+      AC_MSG_ERROR(Can't find curses or ncurses library)\
+    ], -ltermcap)\
+  ])
+else
+  dnl If we do have ncurses, check for ncurses.h 
+  AC_CHECK_HEADERS(ncurses.h)
+fi
+
+dnl Look for termios, and if that fails, try sgtty.
+AC_CHECK_FUNC(tcgetattr, [\
+  AC_CHECK_HEADERS(termios.h,, no_termios=1)], no_termios=1)
+if test "x$no_termios" = "x1" ; then 
+  AC_CHECK_HEADERS(sgtty.h,, AC_MSG_ERROR(Cannot find either termios or sgtty))
+fi
+
+dnl Check for X's stuff
+AC_PATH_XTRA
+if test "x$no_x" != "xyes" ; then
+  XLIBS="$X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
+else
+  XLIBS=""
+fi
+XINCS="$X_CFLAGS"
+AC_SUBST(XLIBS)
+AC_SUBST(XINCS)
+
+dnl Some systems need extra libraries for sockets and dns ...
+AC_CHECK_FUNC(socket,,AC_CHECK_LIB(socket, socket,, [AC_MSG_ERROR(Can't compile without socket)]))
+AC_CHECK_FUNC(gethostbyname,,AC_CHECK_LIB(nsl, gethostbyname,, [AC_MSG_ERROR(Can't compile without gethostbyname)]))
+
+dnl Checks for header files.
+AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h stropts.h unistd.h)
+AC_CHECK_HEADERS(iovec.h sys/uio.h)
+dnl AC_CHECK_HEADERS(termios.h sgtty.h, break)
+
+dnl if test "x$ac_cv_header_termios_h" != "xyes" -a "x$ac_cv_header_sgtty_h" != "xyes" ; then
+dnl   AC_MSG_ERROR(Cannot find either termios or sgtty)
+dnl fi
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_TIME
+
+AC_TYPE_SIGNAL
+AC_TYPE_SIZE_T
+
+AC_CHECK_FUNC(gethostname,,AC_MSG_ERROR(Can't run without gethostname))
+AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_CHECK_FUNCS(putenv strerror ttyname ptsname grantpt unlockpt)
+AC_CHECK_FUNCS(setsid tcflush)
+AC_CHECK_FUNCS(sigprocmask sigsetmask sighold, break)
+
+AC_OUTPUT(Makefile)
+

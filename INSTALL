@@ -1,0 +1,101 @@
+
+			Installation Procedure for Ytalk
+
+
+0) Preparation
+
+To build and install Ytalk, you need to unpack the archive.  Since you're
+reading this text, you have presumabley already done that.  Ytalk uses
+GNU autoconf now for configuration; those of you familiar with compiling
+GNU utilities will feel quite at home.
+
+Short & sweet:
+
+	./configure
+	make
+	make install
+
+1) Configuration
+
+To configure Ytalk, run the `configure' script provided with the
+distribution.  You may use all the standard arguments configure scripts
+take.  The most important ones are:
+
+  --help                  print help message
+
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          (/usr/local by default)
+  --bindir=DIR            user executables in DIR (PREFIX/bin)
+  --infodir=DIR           info documentation in DIR [PREFIX/info]
+  --mandir=DIR            man documentation in DIR [PREFIX/man]
+
+  --with-x		  use the X11 interface (default)
+  --without-x		  do not use the X11 interface; use text only
+
+  --x-includes=DIR	  specify where X11's include files are
+  --x-libraries=DIR	  specify where X11's libraries are
+
+
+The `./configure' script also understands a number of environment variables:
+
+  CPPFLAGS   flags to give to CPP and CC.
+	     ex: CPPFLAGS=-I/path/to/some/include/dir ./configure
+
+  LIBS       extra libraries to link to, and/or where to find them.
+	     ex: LIBS="-L/path/to/extra/libs -R/path/to/extra/libs" ./configure
+
+  CFLAGS     flags to give when compiling (default is -g -O2).
+	     ex: CFLAGS=-O2 ./configure
+
+  LDFLAGS    extra flags to give when linking.
+	     ex: LDFLAGS=-s ./configure
+
+You can customize many default settings by editing Makefile and
+config.h.  The program will work very well without your touching these
+files, but it is useful to have a look at things you can change there.
+
+2) Compilation
+
+To compile the program, type make and cross your fingers.  YTalk is
+fairly portable, so this _should_ work out of the box.  If it doesn't,
+please mail me with all the details at <roger.espel.llima@pobox.com>.
+
+After the compilation, a ready to use `ytalk' executable should reside
+in the distribution directory.  Other than missing its system-wide
+configuration file, it'll be all ready to use.
+
+This is also the right moment to look at the file `ytalkrc', which will
+be installed as the system-wide configuration file.
+
+If you change any options in the Makefile, please run "make clean"
+before recompiling.  If you change the environment variables to run
+`./configure' again, please delete the file `config.cache'.
+
+3) Installation
+
+Use `make install' to install Ytalk to the directories specified to
+configure (/usr/local/* by default).
+
+The standard installation process will copy the ytalk binary to
+/usr/local/bin, the man page to /usr/local/man/man1, and the system
+ytalkrc to /usr/local/etc.  You can customize the directories either
+through the configuration process or making the necessary changes in the
+Makefile.
+
+To delete the files created by Ytalk installation, you can use make
+uninstall.
+
+4) Acknowledgements
+
+Previous YTalk versions were maintained by Britt Yenne; since version
+3.0pl2 was released quite a few years ago, I assume he has lost interest
+in Ytalk, so I've been maintaining it in a "low-key" way (mostly just
+fixing bugs and adding minor things, now autoconf-ing it, and
+integrating people's bug fixes).
+
+Most of these installation instructions are taken word-for-word from the
+`INSTALL' file that comes with GNU Wget.  This means that, unlike the
+rest of the YTalk package (which is freely copyable as long as the
+copyright notices are kept in the sources), this file is (probably)
+covered by the GNU General Public License version 2.
+

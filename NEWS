@@ -1,0 +1,52 @@
+from 3.1 to 3.1.1
+  . try to look for the current machine's fqdn if hostname() doens't
+    include a '.'
+  . fixed the shell under Solaris (oops, broke it in 3.1!)
+  . misc autoconf fixes
+  . resizing didn't work with Linux and ncurses, fixed it
+  . YTalk now checks that connections are answered form the expected host;
+    if they aren't, it complains and shows the new hostname
+  . n-way talk sessions should now be free of duplicated users
+  . fixed the "readdress" option somewhat
+  . portability fixes for 64-bit machines (size_t instead of int)
+
+
+from 3.1beta2 to 3.1
+  . minor documentation updates
+
+from 3.1beta1 to 3.1beta2:
+  . config.h.in was missing a line for HAVE_IOVEC_H
+  . redid the test for termios vs sgtty, making sure tcgetattr exists if
+    termios is to be selected
+  . fixed 8bit-cleanness
+
+from 3.0pl2 to 3.1beta1: 
+  (this includes things that went into the various 3.0.3-8bit versions)
+  . fixed line wrap inside shells (at the cost of breaking the specs in
+    term.doc slightly)
+  . made ESC[r in shells
+  . added the /dev/ptmx style of pty's, and some Solaris-specific code to
+    go with it
+  . added -Y to ask for caps in yes/no questions
+  . added -i to leave the incoming talks to the daemon
+  . added the 'k' option to the main menu (kill all unconnected)
+  . avoid clearing the window when the last partner ^C's on you
+  . 8 bit clean (except for character 0xfe, which is the lower case
+    Icelandic thorn, b/c that is used as the delete char in ytalk, for
+    some reason)
+  . always undesrtood both ^h and delete (^?) as delete chars
+  . fixed annoying bug with UDP handling under Linux (that's where the
+    spurious "no talk daemon" messages were coming from!)
+  . made ytalk send out fqdn's when passing users around, so the other
+    machine has a chance to resolve the address
+  . use strerror() instead of sys_errlist, where available
+  . redefine our own sockaddr_in, since BSD4.4 (and FreeBSD and friends)
+    use a different definition from what the talk daemons expect
+  . split the "auto-rering" flag into "rering" and "prompt-rering"
+  . added aliases for whole addresses, hostnames and login names
+  . ported to GNU Autoconf
+  . let the user save his own side of the conversation too
+  . support virtual hosts and multihomed machines, by letting the user pick
+    which interface to use, and otherwise making a guess at it
+
+

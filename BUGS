@@ -1,0 +1,26 @@
+
+[ the following code fails under ytalk's shell but not in other
+  places.  weird.  ]
+
+See the screenshot below.  As you can see, the problem is
+intermittent.  I can't run `strace' to see what's going wrong, because
+ytalk breaks that too.
+
+The code in dpkg that's failing amounts to
+  c= fork();  if (c<0) bomb_out();
+  if (!c) { exec(); bomb_out(); }
+  repeatedly { rc= waitpid(c,&status); error_check(); }
+and it's the waitpid that's failing with ECHILD.
+
+(pending)
+
+---
+
+RUBDEF and languages:  0xfd is used by some language encodings, but
+YTalk uses it to recognize itself... need to figure something out.
+
+(pending)
+
+---
+
+

@@ -1,0 +1,35 @@
+Subject: v27i024: ytalk-3.0 - multi-user replacement for the UNIX "talk" program, Part01/01
+
+Submitted-By: yenne@austin.eds.com (Britt Yenne)
+Posting-Number: Volume 27, Issue 24
+Archive-Name: ytalk-3.0/part01
+
+Okay... believe it or not, here it finally is.  Several people who have been
+mailing me for months to ask about the status of 3.0 graciously
+"volunteered" to beta-test, and all appears to work.
+
+Ytalk is in essence a multi-user replacement for the UNIX "talk" program.
+Not only will ytalk allow any number of users to connect with one another,
+but it also will communicate with _both_ UNIX talk daemons, as well as
+daemons compiled incorrectly and/or with byte-order or address boundary
+problems.
+
+There is a very large ytalk following spanning every continent, and older
+versions of ytalk are available on more anonymous FTP sites than I can even
+keep track of, but this is the first time I have attempted to post the
+sources to a newsgroup.  Somehow, this seems more organized (or maybe I'm
+frightfully naive... :-)
+
+Version 3.0 is also the first ytalk source I am actually proud of.  It has
+been completely rewritten since 2.3 to remove all of the desperate hacks
+placed in response to incoming bug reports and comments.
+
+My development platform is a Sun SPARC.  Although I have tested on every
+platform I have access to, I am always looking for cross-platform compile
+problems should anyone wish to mail me some.
+
+	As always, have fun.
+	-britt
+
+	yenne@austin.eds.com
+

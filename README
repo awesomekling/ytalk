@@ -1,0 +1,128 @@
+
+				YTalk
+
+YTalk is a compatible replacement for the Unix talk(1) program, which
+adds a number of features.  Mainly, it can talk to more than one person
+at a time, and it can the two different types of talk daemons out there.
+
+For compilation and installation instructions, please see the file
+`INSTALL' in the same directory.  The gist of it is:
+
+	./configure 
+	make 
+	make install
+
+YTalk was written and maintained by Britt Yenne up to verison 3.0pl2.
+That version was released years ago, and there have been no new releases
+since then, so I (Roger Espel Llima, <roger.espel.llima@pobox.com>) have
+taken up maintenance, updating the code to work with newer Unixes,
+fixing bugs and adding new features.  
+
+YTalk is free software, which can be freely redistributed, used and
+modified as long as the copyright notices are kept in the source and
+header files. 
+
+If you hack in new neat things, or fix bugs, or have ideas about new
+features, feel free to mail me at <roger.espel.llima@pobox.com> about
+it.  Same if you have trouble compiling or running YTalk.
+
+
+===========================================================================
+
+
+Changes in YTalk since version 3.1 :
+
+    + Now looks a bit harder for the fqdn of the current machine.
+
+    + Fixed problems with ncurses resizing under Linux, and (again) with 
+      Ytalk shells under Solaris.
+
+    + YTalk now complains (and prints the right hostname) if a
+      connection is answered from an unexpected host.
+
+    + Fixed the checks to prevent user duplication (getting twice the
+      same user in an n-way talk where n>=4).
+
+    + More portability fixes for 64-bit machines.
+
+    + Fixed the "readdress" option somewhat.
+
+
+Changes in YTalk since version 3.0pl2 :
+
+* New features:
+
+    + Configuration through GNU Autoconf, no more Imakefiles or Makefiles
+      to edit "to suit your system".
+
+    + Aliases: you can now alias hosts, usernames, and full addresses,
+      by defining aliases in your ~/.ytalkrc:
+	 -  "alias nick@ longusername@" 
+	          will replace any "nick@anyhost" with "longusername@anyhost".
+ 	 -  "alias @short @longhostname"
+		  will replace any user@short with "user@longhostname".
+         -  "alias nick username@hostname"
+		  will replace "nick" with "username@hostname".
+
+    + Support for virtual hosts and multiple aliases; you can choose the
+      interface (IP address) to use in either of 3 ways:
+	 -  using the "-h hostname_or_ip" command-line option
+	 -  setting the environment variable LOCALHOST to the hostname or
+		IP address
+	 -  putting the line "localhost my-hostname-or-ip" in ~/.ytalkrc
+
+    + Command-line option "-Y" lets you require CAPS on all y/n answers,
+      so you don't answer "yes" just because you happen to type a 'y' in
+      the middle of conversation.  
+      Add "turn caps on" to your ~/.ytalkrc to have this by default.
+
+    + Command-line option "-i" to turn off trying to catch new incoming
+      talk requests (just get the usual message from talk_daemon instead).
+      Add "turn noinvite on" to your ~/.ytalkrc to do this by default.
+
+    + Added "Kill all unconnected" (k) to the main menu; if you're trying
+      to ring some more people, and want to give up, just press ESC k.
+
+    + You can now choose between three possibilities for auto-rering:
+      no rerings at all ("turn rering off"), prompt for rerings 
+      ("turn rerings on" and "turn prompt-rering on"), and fully 
+      automatic rerings ("turn rerings on" and "turn prompt-rering off").
+      Both rerings and prompting are on by default.
+
+    + YTalk attempts not to clears the screen when it exists if the
+      other end ^C'd, so you get to see the end of the conversation even
+      if you weren't paying attention.  
+      
+      Depending on your terminal definitions, this may not work unless
+      you take out the escape sequences that clear the screen, from the
+      'te' termcap entry, and/or from the rmcup terminfo entry.
+
+
+* Bug fixes: 
+
+    + Fixed a bug where Ytalk would often not find the talk daemon under
+      Linux, because of the slightly different UDP error reporting.
+
+    + Ytalk shells wrap their lines properly now.
+
+    + The "set scrolling zone" escape sequence (ESC[r) now works in shells;
+      this is used e.g. by IRC clients.
+
+    + Added support for Solaris-style PTYs, so YTalk shells work under
+      Solaris.
+
+    + Made YTalk 8-bit clean, so you can use accented characters in your
+      conversation (assuming the other side has an 8-bit clean (y)talk too).
+
+    + Deleting is a bit more robust: both ^H and ^?, as well as what is
+      defined by your stty, are now understood to be the delete key.
+
+    + Made Ytalk attempt to send the fully qualified hostname when exporting
+      user connections, so remote machines have a chance of finding the host.
+
+    + Fixed some compatibility problems with BSD4.4 system like FreeBSD,
+      where the definition of a struct sockaddr_in changed.
+
+
+The README for YTalk 3.0pl2 can be found in the file README.old.
+
