@@ -176,6 +176,7 @@ handle_color(void *t)
 		send_users(me, buf, len, buf, len);
 		break;
 	}
+	hide_ymenu();
 }
 #endif
 
