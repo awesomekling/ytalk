@@ -100,7 +100,13 @@ yaddr realloc_mem(yaddr p, int n) {
 /* Clear all memory
  */
 void clear_all(mem_list *list) {
+#ifdef YTALK_DEBUG
+	printf("Clearing memory\n");
+#endif
 	while(list != NULL) {
+#ifdef YTALK_DEBUG
+		printf("%d: %d\n", list->addr, list->size);
+#endif
 		free_mem(list->addr);
 		list = list->next;
 	}
