@@ -27,7 +27,13 @@
 #include "cwin.h"
 
 
-#define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=' || (c)==',')
+#define IS_WHITE(c)	\
+	((c)==' '  ||	\
+	 (c)=='\t' ||	\
+	 (c)=='\n' ||	\
+	 (c)=='='  ||	\
+	 (c)==','	\
+	)
 
 extern char *vhost;
 extern char *gshell;
