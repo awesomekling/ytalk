@@ -50,6 +50,8 @@ typedef struct __ytk_thing {
 ytk_thing *ytk_new_thing();
 void ytk_delete_thing(ytk_thing *);
 void ytk_set_escape(ytk_thing *, void (*)(ytk_thing *));
+void ytk_set_colors(ytk_thing *, int);
+void ytk_set_attr(ytk_thing *, int);
 
 #include "stack.h"
 #include "menu.h"
