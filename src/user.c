@@ -346,7 +346,7 @@ user_title(char *buf, int size, yuser *user)
 				}
 				break;
 			case 'V':
-				if ((int) (b - buf) < (size - 4))
+				if ((int) (b - buf) < (size - 5))
 					b += sprintf(b, "%d.%d.%d", VMAJOR, VMINOR, VPATCH);
 				break;
 			case 's':
