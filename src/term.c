@@ -1080,7 +1080,7 @@ msg_term(char *str)
 /*
  * Spew terminal line contents to a file descriptor.
  */
-void
+static void
 spew_line(int fd, yachar *buf, int len)
 {
 	int a, b, c, v, p;
@@ -1133,8 +1133,8 @@ spew_line(int fd, yachar *buf, int len)
 	}
 }
 
-void
-spew_attrs(int fd, int at, int bg, int fg)
+static void
+spew_attrs(int fd, unsigned char at, unsigned char bg, unsigned char fg)
 {
 	char esc[30];
 	int p = 2;
