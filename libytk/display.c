@@ -5,8 +5,8 @@
 int
 ytk_create_window(ytk_thing *t)
 {
-	ylong rows = YTK_WINDOW_VPADDING;
-	ylong cols = YTK_WINDOW_HPADDING;
+	ylong rows = 0;
+	ylong cols = 2;
 
 	switch (t->type) {
 	case YTK_T_MENU:
@@ -52,24 +52,20 @@ ytk_winch_thing(ytk_thing *w)
 void
 ytk_display_inputbox(ytk_thing *t)
 {
-	memset(YTK_INPUTBOX(t)->buf, ' ', t->width);
-	YTK_INPUTBOX(t)->buf[t->width] = 0;
-
+	snprintf(YTK_INPUTBOX(t)->buf, t->width + 1, " %-*s ",
+		t->width, YTK_INPUTBOX(t)->data);
 	mvwaddstr(t->win, 1, 1, YTK_INPUTBOX(t)->buf);
-	mvwaddstr(t->win, 1, 1 + (YTK_WINDOW_HPADDING / 2), YTK_INPUTBOX(t)->data);
-	waddch(t->win, ACS_CKBOARD);
+	mvwaddch(t->win, 1, strlen(YTK_INPUTBOX(t)->data) + 2, ACS_CKBOARD);
 }
 
 void
 ytk_display_msgbox(ytk_thing *t)
 {
 	ytk_msgbox_item *it = NULL;
-	char *padbuf;
+	char *linebuf;
 	ylong y;
 
-	padbuf = get_mem(t->width * sizeof(char) + 1);
-	memset(padbuf, ' ', t->width);
-	padbuf[t->width] = 0;
+	linebuf = get_mem(t->width * sizeof(char) + 1);
 
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
@@ -81,24 +77,22 @@ ytk_display_msgbox(ytk_thing *t)
 			mvwaddch(t->win, y, t->width + 1, ACS_RTEE);
 			y++;
 		} else {
-			mvwaddstr(t->win, y, 1, padbuf);
-			mvwaddstr(t->win, y, 1 + (YTK_WINDOW_HPADDING / 2), it->text);
+			snprintf(linebuf, t->width + 1, " %-*s ", t->width, it->text);
+			mvwaddstr(t->win, y, 1, linebuf);
 			y++;
 		}
 	}
-	free_mem(padbuf);
+	free_mem(linebuf);
 }
 
 void
 ytk_display_menu(ytk_thing *w)
 {
 	ytk_menu_item *it = NULL;
-	char *padbuf;
+	char *linebuf;
 	ylong y;
 
-	padbuf = get_mem(w->width * sizeof(char) + 1);
-	memset(padbuf, ' ', w->width);
-	padbuf[w->width] = 0;
+	linebuf = get_mem(w->width * sizeof(char) + 1);
 	wattron(w->win, COLOR_PAIR(w->colors) | w->attr);
 
 	y = 1;
@@ -111,27 +105,20 @@ ytk_display_menu(ytk_thing *w)
 		} else {
 			if (it->selected)
 				wattron(w->win, A_REVERSE);
-			mvwaddstr(w->win, y, 1, padbuf);
-			if (YTK_MENU_ITEM_TOGGLE(it)) {
-				mvwaddch(w->win, y, 1 + (YTK_WINDOW_HPADDING / 2), '[');
-				if (it->value)
-					waddch(w->win, ACS_DIAMOND);
-				else
-					waddch(w->win, ' ');
-				waddch(w->win, ']');
-				waddch(w->win, ' ');
-				waddstr(w->win, it->text);
-			} else {
-				mvwaddstr(w->win, y, 1 + (YTK_WINDOW_HPADDING / 2), it->text);
-			}
+			if (YTK_MENU_ITEM_TOGGLE(it))
+				snprintf(linebuf, w->width + 1, " [%c] %-*s ",
+					(it->value) ? '*' : ' ', w->width, it->text);
+			else
+				snprintf(linebuf, w->width + 1, " %-*s ", w->width, it->text);
 			if (it->hotkey)
-				mvwaddch(w->win, y, w->width - (YTK_WINDOW_HPADDING / 2), it->hotkey);
+				linebuf[w->width - 2] = it->hotkey;
+			mvwaddstr(w->win, y, 1, linebuf);
 			if (it->selected)
 				wattroff(w->win, A_REVERSE);
 			y++;
 		}
 	}
-	free_mem(padbuf);
+	free_mem(linebuf);
 }
 
 void
