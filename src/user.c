@@ -246,7 +246,6 @@ free_user(user)
 
 	if (connect_list == NULL
 	    && wait_list == NULL
-	    && !in_ymenu()
 	    && running_process == 0)
 		bail(YTE_SUCCESS_PROMPT);
 
