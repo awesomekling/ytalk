@@ -149,11 +149,11 @@ read_autoport(fd)
 	pack.host[V2_HOSTLEN - 1] = '\0';
 
 	if (!(def_flags & FL_INVITE)) {
-		sprintf(estr, "Talk to %s@%s?", pack.name, pack.host);
+		snprintf(estr, sizeof(estr), "Talk to %s@%s?", pack.name, pack.host);
 		if (yes_no(estr) == 'n')
 			return;
 	}
-	sprintf(estr, "%s@%s", pack.name, pack.host);
+	snprintf(estr, sizeof(estr), "%s@%s", pack.name, pack.host);
 	(void) invite(estr, 1);	/* we should be expected */
 }
 
@@ -255,7 +255,7 @@ sendit(addr, d)
 		mtype = &(omsg.type);
 		rtype = &(orsp.type);
 	} else {
-		sprintf(errstr, "Unkown daemon type: %d", d);
+		snprintf(errstr, MAXERR, "Unkown daemon type: %d", d);
 		show_error(errstr);
 		return -1;
 	}
@@ -471,7 +471,7 @@ find_daemon(addr)
 		if (out)
 			return out;
 	}
-	sprintf(errstr, "No talk daemon on %s", host_name(addr));
+	snprintf(errstr, MAXERR, "No talk daemon on %s", host_name(addr));
 	show_error(errstr);
 	return 0;
 }
@@ -840,7 +840,7 @@ get_host_addr(hostname)
 	errno = 0;
 	if ((host = (struct hostent *) gethostbyname(hostname)) != NULL) {
 		if (host->h_length != sizeof(addr)) {
-			sprintf(errstr, "Bad IN addr: %s", hostname);
+			snprintf(errstr, MAXERR, "Bad IN addr: %s", hostname);
 			show_error(errstr);
 			return (ylong) - 1;
 		}
