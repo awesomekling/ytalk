@@ -41,6 +41,7 @@ ytk_handle_inputbox_input(ytk_inputbox *b, int ch)
 			b->callback((void *) b);
 		break;
 	case 8:
+	case 0x7f:
 		if (b->len > 0) {
 			b->len--;
 			b->data[b->len] = 0;
