@@ -95,6 +95,7 @@ typedef struct {
 	u_char l;
 	int a;
 	u_char b, c;
+	u_char v;
 } yachar;
 #else
 typedef u_char yachar;
@@ -148,8 +149,12 @@ typedef struct _yuser {
 	int sy, sx;		/* saved cursor position */
 	int sc_top, sc_bot;	/* scrolling region */
 	int region_set;		/* set if using a screen region */
+#ifdef YTALK_COLOR
+	int csx;		/* set if in charset crossover mode */
+	int altchar;		/* set if in alternate charset mode */
 	int c_at, c_bg, c_fg;	/* user colors and attributes */
 	int sc_at, sc_bg, sc_fg;/* saved colors and attributes */
+#endif
 	char *full_name;	/* full name (up to 50 chars) */
 	char *user_name;	/* user name */
 	char *host_name;	/* host name */
@@ -312,6 +317,9 @@ extern int io_len;		/* user input count */
 
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
+
+extern char YT_ACS_ON;		/* activates vt100 acs */
+extern char YT_ACS_OFF;		/* deactivates it */
 
 /* ---- some machine compatibility definitions ---- */
 

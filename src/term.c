@@ -314,6 +314,7 @@ _addch_termc(user, c)
 	ac.a = user->c_at;
 	ac.b = user->c_fg;
 	ac.c = user->c_bg;
+	ac.v = user->altchar ^ user->csx;
 	_addch_term(user, ac);
 }
 #endif
@@ -332,6 +333,7 @@ addch_term(user, c)
 	ac.a = user->c_at;
 	ac.b = user->c_fg;
 	ac.c = user->c_bg;
+	ac.v = user->altchar ^ user->csx;
 #endif
 	if (is_printable(c)) {
 #ifdef YTALK_COLOR
@@ -373,6 +375,7 @@ uyac(user, c)
 	ac.a = user->c_at;
 	ac.b = user->c_fg;
 	ac.c = user->c_bg;
+	ac.v = user->altchar ^ user->csx;
 	return ac;
 }
 #endif
@@ -1261,12 +1264,13 @@ spew_line(fd, buf, len)
 	int fd, len;
 	yachar *buf;
 {
-	int a, b, c, p;
+	int a, b, c, v, p;
 	int alast, acur;
 	char esc[30];
 	if (len <= 0)
 		return;
 	a = b = c = -1;
+	v = 0;
 	alast = acur = 0;
 	for (; len; buf++, len--) {
 		p = 2;
@@ -1298,6 +1302,15 @@ spew_line(fd, buf, len)
 			esc[p - 1] = 'm';
 			write(fd, esc, p);
 		}
+
+		if (v != buf->v) {
+			if (buf->v)
+				(void) write(fd, &YT_ACS_ON, 1);
+			else
+				(void) write(fd, &YT_ACS_OFF, 1);
+		}
+		v = buf->v;
+
 		write(fd, &buf->l, 1);
 	}
 }
@@ -1379,6 +1392,10 @@ spew_term(user, fd, rows, cols)
 
 #ifdef YTALK_COLOR
 		(void) spew_attrs(fd, user->c_at, user->c_fg, user->c_bg);
+		if (user->altchar)
+			(void) write(fd, "[(0", 4);
+		if (user->csx)
+			(void) write(fd, &YT_ACS_ON, 1);
 #endif
 
 	} else {

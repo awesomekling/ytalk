@@ -6,6 +6,9 @@
 int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
 };
+
+char YT_ACS_ON = 0x0E;
+char YT_ACS_OFF = 0x0F;
 #endif
 
 void
@@ -53,9 +56,11 @@ vt100_process(user, data)
 		break;
 #endif
 	case '7':		/* save cursor and attributes */
+#ifdef YTALK_COLOR
 		user->sc_at = user->c_at;
 		user->sc_bg = user->c_bg;
 		user->sc_fg = user->c_fg;
+#endif
 		user->sy = user->y;
 		user->sx = user->x;
 		user->got_esc = 0;
@@ -68,9 +73,11 @@ vt100_process(user, data)
 		user->got_esc = 0;
 		break;
 	case '8':		/* restore cursor and attributes */
+#ifdef YTALK_COLOR
 		user->c_at = user->sc_at;
 		user->c_fg = user->sc_fg;
 		user->c_bg = user->sc_bg;
+#endif
 		move_term(user, user->sy, user->sx);
 		user->got_esc = 0;
 		break;
@@ -115,6 +122,9 @@ vt100_process(user, data)
 		break;
 	case '0':
 		if (user->lparen) {
+#ifdef YTALK_COLOR
+			user->altchar = 1;
+#endif
 			user->lparen = 0;
 		}
 		user->got_esc = 0;
@@ -132,6 +142,9 @@ vt100_process(user, data)
 		break;
 	case 'B':		/* move down */
 		if (user->lparen) {
+#ifdef YTALK_COLOR
+			user->altchar = 0;
+#endif
 			user->lparen = 0;
 		} else {
 			if (user->av[0] == 0)

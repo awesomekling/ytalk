@@ -1174,6 +1174,14 @@ process_esc:
 				else
 					newline_term(user);
 				break;
+#ifdef YTALK_COLOR
+			case 14:
+				user->csx = 1;
+				break;
+			case 15:
+				user->csx = 0;
+				break;
+#endif
 			case 27:	/* Escape */
 				user->got_esc = 1;
 				user->ac = 0;

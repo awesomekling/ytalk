@@ -462,11 +462,17 @@ addch_curses(user, c)
 {
 	register ywin *w;
 	register int x, y;
+#ifdef YTALK_COLOR
+	chtype cc = c.l;
+#endif
 
 	w = (ywin *) (user->term);
 	getyx(w->win, y, x);
 #ifdef YTALK_COLOR
-	waddch(w->win, c.l | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
+	if (c.v) {
+		cc = acs_map[cc];
+	}
+	waddch(w->win, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
 #else
 	waddch(w->win, c);
 #endif
