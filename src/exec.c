@@ -77,7 +77,7 @@ setsid()
 }
 #endif
 
-#if defined(USE_DEV_PTMX) && defined(_SOLARIS)
+#if defined(USE_DEV_PTMX) && defined(YTALK_SUNOS)
 int needtopush=0;
 #endif
 
@@ -111,7 +111,7 @@ getpty(name)
 	if (r == 0 && tt != NULL)
 	{
 	    strcpy(name, tt);
-#ifdef _SOLARIS
+#ifdef YTALK_SUNOS
 	    needtopush=1;
 #endif
 	    return pty;
@@ -281,11 +281,10 @@ execute(command)
         if((fd = open(name, O_RDWR)) < 0)
             exit(-1);
 
-/* This will really mess up the shell on OSF1/Tru64 UNIX
- * Define _SOLARIS if you need it.
+/* This will really mess up the shell on OSF1/Tru64 UNIX,
+ * so we only do it on SunOS/Solaris
  */
-#ifdef _SOLARIS
-/* Solaris seems to need this... */
+#ifdef YTALK_SUNOS
 # if defined(HAVE_STROPTS_H) && defined(I_PUSH)
 	if (needtopush)
 	{
