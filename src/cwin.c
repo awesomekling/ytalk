@@ -230,6 +230,7 @@ curses_redraw(void)
 static void
 curses_start(void)
 {
+	char *term;
 #ifdef YTALK_COLOR
 	short i, fg, bg;
 #endif
@@ -239,7 +240,11 @@ curses_start(void)
 	 * around, it seems to cause nothing but trouble.
 	 */
 	/* LINES = COLS = 0; *//* so resizes will work */
-	initscr();
+	if (initscr() == NULL) {
+		term = getenv("TERM");
+		fprintf(stderr, "Error opening terminal: %s.\n", (term ? term : "(null)"));
+		bail(YTE_INIT);
+	}
 	noraw();
 	crmode();
 	noecho();
