@@ -12,7 +12,7 @@ ytk_new_inputbox(char *title, int size, void (*callback) (ytk_inputbox *))
 	new_inputbox->base = new_thing;
 	new_thing->title = title;
 	new_inputbox->data = get_mem((size + 1) * sizeof(char));
-	new_inputbox->buf = get_mem((size + 1) * sizeof(char));
+	new_inputbox->buf = get_mem((size + 1 + YTK_WINDOW_HPADDING) * sizeof(char));
 	new_inputbox->data[0] = '\0';
 	new_inputbox->buf[0] = '\0';
 	new_inputbox->size = size;

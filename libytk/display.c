@@ -52,10 +52,10 @@ ytk_winch_thing(ytk_thing *w)
 void
 ytk_display_inputbox(ytk_thing *t)
 {
-	memset(YTK_INPUTBOX(t)->buf, ' ', t->width - (YTK_WINDOW_HPADDING / 2));
-	YTK_INPUTBOX(t)->buf[t->width - (YTK_WINDOW_HPADDING / 2)] = 0;
+	memset(YTK_INPUTBOX(t)->buf, ' ', t->width);
+	YTK_INPUTBOX(t)->buf[t->width] = 0;
 
-	mvwaddstr(t->win, 1, 1 + (YTK_WINDOW_HPADDING / 2), YTK_INPUTBOX(t)->buf);
+	mvwaddstr(t->win, 1, 1, YTK_INPUTBOX(t)->buf);
 	mvwaddstr(t->win, 1, 1 + (YTK_WINDOW_HPADDING / 2), YTK_INPUTBOX(t)->data);
 	waddch(t->win, ACS_CKBOARD);
 }
