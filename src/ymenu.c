@@ -130,6 +130,7 @@ DEFAULT_TOGGLE(handle_autoimport, FL_IMPORT)
 DEFAULT_TOGGLE(handle_autoinvite, FL_INVITE)
 DEFAULT_TOGGLE(handle_rering, FL_RING)
 DEFAULT_TOGGLE(handle_beeps, FL_BEEP)
+DEFAULT_TOGGLE(handle_ignbrk, FL_IGNBRK)
 DEFAULT_TOGGLE(handle_promptrering, FL_PROMPTRING)
 DEFAULT_TOGGLE(handle_promptquit, FL_PROMPTQUIT)
 
@@ -155,6 +156,7 @@ init_ymenu()
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Auto-invite", 'v', handle_autoinvite, (def_flags & FL_INVITE));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Reringing", 'r', handle_rering, (def_flags & FL_RING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Beeps", 'b', handle_beeps, (def_flags & FL_BEEP));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Ignore break", 'k', handle_ignbrk, (def_flags & FL_IGNBRK));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Prompt rerings", 'p', handle_promptrering, (def_flags & FL_PROMPTRING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Prompt to quit", 'q', handle_promptquit, (def_flags & FL_PROMPTQUIT));
 	ytk_set_escape(options_menu, do_hidething);
