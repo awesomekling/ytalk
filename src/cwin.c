@@ -102,7 +102,7 @@ new_draw_title(w)
 	int x;
 	int rl = 0, rj = 0;
 	char *ta, *t;
-	t = ta = (char *)get_mem(COLS * sizeof(char));
+	t = ta = (char *) get_mem(COLS * sizeof(char));
 	user_title(t, COLS - 1, w->user);
 	move(w->row - 1, w->col);
 	attron(COLOR_PAIR(newui_colors) | newui_attr);

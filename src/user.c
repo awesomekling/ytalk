@@ -299,7 +299,7 @@ find_user(name, host_addr, pid)
 }
 
 void
-user_title(char * buf, int size, yuser * user)
+user_title(char *buf, int size, yuser *user)
 {
 	char *f, *b, *fmt;
 
@@ -309,31 +309,31 @@ user_title(char * buf, int size, yuser * user)
 		fmt = user_format;
 
 	if (fmt == NULL) {
-		if ((int)strlen(user->full_name) <= size)
+		if ((int) strlen(user->full_name) <= size)
 			strcpy(buf, user->full_name);
 		return;
 	}
-	for (f=fmt,b=buf; *f && (int)(b-buf)<size; ) {
+	for (f = fmt, b = buf; *f && (int) (b-buf) < size;) {
 		if (*f == '%') {
-			switch(*(++f)) {
+			switch (*(++f)) {
 			case 'u':
-				if ((int)(b - buf) < (size - (int)strlen(user->user_name)))
+				if ((int) (b - buf) < (size - (int) strlen(user->user_name)))
 					b += sprintf(b, "%s", user->user_name);
 				break;
 			case 'h':
-				if ((int)(b - buf) < (size - (int)strlen(user->host_name)))
+				if ((int) (b - buf) < (size - (int) strlen(user->host_name)))
 					b += sprintf(b, "%s", user->host_name);
 				break;
 			case 'f':
-				if ((int)(b - buf) < (size - (int)strlen(user->host_fqdn)))
+				if ((int) (b - buf) < (size - (int) strlen(user->host_fqdn)))
 					b += sprintf(b, "%s", user->host_fqdn);
 				break;
 			case 't':
-				if ((int)(b - buf) < (size - (int)strlen(user->tty_name)))
+				if ((int) (b - buf) < (size - (int) strlen(user->tty_name)))
 					b += sprintf(b, "%s", user->tty_name);
 				break;
 			case 'v':
-				if ((int)(b - buf) < (size - 4)) {
+				if ((int) (b - buf) < (size - 4)) {
 					if (user->remote.vmajor > 2)
 						b += sprintf(b, "Y%d.%d", user->remote.vmajor, user->remote.vminor);
 					else if (user->remote.vmajor == 2)
@@ -343,7 +343,7 @@ user_title(char * buf, int size, yuser * user)
 				}
 				break;
 			case 'V':
-				if ((int)(b - buf) < (size - 4))
+				if ((int) (b - buf) < (size - 4))
 					b += sprintf(b, "%d.%d.%d", VMAJOR, VMINOR, VPATCH);
 				break;
 			case 's':

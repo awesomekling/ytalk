@@ -941,7 +941,7 @@ house_clean()
 
 #ifdef YTALK_COLOR
 	if (bottom_msg != NULL && bottom_time != 0) {
-		if (t - bottom_time >=10) {
+		if (t - bottom_time >= 10) {
 			bottom_msg = NULL;
 			redraw_all_terms();
 		}
@@ -1306,8 +1306,7 @@ my_input(user, buf, len)
 							update_ymenu();
 						}
 						buf++, len--;
-					}
-					else if (*buf == 14 && term_does_scrollback()) {	/* ^N - scroll down */
+					} else if (*buf == 14 && term_does_scrollback()) {	/* ^N - scroll down */
 						scroll_down(scuser);
 						buf++, len--;
 					} else if (*buf == 6 && term_does_scrollback()) {	/* ^F - window forward */

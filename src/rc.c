@@ -138,8 +138,8 @@ getcolor(color, rc, ra)
 			*ra = A_BOLD;
 	}
 
-	while(cols[i].color != NULL && !found) {
-		if(strcmp(c, cols[i].color) == 0) {
+	while (cols[i].color != NULL && !found) {
+		if (strcmp(c, cols[i].color) == 0) {
 			found = 1;
 			*rc = cols[i].value;
 		}
@@ -161,12 +161,12 @@ setcolors(char *bg, char *fg, int *ucolors, int *fgattr)
 {
 	int bgi, fgi;
 
-	if(fg == NULL || bg == NULL)
+	if (fg == NULL || bg == NULL)
 		return 1;
 
-	if(!getcolor(bg, &bgi, NULL))
+	if (!getcolor(bg, &bgi, NULL))
 		return 2;
-	if(!getcolor(fg, &fgi, fgattr))
+	if (!getcolor(fg, &fgi, fgattr))
 		return 3;
 
 	*ucolors = bgi * 8 + fgi + 1;
@@ -186,10 +186,10 @@ get_bool(value)
 	char ok[8][4] = { "on", "ON", "On", "1", "y", "yes", "YES", "Yes" };
 	char no[8][4] = { "off", "OFF", "Off", "0", "n", "no", "NO", "No" };
 	int i;
-	for(i = 0; i < 8; i++) {
-		if(strcmp(ok[i], value) == 0) {
+	for (i = 0; i < 8; i++) {
+		if (strcmp(ok[i], value) == 0) {
 			return 1;
-		} else if(strcmp(no[i], value) == 0) {
+		} else if (strcmp(no[i], value) == 0) {
 			return 0;
 		}
 	}
@@ -204,7 +204,7 @@ new_alias(a1, a2)
 	char *at;
 
 	/* if a1 is null a2 is too, and we need both */
-	if(a2 == NULL)
+	if (a2 == NULL)
 		return 0;
 
 	a = get_mem(sizeof(struct alias));
@@ -241,20 +241,20 @@ set_shell(char *shell)
 {
 	struct passwd *pw;
 
-	if(shell == NULL)
+	if (shell == NULL)
 		return 0;
 
-	if(*shell == '~') {
+	if (*shell == '~') {
 		pw = getpwuid(myuid);
-		if(pw != NULL) {
-			gshell = (char *) get_mem(strlen(pw->pw_dir)+strlen(shell)+1);
+		if (pw != NULL) {
+			gshell = (char *) get_mem(strlen(pw->pw_dir) + strlen(shell) + 1);
 			shell++;
 			sprintf(gshell, "%s%s", pw->pw_dir, shell);
 		} else {
 			return 0;
 		}
 	} else {
-		gshell = (char *) get_mem(strlen(shell)+1);
+		gshell = (char *) get_mem(strlen(shell) + 1);
 		sprintf(gshell, "%s", shell);
 	}
 	return 1;
@@ -277,24 +277,24 @@ read_rcfile(fname)
 		return;
 
 	line = 0;
-	while(fgets(buf, BUFSIZ, fp)) {
+	while (fgets(buf, BUFSIZ, fp)) {
 		ptr = buf;
 		found = 0;
 		i = 0;
 		line++;
 
-		if(*ptr == '#')
+		if (*ptr == '#')
 			continue;
 
 		cmd = get_word(&ptr);
 
-		if(cmd == NULL)
+		if (cmd == NULL)
 			continue;
 
-		while(opts[i].option != NULL) {
+		while (opts[i].option != NULL) {
 			if (strcmp(cmd, opts[i].option) == 0) {
 				found = 1;
-				switch(get_bool(get_word(&ptr))) {
+				switch (get_bool(get_word(&ptr))) {
 				case 1:
 					def_flags |= opts[i].flag;
 					break;
@@ -310,11 +310,11 @@ read_rcfile(fname)
 			i++;
 		}
 		if (!found) {
-			if(strcmp(cmd, "alias") == 0) {
+			if (strcmp(cmd, "alias") == 0) {
 				found = 1;
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
-				if(!new_alias(from, to)) {
+				if (!new_alias(from, to)) {
 					fprintf(stderr, "Not enough parameters for alias on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
@@ -325,10 +325,10 @@ read_rcfile(fname)
 				if (setcolors(bg, fg, &menu_colors, &menu_attr) == 0) {
 					found = 1;
 				}
-			} else if(strcmp(cmd, "ui_colors") == 0) {
+			} else if (strcmp(cmd, "ui_colors") == 0) {
 				bg = get_word(&ptr);
 				fg = get_word(&ptr);
-				switch(setcolors(bg, fg, &newui_colors, &newui_attr)) {
+				switch (setcolors(bg, fg, &newui_colors, &newui_attr)) {
 				case 0:
 					found = 1;
 					break;
@@ -346,12 +346,12 @@ read_rcfile(fname)
 					break;
 				}
 #endif /* YTALK_COLOR */
-			} else if(strcmp(cmd, "readdress") == 0) {
+			} else if (strcmp(cmd, "readdress") == 0) {
 				found = 1;
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				on   = get_word(&ptr);
-				switch(readdress_host(from, to, on)) {
+				switch (readdress_host(from, to, on)) {
 				case 0:
 					found = 1;
 					break;
@@ -372,33 +372,33 @@ read_rcfile(fname)
 					bail(YTE_INIT);
 					break;
 				}
-			} else if(strcmp(cmd, "localhost") == 0) {
+			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
-				if(vhost != NULL) {
+				if (vhost != NULL) {
 					fprintf(stderr, "Virtualhost already set before line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
 				host = get_word(&ptr);
-				if(host == NULL) {
+				if (host == NULL) {
 					fprintf(stderr, "Missing hostname on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
-				vhost = (char *)get_mem(1 + strlen(host));
+				vhost = (char *) get_mem(1 + strlen(host));
 				strcpy(vhost, host);
-			} else if(strcmp(cmd, "title_format") == 0) {
+			} else if (strcmp(cmd, "title_format") == 0) {
 				found = 1;
 				fmt = get_string(&ptr);
-				title_format = (char *)get_mem(1 + strlen(fmt));
+				title_format = (char *) get_mem(1 + strlen(fmt));
 				strcpy(title_format, fmt);
-			} else if(strcmp(cmd, "user_format") == 0) {
+			} else if (strcmp(cmd, "user_format") == 0) {
 				found = 1;
 				fmt = get_string(&ptr);
-				user_format = (char *)get_mem(1 + strlen(fmt));
+				user_format = (char *) get_mem(1 + strlen(fmt));
 				strcpy(user_format, fmt);
-			} else if(strcmp(cmd, "shell") == 0) {
+			} else if (strcmp(cmd, "shell") == 0) {
 				found = 1;
 				shell = get_word(&ptr);
-				if(!set_shell(shell)) {
+				if (!set_shell(shell)) {
 					fprintf(stderr, "Shell can't be set to nothing on line %d in %s\n", line, fname);
 				}
 			} else {

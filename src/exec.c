@@ -348,7 +348,6 @@ execute(command)
 			perror("tcsetpgrp");
 #endif
 
-
 		/* execute the command */
 
 		if (command)
