@@ -6,7 +6,8 @@
 #include "ytk.h"
 
 ytk_thing *
-ytk_new_inputbox(char *title, int size, void (*callback)(ytk_inputbox *)) {
+ytk_new_inputbox(char *title, int size, void (*callback)(ytk_inputbox *))
+{
 	ytk_thing *new_thing;
 	ytk_inputbox *new_inputbox;
 	new_thing = ytk_new_thing();
@@ -40,7 +41,7 @@ ytk_handle_inputbox_input(ytk_inputbox *b, int ch)
 	case '\r':
 	case '\n':
 		if (b->callback != NULL)
-			b->callback((void *)b);
+			b->callback((void *) b);
 		break;
 	case 8:
 		if (b->len > 0) {

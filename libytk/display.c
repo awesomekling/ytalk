@@ -75,7 +75,7 @@ ytk_display_msgbox(ytk_thing *t)
 
 	y = 1;
 	while ((it = ytk_next_msgbox_item(YTK_MSGBOX(t), it))) {
-		if(YTK_MSGBOX_ITEM_SEPARATOR(it)) {
+		if (YTK_MSGBOX_ITEM_SEPARATOR(it)) {
 			mvwaddch(t->win, y, 0, ACS_LTEE);
 			whline(t->win, 0, t->width);
 			mvwaddch(t->win, y, t->width + 1, ACS_RTEE);
@@ -102,13 +102,13 @@ ytk_display_menu(ytk_thing *w)
 
 	y = 1;
 	while ((it = ytk_next_menu_item(YTK_MENU(w), it))) {
-		if(YTK_MENU_ITEM_SEPARATOR(it)) {
+		if (YTK_MENU_ITEM_SEPARATOR(it)) {
 			mvwaddch(w->win, y, 0, ACS_LTEE);
 			whline(w->win, 0, w->width);
 			mvwaddch(w->win, y, w->width + 1, ACS_RTEE);
 			y++;
 		} else {
-			if(it->selected)
+			if (it->selected)
 				wattroff(w->win, A_REVERSE);
 			mvwaddstr(w->win, y, 1, padbuf);
 			if (YTK_MENU_ITEM_TOGGLE(it)) {
@@ -125,7 +125,7 @@ ytk_display_menu(ytk_thing *w)
 			}
 			if (it->hotkey)
 				mvwaddch(w->win, y, w->width - (YTK_WINDOW_HPADDING / 2), it->hotkey);
-			if(it->selected)
+			if (it->selected)
 				wattron(w->win, A_REVERSE);
 			y++;
 		}
@@ -137,12 +137,12 @@ void
 ytk_display_thing(ytk_thing *t)
 {
 	if (!t->win)
-		if(!ytk_create_window(t))
+		if (!ytk_create_window(t))
 			bail(YTE_ERROR);
 
 	wattron(t->win, A_REVERSE);
 
-	wborder(t->win, 
+	wborder(t->win,
 		ACS_VLINE | A_REVERSE, ACS_VLINE | A_REVERSE,
 		ACS_HLINE | A_REVERSE, ACS_HLINE | A_REVERSE,
 		ACS_ULCORNER | A_REVERSE, ACS_URCORNER | A_REVERSE,

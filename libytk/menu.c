@@ -231,7 +231,7 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 			if (YTK_MENU_ITEM_TOGGLE(it))
 				it->value = !(it->value);
 			if (it->callback != NULL)
-				it->callback((void *)it);
+				it->callback((void *) it);
 		}
 		break;
 	case 27:
@@ -245,7 +245,7 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 			if (YTK_MENU_ITEM_TOGGLE(it))
 				it->value = !(it->value);
 			if (it->callback != NULL)
-				it->callback((void *)it);
+				it->callback((void *) it);
 		}
 	}
 }
