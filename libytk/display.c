@@ -27,6 +27,10 @@ ytk_create_window(ytk_thing *t)
 #endif
 		return FALSE;
 	}
+
+	if ((rows > LINES) || (cols > COLS))
+		return FALSE;
+
 	t->height = rows;
 	t->width = cols;
 	t->top = ((LINES / 2) - (rows / 2)) - 1;
@@ -41,11 +45,10 @@ ytk_create_window(ytk_thing *t)
 void
 ytk_winch_thing(ytk_thing *t)
 {
-	if (t->win != NULL) {
+	if (t->win != NULL)
 		delwin(t->win);
-	}
 	if (!ytk_create_window(t))
-		exit(1);
+		t->win = NULL;
 }
 
 static void
@@ -143,7 +146,7 @@ ytk_display_thing(ytk_thing *t)
 {
 	if (t->win == NULL)
 		if (!ytk_create_window(t))
-			exit(1);
+			return;
 
 #ifdef YTALK_COLOR
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
