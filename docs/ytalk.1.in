@@ -51,19 +51,21 @@ The
 option starts your YTalk window in a shell.
 .PP
 The
+.B -Y
+option requires a capital Y or N as an answer to any yes/no question.
+.PP
+The
 .B -i
 option disables the auto-invite port (meaning you won't see
 "talk to blah@blah.com", but your talk daemon will beep you instead).
 .PP
-The -q option causes YTalk to prompt you before quitting.
+The
+.B -q
+option causes YTalk to prompt you before quitting.
 .PP
 The
 .B -v
-prints the program version and exits.
-.PP
-The
-.B -Y
-option requires a capital Y or N as an answer to any yes/no question.
+option prints the program version and exits.
 .PP
 The
 .B -h
