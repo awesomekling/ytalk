@@ -8,11 +8,11 @@
 \fB\\$1\fR
 .PP
 ..
-.TH YTalk 1 "10 May 1999"
+.TH YTalk 1 "25 Oct 2004" "YTalk 3.2.0"
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
-ytalk [-x] [-s] [-Y] [-i] [-v] [-h hostname_or_ip] username...
+.BI "ytalk [-x] [-s] [-Y] [-i] [-v] [-h " hostname_or_ip "] "username...
 .SH DESCRIPTION
 .I YTalk V3.2.0
 .PP
@@ -42,20 +42,32 @@ You can specify multiple user names on the command line, ie:
 .sp
 	ytalk george fred@hissun.edu marc@grumpy.cc
 .PP
-The -x option enables the X11 interface (described below).
+The 
+.B -x
+option enables the X11 interface (described below).
 .PP
-The -s option starts your YTalk window in a shell.
+The
+.B -s
+option starts your YTalk window in a shell.
 .PP
-The -i option disables the auto-invite port (meaning you won't see
+The
+.B -i
+option disables the auto-invite port (meaning you won't see
 "talk to blah@blah.com", but your talk daemon will beep you instead).
 .PP
-The -v prints the version and exits.
+The
+.B -v
+prints the program version and exits.
 .PP
-The -h option specifies the name or address of the local machine; this
+The
+.B -Y
+option requires a capital Y or N as an answer to any yes/no
+.PP
+The
+.B -h
+option specifies the name or address of the local machine; this
 is useful on multi-homed machines, or virtual hosts, to specify which
 network interface to use for communication.
-.PP
-The -Y option requires a capital Y or N as an answer to any yes/no
 question.
 .PP
 For each user on the command line, YTalk will attempt to connect to the talk
@@ -140,6 +152,9 @@ connections.
 .PP
 By choosing option "o", you can view and/or modify any of the YTalk options.
 See the OPTIONS section below for a list of YTalk options.
+.PP
+By choosing option "r", all users that have not yet responded to your talk
+invitation will be re-rung.
 .PP
 By choosing option "s", you can invoke a shell in your YTalk window.  All
 other users will see what happens in your shell.  YTalk will automatically
@@ -334,7 +349,8 @@ Note that, in this case, the problem could also have been solved by
 telling the home YTalk to use the 192.67.141.0 interface, when doing
 YTalk requests across the PPP link.
 .SH X11 INTERFACE
-If the DISPLAY environment variable is defined when YTalk starts up, then
+If the DISPLAY environment variable is defined when YTalk starts up AND
+the X11 interface has been enabled in .ytalkrc or on the command line, then
 YTalk will attempt to communicate with that X server.  A window will be
 created for you and each user you are connected to.  The X11 Interface can
 be enabled either by specifying -x on the command line or by putting this
@@ -361,17 +377,6 @@ DISPLAY environment variable.
     YTalk.font:  font to use, defaulting to "9x15".
 .sp
     YTalk.geometry:  window size, defaulting to  "80x24".
-.SH FUTURE WORK
-Work is being done on the following ideas:
-.sp
-.br
-	1) a dedicated YTalk daemon.
-.br
-	2) MBCS/NLS support.
-.br
-.PP
-However, as this was claimed over 5 years ago, I wouldn't hold my breath on
-it. :=)
 
 .SH FILES
 
@@ -379,7 +384,7 @@ it. :=)
 .br
     System-wide defaults file.
 .PP
-$HOME/.ytalkrc
+~/.ytalkrc
 .br
     User's local configuration file.  This file overrides
 .br
@@ -389,7 +394,13 @@ $HOME/.ytalkrc
 
 Britt Yenne
 .br
-yenne@austin.eds.com
+<yenne@austin.eds.com>
+
+.SH CURRENT MAINTAINER
+
+Andreas Kling
+.br
+<keso@impul.se>
 
 .SH FORMER MAINTAINERS
 
@@ -400,12 +411,6 @@ Roger Espel Llima
 Jessica Peterson
 .br
 <angel@metawire.org>
-
-.SH CURRENT MAINTAINER
-
-Andreas Kling
-.br
-<keso@impul.se>
 
 .SH CONTRIBUTORS
 Special thanks to Carl Edman for numerous code patches, beta testing,
