@@ -1182,7 +1182,7 @@ process_esc:
 		case 'A':	/* move up */
 		    if(user->av[0] == 0)
 			move_term(user, user->y - 1, user->x);
-		    else if(user->av[0] > user->y)
+		    else if((int)user->av[0] > user->y)
 			move_term(user, 0, user->x);
 		    else
 			move_term(user, user->y - user->av[0], user->x);
@@ -1205,7 +1205,7 @@ process_esc:
 		case 'D':	/* move left */
 		    if(user->av[0] == 0)
 			move_term(user, user->y, user->x - 1);
-		    else if(user->av[0] > user->x)
+		    else if((int)user->av[0] > user->x)
 			move_term(user, user->y, 0);
 		    else
 			move_term(user, user->y, user->x - user->av[0]);
