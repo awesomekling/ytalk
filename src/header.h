@@ -30,22 +30,22 @@
 #include <sys/param.h>
 
 #ifdef TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
+#  include <sys/time.h>
+#  include <time.h>
 #else
-#ifdef HAVE_SYS_TIME
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif
+#  ifdef HAVE_SYS_TIME
+#    include <sys/time.h>
+#  else
+#    include <time.h>
+#  endif
 #endif
 
 #ifdef YTALK_HPUX
-#define _XOPEN_SOURCE_EXTENDED
-#include <sys/socket.h>
-#undef _XOPEN_SOURCE_EXTENDED
+#  define _XOPEN_SOURCE_EXTENDED
+#  include <sys/socket.h>
+#  undef _XOPEN_SOURCE_EXTENDED
 #else
-#include <sys/socket.h>
+#  include <sys/socket.h>
 #endif
 
 #include <netinet/in.h>
@@ -54,7 +54,7 @@
 #include <stdio.h>
 
 #ifdef HAVE_STDLIB_H
-#include <stdlib.h>
+#  include <stdlib.h>
 #endif
 
 /* We may not have prototypes for these functions. */
@@ -65,7 +65,7 @@ extern char *ptsname(int);
 #endif
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+#  include <unistd.h>
 #endif
 
 #define VMAJOR	4		/* major version number */
@@ -75,11 +75,11 @@ extern char *ptsname(int);
 #define EIGHT_BIT_CLEAN		/* take this one out if you don't want it */
 
 #ifdef EIGHT_BIT_CLEAN
-#define is_printable(x)  ( (((x) >= ' ' && (x) <= '~') || \
+#  define is_printable(x)  ( (((x) >= ' ' && (x) <= '~') || \
 			    (unsigned char)(x) >= 0xa0) \
 			  && (x) != RUBDEF )
 #else
-#define is_printable(x) ( (x) >= ' ' && (x) <= '~' )
+#  define is_printable(x) ( (x) >= ' ' && (x) <= '~' )
 #endif
 
 /* ---- types ---- */
