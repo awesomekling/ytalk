@@ -464,6 +464,10 @@ yes_no(char *str)
 	int out = 0;
 	yn = ytk_new_msgbox("");
 	ytk_add_msgbox_item(YTK_MSGBOX(yn), str);
+#ifdef YTALK_COLOR
+	ytk_set_colors(yn, menu_colors);
+	ytk_set_attr(yn, menu_attr);
+#endif
 	ytk_push_thing(menu_stack, yn);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
