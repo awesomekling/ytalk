@@ -119,7 +119,7 @@ getpty(char *name)
 	char *tt;
 
 #ifdef USE_DEV_PTMX
-	RETSIGTYPE(*sigchld) ();
+	RETSIGTYPE(*sigchld) (int);
 	int r = 0;
 #endif
 
