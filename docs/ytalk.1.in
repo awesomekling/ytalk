@@ -42,7 +42,7 @@ You can specify multiple user names on the command line, ie:
 .sp
 	ytalk george fred@hissun.edu marc@grumpy.cc
 .PP
-The -x option disables the X11 interface (described below).
+The -x option enables the X11 interface (described below).
 .PP
 The -s option starts your YTalk window in a shell.
 .PP
@@ -333,17 +333,14 @@ which the office machines basically ignore.
 Note that, in this case, the problem could also have been solved by
 telling the home YTalk to use the 192.67.141.0 interface, when doing
 YTalk requests across the PPP link.
-.PP
-Enough.  For more information on how to use this, consult the source code
-or send me a letter.  :-)
 .SH X11 INTERFACE
 If the DISPLAY environment variable is defined when YTalk starts up, then
 YTalk will attempt to communicate with that X server.  A window will be
 created for you and each user you are connected to.  The X11 Interface can
-be disabled either by specifying -x on the command line or by putting this
+be enabled either by specifying -x on the command line or by putting this
 line into your .ytalkrc file:
 .sp
-	turn X off
+	turn X on
 .PP
 A window is created for each individual user in the conversation.  If the
 input focus is in the main window (ie: the one with "ytalk" in the title
