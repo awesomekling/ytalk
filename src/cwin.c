@@ -189,6 +189,12 @@ curses_redraw(void)
 
 	clear();
 	wnoutrefresh(stdscr);
+
+	if (in_ymenu()) {
+		resize_ymenu();
+		__refresh_ymenu();
+	}
+
 	row = 0;
 	for (w = head; w; w = w->next) {
 		if (w->next) {
@@ -214,10 +220,6 @@ curses_redraw(void)
 			wnoutrefresh(w->swin);
 		} else
 			wnoutrefresh(w->win);
-	}
-	if (in_ymenu()) {
-		resize_ymenu();
-		__refresh_ymenu();
 	}
 	doupdate();
 }
