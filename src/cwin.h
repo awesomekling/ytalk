@@ -19,7 +19,11 @@ extern void init_curses(void);
 extern void end_curses(void);
 extern int open_curses(yuser *);
 extern void close_curses(yuser *);
+#ifdef YTALK_COLOR
 extern void addch_curses(yuser *, yachar);
+#else
+extern void addch_curses(yuser *, ylong);
+#endif
 extern void move_curses(yuser *, int, int);
 extern void clreol_curses(yuser *);
 extern void clreos_curses(yuser *);
