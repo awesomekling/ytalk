@@ -7,13 +7,11 @@
 : ${AUTOHEADER=autoheader}
 : ${AUTOCONF=autoconf}
 
-M4DIR=m4
-
 echo "Cleaning up..."
 rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in
 
 echo "Running $ACLOCAL..."
-WANT_ACLOCAL="1.8" $ACLOCAL -I $M4DIR 2>/dev/null || exit 1
+WANT_ACLOCAL="1.8" $ACLOCAL -I m4 2>/dev/null || exit 1
 test -f aclocal.m4 || \
 	{ echo "FATAL: Failed to generate aclocal.m4" 2>&1; exit 1; }
 
