@@ -47,7 +47,7 @@ ytk_winch_thing(ytk_thing *w)
 		w->win = NULL;		/* Not really necessary. */
 	}
 	if (!ytk_create_window(w))
-		bail(YTE_ERROR);
+		exit(1);
 }
 
 void
@@ -140,7 +140,7 @@ ytk_display_thing(ytk_thing *t)
 {
 	if (!t->win)
 		if (!ytk_create_window(t))
-			bail(YTE_ERROR);
+			exit(1);
 
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
