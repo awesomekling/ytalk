@@ -8,11 +8,6 @@
 #include "ymenu.h"
 #include "cwin.h"
 
-#ifdef YTALK_COLOR
-extern int menu_colors;
-extern int menu_attr;
-#endif
-
 ytk_stack *menu_stack = NULL;
 ytk_thing *main_menu = NULL;
 ytk_thing *options_menu = NULL;
@@ -20,6 +15,13 @@ ytk_thing *usermenu_menu = NULL;
 ytk_thing *userlist_menu = NULL;
 ytk_thing *error_box = NULL;
 ytk_thing *message_box = NULL;
+
+#ifdef YTALK_COLOR
+ytk_thing *color_menu = NULL;
+
+extern int menu_colors;
+extern int menu_attr;
+#endif
 
 char ukey;
 
@@ -49,7 +51,7 @@ do_hidething(ytk_thing *t)
 	ytk_pop(menu_stack);
 	if (t == main_menu)
 		hide_ymenu();
-	else if (t != options_menu)
+	else if (t != options_menu && t != color_menu)
 		ytk_delete_thing(t);
 	refresh_curses();
 	ytk_sync_display();
@@ -145,6 +147,20 @@ handle_kill_unconnected(void *t)
 		free_user(wait_list);
 }
 
+#ifdef YTALK_COLOR
+void
+handle_color(void *t)
+{
+	char k = ((ytk_menu_item *)(t))->hotkey;
+	if (k >= '0' && k <= '7')
+		me->c_fg = k - '0';
+	switch (k) {
+	case 'b': me->c_at |= A_BOLD; break;
+	}
+	hide_ymenu();
+}
+#endif
+
 static void
 set_flags(ylong new_flags)
 {
@@ -216,6 +232,23 @@ init_ymenu()
 #ifdef YTALK_COLOR
 	ytk_set_colors(options_menu, menu_colors);
 	ytk_set_attr(options_menu, menu_attr);
+#endif
+
+#ifdef YTALK_COLOR
+	color_menu = ytk_new_menu("Color Menu");
+	ytk_add_menu_item(YTK_MENU(color_menu), "Black", '0', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Red", '1', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Green", '2', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Yellow", '3', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Blue", '4', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Magenta", '5', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Cyan", '6', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "White", '7', handle_color);
+	ytk_add_menu_separator(YTK_MENU(color_menu));
+	ytk_add_menu_toggle_item(YTK_MENU(color_menu), "Bold", 'b', handle_color, (me->c_at & A_BOLD));
+	ytk_set_escape(color_menu, do_hidething);
+	ytk_set_colors(color_menu, menu_colors);
+	ytk_set_attr(color_menu, menu_attr);
 #endif
 }
 
@@ -331,6 +364,19 @@ void
 show_ymenu()
 {
 	ytk_push(menu_stack, main_menu);
+	ytk_display_stack(menu_stack);
+	ytk_sync_display();
+}
+
+void
+show_colormenu()
+{
+	ytk_menu_item *it;
+
+	it = ytk_find_menu_item_with_hotkey(YTK_MENU(color_menu), (me->c_fg + '0'));
+	ytk_select_menu_item(YTK_MENU(color_menu), it);
+
+	ytk_push(menu_stack, color_menu);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 }

@@ -1345,6 +1345,10 @@ my_input(user, buf, len)
 						*buf = '\n';
 					else if (*buf == 27 || *buf == ALTESC)	/* Esc or ALTESC */
 						break;
+#ifdef YTALK_COLOR
+					else if (*buf == 11)	/* ^K - Color menu */
+						break;
+#endif
 					else if (*buf == 14 || *buf == 6 || *buf == 16)	/* ^N, ^F or ^P */
 						break;
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
@@ -1378,6 +1382,11 @@ my_input(user, buf, len)
 							update_ymenu();
 						}
 						buf++, len--;
+#ifdef YTALK_COLOR
+					} else if (*buf == 11) {	/* ^K - Color menu ;) */
+						show_colormenu();
+						buf++, len--;
+#endif
 					} else if (*buf == 14) {	/* ^N - scroll down */
 						scroll_down(scuser);
 						retitle_all_terms();

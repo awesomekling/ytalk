@@ -18,6 +18,8 @@ void redo_ymenu_userlist();
 int show_message_ymenu(char *);
 int show_error_ymenu(char *, char *);
 
+void show_colormenu();
+
 int can_ymenu();
 int in_ymenu();
 int yes_no(char *);
