@@ -56,7 +56,6 @@ esc_userlist(ytk_thing * t)
 	while ((i = ytk_next_menu_item(YTK_MENU(t), i)) != NULL) {
 		if (i->hotkey >= 'a' && i->hotkey <= 'z')
 		{
-			fprintf(stderr, "free: '%s'\n", i->text);
 			free_mem(i->text);
 		}
 	}
