@@ -18,6 +18,7 @@ typedef struct __ytk_msgbox_item {
 typedef struct {
 	ytk_thing *base;
 	ytk_msgbox_item *first;
+	ytk_msgbox_item *last;
 } ytk_msgbox;
 
 ytk_thing *ytk_new_msgbox(char *);
