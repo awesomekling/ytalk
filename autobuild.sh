@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "+++ Starting autobuild on $(hostname)"
+echo "+++ Starting autobuild on `hostname -s`"
 echo "+++ Date: `date`"
 echo "+++ SNRM: `uname -smrn`"
 cvs update >/dev/null 2>&1
@@ -18,4 +18,4 @@ echo "--- make completed with return code $?"
 echo ">>> ytalk -v"
 src/ytalk -v
 echo "--- ytalk -v finished with return code $?"
-echo "+++ Autobuild completed"
+echo "+++ Autobuild completed at `date`"
