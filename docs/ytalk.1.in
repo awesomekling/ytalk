@@ -61,7 +61,7 @@ prints the program version and exits.
 .PP
 The
 .B -Y
-option requires a capital Y or N as an answer to any yes/no
+option requires a capital Y or N as an answer to any yes/no question.
 .PP
 The
 .B -h
