@@ -57,10 +57,14 @@ void change_area(mem_list *list, yaddr addr, yaddr new_addr, int size) {
  */
 int get_size(mem_list *list, yaddr addr) {
 	mem_list *it = list;
-	while(it && it->addr != addr) {
-		it = it->next;
+	int size = -1;
+	while(it != NULL) {
+		if(it->addr == addr) {
+			size = it->size;
+			break;
+		}
 	}
-	return it->size;
+	return size;
 }
 
 /* Allocate memory.
@@ -78,9 +82,14 @@ yaddr get_mem(int n) {
 /* Free and clear memory
  */
 void free_mem(yaddr addr) {
-	memset(addr, '\0', get_size(glist, addr));
-	free(addr);
-	glist = del_area(glist, addr);
+	int size;
+	if((size = get_size(glist, addr)) != -1) {
+		memset(addr, '\0', get_size(glist, addr));
+		free(addr);
+		glist = del_area(glist, addr);
+	} else {
+		show_error("Mem not in list");
+	}
 }
 
 /* Reallocate memory.
@@ -105,7 +114,7 @@ void clear_all() {
 #endif
 	while(glist != NULL) {
 #ifdef YTALK_DEBUG
-		printf("%d: %d\n", glist->addr, glist->size);
+		printf("%d: %d\n", (int)glist->addr, glist->size);
 #endif
 		free_mem(glist->addr);
 	}
