@@ -75,7 +75,7 @@ AC_ARG_ENABLE([debug], AC_HELP_STRING([--enable-debug], [enable debugging]))
 if test "${enable_debug:-no}" != "no"; then
     AC_DEFINE(YTALK_DEBUG, 1, [Define to 1 to enable debugging output.])
 fi
- 
+
 dnl Some systems need extra libraries for sockets and dns...
 AC_CHECK_FUNC(socket,,AC_CHECK_LIB(socket, socket,, [AC_MSG_ERROR(Can't compile without socket)]))
 AC_CHECK_FUNC(gethostbyname,,AC_CHECK_LIB(nsl, gethostbyname,, [AC_MSG_ERROR(Can't compile without gethostbyname)]))
