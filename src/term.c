@@ -165,9 +165,9 @@ init_term()
 	/* set me up a terminal */
 
 	if (def_flags & FL_NEWUI)
-		(void) snprintf(tmpstr, MAXERR, "%s", me->full_name);
+		snprintf(tmpstr, MAXERR, "%s", me->full_name);
 	else
-		(void) snprintf(tmpstr, MAXERR, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
+		snprintf(tmpstr, MAXERR, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
 
 	if (open_term(me, tmpstr) < 0) {
 		end_term();

@@ -500,7 +500,7 @@ read_ytalkrc()
 	pw = getpwuid(myuid);
 	if (pw != NULL) {
 		fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
-		(void) snprintf(fname, strlen(pw->pw_dir) + 10, "%s/.ytalkrc", pw->pw_dir);
+		snprintf(fname, strlen(pw->pw_dir) + 10, "%s/.ytalkrc", pw->pw_dir);
 		read_rcfile(fname);
 		free_mem(fname);
 	}
