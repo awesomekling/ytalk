@@ -132,4 +132,5 @@ AC_OUTPUT(
 	libytk/Makefile
 	src/Makefile
 	docs/Makefile
+	docs/ytalk.1
 )

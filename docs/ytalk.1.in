@@ -1,5 +1,5 @@
 '''
-'''  Ytalk Version 4.0.0
+'''  Ytalk Version @VERSION@
 '''
 .de Sh
 .br
@@ -8,13 +8,13 @@
 \fB\\$1\fR
 .PP
 ..
-.TH YTalk 1 "25 Oct 2004" "YTalk 4.0.0"
+.TH YTalk 1 "25 Oct 2004" "YTalk @VERSION@"
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
 .BI "ytalk [-sYivqh] " username...
 .SH DESCRIPTION
-.I YTalk V4.0.0
+.I YTalk @VERSION@
 .PP
 YTalk is in essence a multi-user chat program.  It works almost exactly like
 the UNIX talk program and even communicates with the same talk daemon(s), but
