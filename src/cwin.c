@@ -724,7 +724,9 @@ update_scroll_curses(yuser *user)
 void
 update_message_curses(void)
 {
-	mvaddstr(LINES - 1, 0, bottom_msg);
+	move(LINES - 1, 0);
+	if (bottom_msg != NULL)
+		addstr(bottom_msg);
 	clrtoeol();
 	move(1, COLS - 1);
 	refresh();
