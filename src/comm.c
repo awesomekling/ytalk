@@ -19,7 +19,6 @@
 #include "ytp.h"
 #include "socket.h"
 #include "ymenu.h"
-#include "cwin.h"
 #include "mem.h"
 
 #ifdef HAVE_IOVEC_H
@@ -29,6 +28,16 @@
 #ifdef HAVE_SYS_UIO_H
 #include <sys/uio.h>
 #endif
+
+#ifdef YTALK_COLOR
+#  ifdef HAVE_NCURSES_H
+#    include <ncurses.h>
+#  else
+#    include <curses.h>
+#  endif
+#endif
+
+#include "cwin.h"
 
 #define IN_ADDR(s)	((s).sin_addr.s_addr)
 
@@ -1348,6 +1357,8 @@ my_input(user, buf, len)
 #ifdef YTALK_COLOR
 					else if (*buf == 11)	/* ^K - Color menu */
 						break;
+					else if (*buf == 2)		/* ^B - Bold */
+						break;
 #endif
 					else if (*buf == 14 || *buf == 6 || *buf == 16)	/* ^N, ^F or ^P */
 						break;
@@ -1385,6 +1396,16 @@ my_input(user, buf, len)
 #ifdef YTALK_COLOR
 					} else if (*buf == 11) {	/* ^K - Color menu ;) */
 						show_colormenu();
+						buf++, len--;
+					} else if (*buf == 2) {		/* ^B - Bold */
+						if (me->c_at & A_BOLD) {
+							me->c_at &= ~A_BOLD;
+							send_users(me, "[21m", 5, "[21m", 5);
+						}
+						else {
+							me->c_at |= A_BOLD;
+							send_users(me, "[01m", 5, "[01m", 5);
+						}
 						buf++, len--;
 #endif
 					} else if (*buf == 14) {	/* ^N - scroll down */
