@@ -7,7 +7,7 @@ AC_INIT(YTalk, 3.2.0)
 AC_CONFIG_SRCDIR(src/main.c)
 AM_INIT_AUTOMAKE
 
-AC_REVISION($LastChangedRevision: 79 $)
+AC_REVISION($LastChangedRevision: 80 $)
 AM_CONFIG_HEADER(config.h)
 
 dnl Do some system detection. Don't expand this without a good reason.
@@ -53,6 +53,7 @@ AC_CHECK_LIB(ncurses, initscr,
 	if test x$ytalk_cv_curses = x/usr -a -d /usr/include/ncurses; then
 		CPPFLAGS="$CPPFLAGS -I/usr/include/ncurses"
 	fi
+    AC_DEFINE(YTALK_COLOR, 1, [Define to 1 to enable colors.])
 	AC_CHECK_HEADERS(ncurses.h)],
 	[CF_CURSES_LIBS])
 
@@ -63,6 +64,18 @@ if test "x$no_termios" = "x1" ; then
   AC_CHECK_HEADERS(sgtty.h,, AC_MSG_ERROR(Cannot find either termios or sgtty))
 fi
 
+dnl Check if user wants colors (only on by default if we have ncurses)
+AC_ARG_ENABLE([colors], AC_HELP_STRING([--enable-colors], [enable colors]))
+if test "${enable_colors:-no}" != "no"; then
+    AC_DEFINE(YTALK_COLOR, 1, [Define to 1 to enable colors.])
+fi
+
+dnl See if we want debugging output.
+AC_ARG_ENABLE([debug], AC_HELP_STRING([--enable-debug], [enable debugging]))
+if test "${enable_debug:-no}" != "no"; then
+    AC_DEFINE(YTALK_DEBUG, 1, [Define to 1 to enable debugging output.])
+fi
+ 
 dnl Some systems need extra libraries for sockets and dns...
 AC_CHECK_FUNC(socket,,AC_CHECK_LIB(socket, socket,, [AC_MSG_ERROR(Can't compile without socket)]))
 AC_CHECK_FUNC(gethostbyname,,AC_CHECK_LIB(nsl, gethostbyname,, [AC_MSG_ERROR(Can't compile without gethostbyname)]))
