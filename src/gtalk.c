@@ -14,33 +14,36 @@ gtalk_process(yuser *user, ychar data)
 {
 	char *msg;
 
-	if (user->gt_len == (MAXBUF - 1))
+	if (user->gt.len == (MAXBUF - 1))
 		return;
 
-	if (user->gt_type == 0) {
-		user->gt_type = data;
+	if (user->gt.type == 0) {
+		user->gt.type = data;
 		return;
 	}
 
+	if (user->gt.buf == NULL)
+		user->gt.buf = get_mem(MAXBUF);
+
 	if (data == user->KILL || data == '\n') {
-		user->got_gt = 0;
-		user->gt_buf[user->gt_len] = 0;
-		switch (user->gt_type) {
+		user->gt.got_gt = 0;
+		user->gt.buf[user->gt.len] = 0;
+		switch (user->gt.type) {
 		case GTALK_PERSONAL_NAME:
 		case GTALK_IMPORT_REQUEST:
 			break;
 		case GTALK_VERSION_MESSAGE:
 			if (user->gt.version != NULL)
 				free_mem(user->gt.version);
-			user->gt.version = gtalk_parse_version(user->gt_buf);
+			user->gt.version = gtalk_parse_version(user->gt.buf);
 			retitle_all_terms();
 			break;
 		default:
-			msg = get_mem(user->gt_len + 2);
+			msg = get_mem(user->gt.len + 2);
 #ifdef HAVE_SNPRINTF
-			snprintf(msg, user->gt_len + 2, "%c%s", user->gt_type, user->gt_buf);
+			snprintf(msg, user->gt.len + 2, "%c%s", user->gt.type, user->gt.buf);
 #else
-			sprintf(msg, "%c%s", user->gt_type, user->gt_buf);
+			sprintf(msg, "%c%s", user->gt.type, user->gt.buf);
 #endif
 			show_message_ymenu(user->full_name, msg);
 			free_mem(msg);
@@ -48,7 +51,7 @@ gtalk_process(yuser *user, ychar data)
 		return;
 	}
 
-	user->gt_buf[user->gt_len++] = data;
+	user->gt.buf[user->gt.len++] = data;
 }
 
 char *

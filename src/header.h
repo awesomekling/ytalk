@@ -123,10 +123,6 @@ typedef struct {
 	char pad[44];		/* zeroed out */
 } y_parm;
 
-typedef struct {
-	char *version;
-} gtalk_info;
-
 #define MAXARG	8		/* max ESC sequence arg count */
 
 typedef struct _yuser {
@@ -140,7 +136,6 @@ typedef struct _yuser {
 	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
 	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
-	gtalk_info gt;		/* gtalk info */
 	char scroll;		/* set if currently being scrolled */
 	yachar **scrollback;	/* scrollback buffer */
 	long int scrollpos;	/* position in scrollback buffer */
@@ -149,11 +144,6 @@ typedef struct _yuser {
 	char bump;		/* set if at far right */
 	char onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
-	char got_gt;		/* currently parsing gtalk string */
-	char *gt_buf;		/* gtalk string buffer */
-	char gt_type;		/* type of current gtalk string */
-	int gt_len;		/* length of current gtalk string */
-	char got_esc;		/* received an ESC */
 	char key;		/* this user's ident letter for menus */
 	int y, x;		/* current cursor position */
 	int sy, sx;		/* saved cursor position */
@@ -178,10 +168,6 @@ typedef struct _yuser {
 	struct sockaddr_in sock;/* communication socket */
 	struct sockaddr_in orig_sock;	/* original socket -- another sick
 					 * hack */
-	short int av[MAXARG];	/* ESC sequence arguments */
-	unsigned int ac;		/* ESC sequence arg count */
-	unsigned int lparen;		/* lparen escape? */
-
 	/* out-of-band data */
 
 	int dbuf_size;		/* current buffer size */
@@ -189,6 +175,21 @@ typedef struct _yuser {
 	int drain;		/* remaining bytes to drain */
 	void (*dfunc) (struct _yuser *, void *);	/* function to call with drained data */
 	int got_oob;		/* got OOB flag */
+
+	struct {
+		char got_esc;		/* received an ESC */
+		short int av[MAXARG];	/* ESC sequence arguments */
+		unsigned int ac;	/* ESC sequence arg count */
+		unsigned int lparen;	/* lparen escape? */
+	} vt;
+
+	struct {
+		char got_gt;	/* currently parsing gtalk string */
+		char *buf;	/* gtalk string buffer */
+		char type;	/* type of current gtalk string */
+		int len;	/* length of current gtalk string */
+		char *version;	/* user's GNUTALK version */
+	} gt;
 
 	/* anything below this is available for the terminal interface */
 

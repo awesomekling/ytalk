@@ -1172,11 +1172,11 @@ send_users(yuser *user, ychar *buf, int len, ychar *cbuf, int clen)
 void
 show_input(yuser *user, ychar *buf, int len)
 {
-	if (user->got_gt) {
+	if (user->gt.got_gt) {
 process_gt:
 		for (; len > 0; len--, buf++) {
 			gtalk_process(user, *buf);
-			if (user->got_gt == 0) {
+			if (user->gt.got_gt == 0) {
 				len--, buf++;
 				if (*buf == '\n')
 					len--, buf++;
@@ -1184,11 +1184,11 @@ process_gt:
 			}
 		}
 	}
-	if (user->got_esc) {
+	if (user->vt.got_esc) {
 process_esc:
 		for (; len > 0; len--, buf++) {
 			vt100_process(user, *buf);
-			if (user->got_esc == 0) {
+			if (user->vt.got_esc == 0) {
 				len--, buf++;
 				break;
 			}
@@ -1262,16 +1262,17 @@ process_esc:
 				break;
 #endif
 			case 27:	/* Escape */
-				user->got_esc = 1;
-				user->ac = 0;
-				user->av[0] = 0;
-				user->av[1] = 0;
+				user->vt.got_esc = 1;
+				user->vt.ac = 0;
+				user->vt.av[0] = 0;
+				user->vt.av[1] = 0;
+				user->vt.lparen = 0;
 				len--, buf++;
 				goto process_esc;	/* ugly but _fast_ */
 			case GTALK_ESCAPE:
-				user->got_gt = 1;
-				user->gt_type = 0;
-				user->gt_len = 0;
+				user->gt.got_gt = 1;
+				user->gt.type = 0;
+				user->gt.len = 0;
 				len--, buf++;
 				goto process_gt;
 			default:
