@@ -1113,42 +1113,21 @@ send_end_region(void)
 void
 send_users(yuser *user, ychar *buf, int len, ychar *cl_buf, int cl_len)
 {
-	register ychar *o, *b;
 	register yuser *u;
-	static ychar *o_buf = NULL;
-	static int o_len = 0;
-
-	/* data transparency */
-
-	if ((len << 1) > o_len) {
-		o_len = (len << 1) + 512;
-		o_buf = (ychar *) realloc_mem(o_buf, o_len);
-	}
-	for (b = buf, o = o_buf; len > 0; b++, len--) {
-		*(o++) = *b;
-		if (*b == V3_OOB)
-			*(o++) = V3_OOB;
-	}
 
 	if (user && user != me) {
 		if (user->fd > 0) {	/* just to be sure... */
-			if (user->remote.vmajor > 2)
-				if (user->crlf)
-					write(user->fd, cl_buf, cl_len);
-				else
-					write(user->fd, o_buf, o - o_buf);
+			if (user->crlf)
+				write(user->fd, cl_buf, cl_len);
 			else
-				write(user->fd, buf, b - buf);
+				write(user->fd, buf, len);
 		}
 	} else
 		for (u = connect_list; u; u = u->next)
-			if (u->remote.vmajor > 2)
-				if (u->crlf)
-					write(u->fd, cl_buf, cl_len);
-				else
-					write(u->fd, o_buf, o - o_buf);
+			if (u->crlf)
+				write(u->fd, cl_buf, cl_len);
 			else
-				write(u->fd, buf, b - buf);
+				write(u->fd, buf, len);
 
 }
 
