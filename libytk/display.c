@@ -22,7 +22,9 @@ ytk_create_window(ytk_thing *t)
 		cols += ytk_msgbox_width(YTK_MSGBOX(t));
 		break;
 	default:
+#ifdef YTALK_DEBUG
 		fprintf(stderr, "ytk_create_window(): Thing type %d does not support windows.\n", t->type);
+#endif
 		return FALSE;
 	}
 	t->height = rows;
