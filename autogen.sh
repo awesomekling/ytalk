@@ -7,26 +7,39 @@
 : ${AUTOHEADER="autoheader"}
 : ${AUTOCONF="autoconf"}
 
-colsrow=`stty -a | grep columns`
-if [ "`echo $colsrow | egrep '[0-9]+ columns'`" != "" ] ; then
-	termcols=`echo $colsrow | sed 's/.* \([0-9]*\) columns.*/\1/'`
+tty > /dev/null 2&>1
+isatty=$?
+
+if [ $isatty -eq 0 ] ; then
+	colsrow=`stty -a | grep columns`
+	if [ "`echo $colsrow | egrep '[0-9]+ columns'`" != "" ] ; then
+		termcols=`echo $colsrow | sed 's/.* \([0-9]*\) columns.*/\1/'`
+	else
+		termcols=`echo $colsrow | sed 's/.*columns \([0-9]*\).*/\1/'`
+	fi
+	status_offset=`expr $termcols - 5`
+
+	smile() {
+		echo -n "[A[$status_offset"
+		echo "G[ [32;01m:)[0m ]"
+	}
+
+	frown() {
+		echo -n "[A[$status_offset"
+		echo "G[ [31;01m:([0m ]"
+		echo "ERROR: $1"
+		exit 1
+	}
 else
-	termcols=`echo $colsrow | sed 's/.*columns \([0-9]*\).*/\1/'`
+	smile() {
+		echo -n
+	}
+
+	frown() {
+		echo "ERROR: $1"
+		exit 1
+	}
 fi
-
-status_offset=`expr $termcols - 5`
-
-smile() {
-	echo -n "[A[$status_offset"
-	echo "G[ [32;01m:)[0m ]"
-}
-
-frown() {
-	echo -n "[A[$status_offset"
-	echo "G[ [31;01m:([0m ]"
-	echo "ERROR: $1"
-	exit 1
-}
 
 echo
 echo "* Autogenerating files for YTalk-4.0.0-cvs *"
