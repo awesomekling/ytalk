@@ -113,7 +113,7 @@ ytk_step_down_menu(ytk_menu *m)
 ytk_menu_item *
 ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (void *))
 {
-	ytk_menu_item *new, *it;
+	ytk_menu_item *new;
 	new = get_mem(sizeof(ytk_menu_item));
 	new->text = text;
 	new->hotkey = hotkey;
