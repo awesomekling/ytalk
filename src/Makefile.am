@@ -20,7 +20,7 @@ ytalk_SOURCES = \
 	socket.h \
 	ymenu.h
 
-ytalk_LDADD = ../libytk/libytk.a
+ytalk_LDADD = ../libytk/libytk.a $(INTLLIBS)
 
 INCLUDES = -I../libytk
 LIBS = @LIBS@
