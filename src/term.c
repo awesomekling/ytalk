@@ -51,7 +51,6 @@ static void (*_clreol_term) ();	/* clear to end of line */
 static void (*_clreos_term) ();	/* clear to end of screen */
 static void (*_scroll_term) ();	/* scroll up one line */
 static void (*_rev_scroll_term) ();	/* scroll down one line */
-static void (*_flush_term) ();	/* flush pending output */
 
 static int term_type = 0;
 
@@ -156,7 +155,6 @@ init_term()
 		_clreos_term = clreos_curses;
 		_scroll_term = scroll_curses;
 		_rev_scroll_term = NULL;
-		_flush_term = flush_curses;
 		init_curses();
 		term_type = 1;	/* using curses */
 	}
