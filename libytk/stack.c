@@ -47,15 +47,6 @@ ytk_pop(ytk_stack *st)
 }
 
 int
-ytk_is_empty_stack(ytk_stack *st)
-{
-	if (st && st->top)
-		return FALSE;
-	else
-		return TRUE;
-}
-
-int
 ytk_on_stack(ytk_stack *st, ytk_thing *t)
 {
 	ytk_stack_item *si;
