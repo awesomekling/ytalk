@@ -159,7 +159,12 @@ handle_color(void *t)
 	if (k >= '0' && k <= '7')
 		me->c_fg = k - '0';
 	switch (k) {
-	case 'b': me->c_at |= A_BOLD; break;
+	case 'b':
+		if (((ytk_menu_item *)t)->value)
+			me->c_at |= A_BOLD;
+		else
+			me->c_at &= ~A_BOLD;
+		break;
 	}
 	hide_ymenu();
 }
