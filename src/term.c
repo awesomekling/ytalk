@@ -1622,3 +1622,13 @@ update_scroll_term(user)
 		break;
 	}
 }
+
+void
+retitle_all_terms()
+{
+	switch (term_type) {
+	case 1:
+		retitle_all_curses();
+		break;
+	}
+}
