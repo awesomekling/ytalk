@@ -215,6 +215,9 @@ execute(command)
     int fd;
     char name[20], *shell;
     struct passwd *pw = NULL;
+#ifdef HAVE_TCSETPGRP
+    pid_t sid;
+#endif
 
     if(me->flags & FL_LOCKED)
     {
@@ -267,7 +270,7 @@ execute(command)
     {
 	close(fd);
 	close_all();
-        if(setsid() < 0)
+        if((sid = setsid()) < 0)
             exit(-1);
         if((fd = open(name, O_RDWR)) < 0)
             exit(-1);
