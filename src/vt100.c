@@ -179,7 +179,10 @@ vt100_process(yuser *user, char data)
 			else
 				move_term(user, user->y, user->x - user->vt.av[0]);
 		} else {
-			scroll_term(user);
+			if (user->y <= user->sc_bot)
+				user->y++;
+			else
+				scroll_term(user);
 		}
 		user->vt.got_esc = 0;
 		break;
@@ -242,7 +245,10 @@ vt100_process(yuser *user, char data)
 			else
 				del_line_term(user, user->vt.av[0]);
 		} else		/* reverse scroll */
-			rev_scroll_term(user);
+			if (user->y > user->sc_top)
+				user->y--;
+			else
+				rev_scroll_term(user);
 		user->vt.got_esc = 0;
 		break;
 	case 'P':
