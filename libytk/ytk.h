@@ -29,9 +29,6 @@
 #define YTK_T_INPUTBOX	2
 #define YTK_T_MSGBOX	3
 
-#define YTK_WINDOW_VPADDING 0
-#define YTK_WINDOW_HPADDING 2
-
 typedef struct __ytk_thing {
 	void	*object;
 	ylong	type;
