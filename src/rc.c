@@ -181,16 +181,6 @@ set_option(opt, value)
 		mask |= FL_NEWUI;
 #endif
 
-#ifdef USE_X11
-	else if (strcmp(opt, "xwin") == 0
-		 || strcmp(opt, "xwindows") == 0
-		 || strcmp(opt, "XWindows") == 0
-		 || strcmp(opt, "Xwin") == 0
-		 || strcmp(opt, "x") == 0
-		 || strcmp(opt, "X") == 0)
-		mask |= FL_XWIN;
-#endif
-
 	else if (strcmp(opt, "asides") == 0
 		 || strcmp(opt, "aside") == 0
 		 || strcmp(opt, "as") == 0)
