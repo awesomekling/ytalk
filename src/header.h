@@ -308,6 +308,7 @@ extern int open_term(yuser *);
 extern void close_term(yuser *);
 extern void addch_term(yuser *, ychar);
 extern void move_term(yuser *, int, int);
+extern void fill_term(yuser *user, int y1, int x1, int y2, int x2, ychar c);
 extern void clreol_term(yuser *);
 extern void clreos_term(yuser *);
 extern void scroll_term(yuser *);
