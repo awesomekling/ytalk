@@ -24,6 +24,10 @@
 #include "cwin.h"
 #include <pwd.h>
 
+#ifdef HAVE_UTMPX_H
+#  include <utmpx.h>
+#endif
+
 #ifdef HAVE_SYS_IOCTL_H
 #  include <sys/ioctl.h>
 #endif
@@ -68,6 +72,10 @@ int openpty(int *, int *, char *, struct termios *, struct winsize *);
 
 #if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
 #  define USE_DEV_PTMX
+#endif
+
+#ifdef HAVE_UTMPX_H
+static struct utmpx utx;
 #endif
 
 int running_process = 0;	/* flag: is process running? */
@@ -347,6 +355,28 @@ execute(char *command)
 		 */
 		ioctl(fd, TIOCSCTTY);
 #endif
+
+#ifdef HAVE_UTMPX_H
+
+		/*
+		 * Set up a utmpx structure and add it to utmpx database.
+		 */
+
+		if (pw && pw->pw_name) {
+			strcpy(utx.ut_name, pw->pw_name);
+			if ((memcmp(name, "/dev/", 5) == 0) && name[5] != '\0') {
+				strcpy(utx.ut_line, name + 5);
+			}
+			utx.ut_type = USER_PROCESS;
+			utx.ut_pid = getpid();
+			strcpy(utx.ut_host, "ytalk");
+			utx.ut_syslen = 6;
+			if (pututxline(&utx) == NULL) {
+				fprintf(stderr, "pututxline() failed.\n");
+			}
+		}
+
+#endif /* HAVE_UTMPX_H */
 
 		/* execute the command */
 
