@@ -224,9 +224,6 @@ execute(command)
 	char name[20], *shell;
 	struct stat sbuf;
 	struct passwd *pw = NULL;
-#ifdef HAVE_TCSETPGRP
-	pid_t sid;
-#endif
 #ifdef HAVE_OPENPTY
 	int fds;
 #endif
@@ -294,11 +291,7 @@ execute(command)
 	if ((pid = fork()) == 0) {
 		close(fd);
 		close_all();
-#ifdef HAVE_TCSETPGRP
-		if ((sid = setsid()) < 0)
-#else
 		if (setsid() < 0)
-#endif
 			exit(-1);
 		if ((fd = open(name, O_RDWR)) < 0)
 			exit(-1);
@@ -342,11 +335,6 @@ execute(command)
 		 * BSD-style job control.
 		 */
 		ioctl(fd, TIOCSCTTY);
-#endif
-
-#ifdef HAVE_TCSETPGRP
-		if (tcsetpgrp(fd, sid) < 0)
-			perror("tcsetpgrp");
 #endif
 
 		/* execute the command */
