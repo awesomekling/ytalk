@@ -5,6 +5,15 @@ AC_INIT(YTalk, 3.2.0)
 AC_REVISION($LastChangedRevision: 77 $)
 AC_CONFIG_HEADER(config.h)
 
+dnl Do some system detection. Don't expand this without a good reason.
+host=`uname -s`
+case "$host" in
+*SunOS*)
+  SYSTEM_DEFS=-DYTALK_SUNOS
+  ;;
+esac
+AC_SUBST(SYSTEM_DEFS)
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
