@@ -266,7 +266,7 @@ read_rcfile(fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on, *shell, *fmt;
+	char *ptr, *cmd, *from, *to, *on, *tmp;
 	char *host;
 	int i, line, found;
 #ifdef YTALK_COLOR
@@ -387,20 +387,25 @@ read_rcfile(fname)
 				strcpy(vhost, host);
 			} else if (strcmp(cmd, "title_format") == 0) {
 				found = 1;
-				fmt = get_string(&ptr);
-				title_format = (char *) get_mem(1 + strlen(fmt));
-				strcpy(title_format, fmt);
+				tmp = get_string(&ptr);
+				title_format = (char *) get_mem(1 + strlen(tmp));
+				strcpy(title_format, tmp);
 			} else if (strcmp(cmd, "user_format") == 0) {
 				found = 1;
-				fmt = get_string(&ptr);
-				user_format = (char *) get_mem(1 + strlen(fmt));
-				strcpy(user_format, fmt);
+				tmp = get_string(&ptr);
+				user_format = (char *) get_mem(1 + strlen(tmp));
+				strcpy(user_format, tmp);
 			} else if (strcmp(cmd, "shell") == 0) {
 				found = 1;
-				shell = get_word(&ptr);
-				if (!set_shell(shell)) {
+				tmp = get_word(&ptr);
+				if (!set_shell(tmp)) {
 					fprintf(stderr, "Shell can't be set to nothing on line %d in %s\n", line, fname);
 				}
+			} else if (strcmp(cmd, "history_rows") == 0) {
+				found = 1;
+				tmp = get_word(&ptr);
+				if (tmp != NULL)
+					scrollback_lines = strtol(tmp, NULL, 10);
 			} else {
 				fprintf(stderr, "Unknown option \"%s\" on line %d in %s\n", cmd, line, fname);
 				bail(YTE_INIT);
