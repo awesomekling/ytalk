@@ -165,7 +165,7 @@ ytk_display_thing(ytk_thing *t)
 
 	if (t->title != NULL) {
 		wattron(t->win, A_BOLD);
-		mvwaddstr(t->win, 0, (t->width / 2) - (strlen(t->title)) / 2, t->title);
+		mvwaddstr(t->win, 0, 1 + (t->width / 2) - (strlen(t->title) / 2), t->title);
 		wattroff(t->win, A_BOLD);
 	}
 
