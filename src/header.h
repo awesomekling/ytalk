@@ -17,6 +17,9 @@
 #include "config.h"
 
 #ifdef ENABLE_NLS
+#  ifdef HAVE_LOCALE_H
+#    include <locale.h>
+#  endif
 #  include <libintl.h>
 #  define _(String) gettext(String)
 #else
