@@ -62,13 +62,11 @@ ytk_on_stack(ytk_stack *st, ytk_thing *t)
 	if (st->top == NULL || t == NULL)
 		return FALSE;
 	si = st->top;
-	while (si->prev != NULL) {
+	while (si != NULL) {
 		if (si->thing == t)
 			return TRUE;
 		si = si->prev;
 	}
-	if (si->thing == t)
-		return TRUE;
 	return FALSE;
 }
 
@@ -79,11 +77,10 @@ ytk_winch_stack(ytk_stack *st)
 	if (st->top == NULL)
 		return;
 	si = st->top;
-	while (si->prev != NULL) {
+	while (si != NULL) {
 		ytk_winch_thing(si->thing);
 		si = si->prev;
 	}
-	ytk_winch_thing(si->thing);
 }
 
 void
@@ -96,11 +93,10 @@ ytk_display_stack(ytk_stack *st)
 	while (si->prev != NULL) {
 		si = si->prev;
 	}
-	while (si->next != NULL) {
+	while (si != NULL) {
 		ytk_display_thing(si->thing);
 		si = si->next;
 	}
-	ytk_display_thing(si->thing);
 }
 
 void
