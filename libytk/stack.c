@@ -59,9 +59,9 @@ int
 ytk_on_stack(ytk_stack *st, ytk_thing *t)
 {
 	ytk_stack_item *si;
-	si = st->top;
-	if (si == NULL || t == NULL)
+	if (st->top == NULL || t == NULL)
 		return FALSE;
+	si = st->top;
 	while (si->prev != NULL) {
 		if (si->thing == t)
 			return TRUE;
@@ -76,9 +76,9 @@ void
 ytk_winch_stack(ytk_stack *st)
 {
 	ytk_stack_item *si;
-	si = st->top;
-	if (si == NULL)
+	if (st->top == NULL)
 		return;
+	si = st->top;
 	while (si->prev != NULL) {
 		ytk_winch_thing(si->thing);
 		si = si->prev;
@@ -90,9 +90,9 @@ void
 ytk_display_stack(ytk_stack *st)
 {
 	ytk_stack_item *si;
-	si = st->top;
-	if (si == NULL)
+	if (st->top == NULL)
 		return;
+	si = st->top;
 	while (si->prev != NULL) {
 		si = si->prev;
 	}
