@@ -672,6 +672,7 @@ lf_term(user)
 			next_y = 0;
 		if (next_y > 0 || !(user->flags & FL_SCROLL)) {
 			move_term(user, next_y, user->x);
+			clreol_term(user);
 		}
 		move_term(user, new_y, user->x);
 	}
