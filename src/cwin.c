@@ -278,6 +278,8 @@ curses_start()
 		for (i = 0; i < 64; i++) {
 			fg = i & 7;
 			bg = i >> 3;
+			if (fg == COLOR_WHITE)
+				fg = COLOR_DEFAULT;
 			if (bg == COLOR_BLACK)
 				bg = COLOR_DEFAULT;
 			init_pair(i + 1, fg, bg);
