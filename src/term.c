@@ -1306,11 +1306,16 @@ spew_attrs(fd, at, bg, fg)
 {
 	char esc[30];
 	int p = 2;
-	if(at & A_BOLD)	p += sprintf(esc + p, "%d;", 1);
-	if(at & A_DIM) p += sprintf(esc + p, "%d;", 2);
-	if(at & A_UNDERLINE) p += sprintf(esc + p, "%d;", 4);
-	if(at & A_BLINK) p += sprintf(esc + p, "%d;", 5);
-	if(at & A_REVERSE) p += sprintf(esc + p, "%d;", 7);
+	if (at & A_BOLD)
+		p += sprintf(esc + p, "%d;", 1);
+	if (at & A_DIM)
+		p += sprintf(esc + p, "%d;", 2);
+	if (at & A_UNDERLINE)
+		p += sprintf(esc + p, "%d;", 4);
+	if (at & A_BLINK)
+		p += sprintf(esc + p, "%d;", 5);
+	if (at & A_REVERSE)
+		p += sprintf(esc + p, "%d;", 7);
 	p += sprintf(esc + p, "%d;", 30 + bg);
 	p += sprintf(esc + p, "%d;", 40 + fg);
 	esc[0] = 27;
