@@ -99,16 +99,6 @@ ytk_purge_stack(ytk_stack *st)
 	free_mem(st);
 }
 
-void
-ytk_delete_stack(ytk_stack *st)
-{
-	for (;;) {
-		if (ytk_pop(st) == NULL)
-			break;
-	}
-	free_mem(st);
-}
-
 int
 ytk_handle_stack_input(ytk_stack *st, int ch)
 {

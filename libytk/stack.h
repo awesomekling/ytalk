@@ -18,7 +18,6 @@ typedef struct __ytk_stack {
 } ytk_stack;
 
 ytk_stack *ytk_new_stack(void);
-void ytk_delete_stack(ytk_stack *);
 void ytk_purge_stack(ytk_stack *);
 void ytk_push(ytk_stack *, ytk_thing *);
 ytk_thing *ytk_pop(ytk_stack *);
