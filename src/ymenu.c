@@ -50,6 +50,19 @@ do_hidething(ytk_thing * t)
 }
 
 void
+esc_userlist(ytk_thing * t)
+{
+	ytk_menu_item *i = NULL;
+	while ((i = ytk_next_menu_item(YTK_MENU(t), i)) != NULL) {
+		if (i->hotkey >= 'a' && i->hotkey <= 'z')
+		{
+			fprintf(stderr, "free: '%s'\n", i->text);
+			free_mem(i->text);
+		}
+	}
+}
+
+void
 handle_runcmd()
 {
 	ytk_thing *c;
@@ -90,7 +103,6 @@ handle_userlist(void *i)
 	ytk_push_thing(menu_stack, userlist_menu);
 }
 
-
 void
 handle_quit(void *i)
 {
@@ -105,6 +117,7 @@ void
 handle_rering_all(void *i)
 {
 	(void) i;
+	esc_userlist(userlist_menu);
 	hide_ymenu();
 	rering_all();
 }
@@ -113,6 +126,7 @@ void
 handle_kill_unconnected(void *t)
 {
 	(void) t;
+	esc_userlist(userlist_menu);
 	hide_ymenu();
 	while (wait_list)
 		free_user(wait_list);
@@ -252,7 +266,7 @@ init_userlist()
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
 	ytk_add_menu_item(YTK_MENU(userlist_menu), "Rering all unconnected", 'R', handle_rering_all);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), "Kill all unconnected", 'K', handle_kill_unconnected);
-	ytk_set_escape(userlist_menu, do_hidething);
+	ytk_set_escape(userlist_menu, esc_userlist);
 }
 
 void
