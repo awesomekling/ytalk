@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YTalk 4.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-16 10:16+0100\n"
+"POT-Creation-Date: 2005-03-22 18:46+0100\n"
 "PO-Revision-Date: 2004-12-05 14:52+0100\n"
 "Last-Translator: Andreas Kling <keso@impul.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -16,90 +16,90 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/comm.c:175 src/comm.c:177
+#: src/comm.c:179 src/comm.c:181
 #, fuzzy, c-format
 msgid "Unknown host: '%s'"
 msgstr "Okänd värd: '%s'"
 
-#: src/comm.c:196 src/comm.c:198 src/comm.c:275 src/comm.c:277
+#: src/comm.c:200 src/comm.c:202 src/comm.c:279 src/comm.c:281
 #, c-format
 msgid "Import %s@%s?"
 msgstr "Vill du importera %s@%s?"
 
-#: src/comm.c:683 src/comm.c:685
+#: src/comm.c:687 src/comm.c:689
 #, c-format
 msgid "%s connected."
 msgstr "%s ansluten."
 
-#: src/comm.c:735
+#: src/comm.c:739
 msgid "Connection from unexpected host!"
 msgstr "Anslutning från oväntad värd!"
 
-#: src/comm.c:935 src/comm.c:937
+#: src/comm.c:939 src/comm.c:941
 #, c-format
 msgid "Ringing %s..."
 msgstr "Ringer %s..."
 
-#: src/comm.c:951 src/comm.c:953 src/comm.c:1027 src/comm.c:1029
-#: src/comm.c:1062 src/comm.c:1064
+#: src/comm.c:955 src/comm.c:957 src/comm.c:1031 src/comm.c:1033
+#: src/comm.c:1066 src/comm.c:1068
 #, c-format
 msgid "%s refusing messages"
 msgstr "%s vägrar meddelanden"
 
-#: src/comm.c:957 src/comm.c:959 src/comm.c:1033 src/comm.c:1035
-#: src/comm.c:1068 src/comm.c:1070
+#: src/comm.c:961 src/comm.c:963 src/comm.c:1037 src/comm.c:1039
+#: src/comm.c:1072 src/comm.c:1074
 #, c-format
 msgid "%s not logged in"
 msgstr "%s ej inloggad"
 
-#: src/comm.c:1008 src/comm.c:1010
+#: src/comm.c:1012 src/comm.c:1014
 #, c-format
 msgid "Rering %s?"
 msgstr "Ring %s igen?"
 
-#: src/comm.c:1018 src/comm.c:1020
+#: src/comm.c:1022 src/comm.c:1024
 #, c-format
 msgid "Reringing %s\n"
 msgstr "Ringer %s igen\n"
 
-#: src/exec.c:184
+#: src/exec.c:124
 msgid "Command shell terminated."
 msgstr "Kommandoskalet avslutades."
 
-#: src/exec.c:186
+#: src/exec.c:126
 msgid "Command execution finished."
 msgstr "Kommandot avslutades."
 
-#: src/exec.c:232
+#: src/exec.c:172
 msgid "A command is already executing."
 msgstr "Ett kommando kör redan."
 
-#: src/exec.c:237 src/exec.c:243
+#: src/exec.c:177 src/exec.c:183
 msgid "Cannot allocate pseudo-terminal."
 msgstr "Kan inte allokera pseudo-terminal."
 
-#: src/exec.c:288
+#: src/exec.c:229
 msgid "Warning: The pseudo-terminal is world-readable."
 msgstr "Varning: Denna pseudo-terminal är läsbar av alla."
 
-#: src/exec.c:364
+#: src/exec.c:324
 msgid "fork() failed"
 msgstr "fork() misslyckades"
 
-#: src/main.c:47
+#: src/main.c:50
 msgid "Press any key to quit."
 msgstr "Tryck valfri tangent för att avsluta."
 
-#: src/main.c:88
+#: src/main.c:91
 msgid "Error"
 msgstr "Felmeddelande"
 
-#: src/main.c:190
+#: src/main.c:191
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr "Okänd flagga '%c'\n"
 
-#: src/main.c:206
+#: src/main.c:207
 #, c-format
 msgid ""
 "Usage:    %s [options] user[@host][#tty]...\n"
@@ -118,257 +118,283 @@ msgstr ""
 "                -v          --    skriv ut programversion\n"
 "                -h          --    visa detta hjälpmeddelande\n"
 
-#: src/main.c:218
+#: src/main.c:219
 #, c-format
 msgid "Standard input is not a valid terminal device.\n"
 msgstr "Standard-input är ej en giltig terminalenhet.\n"
 
-#: src/main.c:257 src/user.c:281
+#: src/main.c:258 src/user.c:284
 msgid "Waiting for connection..."
 msgstr "Väntar på anslutning..."
 
-#: src/rc.c:308
+#: src/rc.c:313
 msgid "Invalid bool option."
 msgstr "Ogiltigt booleskt värde."
 
-#: src/rc.c:324
+#: src/rc.c:329
 msgid "Not enough parameters for alias."
 msgstr "Otillräckligt antal parametrar för alias."
 
-#: src/rc.c:342
+#: src/rc.c:347
 msgid "You must specify both foreground and background."
 msgstr "Du måste specifiera både för- och bakgrund."
 
-#: src/rc.c:346
+#: src/rc.c:351
 msgid "Invalid foreground color."
 msgstr "Ogiltig förgrundsfärg"
 
-#: src/rc.c:350
+#: src/rc.c:355
 msgid "Invalid background color."
 msgstr "Ogiltig bakgrundsfärg."
 
-#: src/rc.c:365
+#: src/rc.c:370
 msgid "Cannot resolve \"from\" address."
 msgstr "Kan inte slå upp från-adress."
 
-#: src/rc.c:369
+#: src/rc.c:374
 msgid "Cannot resolve \"to\" address."
 msgstr "Kan inte slå upp till-adress."
 
-#: src/rc.c:373
+#: src/rc.c:378
 msgid "Cannot resolve \"on\" address."
 msgstr "Kan inte slå upp på-adress."
 
-#: src/rc.c:377
+#: src/rc.c:382
 msgid "From and to are the same host."
 msgstr "Från och till är samma värd.n"
 
-#: src/rc.c:384
+#: src/rc.c:389
 msgid "Virtual host already set."
 msgstr "Virtuell värd redan satt."
 
-#: src/rc.c:389
+#: src/rc.c:394
 msgid "Missing hostname."
 msgstr "Värdnamn saknas."
 
-#: src/rc.c:408
+#: src/rc.c:413
 msgid "Shell cannot be empty."
 msgstr "Skal kan ej vara tomt."
 
-#: src/rc.c:416
+#: src/rc.c:421
 msgid "Unknown option."
 msgstr "Okänd inställning."
 
-#: src/socket.c:153 src/socket.c:155
+#: src/socket.c:157 src/socket.c:159
 #, c-format
 msgid "Talk to %s@%s?"
 msgstr "Tala med %s@%s?"
 
-#: src/socket.c:271 src/socket.c:273
+#: src/socket.c:275 src/socket.c:277
 #, c-format
 msgid "Unkown daemon type: %d"
 msgstr "Okänd servertyp: %d"
 
-#: src/socket.c:432
+#: src/socket.c:436
 msgid "Warning: cannot write to new talk daemon"
 msgstr "Varning: kan ej skriva till ny talkserver"
 
-#: src/socket.c:438
+#: src/socket.c:442
 msgid "Warning: cannot write to old talk daemon"
 msgstr "Varning: kan ej skriva till gammal talkserver"
 
-#: src/socket.c:490 src/socket.c:492
+#: src/socket.c:494 src/socket.c:496
 #, c-format
 msgid "No talk daemon on %s"
 msgstr "Ingen talkserver på %s"
 
-#: src/user.c:111
+#: src/user.c:114
 msgid "Who are you?"
 msgstr "Vem är du?"
 
-#: src/user.c:217 src/user.c:219
+#: src/user.c:220 src/user.c:222
 #, c-format
 msgid "%s disconnected."
 msgstr "%s kopplade från."
 
-#: src/user.c:330
+#: src/user.c:333
 msgid "Couldn't open file for writing."
 msgstr "Kunde inte öppna filen för skrivning."
 
-#: src/user.c:348
+#: src/user.c:351
 msgid "Couldn't close output file."
 msgstr "Kunde inte stänga filen."
 
-#: src/user.c:352 src/user.c:354
+#: src/user.c:355 src/user.c:357
 #, c-format
 msgid "Wrote %lu lines."
 msgstr "Skrev %lu rader."
 
-#: src/ymenu.c:90
+#: src/ymenu.c:108
 msgid "Add user"
 msgstr "Lägg till användare"
 
-#: src/ymenu.c:99 src/ymenu.c:226
+#: src/ymenu.c:117 src/ymenu.c:251
 msgid "Run command"
 msgstr "Kör kommando"
 
-#: src/ymenu.c:220
+#: src/ymenu.c:245
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
-#: src/ymenu.c:221
+#: src/ymenu.c:246
 msgid "Add another user"
 msgstr "Lägg till användare"
 
-#: src/ymenu.c:222
+#: src/ymenu.c:247
 msgid "User list"
 msgstr "Användarlista"
 
-#: src/ymenu.c:224 src/ymenu.c:235
+#: src/ymenu.c:249 src/ymenu.c:260
 msgid "Options"
 msgstr "Inställningar"
 
-#: src/ymenu.c:225
+#: src/ymenu.c:250
 msgid "Spawn shell"
 msgstr "Starta skal"
 
-#: src/ymenu.c:228
+#: src/ymenu.c:253
 msgid "Quit"
 msgstr "Avsluta"
 
-#: src/ymenu.c:236
+#: src/ymenu.c:261
 msgid "Scrolling"
 msgstr "Skrollning"
 
-#: src/ymenu.c:237
+#: src/ymenu.c:262
 msgid "Word-wrap"
 msgstr "Word-wrap"
 
-#: src/ymenu.c:238
+#: src/ymenu.c:263
 msgid "Auto-import"
 msgstr "Auto-import"
 
-#: src/ymenu.c:239
+#: src/ymenu.c:264
 msgid "Auto-invite"
 msgstr "Auto-inbjudan"
 
-#: src/ymenu.c:240
+#: src/ymenu.c:265
 msgid "Reringing"
 msgstr "Återuppringning"
 
-#: src/ymenu.c:241
+#: src/ymenu.c:266
 msgid "Beeps"
 msgstr "Pip"
 
-#: src/ymenu.c:242
+#: src/ymenu.c:267
 msgid "Ignore break"
 msgstr "Ignorera brytsignal"
 
-#: src/ymenu.c:243
+#: src/ymenu.c:268
 msgid "Require caps"
 msgstr "Kräv versaler"
 
-#: src/ymenu.c:244
+#: src/ymenu.c:269
 msgid "Prompt rerings"
 msgstr "Fråga vid återuppringning"
 
-#: src/ymenu.c:245
+#: src/ymenu.c:270
 msgid "Prompt to quit"
 msgstr "Fråga vid avslut"
 
-#: src/ymenu.c:247
+#: src/ymenu.c:272
 msgid "Reload ytalkrc"
 msgstr "Ladda om ytalkrc"
 
-#: src/ymenu.c:255
+#: src/ymenu.c:280
 msgid "Color Menu"
 msgstr "Färgmeny"
 
-#: src/ymenu.c:256
+#: src/ymenu.c:281
 msgid "Black"
 msgstr "Svart"
 
-#: src/ymenu.c:257
+#: src/ymenu.c:282
 msgid "Red"
 msgstr "Röd"
 
-#: src/ymenu.c:258
+#: src/ymenu.c:283
 msgid "Green"
 msgstr "Grön"
 
-#: src/ymenu.c:259
+#: src/ymenu.c:284
 msgid "Yellow"
 msgstr "Gul"
 
-#: src/ymenu.c:260
+#: src/ymenu.c:285
 msgid "Blue"
 msgstr "Blå"
 
-#: src/ymenu.c:261
+#: src/ymenu.c:286
 msgid "Magenta"
 msgstr "Magenta"
 
-#: src/ymenu.c:262
+#: src/ymenu.c:287
 msgid "Cyan"
 msgstr "Cyan"
 
-#: src/ymenu.c:263
+#: src/ymenu.c:288
 msgid "White"
 msgstr "Vit"
 
-#: src/ymenu.c:265
+#: src/ymenu.c:290
 msgid "Bold"
 msgstr "Fet"
 
-#: src/ymenu.c:286
+#: src/ymenu.c:311
 msgid "Enter filename:"
 msgstr "Ange filnamn:"
 
-#: src/ymenu.c:326
-msgid "View information"
-msgstr "Visa information"
+#: src/ymenu.c:338 src/ymenu.c:399
+#, fuzzy
+msgid "User information"
+msgstr "Användarinformation"
 
-#: src/ymenu.c:328
+#: src/ymenu.c:340
+#, c-format
+msgid "User:            %s"
+msgstr "Användare:       %s"
+
+#: src/ymenu.c:345
+#, c-format
+msgid "Client type:     "
+msgstr "Klienttyp:       "
+
+#: src/ymenu.c:362
+#, c-format
+msgid "Version info:    %s"
+msgstr "Versionsinfo:    %s"
+
+#: src/ymenu.c:366
+#, c-format
+msgid "System type:     %s"
+msgstr "Systemtyp:       %s"
+
+#: src/ymenu.c:371
+#, c-format
+msgid "Edit characters: "
+msgstr "Kontrolltecken   "
+
+#: src/ymenu.c:400
 msgid "Disconnect"
 msgstr "Koppla från"
 
-#: src/ymenu.c:329
+#: src/ymenu.c:401
 msgid "Save to file"
 msgstr "Spara till fil"
 
-#: src/ymenu.c:346
+#: src/ymenu.c:418
 msgid "User List"
 msgstr "Användarlista"
 
-#: src/ymenu.c:372
+#: src/ymenu.c:444
 msgid "<unconnected>"
 msgstr "<ej ansluten>"
 
-#: src/ymenu.c:379
+#: src/ymenu.c:451
 msgid "Rering all unconnected"
 msgstr "Ring alla oanslutna"
 
-#: src/ymenu.c:380
+#: src/ymenu.c:452
 msgid "Kill all unconnected"
 msgstr "Släpp alla oanslutna"
 
