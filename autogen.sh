@@ -37,6 +37,8 @@ frown() {
 label() {
 	if [ $isatty -eq 0 ] ; then
 		echo " [34;01m*[0m $1"
+	else
+		echo "* $1"
 	fi
 }
 
