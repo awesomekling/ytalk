@@ -3,3 +3,5 @@ ytalk_SOURCES = main.c term.c user.c fd.c comm.c menu.c socket.c rc.c exec.c cwi
 
 INCLUDES = @XINCS@
 LIBS = @LIBS@ @XLIBS@
+
+DEFS = @DEFS@ @SYSTEM_DEFS@
