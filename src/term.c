@@ -390,8 +390,10 @@ move_term(user, y, x)
 	if (x < 0 || x >= user->cols) {
 		user->bump = 1;
 		x = user->cols - 1;
-	} else
+	} else {
 		user->bump = 0;
+		user->onend = 0;
+	}
 	_move_term(user, y, x);
 	user->y = y;
 	user->x = x;

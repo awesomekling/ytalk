@@ -140,6 +140,7 @@ typedef struct _yuser {
 	yachar **scr;		/* screen data */
 	int *scr_tabs;		/* screen tab positions */
 	char bump;		/* set if at far right */
+	int onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
 	char got_esc;		/* received an ESC */
 	ychar key;		/* this user's ident letter for menus */

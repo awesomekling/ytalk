@@ -1128,8 +1128,16 @@ process_esc:
 						newline_term(user);
 					}
 				} else {
-					addch_term(user, *buf);
-					newline_term(user);
+					if (user->x == user->cols - 1) {
+						if (user->onend) {
+							newline_term(user);
+							addch_term(user, *buf);
+							user->onend = 0;
+						} else {
+							addch_term(user, *buf);
+							user->onend = 1;
+						}
+					}
 				}
 			} else
 				addch_term(user, *buf);
