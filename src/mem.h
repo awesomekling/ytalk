@@ -5,6 +5,7 @@ typedef struct t_mem_list {
 	char *file;
 	int line;
 #endif
+	struct t_mem_list *prev;
 	struct t_mem_list *next;
 } mem_list;
 
@@ -14,7 +15,7 @@ typedef struct t_mem_list {
 #endif
 
 mem_list *add_area( /* mem_list*, yaddr, int, int, char* */ );
-mem_list *del_area( /* mem_list*, yaddr */ );
+mem_list *del_area( /* mem_list*, mem_list* */ );
 #ifdef YTALK_DEBUG
 yaddr real_get_mem( /* int, int, char* */ );
 void real_free_mem( /* yaddr, int, char* */ );
@@ -24,5 +25,6 @@ void free_mem( /* yaddr */ );
 #endif
 yaddr realloc_mem( /* yaddr, int */ );
 void change_area( /* mem_list*, yaddr, yaddr, int */ );
+mem_list *find_area( /* yaddr */ );
 int get_size( /* mem_list*, yaddr */ );
 void clear_all();

@@ -38,32 +38,55 @@ add_area(list, addr, size)
 	entry->line = line;
 	entry->file = file;
 #endif
+	entry->prev = NULL;
+	if(list != NULL)
+		list->prev = entry;
 	entry->next = list;
 	return entry;
 }
 
-/*
- * Delete from linked list
- */
 mem_list *
-del_area(list, addr)
+find_area(list, addr)
 	mem_list *list;
 	yaddr addr;
 {
-	mem_list *it = list, *backup = list;
-	if (it->addr == addr) {
-		list = it->next;
-		free(it);
-		return list;
-	}
-	while (it != NULL) {
-		if (it->addr == addr)
+	mem_list *it = list;
+	while(it != NULL) {
+		if(it->addr == addr)
 			break;
-		backup = it;
 		it = it->next;
 	}
-	backup->next = it->next;
-	free(it);
+	return it;
+}
+
+/*
+ * Delete from linked list. There are many -> in this funktion.. Try to stay concentrated.
+ */
+mem_list *
+del_area(list, entry)
+	mem_list *list;
+	mem_list *entry;
+{
+	if(list == entry)
+		list = entry->next;
+
+	if(entry->next == NULL && entry->prev == NULL) {
+		free(entry);
+		return NULL;
+	}
+
+	if(entry->prev != NULL)
+		entry->prev->next = entry->next;
+	else
+		entry->next->prev = NULL;
+
+	if(entry->next != NULL)
+		entry->next->prev = entry->prev;
+	else
+		entry->prev->next = NULL;
+
+	free(entry);
+
 	return list;
 }
 
@@ -150,11 +173,11 @@ free_mem(addr)
 #endif
 	yaddr addr;
 {
-	int size;
-	if ((size = get_size(glist, addr)) > 0) {
-		(void) memset(addr, '\0', (size_t) size);
-		free(addr);
-		glist = del_area(glist, addr);
+	mem_list *entry;
+	if((entry = find_area(glist, addr)) != NULL) {
+		(void) memset(entry->addr, '\0', (size_t) entry->size);
+		free(entry->addr);
+		glist = del_area(glist, entry);
 	} else {
 #ifdef YTALK_DEBUG
 #ifdef HAVE_SNPRINTF
