@@ -934,6 +934,9 @@ resize_win(user, height, width)
     send_winch(user);
     redraw_term(user, 0);
     flush_term(user);
+
+    /* Restore raw mode if running a shell */
+    if(running_process) set_raw_term();
 }
 
 /* Draw a nice box.
