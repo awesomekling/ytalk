@@ -213,19 +213,28 @@ new_alias(a1, a2)
 	return 1; /* success */
 }
 
-static void
-set_shell(yuser *user, char *shell)
+static int
+set_shell(char *shell)
 {
 	struct passwd *pw;
+
+	if(shell == NULL)
+		return 0;
+
 	if(*shell == '~') {
 		pw = getpwuid(myuid);
-		gshell = (char *) get_mem(strlen(pw->pw_dir)+strlen(shell));
-		shell++;
-		sprintf(gshell, "%s%s", pw->pw_dir, shell);
+		if(pw != NULL) {
+			gshell = (char *) get_mem(strlen(pw->pw_dir)+strlen(shell)+1);
+			shell++;
+			sprintf(gshell, "%s%s", pw->pw_dir, shell);
+		} else {
+			return 0;
+		}
 	} else {
 		gshell = (char *) get_mem(strlen(shell)+1);
 		sprintf(gshell, "%s", shell);
 	}
+	return 1;
 }
 
 static void
@@ -350,7 +359,9 @@ read_rcfile(fname)
 			} else if(strcmp(cmd, "shell") == 0) {
 				found = 1;
 				shell = get_word(&ptr);
-				set_shell(me, shell);
+				if(!set_shell(shell)) {
+					fprintf(stderr, "Shell can't be set to nothing on line %d in %s\n", line, fname);
+				}
 			} else {
 				fprintf(stderr, "Unknown option \"%s\" on line %d in %s\n", cmd, line, fname);
 				bail(YTE_INIT);
