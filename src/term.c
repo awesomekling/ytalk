@@ -39,8 +39,7 @@
 #endif
 
 #include "cwin.h"
-#include "xwin.h"
-#include "menu.h"
+#include "ymenu.h"
 
 static int (*_open_term) ();	/* open a new terminal */
 static void (*_close_term) ();	/* close a terminal */
@@ -146,22 +145,6 @@ init_term()
 
 	term_type = 0;		/* nothing selected yet */
 
-#ifdef USE_X11
-	if (term_type == 0 && (def_flags & FL_XWIN) && getenv("DISPLAY")) {
-		_open_term = open_xwin;
-		_close_term = close_xwin;
-		_addch_term = addch_xwin;
-		_move_term = move_xwin;
-		_clreol_term = clreol_xwin;
-		_clreos_term = clreos_xwin;
-		_scroll_term = scroll_xwin;
-		_rev_scroll_term = rev_scroll_xwin;
-		_flush_term = flush_xwin;
-		init_xwin();
-		term_type = 2;	/* using xwin */
-	}
-#endif
-
 	/* if no window system found, default to curses */
 
 	if (term_type == 0) {
@@ -256,11 +239,6 @@ end_term()
 	case 1:		/* curses */
 		end_curses();
 		break;
-#ifdef USE_X11
-	case 2:		/* xwin */
-		end_xwin();
-		break;
-#endif
 	}
 	term_type = 0;
 }
@@ -962,10 +940,13 @@ redraw_term(user, y)
 
 	/* redisplay any active menu */
 
+#if 0
 	if (menu_ptr != NULL)
 		update_menu();
-	else
-		_move_term(user, user->y, user->x);
+#endif
+	if (in_ymenu())
+		update_ymenu();
+	_move_term(user, user->y, user->x);
 }
 
 /*
