@@ -7,15 +7,21 @@
 : ${AUTOHEADER="autoheader"}
 : ${AUTOCONF="autoconf"}
 
-termcols=`stty -a | sed -n '/columns/s/.*columns \([0-9]*\).*/\1/p'`
+colsrow=`stty -a | grep columns`
+if [ "`echo $colsrow | egrep '[0-9]+ columns'`" != "" ] ; then
+	termcols=`echo $colsrow | sed 's/.* \([0-9]*\) columns.*/\1/'`
+else
+	termcols=`echo $colsrow | sed 's/.*columns \([0-9]*\).*/\1/'`
+fi
+
 status_offset=`expr $termcols - 5`
 
-function smile {
+smile() {
 	echo -n "[A[$status_offset"
 	echo "G[ [32;01m:)[0m ]"
 }
 
-function frown {
+frown() {
 	echo -n "[A[$status_offset"
 	echo "G[ [31;01m:([0m ]"
 	echo "ERROR: $1"
