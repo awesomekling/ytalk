@@ -151,9 +151,11 @@ ytk_display_thing(ytk_thing *t)
 		ACS_LLCORNER, ACS_LRCORNER
 	);
 
-	wattron(t->win, A_BOLD);
-	mvwaddstr(t->win, 0, (t->width / 2) - (strlen(t->title)) / 2, t->title);
-	wattroff(t->win, A_BOLD);
+	if (t->title != NULL) {
+		wattron(t->win, A_BOLD);
+		mvwaddstr(t->win, 0, (t->width / 2) - (strlen(t->title)) / 2, t->title);
+		wattroff(t->win, A_BOLD);
+	}
 
 	switch (t->type) {
 	case YTK_T_MENU:
