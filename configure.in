@@ -19,6 +19,9 @@ case "$host" in
 *HP-UX*)
   SYSTEM_DEFS="-DYTALK_HPUX"
   ;;
+*OSF1*)
+  SYSTEM_DEFS="-DYTALK_OSF1"
+  ;;
 esac
 AC_SUBST(SYSTEM_DEFS)
 
