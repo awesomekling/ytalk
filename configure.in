@@ -113,6 +113,12 @@ AC_CHECK_TYPE([socklen_t], [AC_DEFINE(HAVE_SOCKLEN_T, 1, [Define to 1 if you hav
 	#include <sys/types.h>
 	#include <sys/socket.h>])
 
+dnl Check for openpty() and util.h
+AC_CHECK_HEADERS(util.h)
+AC_CHECK_FUNCS(openpty,,
+	[AC_CHECK_LIB(util, openpty, [AC_DEFINE(HAVE_OPENPTY)] [LIBS="$LIBS -lutil"])
+])
+
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS(putenv strerror ttyname ptsname grantpt unlockpt)
