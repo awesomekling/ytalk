@@ -54,11 +54,11 @@ esc_userlist(ytk_thing * t)
 {
 	ytk_menu_item *i = NULL;
 	while ((i = ytk_next_menu_item(YTK_MENU(t), i)) != NULL) {
-		if (i->hotkey >= 'a' && i->hotkey <= 'z')
-		{
+		if (i->hotkey >= 'a' && i->hotkey <= 'z') {
 			free_mem(i->text);
 		}
 	}
+	do_hidething(t);
 }
 
 void
