@@ -19,7 +19,8 @@ ytalk_SOURCES = \
 	cwin.h \
 	mem.h \
 	socket.h \
-	ymenu.h
+	ymenu.h \
+	gtalk.h
 
 ytalk_LDADD = ../libytk/libytk.a $(INTLLIBS)
 
