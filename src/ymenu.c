@@ -253,13 +253,12 @@ handle_disconnect_user(ytk_menu_item *i)
 {
 	yuser *u;
 	(void) i;
+	hide_ymenu();
 	for (u = user_list; u; u = u->unext)
 		if (u->key == ukey) {
 			free_user(u);
 			break;
 		}
-	ytk_pop(menu_stack);
-	hide_ymenu();
 }
 
 void
