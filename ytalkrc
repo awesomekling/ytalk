@@ -30,3 +30,4 @@ prompt_rering = on
 #ui_colors background [bold-]foreground
 #beeps = on
 #ignore_break = off
+#shell = /bin/tcsh
