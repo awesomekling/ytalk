@@ -396,6 +396,9 @@ show_colormenu()
 	it = ytk_find_menu_item_with_hotkey(YTK_MENU(color_menu), (me->c_fg + '0'));
 	ytk_select_menu_item(YTK_MENU(color_menu), it);
 
+	it = ytk_find_menu_item_with_hotkey(YTK_MENU(color_menu), 'b');
+	it->value = ((me->c_at & A_BOLD) != 0);
+
 	ytk_push(menu_stack, color_menu);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
