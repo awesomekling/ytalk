@@ -68,8 +68,8 @@ extern char *ptsname(int);
 #include <unistd.h>
 #endif
 
-#define VMAJOR	3		/* major version number */
-#define VMINOR	2		/* minor version number */
+#define VMAJOR	4		/* major version number */
+#define VMINOR	0		/* minor version number */
 #define VPATCH	0		/* patch level */
 
 #define EIGHT_BIT_CLEAN		/* take this one out if you don't want it */
