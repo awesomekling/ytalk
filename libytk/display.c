@@ -142,10 +142,14 @@ ytk_display_thing(ytk_thing *t)
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
 	wborder(t->win,
-		ACS_VLINE, ACS_VLINE,
-		ACS_HLINE, ACS_HLINE,
-		ACS_ULCORNER, ACS_URCORNER,
-		ACS_LLCORNER, ACS_LRCORNER
+		ACS_VLINE | COLOR_PAIR(t->colors) | t->attr,
+		ACS_VLINE | COLOR_PAIR(t->colors) | t->attr,
+		ACS_HLINE | COLOR_PAIR(t->colors) | t->attr,
+		ACS_HLINE | COLOR_PAIR(t->colors) | t->attr,
+		ACS_ULCORNER | COLOR_PAIR(t->colors) | t->attr,
+		ACS_URCORNER | COLOR_PAIR(t->colors) | t->attr,
+		ACS_LLCORNER | COLOR_PAIR(t->colors) | t->attr,
+		ACS_LRCORNER | COLOR_PAIR(t->colors) | t->attr
 	);
 
 	if (t->title != NULL) {
