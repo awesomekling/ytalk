@@ -123,6 +123,10 @@ typedef struct {
 	char pad[44];		/* zeroed out */
 } y_parm;
 
+typedef struct {
+	char *version;
+} gtalk_info;
+
 #define MAXARG	8		/* max ESC sequence arg count */
 
 typedef struct _yuser {
@@ -136,6 +140,7 @@ typedef struct _yuser {
 	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
 	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
+	gtalk_info gt;		/* pointer to gtalk info if gtalk user */
 	char scroll;		/* set if currently being scrolled */
 	yachar **scrollback;	/* scrollback buffer */
 	long int scrollpos;	/* position in scrollback buffer */
@@ -144,6 +149,9 @@ typedef struct _yuser {
 	char bump;		/* set if at far right */
 	char onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
+	char got_gt;		/* currently parsing gtalk string */
+	char gt_type;		/* type of current gtalk string */
+	int gt_len;		/* length of current gtalk string */
 	char got_esc;		/* received an ESC */
 	char key;		/* this user's ident letter for menus */
 	int y, x;		/* current cursor position */

@@ -274,12 +274,44 @@ handle_disconnect_user(ytk_menu_item *i)
 }
 
 static void
+view_extinfo(ytk_menu_item *i)
+{
+	ytk_thing *info_box;
+	yuser *u, *user = NULL;
+	static char gtalk_ver[128];
+	(void) i;
+
+	for (u = user_list; u; u = u->unext)
+		if (u->key == ukey) {
+			user = u;
+			break;
+		}
+
+	if (user == NULL)
+		return;
+
+	info_box = ytk_new_msgbox("Extended information");
+	sprintf(gtalk_ver, "gtalk version: %s", user->gt.version);
+	ytk_add_msgbox_item(YTK_MSGBOX(info_box), gtalk_ver);
+	ytk_set_escape(info_box, do_hidething);
+#ifdef YTALK_COLOR
+	ytk_set_colors(info_box, menu_colors);
+	ytk_set_attr(info_box, menu_attr);
+#endif
+	ytk_push(menu_stack, info_box);
+	ytk_display_stack(menu_stack);
+	ytk_sync_display();
+}
+
+static void
 init_usermenu(char k)
 {
 	yuser *u;
 	for (u = user_list; u; u = u->unext)
 		if (u->key == k) {
 			usermenu_menu = ytk_new_menu(u->full_name);
+			if (u->gt.version != NULL)
+				ytk_add_menu_item(YTK_MENU(usermenu_menu), _("View extended information"), 'x', view_extinfo);
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', NULL);	/* FIXME: Fix me! */
 			ukey = k;
@@ -311,8 +343,10 @@ init_userlist()
 				p += sprintf(p, "YTalk %d.%d", u->remote.vmajor, u->remote.vminor);
 			else if (u->remote.vmajor == 2)
 				p += sprintf(p, "YTalk 2.?");
+			else if (u->gt.version != NULL)
+				p += sprintf(p, "GNU talk");
 			else
-				p += sprintf(p, "UNIX talk");
+				p += sprintf(p, "BSD talk");
 			u->key = hk++;
 			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_userlist_menu);
 		}

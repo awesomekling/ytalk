@@ -14,6 +14,7 @@ ytalk_SOURCES = \
 	mem.c \
 	scroll.c \
 	vt100.c \
+	gtalk.c \
 	header.h \
 	cwin.h \
 	mem.h \

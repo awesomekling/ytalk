@@ -21,6 +21,7 @@
 #include "ymenu.h"
 #include "mem.h"
 #include "cwin.h"
+#include "gtalk.h"
 
 #ifdef HAVE_IOVEC_H
 #include <iovec.h>
@@ -599,7 +600,7 @@ ytalk_user(int fd)
 		if (u != user)
 			send_import(u, user);
 
-	/* NEWUI: make sure we display the correct remote version */
+	/* make sure we display the correct remote version */
 	retitle_all_terms();
 }
 
@@ -668,6 +669,8 @@ connect_user(int fd)
 	sprintf(msgstr, _("%s connected."), user->full_name);
 #endif
 	msg_term(msgstr);
+
+	gtalk_send_version(user);
 }
 
 /*
@@ -1167,6 +1170,18 @@ send_users(yuser *user, ychar *buf, int len, ychar *cbuf, int clen)
 void
 show_input(yuser *user, ychar *buf, int len)
 {
+	if (user->got_gt) {
+process_gt:
+		for (; len > 0; len--, buf++) {
+			gtalk_process(user, *buf);
+			if (user->got_gt == 0) {
+				len--, buf++;
+				if (*buf == '\n')
+					len--, buf++;
+				break;
+			}
+		}
+	}
 	if (user->got_esc) {
 process_esc:
 		for (; len > 0; len--, buf++) {
@@ -1251,6 +1266,12 @@ process_esc:
 				user->av[1] = 0;
 				len--, buf++;
 				goto process_esc;	/* ugly but _fast_ */
+			case GTALK_ESCAPE:
+				user->got_gt = 1;
+				user->gt_type = 0;
+				user->gt_len = 0;
+				len--, buf++;
+				goto process_gt;
 			default:
 				if (*buf < ' ') {
 					/* show a control char */

@@ -346,8 +346,10 @@ user_title(char *buf, int size, yuser *user)
 						b += sprintf(b, "Y%d.%d", user->remote.vmajor, user->remote.vminor);
 					else if (user->remote.vmajor == 2)
 						b += sprintf(b, "Y2.?");
+					else if (user->gt.version != NULL)
+						b += sprintf(b, "GNU");
 					else
-						b += sprintf(b, "UNIX");
+						b += sprintf(b, "BSD");
 				}
 				break;
 			case 'V':
