@@ -12,7 +12,7 @@
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
-.BI "ytalk [-s] [-Y] [-i] [-v] [-q] [-h " hostname_or_ip "] " username...
+.BI "ytalk [-sYivqh] " username...
 .SH DESCRIPTION
 .I YTalk V3.2.0
 .PP
@@ -65,9 +65,8 @@ option prints the program version and exits.
 .PP
 The
 .B -h
-option specifies the name or address of the local machine; this
-is useful on multi-homed machines, or virtual hosts, to specify which
-network interface to use for communication.
+options prints usage help and exits. It used to specify a virtual host,
+this is now done in your .ytalkrc
 .PP
 For each user on the command line, YTalk will attempt to connect to the talk
 daemon on the specified user's host and determine if that user has left an
