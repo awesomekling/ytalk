@@ -9,7 +9,6 @@ unsigned int bad_free = 0;
 unsigned int bad_realloc = 0;
 unsigned int realloc_null = 0;
 unsigned int leaked = 0;
-#endif
 
 static mem_list *glist = NULL;
 
@@ -17,16 +16,7 @@ static mem_list *glist = NULL;
  * Add to linked list
  */
 mem_list *
-#ifdef YTALK_DEBUG
-add_area(list, addr, size, line, file)
-	int line;
-	char *file;
-#else
-add_area(list, addr, size)
-#endif
-	mem_list *list;
-	yaddr addr;
-	int size;
+add_area(mem_list *list, yaddr addr, int size, int line, char *file)
 {
 	mem_list *entry;
 	if (addr == 0)
@@ -34,10 +24,8 @@ add_area(list, addr, size)
 	entry = (mem_list *) malloc(sizeof(mem_list));
 	entry->addr = addr;
 	entry->size = size;
-#ifdef YTALK_DEBUG
 	entry->line = line;
 	entry->file = file;
-#endif
 	entry->prev = NULL;
 	if(list != NULL)
 		list->prev = entry;
@@ -46,9 +34,7 @@ add_area(list, addr, size)
 }
 
 mem_list *
-find_area(list, addr)
-	mem_list *list;
-	yaddr addr;
+find_area(mem_list *list, yaddr addr)
 {
 	mem_list *it = list;
 	while(it != NULL) {
@@ -63,9 +49,7 @@ find_area(list, addr)
  * Delete from linked list. There are many -> in this funktion.. Try to stay concentrated.
  */
 mem_list *
-del_area(list, entry)
-	mem_list *list;
-	mem_list *entry;
+del_area(mem_list *list, mem_list *entry)
 {
 	if(list == entry)
 		list = entry->next;
@@ -94,10 +78,7 @@ del_area(list, entry)
  * Change stored size
  */
 void
-change_area(list, addr, new_addr, size)
-	mem_list *list;
-	yaddr addr, new_addr;
-	int size;
+change_area(mem_list *list, yaddr addr, yaddr new_addr, int size)
 {
 	mem_list *it = list;
 	while (it != NULL) {
@@ -108,19 +89,15 @@ change_area(list, addr, new_addr, size)
 		}
 		it = it->next;
 	}
-#ifdef YTALK_DEBUG
 	show_error("Reallocation failed: Not in allocation list");
 	bad_realloc++;
-#endif
 }
 
 /*
  * Size to clear where the pointer points
  */
 int
-get_size(list, addr)
-	mem_list *list;
-	yaddr addr;
+get_size(mem_list *list, yaddr addr)
 {
 	mem_list *it = list;
 	int size = -1;
@@ -133,19 +110,17 @@ get_size(list, addr)
 	}
 	return size;
 }
+#endif /* YTALK_DEBUG */
 
 /*
  * Allocate memory.
  */
 yaddr
 #ifdef YTALK_DEBUG
-real_get_mem(n, line, file)
-	int line;
-	char *file;
+real_get_mem(int n, int line, char *file)
 #else
-get_mem(n)
+get_mem(int n)
 #endif
-	int n;
 {
 	yaddr out;
 	if ((out = (yaddr) malloc((size_t) n)) == NULL) {
@@ -154,8 +129,6 @@ get_mem(n)
 	}
 #ifdef YTALK_DEBUG
 	glist = add_area(glist, out, n, line, file);
-#else
-	glist = add_area(glist, out, n);
 #endif
 	return out;
 }
@@ -163,15 +136,15 @@ get_mem(n)
 /*
  * Free and clear memory
  */
+#ifndef YTALK_DEBUG
 void
-#ifdef YTALK_DEBUG
-real_free_mem(addr, line, file)
-	int line;
-	char *file;
+free_mem(yaddr addr)
+{
+	free(addr);
+}
 #else
-free_mem(addr)
-#endif
-	yaddr addr;
+void
+real_free_mem(yaddr addr, int line, char *file)
 {
 	mem_list *entry;
 	if((entry = find_area(glist, addr)) != NULL) {
@@ -179,25 +152,22 @@ free_mem(addr)
 		free(entry->addr);
 		glist = del_area(glist, entry);
 	} else {
-#ifdef YTALK_DEBUG
-#ifdef HAVE_SNPRINTF
+#  ifdef HAVE_SNPRINTF
 		snprintf(errstr, MAXERR, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned) addr, file, line);
-#else
+#  else
 		sprintf(errstr, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned) addr, file, line);
-#endif
+#  endif
 		show_error(errstr);
 		bad_free++;
-#endif
 	}
 }
+#endif /* YTALK_DEBUG */
 
 /*
  * Reallocate memory.
  */
 yaddr
-realloc_mem(p, n)
-	yaddr p;
-	int n;
+realloc_mem(yaddr p, int n)
 {
 	yaddr out;
 	if (p == NULL) {
@@ -210,10 +180,13 @@ realloc_mem(p, n)
 		show_error("realloc() failed");
 		bail(YTE_NO_MEM);
 	}
+#ifdef YTALK_DEBUG
 	change_area(glist, p, out, n);
+#endif
 	return out;
 }
 
+#ifdef YTALK_DEBUG
 /*
  * Clear all memory
  */
@@ -221,30 +194,23 @@ void
 clear_all()
 {
 	mem_list *it;
-#ifdef YTALK_DEBUG
 	fprintf(stderr, "Clearing memory\n");
-#endif
 	while (glist != NULL) {
-#ifdef YTALK_DEBUG
 		fprintf(stderr, "0x%lx: %d\t(%s:%d)\n", (long unsigned) glist->addr, glist->size,
 			glist->file, glist->line
 		 );
-#endif
 		/* The next 5 rows are a simpler and faster version of free_mem() */
 		it = glist;
 		glist = glist->next;
 		memset(it->addr, '\0', (size_t) it->size);
 		free(it->addr);
 		free(it);
-#ifdef YTALK_DEBUG
 		leaked++;
-#endif
 	}
-#ifdef YTALK_DEBUG
 	fprintf(stderr, "Statistics:\n");
 	fprintf(stderr, "Bad free_mem() calls:    %u\n", bad_free);
 	fprintf(stderr, "Bad realloc_mem() calls: %u\n", bad_realloc);
 	fprintf(stderr, "realloc_mem(NULL) calls: %u\n", realloc_null);
 	fprintf(stderr, "Leaked allocations:      %u\n", leaked);
-#endif
 }
+#endif /* YTALK_DEBUG */
