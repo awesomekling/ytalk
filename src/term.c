@@ -53,6 +53,7 @@ static void (*_scroll_term) (yuser *);		/* scroll up one line */
 static void (*_rev_scroll_term) (yuser *);	/* scroll down one line */
 
 static int term_type = 0;
+static yachar eyac;
 
 char *bottom_msg = NULL;
 ylong bottom_time = 0;
