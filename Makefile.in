@@ -11,10 +11,6 @@
 # no part of this NOTICE is deleted or edited in any manner.
 # 
 
-# This version of YTalk is maintained by Roger Espel Llima
-# <roger.espel.llima@pobox.com>, and provided under the same 
-# conditions; see the file README for details.
-
 srcdir		= @srcdir@
 VPATH		= @srcdir@
 
