@@ -360,6 +360,15 @@ in_ymenu()
 		return 0;
 }
 
+int
+can_ymenu()
+{
+	if (main_menu != NULL)
+		return 1;
+	else
+		return 0;
+}
+
 void
 resize_ymenu()
 {
