@@ -939,12 +939,14 @@ house_clean()
 
 	t = (ylong) time(NULL);
 
+#ifdef YTALK_COLOR
 	if (bottom_msg != NULL && bottom_time != 0) {
 		if (t - bottom_time >=10) {
 			bottom_msg = NULL;
 			redraw_all_terms();
 		}
 	}
+#endif
 
 	if (t - last_auto >= 30) {
 		last_auto = t;

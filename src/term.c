@@ -49,7 +49,6 @@ static void (*_flush_term) ();	/* flush pending output */
 static int term_type = 0;
 
 #ifdef YTALK_COLOR
-char msgstr[MAXERR];		/* temporary string for bottom messages */
 char *bottom_msg = NULL;
 ylong bottom_time = 0;
 #endif

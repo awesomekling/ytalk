@@ -21,6 +21,7 @@
 #include "mem.h"
 
 char errstr[132];		/* temporary string for errors */
+char msgstr[MAXERR];		/* temporary string for bottom messages */
 char *vhost = NULL;		/* specified virtual host */
 ylong myuid;			/* global uid */
 char *gshell = NULL;		/* global shell */

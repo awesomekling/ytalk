@@ -17,7 +17,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_NCURSES_H
+#ifdef HAVE_NCURSES_H_MU
 #define YTALK_COLOR
 #endif
 
@@ -321,6 +321,7 @@ extern yuser *connect_list;	/* list of connected users */
 extern yuser *wait_list;	/* list of invited users */
 extern yuser *fd_to_user[MAX_FILES];	/* convert file descriptors to users */
 extern char errstr[MAXERR];	/* temporary string for errors */
+extern char msgstr[MAXERR];	/* temporary string for messages */
 extern ylong def_flags;		/* default FL_* flags */
 extern int user_winch;		/* user window/status changed flag */
 
@@ -333,7 +334,6 @@ extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
 extern char *gshell;		/* stores your shell */
 #ifdef YTALK_COLOR
-extern char msgstr[MAXERR];	/* temporary string for messages */
 extern char *bottom_msg;	/* current status message */
 extern ylong bottom_time;	/* timestamp of the above */
 #endif
