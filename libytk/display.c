@@ -30,7 +30,7 @@ ytk_create_window(ytk_thing *t)
 	}
 	t->height = rows;
 	t->width = cols;
-	t->top = (LINES / 2) - (rows / 2);
+	t->top = ((LINES / 2) - (rows / 2)) - 1;
 	t->left = (COLS / 2) - (cols / 2);
 	t->win = newwin(
 		t->height + 2, t->width + 2,
