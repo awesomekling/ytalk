@@ -1300,6 +1300,27 @@ spew_line(fd, buf, len)
 	}
 }
 
+void
+spew_attrs(fd, at, bg, fg)
+	int fd, at, bg, fg;
+{
+	char esc[30];
+	int p = 2;
+	if(at & A_BOLD)	p += sprintf(esc + p, "%d;", 1);
+	if(at & A_DIM) p += sprintf(esc + p, "%d;", 2);
+	if(at & A_UNDERLINE) p += sprintf(esc + p, "%d;", 4);
+	if(at & A_BLINK) p += sprintf(esc + p, "%d;", 5);
+	if(at & A_REVERSE) p += sprintf(esc + p, "%d;", 7);
+	p += sprintf(esc + p, "%d;", 30 + bg);
+	p += sprintf(esc + p, "%d;", 40 + fg);
+	esc[0] = 27;
+	esc[1] = '[';
+	esc[p - 1] = 'm';
+	/* Clear all attributes */
+	write(fd, "[0m", 4);
+	/* Send our attributes */
+	write(fd, esc, p);
+}
 #endif
 
 /*
@@ -1348,6 +1369,11 @@ spew_term(user, fd, rows, cols)
 
 		(void) sprintf(tmp, "%c[%d;%dH", 27, user->y + 1, user->x + 1);
 		(void) write(fd, tmp, strlen(tmp));
+
+#ifdef YTALK_COLOR
+		(void) spew_attrs(fd, user->c_at, user->c_fg, user->c_bg);
+#endif
+
 	} else {
 		y = first_interesting_row(user, rows, cols);
 		for (;;) {
