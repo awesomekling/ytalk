@@ -1289,8 +1289,6 @@ process_esc:
 		    move_term(user, 0, 0);
 		    user->got_esc = 0;
 		    break;
-		case 27:	/* escape. some programs do not behave. */
-		    break;
 		default:
 		    user->got_esc = 0;
 	    }
