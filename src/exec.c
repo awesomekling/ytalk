@@ -91,7 +91,6 @@ getpty(name)
 {
     register int pty, tty;
     char *tt;
-    extern char *ttyname();
 
 #ifdef USE_DEV_PTMX
     RETSIGTYPE (*sigchld)();
