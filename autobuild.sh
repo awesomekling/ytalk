@@ -1,8 +1,8 @@
 #!/bin/sh
 
-echo "+++ Starting autobuild on `hostname -s`"
+echo "+++ Starting autobuild on `hostname | cut -f1 -d.`"
 echo "+++ Date: `date`"
-echo "+++ SNRM: `uname -smrn`"
+echo "+++ SNRM: `uname -snrm`"
 cvs update -dP >/dev/null 2>&1
 echo ">>> autogen.sh"
 ./autogen.sh
