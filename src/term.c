@@ -849,7 +849,7 @@ del_line_term(user, num)
 
 static void
 copy_text(fr, to, count)
-  register int *fr, *to;
+  register yachar *fr, *to;
   register int count;
 {
     if(to < fr)
