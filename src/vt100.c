@@ -185,11 +185,15 @@ vt100_process(user, data)
 		user->got_esc = 0;
 		break;
 	case 'J':		/* clear to end of screen */
-		clreos_term(user);
+		if (user->got_esc == 2) {
+			clreos_term(user);
+		}
 		user->got_esc = 0;
 		break;
 	case 'K':		/* clear to end of line */
-		clreol_term(user);
+		if (user->got_esc == 2) {
+			clreol_term(user);
+		}
 		user->got_esc = 0;
 		break;
 	case 'L':
