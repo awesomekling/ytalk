@@ -569,16 +569,6 @@ tab_term(yuser *user)
 }
 
 /*
- * Process a carriage return.
- */
-void
-cr_term(yuser *user)
-{
-	move_term(user, user->y, 0);
-	return;
-}
-
-/*
  * Process a line feed.
  */
 void
