@@ -1111,24 +1111,54 @@ send_end_region(void)
  * if the given user is either "me" or NULL.
  */
 void
-send_users(yuser *user, ychar *buf, int len, ychar *cl_buf, int cl_len)
+send_users(yuser *user, ychar *buf, int len, ychar *cbuf, int clen)
 {
 	register yuser *u;
+	ychar *o, *b, *co, *cb;
+	static ychar *o_buf = NULL;
+	static ychar *o_cbuf = NULL;
+	static int o_len = 0, o_clen = 0;
+
+	/* duplicate OOB markers to allow transmission of 'ý' */
+	if ((len << 1) > o_len) {
+		o_len = (len << 1) + 512;
+		o_buf = realloc_mem(o_buf, o_len);
+	}
+	if ((clen << 1) > o_clen) {
+		o_clen = (clen << 1) + 512;
+		o_cbuf = realloc_mem(o_cbuf, o_clen);
+	}
+	for (b = buf, o = o_buf; len > 0; b++, len--) {
+		*(o++) = *b;
+		if (*b == V3_OOB)
+			*(o++) = V3_OOB;
+	}
+	for (cb = cbuf, co = o_cbuf; clen > 0; cb++, clen--) {
+		*(co++) = *cb;
+		if (*cb == V3_OOB)
+			*(co++) = V3_OOB;
+	}
 
 	if (user && user != me) {
 		if (user->fd > 0) {	/* just to be sure... */
-			if (user->crlf)
-				write(user->fd, cl_buf, cl_len);
+			if (user->remote.vmajor > 2)
+				if (user->crlf)
+					write(user->fd, o_cbuf, co - o_cbuf);
+				else
+					write(user->fd, o_buf, o - o_buf);
 			else
-				write(user->fd, buf, len);
+				write(user->fd, buf, b - buf);
 		}
 	} else
 		for (u = connect_list; u; u = u->next)
-			if (u->crlf)
-				write(u->fd, cl_buf, cl_len);
+			if (user->remote.vmajor > 2)
+				if (u->crlf)
+					write(u->fd, o_cbuf, co - o_cbuf);
+				else
+					write(u->fd, o_buf, o - o_buf);
 			else
-				write(u->fd, buf, len);
-
+				write(u->fd, buf, b - buf);
+	}
 }
 
 /*
