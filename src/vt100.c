@@ -14,9 +14,17 @@ vt100_process(yuser *user, char data)
 {
 	unsigned int i;
 
-	if (data >= '0' && data <= '9' && user->vt.got_esc > 1) {
-		user->vt.av[user->vt.ac] = (user->vt.av[user->vt.ac] * 10) + (int) (data - '0');
-		return;
+	if (data >= '0' && data <= '9') {
+		if (user->vt.got_esc > 1) {
+			user->vt.av[user->vt.ac] = (user->vt.av[user->vt.ac] * 10) + (int) (data - '0');
+			return;
+		}
+		if (user->vt.hash == 1 && data == '8') {
+			fill_term(user, 0, 0, user->rows - 1, user->cols - 1, 'E');
+			redraw_term(user, 0);
+			user->vt.got_esc = 0;
+			return;
+		}
 	}
 	switch (data) {
 	case ';':		/* arg separator */
@@ -31,6 +39,9 @@ vt100_process(yuser *user, char data)
 			user->vt.got_esc = 3;
 		else
 			user->vt.got_esc = 0;
+		break;
+	case '#':
+		user->vt.hash = 1;
 		break;
 #ifdef YTALK_COLOR
 	case 'm':

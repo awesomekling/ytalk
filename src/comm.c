@@ -1265,6 +1265,7 @@ process_esc:
 				user->vt.av[0] = 0;
 				user->vt.av[1] = 0;
 				user->vt.lparen = 0;
+				user->vt.hash = 0;
 				len--, buf++;
 				goto process_esc;	/* ugly but _fast_ */
 			case GTALK_ESCAPE:

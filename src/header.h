@@ -180,7 +180,8 @@ typedef struct _yuser {
 		char got_esc;		/* received an ESC */
 		short int av[MAXARG];	/* ESC sequence arguments */
 		unsigned int ac;	/* ESC sequence arg count */
-		unsigned int lparen;	/* lparen escape? */
+		char lparen;		/* lparen escape? */
+		char hash;		/* hash escape? */
 	} vt;
 
 	struct {
