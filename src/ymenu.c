@@ -412,7 +412,10 @@ show_error_ymenu(char *str, char *syserr)
 {
 	if (error_box == NULL)
 		error_box = ytk_new_msgbox("YTalk Error");
+	else
+		ytk_add_msgbox_separator(YTK_MSGBOX(error_box));
 	ytk_add_msgbox_item(YTK_MSGBOX(error_box), str);
+	ytk_winch_thing(error_box);
 	if (syserr && (strlen(syserr) > 0))
 		ytk_add_msgbox_item(YTK_MSGBOX(error_box), syserr);
 	if (!ytk_on_stack(menu_stack, error_box))
@@ -444,7 +447,10 @@ show_message_ymenu(char *str)
 {
 	if (message_box == NULL)
 		message_box = ytk_new_msgbox("YTalk Message");
+	else
+		ytk_add_msgbox_separator(YTK_MSGBOX(message_box));
 	ytk_add_msgbox_item(YTK_MSGBOX(message_box), str);
+	ytk_winch_thing(message_box);
 	ytk_set_escape(message_box, handle_ebox);
 #ifdef YTALK_COLOR
 	ytk_set_colors(message_box, menu_colors);
