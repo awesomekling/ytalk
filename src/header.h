@@ -260,6 +260,7 @@ extern ychar *io_ptr;		/* user input pointer */
 extern int    io_len;		/* user input count */
 
 extern int running_process;	/* flag: is process running? */
+extern ylong myuid;		/* stores your uid */
 
 /* ---- some machine compatibility definitions ---- */
 

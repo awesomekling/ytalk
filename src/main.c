@@ -22,6 +22,7 @@
 
 char errstr[132];	/* temporary string for errors */
 char *vhost = NULL;	/* specified virtual host */
+ylong myuid;		/* global uid */
 
 /* Clean up and exit.
  */
@@ -189,6 +190,9 @@ Options:     -i             --    no auto-invite port\n\
     signal(SIGQUIT, got_sig);
     signal(SIGABRT, got_sig);
     signal(SIGPIPE, SIG_IGN);
+
+    /* save the uid for later use */
+    myuid = getuid();
 
     /* set default options */
 
