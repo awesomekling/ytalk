@@ -1260,7 +1260,7 @@ my_input(yuser *user, ychar *buf, int len)
 {
 	register ychar *c, *n;
 	register int i, j;
-	ychar *nbuf = 0;
+	ychar *nbuf = NULL;
 
 	/* If someone's waiting for input, give it to them! */
 
@@ -1399,7 +1399,7 @@ my_input(yuser *user, ychar *buf, int len)
 		}
 	}
 
-	if (nbuf != 0)
+	if (nbuf != NULL)
 		free_mem(nbuf);
 }
 
