@@ -10,10 +10,13 @@
 echo "Cleaning up..."
 rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in
 
-echo "Touching ChangeLog..."
+echo "Touching \"required\" files..."
 touch ChangeLog
+touch ABOUT-NLS
 test -f ChangeLog || \
-	{ echo "FATAL: Failed to create ChangeLog" 2>&1; exit 1; }
+	{ echo "FATAL: Failed to touch ChangeLog" 2>&1; exit 1; }
+test -f ABOUT-NLS || \
+	{ echo "FATAL: Failed to touch ChangeLog" 2>&1; exit 1; }
 
 echo "Running $ACLOCAL..."
 WANT_ACLOCAL="1.8" $ACLOCAL -I m4 2>/dev/null || exit 1
