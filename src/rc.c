@@ -313,7 +313,6 @@ resolve_alias(uh)
 void
 read_ytalkrc()
 {
-    char *w;
     yuser *u;
     char fname[256];
     struct passwd *pw;
