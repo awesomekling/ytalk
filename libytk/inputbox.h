@@ -1,7 +1,4 @@
-/* ytk/inputbox.h
- *
- *
- */
+/* libytk/inputbox.h */
 
 #ifndef __YTK_INPUTBOX_H__
 #define __YTK_INPUTBOX_H__

@@ -1,7 +1,4 @@
-/* ytk/msgbox.h
- *
- *
- */
+/* libytk/msgbox.h */
 
 #ifndef __YTK_MSGBOX_H__
 #define __YTK_MSGBOX_H__

@@ -1,7 +1,4 @@
-/* ytk/menu.h
- *
- *
- */
+/* libytk/menu.h */
 
 #ifndef __YTK_MENU_H__
 #define __YTK_MENU_H__

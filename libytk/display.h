@@ -1,7 +1,4 @@
-/* ytk/display.h
- *
- *
- */
+/* libytk/display.h */
 
 #ifndef __YTK_DISPLAY_H__
 #define __YTK_DISPLAY_H__

@@ -1,7 +1,4 @@
-/* ytk/stack.h
- *
- *
- */
+/* libytk/stack.h */
 
 #ifndef __YTK_STACK_H__
 #define __YTK_STACK_H__

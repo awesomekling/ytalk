@@ -1,7 +1,4 @@
-/* ytk_display.c
- * the ytalk thingkit
- *
- */
+/* libytk/display.c */
 
 #include "ytk.h"
 

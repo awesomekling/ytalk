@@ -1,11 +1,4 @@
-/* ytk/stack.c
- * the ytalk thingkit
- *
- * here lies the thing stack, the finest thing in all of ytk.
- * push things onto the stack and they will appear in fine z-order.
- * the topmost thing receives all input.
- *
- */
+/* libytk/stack.c */
 
 #include "ytk.h"
 

@@ -1,7 +1,4 @@
-/* ytk/msgbox.c
- *
- *
- */
+/* libytk/msgbox.c */
 
 #include "ytk.h"
 

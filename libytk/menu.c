@@ -1,7 +1,4 @@
-/* ytk/menu.c
- *
- *
- */
+/* libytk/menu.c */
 
 #include "ytk.h"
 

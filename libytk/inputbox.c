@@ -1,7 +1,4 @@
-/* ytk/inputbox.c
- *
- *
- */
+/* libytk/inputbox.c */
 
 #include "ytk.h"
 

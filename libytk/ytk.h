@@ -1,7 +1,4 @@
-/* ytk.h
- * the ytalk thingkit
- *
- */
+/* libytk/ytk.h */
 
 #ifndef __YTK_H__
 #define __YTK_H__
