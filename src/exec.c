@@ -24,7 +24,7 @@
 #include "cwin.h"
 #include <pwd.h>
 
-#ifdef HAVE_UTMPX_H
+#if defined(HAVE_UTMPX_H) && defined(YTALK_SUNOS)
 #  include <utmpx.h>
 #endif
 
@@ -74,7 +74,7 @@ int openpty(int *, int *, char *, struct termios *, struct winsize *);
 #  define USE_DEV_PTMX
 #endif
 
-#ifdef HAVE_UTMPX_H
+#if defined(HAVE_UTMPX_H) && defined(YTALK_SUNOS)
 static struct utmpx utx;
 #endif
 
@@ -356,7 +356,7 @@ execute(char *command)
 		ioctl(fd, TIOCSCTTY);
 #endif
 
-#ifdef HAVE_UTMPX_H
+#if defined(HAVE_UTMPX_H) && defined(YTALK_SUNOS)
 
 		/*
 		 * Set up a utmpx structure and add it to utmpx database.
@@ -370,13 +370,12 @@ execute(char *command)
 			utx.ut_type = USER_PROCESS;
 			utx.ut_pid = getpid();
 			strcpy(utx.ut_host, "ytalk");
-			utx.ut_syslen = 6;
 			if (pututxline(&utx) == NULL) {
 				fprintf(stderr, "pututxline() failed.\n");
 			}
 		}
 
-#endif /* HAVE_UTMPX_H */
+#endif /* HAVE_UTMPX_H && YTALK_SUNOS */
 
 		/* execute the command */
 
