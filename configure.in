@@ -38,6 +38,7 @@ AC_PROG_RANLIB
 dnl Internationalization stuff
 ALL_LINGUAS="sv"
 AM_GNU_GETTEXT
+AM_GNU_GETTEXT_VERSION(0.10.35)
 AC_DEFINE_DIR([datadir], [datadir], [datadir])
 AC_DEFINE_UNQUOTED(LOCALEDIR, ["${datadir}/locale"], ["Location of locale database"])
 

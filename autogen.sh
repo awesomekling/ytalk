@@ -10,6 +10,9 @@
 echo "Cleaning up..."
 rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in
 
+echo "Setting up gettext..."
+./setup-gettext
+
 echo "Touching \"required\" files..."
 touch ChangeLog
 touch ABOUT-NLS
