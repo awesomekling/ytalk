@@ -17,6 +17,7 @@
 /* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
+#include <pwd.h>
 
 #ifdef HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
@@ -214,6 +215,7 @@ execute(command)
 {
     int fd;
     char name[20], *shell;
+    struct passwd *pw = NULL;
 
     if(me->flags & FL_LOCKED)
     {
@@ -241,8 +243,13 @@ execute(command)
 # endif
 #endif
 
-    if((shell = (char *)getenv("SHELL")) == NULL)
+    pw = getpwuid(myuid);
+    if(pw != NULL) {
+	shell = pw->pw_shell;
+    } else {
 	shell = "/bin/sh";
+    }
+
     calculate_size(&prows, &pcols);
     if((pid = fork()) == 0)
     {

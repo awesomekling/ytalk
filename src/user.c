@@ -137,10 +137,7 @@ char *vhost;
 
     /* get my username */
 
-    if ((my_name = getenv("USER")) == NULL)
-	my_name = getlogin();
-    if(my_name == NULL)
-	my_name = user_name(my_uid);
+    my_name = user_name(my_uid);
     if(my_name == NULL)
 	my_name = getlogin();
     if(my_name == NULL || my_name[0] == '\0')

@@ -17,6 +17,7 @@
 /* Mail comments or questions to ytalk@austin.eds.com */
 
 #include "header.h"
+#include <pwd.h>
 
 #define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n')
 
@@ -315,6 +316,7 @@ read_ytalkrc()
     char *w;
     yuser *u;
     char fname[256];
+    struct passwd *pw;
 
     /* read the system ytalkrc file */
 
@@ -324,9 +326,10 @@ read_ytalkrc()
 
     /* read the user's ytalkrc file */
 
-    if((w = (char *)getenv("HOME")) != NULL)
+    pw = getpwuid(myuid);
+    if(pw != NULL) 
     {
-	sprintf(fname, "%s/.ytalkrc", w);
+	sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
 	read_rcfile(fname);
     }
 
