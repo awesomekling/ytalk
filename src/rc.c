@@ -22,6 +22,7 @@
 #define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=')
 
 extern char *vhost;
+extern char *gshell;
 
 #ifdef YTALK_COLOR
 extern int newui_colors;
@@ -211,12 +212,27 @@ new_alias(a1, a2)
 }
 
 static void
+set_shell(yuser *user, char *shell)
+{
+	struct passwd *pw;
+	if(*shell == '~') {
+		pw = getpwuid(myuid);
+		gshell = (char *) get_mem(strlen(pw->pw_dir)+strlen(shell));
+		shell++;
+		sprintf(gshell, "%s%s", pw->pw_dir, shell);
+	} else {
+		gshell = (char *) get_mem(strlen(shell)+1);
+		sprintf(gshell, "%s", shell);
+	}
+}
+
+static void
 read_rcfile(fname)
 	char *fname;
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on, *bg, *fg;
+	char *ptr, *cmd, *from, *to, *on, *bg, *fg, *shell;
 	char *host;
 	int i, line, found;
 
@@ -286,6 +302,7 @@ read_rcfile(fname)
 					break;
 				}
 			} else if(strcmp(cmd, "readdress") == 0) {
+				found = 1;
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				on   = get_word(&ptr);
@@ -311,6 +328,7 @@ read_rcfile(fname)
 					break;
 				}
 			} else if(strcmp(cmd, "localhost") == 0) {
+				found = 1;
 				if(vhost != NULL) {
 					fprintf(stderr, "Virtualhost already set before line %d in %s\n", line, fname);
 					bail(YTE_INIT);
@@ -322,6 +340,10 @@ read_rcfile(fname)
 				}
 				vhost = (char *)get_mem(1 + strlen(host));
 				strcpy(vhost, host);
+			} else if(strcmp(cmd, "shell") == 0) {
+				found = 1;
+				shell = get_word(&ptr);
+				set_shell(me, shell);
 			} else {
 				fprintf(stderr, "Unknown rc-directive on line %d in %s\n", line, fname);
 				bail(YTE_INIT);
@@ -406,6 +428,7 @@ read_ytalkrc()
 		read_rcfile(fname);
 		free_mem(fname);
 	}
+
 	/* set all default flags */
 
 	for (u = user_list; u != NULL; u = u->unext)

@@ -255,7 +255,9 @@ execute(command)
 #endif
 
 	pw = getpwuid(myuid);
-	if (pw != NULL) {
+	if (gshell != NULL) {
+		shell = gshell;
+	} else if (pw != NULL) {
 		shell = pw->pw_shell;
 	} else {
 		shell = "/bin/sh";

@@ -319,6 +319,7 @@ extern yuser *scuser;		/* user being scrolled */
 
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
+extern char *gshell;		/* stores your shell */
 
 extern char YT_ACS_ON;		/* activates vt100 acs */
 extern char YT_ACS_OFF;		/* deactivates it */
