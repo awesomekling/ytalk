@@ -892,7 +892,7 @@ host_name(addr)
  * useful especially over routers where "foo.com" is known as the
  * differently-addressed "bar.com" to host "xyzzy.com".
  */
-void
+int
 readdress_host(from_id, to_id, on_id)
 	char *from_id, *to_id, *on_id;
 {
@@ -901,19 +901,13 @@ readdress_host(from_id, to_id, on_id)
 	ylong from_mask, to_mask, on_mask;
 
 	if ((from_addr = get_host_addr(from_id)) == (ylong) - 1) {
-		sprintf(errstr, "Unknown host: '%s'", from_id);
-		show_error(errstr);
-		return;
+		return 1;
 	}
 	if ((to_addr = get_host_addr(to_id)) == (ylong) - 1) {
-		sprintf(errstr, "Unknown host: '%s'", to_id);
-		show_error(errstr);
-		return;
+		return 2;
 	}
 	if ((on_addr = get_host_addr(on_id)) == (ylong) - 1) {
-		sprintf(errstr, "Unknown host: '%s'", on_id);
-		show_error(errstr);
-		return;
+		return 3;
 	}
 	from_mask = make_net_mask(from_addr);
 	to_mask = make_net_mask(to_addr);
@@ -924,7 +918,7 @@ readdress_host(from_id, to_id, on_id)
 		return;
 #endif
 	if (from_addr == to_addr)
-		return;
+		return 4;
 
 	new = (readdr *) get_mem(sizeof(readdr));
 	new->addr = on_addr;
@@ -935,4 +929,6 @@ readdress_host(from_id, to_id, on_id)
 	new->id_mask = to_mask;
 	new->next = readdr_list;
 	readdr_list = new;
+
+	return 0;
 }
