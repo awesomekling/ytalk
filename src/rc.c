@@ -320,7 +320,7 @@ void
 read_ytalkrc()
 {
     yuser *u;
-    char fname[256];
+    char *fname;
     struct passwd *pw;
 
     /* read the system ytalkrc file */
@@ -334,8 +334,10 @@ read_ytalkrc()
     pw = getpwuid(myuid);
     if(pw != NULL) 
     {
+	fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
 	sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
 	read_rcfile(fname);
+	free_mem(fname);
     }
 
     /* set all default flags */
