@@ -34,9 +34,12 @@
 
 #include <netinet/in.h>
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
 
 /* We may not have prototypes for these functions. */
 #if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
