@@ -286,8 +286,8 @@ close_term(user)
     {
 	_close_term(user);
 	for(i = 0; i < user->t_rows; i++)
-	    free(user->scr[i]);
-	free(user->scr);
+	    free_mem(user->scr[i]);
+	free_mem(user->scr);
 	user->scr = NULL;
 	user->t_rows = user->rows = 0;
 	user->t_cols = user->cols = 0;
@@ -894,8 +894,8 @@ resize_win(user, height, width)
 	new_y = j - 1;
 	y_pos = user->y;
 	for(; j < user->t_rows; j++)
-	    free(user->scr[j]);
-	free(user->scr);
+	    free_mem(user->scr[j]);
+	free_mem(user->scr);
     }
     else
     {
@@ -914,10 +914,10 @@ resize_win(user, height, width)
 	{
 	    if(++j >= user->t_rows)
 		j = 0;
-	    free(user->scr[j]);
+	    free_mem(user->scr[j]);
 	}
 	y_pos = new_y;
-	free(user->scr);
+	free_mem(user->scr);
     }
     user->scr = newscr;
 

@@ -326,7 +326,7 @@ close_curses(user)
 	}
     }
     delwin(w->win);
-    free(w);
+    free_mem(w);
     curses_redraw();
 }
 

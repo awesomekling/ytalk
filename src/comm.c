@@ -721,9 +721,9 @@ contact_user(fd)
         if (IN_ADDR(peer) != user->host_addr)
 	{
 	  if (user->host_name) 
-	      free(user->host_name);
+	      free_mem(user->host_name);
 	  if (user->host_fqdn) 
-	      free(user->host_fqdn);
+	      free_mem(user->host_fqdn);
 	  user->host_addr = IN_ADDR(peer);
 	  hname = host_name(user->host_addr);
 	  user->host_name = str_copy(hname);
@@ -848,7 +848,7 @@ invite(name, send_announce)
 	}
     }
     user = new_user(hisname, hishost, histty);
-    free(hisname);
+    free_mem(hisname);
     if(user == NULL)
 	return NULL;
 
@@ -1318,7 +1318,8 @@ process_esc:
 	    switch(*buf)
 	    {
 		case 7:		/* Bell */
-		    putc(7, stderr);
+		    if(def_flags & FL_BEEP)
+			putc(7, stderr);
 		    break;
 		case 8:		/* Backspace */
 		    if(user->x > 0)
@@ -1423,7 +1424,7 @@ my_input(user, buf, len)
 		}
 		if((i = buf - c) > 0)
 		{
-		    if(user != NULL && user != me && !(def_flags & FL_ASIDE))
+		    if(user != NULL && user != me && !(def_flags & FL_ASIDE) && def_flags & FL_BEEP)
 			putc(7, stderr);
 		    else
 		    {

@@ -343,7 +343,7 @@ update_menu()
 
 		if(ic > ' ' && ic <= '~')
 		{
-		    if(text_pos >= menu_long)
+		    if(text_pos >= menu_long && def_flags & FL_BEEP)
 			putc(7, stderr);
 		    else
 		    {

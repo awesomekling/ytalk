@@ -100,6 +100,10 @@ set_option(opt, value)
     || strcmp(opt, "pr") == 0)
 	mask |= FL_PROMPTRING;
 
+    else if(strcmp(opt, "beeps") == 0
+    || strcmp(opt, "beep") == 0)
+	mask |= FL_BEEP;
+
     else if(strcmp(opt, "xwin") == 0
     || strcmp(opt, "xwindows") == 0
     || strcmp(opt, "XWindows") == 0
@@ -254,7 +258,7 @@ read_rcfile(fname)
 	show_error(errstr);
     }
 
-    free(buf);
+    free_mem(buf);
     fclose(fp);
 }
 

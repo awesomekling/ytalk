@@ -53,7 +53,8 @@ show_error(str)
     else
 	syserr = strerror(errno);
 
-    putc(7, stderr);
+    if(def_flags & FL_BEEP)
+	putc(7, stderr);
     if(in_error == 0 && what_term() != 0)
     {
 	in_error = 1;
@@ -197,7 +198,7 @@ Options:     -i             --    no auto-invite port\n\
 
     /* set default options */
 
-    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING;
+    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING | FL_BEEP;
 
     /* go for it! */
 

@@ -150,6 +150,7 @@ typedef struct _yuser {
 #define FL_CAPS		0x00000100L     /* want caps as answers */
 #define FL_NOAUTO       0x00000200L     /* no auto-invite port */
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
+#define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */

@@ -296,12 +296,12 @@ free_user(user)
             bail(0);
 
     close_term(user);
-    free(user->full_name);
-    free(user->user_name);
-    free(user->host_name);
-    free(user->tty_name);
+    free_mem(user->full_name);
+    free_mem(user->user_name);
+    free_mem(user->host_name);
+    free_mem(user->tty_name);
     if(user->dbuf)
-	free(user->dbuf);
+	free_mem(user->dbuf);
     if(user->output_fd > 0)
 	close(user->output_fd);
     if(user->fd)
@@ -312,7 +312,7 @@ free_user(user)
     }
     if(user->key != '\0')
 	key_to_user[user->key] = NULL;
-    free(user);
+    free_mem(user);
     if(connect_list == NULL && wait_list != NULL)
 	msg_term(me, "Waiting for connection...");
     user_winch = 1;
