@@ -202,6 +202,11 @@ free_user(user)
 {
 	register yuser *u;
 
+	/* print a disco message */
+
+	sprintf(msgstr, "%s disconnected.", user->full_name);
+	msg_term(msgstr);
+
 	/* make sure we're not stuck scrolling a long gone user */
 
 	if (user == scuser)
@@ -259,6 +264,8 @@ free_user(user)
 	if (connect_list == NULL && wait_list != NULL)
 		msg_term("Waiting for connection...");
 	user_winch = 1;
+
+	redraw_all_terms();
 }
 
 /*
