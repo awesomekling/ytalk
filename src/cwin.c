@@ -582,7 +582,7 @@ retitle_all_curses()
 
 /*
  * Refresh all visible windows
- * 
+ *
  */
 void
 refresh_curses()

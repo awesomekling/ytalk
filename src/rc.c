@@ -222,7 +222,7 @@ read_rcfile(fname)
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return;
-	
+
 	line = 0;
 	while(fgets(buf, BUFSIZ, fp)) {
 		ptr = buf;

@@ -1,7 +1,7 @@
 /*
  * ymenu.c
- * 
- * 
+ *
+ *
  */
 
 #include "ytk.h"
