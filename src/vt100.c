@@ -159,7 +159,7 @@ vt100_process(yuser *user, char data)
 			else
 				move_term(user, user->y, user->x - user->vt.av[0]);
 		} else {
-			if (user->y <= user->sc_bot)
+			if (user->y < user->sc_bot)
 				user->y++;
 			else
 				scroll_term(user);
