@@ -422,7 +422,7 @@ extern int newsock( /* yuser */ );	/* socket.c */
 extern int connect_to( /* yuser */ );	/* socket.c */
 extern ylong get_host_addr( /* hostname */ );	/* socket.c */
 extern char *host_name( /* addr */ );	/* socket.c */
-extern void readdress_host( /* from, to, on */ );	/* socket.c */
+extern int readdress_host( /* from, to, on */ );	/* socket.c */
 
 extern void read_ytalkrc();	/* rc.c */
 extern char *resolve_alias( /* uh */ );	/* rc.c */
