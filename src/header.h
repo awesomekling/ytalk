@@ -377,7 +377,7 @@ extern void update_exec();	/* exec.c */
 extern void kill_exec();	/* exec.c */
 extern void winch_exec();	/* exec.c */
 
-extern void vt100_process( /* yuser, char */ );	/* vt100.c */
+extern void vt100_process(yuser *, char);	/* vt100.c */
 
 extern void init_scroll(yuser *);
 extern void free_scroll(yuser *);

@@ -14,9 +14,7 @@ char YT_ACS_ON = 0x0E;
 char YT_ACS_OFF = 0x0F;
 
 void
-vt100_process(user, data)
-	yuser *user;
-	char data;
+vt100_process(yuser *user, char data)
 {
 	unsigned int i;
 
