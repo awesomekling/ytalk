@@ -131,6 +131,12 @@ init_termios(void)
 void
 init_term(void)
 {
+
+	eyac.l = ' ';
+	eyac.a = 0;
+	eyac.b = 7;
+	eyac.c = 0;
+
 #ifdef USE_SGTTY
 	init_sgtty();
 #else
@@ -302,17 +308,6 @@ addch_term(yuser *user, ychar c)
 
 #ifdef YTALK_COLOR
 static yachar
-yac(char c)
-{
-	yachar ac;
-	ac.l = c;
-	ac.a = 0;
-	ac.b = 7;
-	ac.c = 0;
-	return ac;
-}
-
-static yachar
 uyac(yuser *user, char c)
 {
 	yachar ac;
@@ -403,7 +398,7 @@ clreos_term(yuser *user)
 			c = user->scr[i] + j;
 			for (; j < user->cols; j++)
 #ifdef YTALK_COLOR
-				*(c++) = yac(' ');
+				*(c++) = eyac;
 #else
 				*(c++) = ' ';
 #endif
@@ -458,7 +453,7 @@ scroll_term(yuser *user)
 		user->scr[user->sc_bot] = c;
 		for (i = 0; i < user->cols; i++)
 #ifdef YTALK_COLOR
-			*(c++) = yac(' ');
+			*(c++) = eyac;
 #else
 			*(c++) = ' ';
 #endif
@@ -496,7 +491,7 @@ rev_scroll_term(yuser *user)
 		user->scr[user->sc_top] = c;
 		for (i = 0; i < user->cols; i++)
 #ifdef YTALK_COLOR
-			*(c++) = yac(' ');
+			*(c++) = eyac;
 #else
 			*(c++) = ' ';
 #endif
@@ -712,7 +707,7 @@ add_line_term(yuser *user, int num)
 			c = user->scr[user->y + num];
 			for (i = 0; i < user->cols; i++)
 #ifdef YTALK_COLOR
-				*(c++) = yac(' ');
+				*(c++) = eyac;
 #else
 				*(c++) = ' ';
 #endif
@@ -757,7 +752,7 @@ del_line_term(yuser *user, int num)
 			c = user->scr[user->rows - num];
 			for (i = 0; i < user->cols; i++)
 #ifdef YTALK_COLOR
-				*(c++) = yac(' ');
+				*(c++) = eyac;
 #else
 				*(c++) = ' ';
 #endif
@@ -809,7 +804,7 @@ add_char_term(yuser *user, int num)
 	copy_text(c - i, c - i + num, i);
 	for (c -= i; num > 0; num--) {
 #ifdef YTALK_COLOR
-		_addch_term(user, *(c++) = yac(' '));
+		_addch_term(user, *(c++) = eyac);
 #else
 		*(c++) = ' ';
 		_addch_term(user, ' ');
@@ -851,7 +846,7 @@ del_char_term(yuser *user, int num)
 		_addch_term(user, *(c++));
 	for (; num > 0; num--) {
 #ifdef YTALK_COLOR
-		_addch_term(user, *(c++) = yac(' '));
+		_addch_term(user, *(c++) = eyac);
 #else
 		*(c++) = ' ';
 		_addch_term(user, ' ');
@@ -980,7 +975,7 @@ resize_win(yuser *user, int height, int width)
 			user->scr[i] = (yachar *) realloc_mem(user->scr[i], width * sizeof(yachar));
 			for (j = user->t_cols; j < width; j++)
 #ifdef YTALK_COLOR
-				user->scr[i][j] = yac(' ');
+				user->scr[i][j] = eyac;
 #else
 				user->scr[i][j] = ' ';
 #endif
@@ -1000,7 +995,7 @@ resize_win(yuser *user, int height, int width)
 		c = user->scr[i] = (yachar *) get_mem(width * sizeof(yachar));
 		for (j = 0; j < width; j++)
 #ifdef YTALK_COLOR
-			*(c++) = yac(' ');
+			*(c++) = eyac;
 #else
 			*(c++) = ' ';
 #endif
