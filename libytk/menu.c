@@ -105,8 +105,10 @@ ytk_step_up_menu(ytk_menu *m)
 			return;
 		it = it->prev;
 	}
-	it->prev->selected = TRUE;
-	p->selected = FALSE;
+	if (it->prev != NULL) {
+		it->prev->selected = TRUE;
+		p->selected = FALSE;
+	}
 }
 
 void
