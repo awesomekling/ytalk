@@ -51,7 +51,11 @@ do_hidething(ytk_thing *t)
 	ytk_pop(menu_stack);
 	if (t == main_menu)
 		hide_ymenu();
+#ifdef YTALK_COLOR
 	else if (t != options_menu && t != color_menu)
+#else
+	else if (t != options_menu)
+#endif
 		ytk_delete_thing(t);
 	refresh_curses();
 	ytk_sync_display();
@@ -368,6 +372,7 @@ show_ymenu()
 	ytk_sync_display();
 }
 
+#ifdef YTALK_COLOR
 void
 show_colormenu()
 {
@@ -380,6 +385,7 @@ show_colormenu()
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 }
+#endif
 
 void
 update_ymenu()
