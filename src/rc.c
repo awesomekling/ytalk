@@ -78,6 +78,29 @@ colors cols[] = {
 /* ---- local functions ---- */
 
 static char *
+get_string(p)
+	char **p;
+{
+	register char *c, *out;
+
+	c = *p;
+	while (IS_WHITE(*c))
+		c++;
+	if (*c == '\0')
+		return NULL;
+	out = c;
+	while (*c != '\0') {
+		if (*c == '\n') {
+			*c = '\0';
+			break;
+		}
+		c++;
+	}
+	*p = c;
+	return out;
+}
+
+static char *
 get_word(p)
 	char **p;
 {
@@ -243,7 +266,7 @@ read_rcfile(fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on, *shell;
+	char *ptr, *cmd, *from, *to, *on, *shell, *fmt;
 	char *host;
 	int i, line, found;
 #ifdef YTALK_COLOR
@@ -362,6 +385,16 @@ read_rcfile(fname)
 				}
 				vhost = (char *)get_mem(1 + strlen(host));
 				strcpy(vhost, host);
+			} else if(strcmp(cmd, "title_format") == 0) {
+				found = 1;
+				fmt = get_string(&ptr);
+				title_format = (char *)get_mem(1 + strlen(fmt));
+				strcpy(title_format, fmt);
+			} else if(strcmp(cmd, "user_format") == 0) {
+				found = 1;
+				fmt = get_string(&ptr);
+				user_format = (char *)get_mem(1 + strlen(fmt));
+				strcpy(user_format, fmt);
 			} else if(strcmp(cmd, "shell") == 0) {
 				found = 1;
 				shell = get_word(&ptr);

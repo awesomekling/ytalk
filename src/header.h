@@ -333,6 +333,8 @@ extern yuser *scuser;		/* user being scrolled */
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
 extern char *gshell;		/* stores your shell */
+extern char *title_format;
+extern char *user_format;
 #ifdef YTALK_COLOR
 extern char *bottom_msg;	/* current status message */
 extern ylong bottom_time;	/* timestamp of the above */
@@ -413,6 +415,7 @@ extern void free_user( /* yuser */ );	/* user.c */
 extern yuser *find_user( /* name, host_addr, pid */ );	/* user.c */
 extern void generate_full_name( /* yuser */ );	/* user.c */
 extern void free_users();	/* user.c */
+extern void user_title(char *, unsigned int, yuser *);
 
 extern void init_fd();		/* fd.c */
 extern void add_fd( /* fd, func */ );	/* fd.c */
