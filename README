@@ -8,13 +8,13 @@ at a time, and it can the two different types of talk daemons out there.
 For compilation and installation instructions, please see the file
 `INSTALL' in the same directory.  The gist of it is:
 
-	./configure 
-	make 
+	./configure
+	make
 	make install
 
 YTalk is free software, which can be freely redistributed, used and
 modified as long as the copyright notices are kept in the source and
-header files. 
+header files.
 
 If you hack in new neat things, or fix bugs, or have ideas about new
 features, feel free to mail me at <keso@impul.se> about

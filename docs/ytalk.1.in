@@ -10,7 +10,7 @@
 ..
 .TH YTalk 1 "10 May 1999"
 .SH NAME
-ytalk - A multi-user chat program. 
+ytalk - A multi-user chat program.
 .SH SYNOPSIS
 ytalk [-x] [-s] [-Y] [-i] [-v] [-h hostname_or_ip] username...
 .SH DESCRIPTION
@@ -20,7 +20,7 @@ YTalk is in essence a multi-user chat program.  It works almost exactly like
 the UNIX talk program and even communicates with the same talk daemon(s), but
 YTalk allows for multiple connections.
 
-The 
+The
 .I username
 field may be formatted in several different ways:
 .br
@@ -30,8 +30,8 @@ field may be formatted in several different ways:
 .br
 	name#tty      - some user on a particular terminal
 .br
-	name#tty@host - some user on a particular tty on a 
-.br 
+	name#tty@host - some user on a particular tty on a
+.br
 				 different machine
 .br
 	name@host#tty - same as "name#tty@host"
@@ -107,8 +107,8 @@ understand the limitations that UNIX "talk" places on YTalk is to test
 various connections between the two and see how things work.
 .PP
 .SH ESCAPE MENU
-Whenever you are using YTalk, you can hit the 
-.I ESCAPE 
+Whenever you are using YTalk, you can hit the
+.I ESCAPE
 key to bring up a menu which at this
 moment has these options:
 .sp
@@ -373,7 +373,7 @@ Work is being done on the following ideas:
 	2) MBCS/NLS support.
 .br
 .PP
-However, as this was claimed over 5 years ago, I wouldn't hold my breath on 
+However, as this was claimed over 5 years ago, I wouldn't hold my breath on
 it. :=)
 
 .SH FILES

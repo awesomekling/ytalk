@@ -66,12 +66,12 @@ AC_CHECK_LIB(ncursesw, initscr,
 dnl Look for termios, and if that fails, try sgtty.
 AC_CHECK_FUNC(tcgetattr, [\
   AC_CHECK_HEADERS(termios.h,, no_termios=1)], no_termios=1)
-if test "x$no_termios" = "x1" ; then 
+if test "x$no_termios" = "x1" ; then
   AC_CHECK_HEADERS(sgtty.h,, AC_MSG_ERROR(Cannot find either termios or sgtty))
 fi
 
 dnl X setup.
-AC_ARG_WITH(x, 
+AC_ARG_WITH(x,
   AC_HELP_STRING([--with-x], [use the X Window System]),
   no_x=0, no_x=1)
 if test "x$no_x" = "x1"; then

@@ -36,7 +36,7 @@ get sent to all connected users.
 Note that it is much more optimal to call this function once with a
 batch of input characters rather than calling this function once for
 each character.
-    
+
 A valid YTalk 3.0 terminal interface provides these output functions:
 
     void

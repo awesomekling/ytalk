@@ -60,7 +60,7 @@ from 3.1beta1 to 3.1beta2:
 	  termios is to be selected
 	. fixed 8bit-cleanness
 
-from 3.0pl2 to 3.1beta1: 
+from 3.0pl2 to 3.1beta1:
 	<this includes things that went into the various 3.0.3-8bit versions>
 	. fixed line wrap inside shells (at the cost of breaking the specs in
 	  term.doc slightly)
