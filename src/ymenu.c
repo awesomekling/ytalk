@@ -156,14 +156,24 @@ void
 handle_color(void *t)
 {
 	char k = ((ytk_menu_item *)(t))->hotkey;
-	if (k >= '0' && k <= '7')
+	char buf[8];
+	int len;
+
+	if (k >= '0' && k <= '7') {
 		me->c_fg = k - '0';
+		len = snprintf(buf, sizeof(buf), "%c[%dm", 27, (k - '0') + 30);
+		send_users(me, buf, len, buf, len);
+	}
 	switch (k) {
 	case 'b':
-		if (((ytk_menu_item *)t)->value)
+		if (((ytk_menu_item *)t)->value) {
 			me->c_at |= A_BOLD;
-		else
+			len = snprintf(buf, sizeof(buf), "%c[01m", 27);
+		} else {
 			me->c_at &= ~A_BOLD;
+			len = snprintf(buf, sizeof(buf), "%c[21m", 27);
+		}
+		send_users(me, buf, len, buf, len);
 		break;
 	}
 	hide_ymenu();
