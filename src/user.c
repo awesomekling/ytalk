@@ -185,7 +185,6 @@ new_user(name, hostname, tty)
 		out->tty_name = str_copy("");
 	out->d_id = daemon_id++;
 	generate_full_name(out);
-	/*assign_key(out);*/
 	out->flags = def_flags;
 
 	/* Actually make an effort to keep the user list in order */
