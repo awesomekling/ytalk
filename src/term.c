@@ -589,6 +589,8 @@ rub_term(user)
 	register yuser *user;
 {
 	if (user->x > 0) {
+		if (user->x == user->cols - 1)
+			user->onend = 0;
 		if (user->bump) {
 			addch_term(user, ' ');
 			user->bump = 0;
