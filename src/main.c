@@ -117,6 +117,21 @@ str_copy(char *str)
 	return out;
 }
 
+#ifdef YTALK_COLOR
+int
+ya_strlen(yachar *str)
+{
+	yachar *p;
+	int ret;
+
+	for (p = str, ret = 0; p->l; p++, ret++);
+
+	return ret;
+}
+#else
+#  define ya_strlen strlen
+#endif /* YTALK_COLOR */
+
 /*
  * Process signals.
  */
