@@ -461,7 +461,7 @@ scroll_term(user)
 	if (user->sc_bot > user->sc_top) {
 		c = user->scr[user->sc_top];
 
-		if (user->sc_top == 0 && term_does_scrollback()) {
+		if (user->sc_top == 0 && scrollback_lines > 0) {
 			if (user->scrollback[scrollback_lines - 1] == NULL) {
 				for (y = 0; ((y < scrollback_lines) && (user->scrollback[y] != NULL)) ; y++);
 				if (y < (scrollback_lines - 1))
