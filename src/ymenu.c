@@ -416,9 +416,9 @@ show_error_ymenu(char *str, char *syserr)
 	else
 		ytk_add_msgbox_separator(YTK_MSGBOX(error_box));
 	ytk_add_msgbox_item(YTK_MSGBOX(error_box), str);
-	ytk_winch_thing(error_box);
 	if (syserr && (strlen(syserr) > 0))
 		ytk_add_msgbox_item(YTK_MSGBOX(error_box), syserr);
+	ytk_winch_thing(error_box);
 	if (!ytk_on_stack(menu_stack, error_box))
 		ytk_push(menu_stack, error_box);
 	ytk_set_escape(error_box, handle_ebox);
