@@ -3,7 +3,7 @@
 echo "+++ Starting autobuild on `hostname -s`"
 echo "+++ Date: `date`"
 echo "+++ SNRM: `uname -smrn`"
-cvs update >/dev/null 2>&1
+cvs update -dP >/dev/null 2>&1
 echo ">>> autogen.sh"
 ./autogen.sh
 echo "--- autogen.sh completed with return code $?"
