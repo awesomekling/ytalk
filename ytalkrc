@@ -24,13 +24,8 @@ turn prompt-rering on
 #turn noinvite off
 #turn caps off
 
-# X11 options
-#turn X off
-#turn asides off
-
 # New things
 
-#turn vt100 off
 #turn newui off
 #set-colors background [bold-]foreground
 #menu-color [bold-]foreground
