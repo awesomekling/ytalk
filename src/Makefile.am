@@ -22,7 +22,7 @@ ytalk_SOURCES = \
 
 ytalk_LDADD = ../libytk/libytk.a $(INTLLIBS)
 
-INCLUDES = -I../libytk
+INCLUDES = -I../libytk -I../intl
 LIBS = @LIBS@
 
 DEFS = @DEFS@ @SYSTEM_DEFS@
