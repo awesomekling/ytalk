@@ -53,19 +53,24 @@ scroll_up(yuser *user)
 void
 scroll_down(yuser *user)
 {
+	long int i;
 	if (scrollback_lines == 0 || user->scrollback[0] == NULL)
 		return;
 
-	if ((user->scrollpos > (scrollback_lines - (int) user->rows - 1)) ||
+	if ((user->scrollpos > (scrollback_lines - ((int) user->rows / 2))) ||
 		(user->scrollback[user->scrollpos] == NULL ))
 	{
-		if (!(user->scrollback[user->scrollpos] == NULL))
-			user->scrollpos = scrollback_lines - 1;
+		if (!(user->scrollback[user->scrollpos] == NULL)) {
+			for (i = 0; (i < scrollback_lines) && (user->scrollback[i] != NULL); i++);
+			user->scrollpos = i - 1;
+		}
 		user->scroll = 0;
 		end_scroll_term(user);
 	} else {
 		user->scrollpos += (user->rows / 2);
 		if (user->scrollback[user->scrollpos] == NULL) {
+			for (i = 0; (i < scrollback_lines) && (user->scrollback[i] != NULL); i++);
+			user->scrollpos = i - 1;
 			user->scroll = 0;
 			end_scroll_term(user);
 		} else
