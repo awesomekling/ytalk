@@ -29,6 +29,7 @@ ignore_break	= off
 
 # User interface configuration
 newui		= on
+history_rows	= 1000
 
 # Color configuration
 #
