@@ -41,8 +41,8 @@ extern int daemons;
 #define TTY_SIZE 16
 
 typedef struct bsd42_sockaddr_in {
-	u_short sin_family;
-	u_short sin_port;
+	unsigned short sin_family;
+	unsigned short sin_port;
 	struct in_addr sin_addr;
 	char sin_zero[8];
 } BSD42_SOCK;
@@ -68,7 +68,7 @@ typedef struct {
 typedef struct {
 	char type;
 	char answer;
-	u_short filler;
+	unsigned short filler;
 	ylong id_num;
 	BSD42_SOCK addr;
 } CTL_RESPONSE;
@@ -77,9 +77,9 @@ typedef struct {
  * Control Message structure for BSD4.2
  */
 typedef struct {
-	u_char vers;
+	unsigned char vers;
 	char type;
-	u_short filler;
+	unsigned short filler;
 	ylong id_num;
 	BSD42_SOCK addr;
 	BSD42_SOCK ctl_addr;
@@ -95,7 +95,7 @@ typedef struct {
  * Control Response structure for BSD4.2
  */
 typedef struct {
-	u_char vers;
+	unsigned char vers;
 	char type;
 	char answer;
 	char filler;

@@ -346,7 +346,7 @@ sendit(ylong addr, int d)
 	 * to fix this problem.
 	 */
 	if (d == otalk && nrsp.type == LOOK_UP && nrsp.answer == 0) {
-		u_short t;
+		unsigned short t;
 		memcpy((char *) &t, ((char *) &orsp.addr.sin_family) - 2, sizeof(t));
 		if (ntohs(t) == AF_INET && ntohs(orsp.addr.sin_family) != AF_INET) {
 			char *c;
@@ -559,7 +559,7 @@ close_all(void)
  * First, a quick and easy interface for the user sockets.
  */
 int
-send_dgram(yuser *user, u_char type)
+send_dgram(yuser *user, unsigned char type)
 {
 	ylong addr;
 	int d;
@@ -695,7 +695,7 @@ send_dgram(yuser *user, u_char type)
  * always sends to the caller's host, and always does just an invite.
  */
 int
-send_auto(u_char type)
+send_auto(unsigned char type)
 {
 	int dtype, d, rc;
 

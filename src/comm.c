@@ -523,7 +523,7 @@ static void
 ytalk_user(int fd)
 {
 	register yuser *user, *u;
-	u_short cols;
+	unsigned short cols;
 
 	if ((user = fd_to_user[fd]) == NULL) {
 		remove_fd(fd);
