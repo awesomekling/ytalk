@@ -372,10 +372,8 @@ execute(command)
 	}
 
 	/* skip clearing unless spawning interactive shell */
-	if (command) {
-		me->region_set = 1;
-	}
-	set_win_region(me, prows, pcols);
+	if (!command)
+		set_win_region(me, prows, pcols);
 
 	/* give the forked process some time to get dressed. */
 	sleep(1);
