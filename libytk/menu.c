@@ -97,11 +97,8 @@ ytk_step_up_menu(ytk_menu *m)
 	if (it == NULL || it == m->first || it->prev == NULL)
 		return;
 	p = it;
-	while (YTK_MENU_ITEM_SEPARATOR(it->prev)) {
-		if (it->prev == NULL)
-			return;
+	while (YTK_MENU_ITEM_SEPARATOR(it->prev))
 		it = it->prev;
-	}
 	if (it->prev != NULL) {
 		it->prev->selected = TRUE;
 		p->selected = FALSE;
@@ -116,7 +113,7 @@ ytk_step_down_menu(ytk_menu *m)
 	if (it == NULL || it->next == NULL)
 		return;
 	p = it;
-	while (it->next != NULL && YTK_MENU_ITEM_SEPARATOR(it->next))
+	while (YTK_MENU_ITEM_SEPARATOR(it->next))
 		it = it->next;
 	if (it->next != NULL) {
 		it->next->selected = TRUE;
