@@ -684,6 +684,8 @@ __update_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
 	long int r, i, fb = -1;
+	if (w->swin == NULL)
+		return;
 	werase(w->swin);
 	for (r = 0; r <= (user->rows - 1); r++) {
 		wmove(w->swin, r, 0);
