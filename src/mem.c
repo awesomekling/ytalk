@@ -220,6 +220,7 @@ realloc_mem(p, n)
 void
 clear_all()
 {
+	mem_list *it;
 #ifdef YTALK_DEBUG
 	fprintf(stderr, "Clearing memory\n");
 #endif
@@ -229,7 +230,12 @@ clear_all()
 			glist->file, glist->line
 		 );
 #endif
-		free_mem(glist->addr);
+		/* The next 5 rows are a simpler and faster version of free_mem() */
+		it = glist;
+		glist = glist->next;
+		memset(it->addr, '\0', (size_t) it->size);
+		free(it->addr);
+		free(it);
 #ifdef YTALK_DEBUG
 		leaked++;
 #endif
