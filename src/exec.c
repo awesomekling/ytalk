@@ -77,7 +77,7 @@ setsid()
 }
 #endif
 
-#ifdef USE_DEV_PTMX
+#if defined(USE_DEV_PTMX) && defined(_SOLARIS)
 int needtopush=0;
 #endif
 
@@ -111,7 +111,9 @@ getpty(name)
 	if (r == 0 && tt != NULL)
 	{
 	    strcpy(name, tt);
+#ifdef _SOLARIS
 	    needtopush=1;
+#endif
 	    return pty;
 	}
     }
@@ -275,13 +277,18 @@ execute(command)
         if((fd = open(name, O_RDWR)) < 0)
             exit(-1);
 
+/* This will really mess up the shell on OSF1/Tru64 UNIX
+ * Define _SOLARIS if you need it.
+ */
+#ifdef _SOLARIS
 /* Solaris seems to need this... */
-#if defined(HAVE_STROPTS_H) && defined(I_PUSH)
+# if defined(HAVE_STROPTS_H) && defined(I_PUSH)
 	if (needtopush)
 	{
 	    ioctl(fd, I_PUSH, "ptem");
 	    ioctl(fd, I_PUSH, "ldterm");
 	}
+# endif
 #endif
 
         dup2(fd, 0);
