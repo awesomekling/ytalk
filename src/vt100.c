@@ -126,12 +126,14 @@ vt100_process(user, data)
 	    user->got_esc = 0;
 	    break;
 	case 'A':	/* move up */
-	    if(user->av[0] == 0)
-		move_term(user, user->y - 1, user->x);
-	    else if((int)user->av[0] > user->y)
-		move_term(user, 0, user->x);
-	    else
-		move_term(user, user->y - user->av[0], user->x);
+	    if(user->got_esc == 2) {
+		if(user->av[0] == 0)
+		    move_term(user, user->y - 1, user->x);
+		else if((int)user->av[0] > user->y)
+		    move_term(user, 0, user->x);
+		else
+		    move_term(user, user->y - user->av[0], user->x);
+	    }
 	    user->got_esc = 0;
 	    break;
 	case 'B':	/* move down */
@@ -146,19 +148,23 @@ vt100_process(user, data)
 	    user->got_esc = 0;
 	    break;
 	case 'C':	/* move right */
-	    if(user->av[0] == 0)
-		move_term(user, user->y, user->x + 1);
-	    else
-		move_term(user, user->y, user->x + user->av[0]);
+	    if(user->got_esc == 2) {
+		if(user->av[0] == 0)
+		    move_term(user, user->y, user->x + 1);
+		else
+		    move_term(user, user->y, user->x + user->av[0]);
+	    }
 	    user->got_esc = 0;
 	    break;
 	case 'D':	/* move left */
-	    if(user->av[0] == 0)
-		move_term(user, user->y, user->x - 1);
-	    else if((int)user->av[0] > user->x)
-		move_term(user, user->y, 0);
-	    else
-		move_term(user, user->y, user->x - user->av[0]);
+	    if(user->got_esc == 2) {
+		if(user->av[0] == 0)
+		    move_term(user, user->y, user->x - 1);
+		else if((int)user->av[0] > user->x)
+		    move_term(user, user->y, 0);
+		else
+		    move_term(user, user->y, user->x - user->av[0]);
+	    }
 	    user->got_esc = 0;
 	    break;
 	case 'H':	/* move */
