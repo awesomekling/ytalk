@@ -299,13 +299,13 @@ execute(char *command)
 		 * This will really mess up the shell on OSF1/Tru64 UNIX, so
 		 * we only do it on SunOS/Solaris
 		 */
-#ifdef YTALK_SUNOS
-#if defined(HAVE_STROPTS_H) && defined(I_PUSH)
+#if defined(USE_DEV_PTMX) && defined(YTALK_SUNOS)
+#  if defined(HAVE_STROPTS_H) && defined(I_PUSH)
 		if (needtopush) {
 			ioctl(fd, I_PUSH, "ptem");
 			ioctl(fd, I_PUSH, "ldterm");
 		}
-#endif
+#  endif
 #endif
 
 		dup2(fd, 0);
