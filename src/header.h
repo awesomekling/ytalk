@@ -303,6 +303,8 @@ extern char *str_copy(char *);
 extern void show_error(char *);
 #ifdef YTALK_COLOR
 extern int ya_strlen(yachar *);
+#else
+#  define ya_strlen(a) strlen((char *)(a))
 #endif
 
 /* term.c */

@@ -131,8 +131,6 @@ ya_strlen(yachar *str)
 
 	return ret;
 }
-#else
-#  define ya_strlen strlen
 #endif /* YTALK_COLOR */
 
 /*
