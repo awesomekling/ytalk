@@ -36,19 +36,6 @@
 #  endif
 #endif
 
-static int (*_open_term) (yuser *);		/* open a new terminal */
-static void (*_close_term) (yuser *);		/* close a terminal */
-#ifdef YTALK_COLOR
-static void (*_addch_term) (yuser *, yachar);	/* write a char to a terminal */
-#else
-static void (*_addch_term) (yuser *, ylong);
-#endif
-static void (*_move_term) (yuser *, int, int);	/* move cursor to Y,X position */
-static void (*_clreol_term) (yuser *);		/* clear to end of line */
-static void (*_clreos_term) (yuser *);		/* clear to end of screen */
-static void (*_scroll_term) (yuser *);		/* scroll up one line */
-static void (*_rev_scroll_term) (yuser *);	/* scroll down one line */
-
 static int term_type = 0;
 static yachar emptyc;
 
@@ -157,27 +144,10 @@ init_term(void)
 	init_termios();
 #endif
 
-	/*
-	 * Decide on a terminal (window) system and set up the function
-	 * pointers.
-	 */
+	/* it's all about curses from here on */
+	init_curses();
+	term_type = 1;
 
-	term_type = 0;		/* nothing selected yet */
-
-	/* if no window system found, default to curses */
-
-	if (term_type == 0) {
-		_open_term = open_curses;
-		_close_term = close_curses;
-		_addch_term = addch_curses;
-		_move_term = move_curses;
-		_clreol_term = clreol_curses;
-		_clreos_term = clreos_curses;
-		_scroll_term = scroll_curses;
-		_rev_scroll_term = NULL;
-		init_curses();
-		term_type = 1;	/* using curses */
-	}
 	/* set me up a terminal */
 
 	if (open_term(me) < 0) {
@@ -235,8 +205,7 @@ keypad_term(yuser *user, int bf)
 {
 	if (user != me)
 		return;
-	if (term_type == 1)
-		keypad_curses(user, bf);
+	keypad_curses(user, bf);
 }
 #endif /* HAVE_KEYPAD */
 
@@ -246,11 +215,8 @@ keypad_term(yuser *user, int bf)
 void
 end_term(void)
 {
-	switch (term_type) {
-	case 1:		/* curses */
+	if (term_type == 1)
 		end_curses();
-		break;
-	}
 	term_type = 0;
 }
 
@@ -260,7 +226,7 @@ end_term(void)
 int
 open_term(yuser *user)
 {
-	if (_open_term(user) != 0)
+	if (open_curses(user) != 0)
 		return -1;
 	user->x = user->y = 0;
 	if (user->scr == NULL)
@@ -277,7 +243,7 @@ close_term(yuser *user)
 	register int i;
 
 	if (user->scr) {
-		_close_term(user);
+		close_curses(user);
 		for (i = 0; i < user->t_rows; i++)
 			free_mem(user->scr[i]);
 		free_mem(user->scr);
@@ -302,13 +268,13 @@ addch_term(yuser *user, ychar c)
 	ac = c;
 #endif
 	if (is_printable(c)) {
-		_addch_term(user, ac);
+		addch_curses(user, ac);
 		user->scr[user->y][user->x] = ac;
 		if (++(user->x) >= user->cols) {
 			user->bump = 1;
 			user->x = user->cols - 1;
 			if (user->cols < user->t_cols)
-				_move_term(user, user->y, user->x);
+				move_curses(user, user->y, user->x);
 		}
 	}
 }
@@ -328,7 +294,7 @@ move_term(yuser *user, int y, int x)
 		user->bump = 0;
 		user->onend = 0;
 	}
-	_move_term(user, y, x);
+	move_curses(user, y, x);
 	user->y = y;
 	user->x = x;
 }
@@ -352,10 +318,10 @@ clreol_term(yuser *user)
 	if (user->cols < user->t_cols) {
 		c = user->scr[user->y] + user->x;
 		for (j = user->x; j < user->cols; j++)
-			_addch_term(user, *(c++) = nc);
+			addch_curses(user, *(c++) = nc);
 		move_term(user, user->y, user->x);
 	} else {
-		_clreol_term(user);
+		clreol_curses(user);
 		c = user->scr[user->y] + user->x;
 		for (j = user->x; j < user->cols; j++)
 			*(c++) = nc;
@@ -382,7 +348,7 @@ clreos_term(yuser *user)
 		}
 		move_term(user, y, x);
 	} else {
-		_clreos_term(user);
+		clreos_curses(user);
 		j = user->x;
 		for (i = user->y; i < user->rows; i++) {
 			c = user->scr[i] + j;
@@ -439,12 +405,11 @@ scroll_term(yuser *user)
 		user->scr[user->sc_bot] = c;
 		for (i = 0; i < user->cols; i++)
 			*(c++) = emptyc;
-		if (_scroll_term
-		    && user->rows == user->t_rows
+		if (user->rows == user->t_rows
 		    && user->cols == user->t_cols
 		    && user->sc_top == 0
 		    && user->sc_bot == user->rows - 1)
-			_scroll_term(user);
+			scroll_curses(user);
 		else
 			redraw_term(user, 0);
 	} else {
@@ -473,14 +438,7 @@ rev_scroll_term(yuser *user)
 		user->scr[user->sc_top] = c;
 		for (i = 0; i < user->cols; i++)
 			*(c++) = emptyc;
-		if (_rev_scroll_term
-		    && user->rows == user->t_rows
-		    && user->cols == user->t_cols
-		    && user->sc_top == 0
-		    && user->sc_bot == user->rows - 1)
-			_rev_scroll_term(user);
-		else
-			redraw_term(user, 0);
+		redraw_term(user, 0);
 	} else {
 		sy = user->y;
 		sx = user->x;
@@ -762,10 +720,10 @@ add_char_term(yuser *user, int num)
 	c++;
 	copy_text(c - i, c - i + num, i);
 	for (c -= i; num > 0; num--)
-		_addch_term(user, *(c++) = emptyc);
+		addch_curses(user, *(c++) = emptyc);
 	for (; i > 0; i--)
-		_addch_term(user, *(c++));
-	_move_term(user, user->y, user->x);
+		addch_curses(user, *(c++));
+	move_curses(user, user->y, user->x);
 }
 
 /*
@@ -796,10 +754,10 @@ del_char_term(yuser *user, int num)
 	c++;
 	copy_text(c - i, c - i - num, i);
 	for (c -= (i + num); i > 0; i--)
-		_addch_term(user, *(c++));
+		addch_curses(user, *(c++));
 	for (; num > 0; num--)
-		_addch_term(user, *(c++) = emptyc);
-	_move_term(user, user->y, user->x);
+		addch_curses(user, *(c++) = emptyc);
+	move_curses(user, user->y, user->x);
 }
 
 /*
@@ -812,11 +770,11 @@ redraw_term(yuser *user, int y)
 	register yachar *c;
 
 	for (; y < user->t_rows; y++) {
-		_move_term(user, y, 0);
-		_clreol_term(user);
+		move_curses(user, y, 0);
+		clreol_curses(user);
 		c = user->scr[y];
 		for (x = 0; x < user->t_cols; x++, c++) {
-			_addch_term(user, *c);
+			addch_curses(user, *c);
 		}
 	}
 
@@ -824,7 +782,7 @@ redraw_term(yuser *user, int y)
 
 	if (in_ymenu())
 		update_ymenu();
-	_move_term(user, user->y, user->x);
+	move_curses(user, user->y, user->x);
 }
 
 /*
