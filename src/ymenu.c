@@ -208,8 +208,8 @@ handle_disconnect_user(void *t)
 			free_user(u);
 			break;
 		}
-	redo_ymenu_userlist();
 	(void) ytk_pop_thing(menu_stack);
+	hide_ymenu();
 }
 
 void
