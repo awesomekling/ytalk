@@ -339,6 +339,12 @@ user_title(char * buf, int size, yuser * user)
 				if ((int)(b - buf) < (size - 4))
 					b += sprintf(b, "%d.%d.%d", VMAJOR, VMINOR, VPATCH);
 				break;
+			case 's':
+				if (user == scuser)
+					*(b++) = '*';
+				else
+					*(b++) = ' ';
+				break;
 			case '!':
 				*(b++) = 9;
 				break;

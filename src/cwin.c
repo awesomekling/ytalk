@@ -117,19 +117,14 @@ new_draw_title(w)
 				addch(*t);
 			}
 			t++;
-		} else if (rj && *t && (x == (w->width - rl - 2))) {
-			for (; *t && (x < w->width - 2); t++) {
+		} else if (rj && *t && (x == (w->width - rl))) {
+			for (; *t && (x < w->width); t++) {
 				if (*t > 31) {
 					addch(*t);
 					x++;
 				}
 			}
 			x--;
-		} else if (x == (w->width - 2)) {
-			if (w->user == scuser)
-				addch('*');
-			else
-				addch(' ');
 		} else {
 			addch(' ');
 		}
