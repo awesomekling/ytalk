@@ -12,11 +12,11 @@ ytk_new_stack()
 }
 
 void
-ytk_push(ytk_stack *st, ytk_thing *w)
+ytk_push(ytk_stack *st, ytk_thing *t)
 {
 	ytk_stack_item *new;
 	new = get_mem(sizeof(ytk_stack_item));
-	new->thing = w;
+	new->thing = t;
 	new->next = NULL;
 	new->prev = st->top;
 	if (new->prev != NULL) {

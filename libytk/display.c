@@ -39,12 +39,12 @@ ytk_create_window(ytk_thing *t)
 }
 
 void
-ytk_winch_thing(ytk_thing *w)
+ytk_winch_thing(ytk_thing *t)
 {
-	if (w->win) {
-		delwin(w->win);
+	if (t->win) {
+		delwin(t->win);
 	}
-	if (!ytk_create_window(w))
+	if (!ytk_create_window(t))
 		exit(1);
 }
 
@@ -96,44 +96,44 @@ ytk_display_msgbox(ytk_thing *t)
 }
 
 void
-ytk_display_menu(ytk_thing *w)
+ytk_display_menu(ytk_thing *t)
 {
 	ytk_menu_item *it = NULL;
 	char *linebuf;
 	ylong y;
 
-	linebuf = get_mem(w->width * sizeof(char) + 1);
+	linebuf = get_mem(t->width * sizeof(char) + 1);
 #ifdef YTALK_COLOR
-	wattron(w->win, COLOR_PAIR(w->colors) | w->attr);
+	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 #endif
 
 	y = 1;
-	while ((it = ytk_next_menu_item(YTK_MENU(w), it))) {
+	while ((it = ytk_next_menu_item(YTK_MENU(t), it))) {
 		if (YTK_MENU_ITEM_SEPARATOR(it)) {
-			mvwaddch(w->win, y, 0, ACS_LTEE);
-			whline(w->win, 0, w->width);
-			mvwaddch(w->win, y, w->width + 1, ACS_RTEE);
+			mvwaddch(t->win, y, 0, ACS_LTEE);
+			whline(t->win, 0, t->width);
+			mvwaddch(t->win, y, t->width + 1, ACS_RTEE);
 			y++;
 		} else {
 			if (it->selected)
-				wattron(w->win, A_REVERSE);
+				wattron(t->win, A_REVERSE);
 			if (YTK_MENU_ITEM_TOGGLE(it))
 #ifdef HAVE_SNPRINTF
-				snprintf(linebuf, w->width + 1, " [%c] %-*s ", (it->value) ? '*' : ' ', w->width - 6, it->text);
+				snprintf(linebuf, t->width + 1, " [%c] %-*s ", (it->value) ? '*' : ' ', t->width - 6, it->text);
 #else
-				sprintf(linebuf, " [%c] %-*s ", (it->value) ? '*' : ' ', w->width - 6, it->text);
+				sprintf(linebuf, " [%c] %-*s ", (it->value) ? '*' : ' ', t->width - 6, it->text);
 #endif
 			else
 #ifdef HAVE_SNPRINTF
-				snprintf(linebuf, w->width + 1, " %-*s ", w->width - 2, it->text);
+				snprintf(linebuf, t->width + 1, " %-*s ", t->width - 2, it->text);
 #else
-				sprintf(linebuf, " %-*s ", w->width - 2, it->text);
+				sprintf(linebuf, " %-*s ", t->width - 2, it->text);
 #endif
 			if (it->hotkey)
-				linebuf[w->width - 2] = it->hotkey;
-			mvwaddstr(w->win, y, 1, linebuf);
+				linebuf[t->width - 2] = it->hotkey;
+			mvwaddstr(t->win, y, 1, linebuf);
 			if (it->selected)
-				wattroff(w->win, A_REVERSE);
+				wattroff(t->win, A_REVERSE);
 			y++;
 		}
 	}

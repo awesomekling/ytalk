@@ -19,9 +19,9 @@
 # define FALSE 0
 #endif
 
-#define YTK_MENU(w)		((ytk_menu *)w->object)
-#define YTK_INPUTBOX(w)	((ytk_inputbox *)w->object)
-#define YTK_MSGBOX(w)	((ytk_msgbox *)w->object)
+#define YTK_MENU(t)		((ytk_menu *)t->object)
+#define YTK_INPUTBOX(t)	((ytk_inputbox *)t->object)
+#define YTK_MSGBOX(t)	((ytk_msgbox *)t->object)
 #define YTK_THING(o)	(o->base)
 
 #define YTK_T_NULL		0
