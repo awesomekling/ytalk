@@ -46,7 +46,8 @@ static yachar emptyc;
 char *bottom_msg = NULL;
 ylong bottom_time = 0;
 
-static char *tcbp, *tcap, *tcapp;
+static char *tcbp = NULL;
+static char *tcap = NULL, *tcapp;
 
 #ifdef USE_SGTTY
 static int line_discipline;
@@ -131,7 +132,7 @@ user_yac(yuser *user, char c, yachar *ac)
 static void
 init_termcap(void)
 {
-	char *term;
+	char *term, *tcks;
 	int success;
 	tcbp = get_mem(4096);
 	tcap = get_mem(4096);
@@ -148,15 +149,22 @@ init_termcap(void)
 		exit(YTE_INIT);
 	}
 	/* activate keypad capabilities */
-	printf("%s", get_tcstr("ks"));
+	tcks = get_tcstr("ks");
+	if (tcks != NULL)
+		printf("%s", tcks);
 }
 
 static void
 end_termcap(void)
 {
-	printf("%s", get_tcstr("ke"));
-	free_mem(tcap);
-	free_mem(tcbp);
+	char *tcke;
+	tcke = get_tcstr("ke");
+	if (tcke != NULL)
+		printf("%s", tcke);
+	if (tcap != NULL)
+		free_mem(tcap);
+	if (tcbp != NULL)
+		free_mem(tcbp);
 }
 
 char *
