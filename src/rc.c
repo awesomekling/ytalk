@@ -19,7 +19,7 @@
 #include "mem.h"
 #include <pwd.h>
 
-#define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=')
+#define IS_WHITE(c)	((c)==' ' || (c)=='\t' || (c)=='\n' || (c)=='=' || (c)==',')
 
 extern char *vhost;
 extern char *gshell;
