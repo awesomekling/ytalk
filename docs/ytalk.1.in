@@ -12,7 +12,7 @@
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
-.BI "ytalk [-x] [-s] [-Y] [-i] [-v] [-q] [-h " hostname_or_ip "] " username...
+.BI "ytalk [-s] [-Y] [-i] [-v] [-q] [-h " hostname_or_ip "] " username...
 .SH DESCRIPTION
 .I YTalk V3.2.0
 .PP
@@ -41,10 +41,6 @@ field may be formatted in several different ways:
 You can specify multiple user names on the command line, ie:
 .sp
 	ytalk george fred@hissun.edu marc@grumpy.cc
-.PP
-The
-.B -x
-option enables the X11 interface (described below).
 .PP
 The
 .B -s
@@ -101,11 +97,6 @@ subdivided into smaller and smaller windows, one for each connected user.
 Right now, the number of connected users is limited by the number of lines
 on your terminal (or window), for each connected user needs at least three
 lines.
-.PP
-YTalk does implement primitive support of the X11 Windowing System.  If the
-environment variable DISPLAY is set, then YTalk attempts to connect to that
-X server.  Further details about the X11 interface (and how to turn it off)
-are given below.
 .PP
 As each new user is added to the conversation, YTalk will transmit information
 about that user to all other connected YTalk users so that their screens will
@@ -203,8 +194,6 @@ to edit the YTalk options.  The current options are:
 	p: [don't] prompt before rerings
 .br
 	q: [don't] prompt before quitting
-.br
-	a: turn asides [off/on]
 .PP
 If
 .I scrolling
@@ -242,12 +231,6 @@ If
 .I prompt-quit
 is turned on, then YTalk will wait for keyboard input before quitting.
 .PP
-If
-.I asides
-is turned on (it may not be available), then keyboard input received while
-the input focus is in a specific users' window will only be sent to that
-user.  See the X11 interface description below.
-.PP
 Any of these options can be set to your preference in your .ytalkrc file,
 as described below.
 .SH YTALK STARTUP FILE
@@ -273,15 +256,11 @@ is one of
 .I prompt-quit ,
 .I caps ,
 .I noinvite ,
-.I asides ,
 .I ignorebreak ,
 .I beeps ,
-.I vt100 ,
 or
-.I X .
-Setting these options works just like described above.  Turning
-.I X
-on or off will enable or disable the X11 Interface described below.
+.I vt100 ,
+Setting these options works just like described above.
 For example, one could enable word-wrap with the line:
 .sp
 	turn word-wrap on
@@ -360,35 +339,6 @@ which the office machines basically ignore.
 Note that, in this case, the problem could also have been solved by
 telling the home YTalk to use the 192.67.141.0 interface, when doing
 YTalk requests across the PPP link.
-.SH X11 INTERFACE
-If the DISPLAY environment variable is defined when YTalk starts up AND
-the X11 interface has been enabled in .ytalkrc or on the command line, then
-YTalk will attempt to communicate with that X server.  A window will be
-created for you and each user you are connected to.  The X11 Interface can
-be enabled either by specifying -x on the command line or by putting this
-line into your .ytalkrc file:
-.sp
-	turn X on
-.PP
-A window is created for each individual user in the conversation.  If the
-input focus is in the main window (ie: the one with "ytalk" in the title
-bar) then anything typed will be sent to all connected users.  If the input
-focus is in one of the users' windows, then anything typed will be sent
-as an aside to only that user.  If the "aside" option is turned off (see
-above) then ytalk will beep and not accept anything typed when the input
-focus is not in the main window.
-.PP
-YTalk consults the X11 Resource Database for these user-definable
-configuration options:
-.sp
-    YTalk.display:  X server to connect to, defaulting to the
-DISPLAY environment variable.
-.sp
-    YTalk.reverse:  reverse black/white pixels.
-.sp
-    YTalk.font:  font to use, defaulting to "9x15".
-.sp
-    YTalk.geometry:  window size, defaulting to  "80x24".
 
 .SH FILES
 
