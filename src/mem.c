@@ -3,6 +3,14 @@
 #include "header.h"
 #include "mem.h"
 
+#ifdef YTALK_DEBUG
+/* some statistical accumulators */
+unsigned int bad_free = 0;
+unsigned int bad_realloc = 0;
+unsigned int realloc_null = 0;
+unsigned int leaked = 0;
+#endif
+
 static mem_list *glist = NULL;
 
 /* Add to linked list
@@ -52,7 +60,10 @@ void change_area(mem_list *list, yaddr addr, yaddr new_addr, int size) {
 		}
 		it = it->next;
 	}
-	show_error("Realloc mem failed: Not in list");
+#ifdef YTALK_DEBUG
+	show_error("Reallocation failed: Not in allocation list");
+	bad_realloc++;
+#endif
 }
 
 /* Size to clear where the pointer points
@@ -91,7 +102,10 @@ void free_mem(yaddr addr) {
 		free(addr);
 		glist = del_area(glist, addr);
 	} else {
-		show_error("Mem not in list");
+#ifdef YTALK_DEBUG
+		show_error("Free failed: Not in allocation list");
+		bad_free++;
+#endif
 	}
 }
 
@@ -99,8 +113,12 @@ void free_mem(yaddr addr) {
  */
 yaddr realloc_mem(yaddr p, int n) {
 	yaddr out;
-	if(p == NULL)
+	if(p == NULL) {
+#ifdef YTALK_DEBUG
+		realloc_null++;
+#endif
 		return get_mem(n);
+	}
 	if((out = (yaddr)realloc(p, n)) == NULL) {
 		show_error("realloc() failed");
 		bail(YTE_NO_MEM);
@@ -121,5 +139,13 @@ void clear_all() {
 glist->file, glist->line);
 #endif
 		free_mem(glist->addr);
+		leaked++;
 	}
+#ifdef YTALK_DEBUG
+	printf("Statistics:\n");
+	printf("Bad free_mem() calls:    %u\n", bad_free);
+	printf("Bad realloc_mem() calls: %u\n", bad_realloc);
+	printf("realloc_mem(NULL) calls: %u\n", realloc_null);
+	printf("Leaked allocations:      %u\n", leaked);
+#endif
 }
