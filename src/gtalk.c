@@ -12,8 +12,6 @@
 void
 gtalk_process(yuser *user, ychar data)
 {
-	char *msg;
-
 	if (user->gt.len == (MAXBUF - 1))
 		return;
 
@@ -38,15 +36,6 @@ gtalk_process(yuser *user, ychar data)
 			user->gt.version = gtalk_parse_version(user->gt.buf);
 			retitle_all_terms();
 			break;
-		default:
-			msg = get_mem(user->gt.len + 2);
-#ifdef HAVE_SNPRINTF
-			snprintf(msg, user->gt.len + 2, "%c%s", user->gt.type, user->gt.buf);
-#else
-			sprintf(msg, "%c%s", user->gt.type, user->gt.buf);
-#endif
-			show_message_ymenu(user->full_name, msg);
-			free_mem(msg);
 		}
 		return;
 	}
@@ -95,19 +84,4 @@ gtalk_send_version(yuser *user)
 	write(user->fd, buf, len);
 	free_mem(buf);
 	return;
-}
-
-void
-gtalk_send_message(yuser *user, char *msg)
-{
-	char *buf;
-	int len;
-	buf = get_mem(strlen(msg) + 3);
-#ifdef HAVE_SNPRINTF
-	len = snprintf(buf, strlen(msg) + 3, "%c%s\n", GTALK_ESCAPE, msg);
-#else
-	len = sprintf(buf, "%c%s\n", GTALK_ESCAPE, msg);
-#endif
-	write(user->fd, buf, len);
-	free_mem(buf);
 }

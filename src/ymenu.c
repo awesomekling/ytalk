@@ -15,7 +15,6 @@ static ytk_thing *options_menu = NULL;
 static ytk_thing *usermenu_menu = NULL;
 static ytk_thing *userlist_menu = NULL;
 static ytk_thing *error_box = NULL;
-static ytk_thing *message_box = NULL;
 
 #ifdef YTALK_COLOR
 static ytk_thing *color_menu = NULL;
@@ -44,14 +43,6 @@ do_adduser(ytk_inputbox *b)
 	hide_ymenu();
 	if (b->len > 0)
 		invite(b->data, 0);
-}
-
-static void
-do_sendmessage(ytk_inputbox *b)
-{
-	hide_ymenu();
-	if (b->len > 0)
-		gtalk_send_message(menu_user, b->data);
 }
 
 static void
@@ -303,32 +294,6 @@ view_extinfo(ytk_menu_item *i)
 }
 
 static void
-handle_privatemessage(ytk_menu_item *i)
-{
-	ytk_thing *b;
-	char *titlebuf;
-	(void) i;
-
-	if (menu_user == NULL ||  menu_user == me)
-		return;
-
-	titlebuf = get_mem(strlen(menu_user->full_name) + strlen(_("Message to")) + 2);
-#ifdef HAVE_SNPRINTF
-	snprintf(titlebuf, strlen(menu_user->full_name) + strlen(_("Message to")) + 2,
-				"%s %s", _("Message to"), menu_user->full_name);
-#else
-	sprintf(titlebuf, "%s %s", _("Message to"), menu_user->full_name);
-#endif
-	b = ytk_new_inputbox(titlebuf, 60, do_sendmessage);
-	ytk_set_escape(b, do_hidething);
-#ifdef YTALK_COLOR
-	ytk_set_colors(b, menu_colors);
-	ytk_set_attr(b, menu_attr);
-#endif
-	ytk_push(menu_stack, b);
-}
-
-static void
 init_usermenu(char k)
 {
 	yuser *u;
@@ -336,7 +301,6 @@ init_usermenu(char k)
 		if (u->key == k) {
 			usermenu_menu = ytk_new_menu(u->full_name);
 			if (u->gt.version != NULL) {
-				ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Private message"), 'p', handle_privatemessage);
 				ytk_add_menu_item(YTK_MENU(usermenu_menu), _("View information"), 'x', view_extinfo);
 			}
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
@@ -513,51 +477,6 @@ void
 refresh_ymenu()
 {
 	__refresh_ymenu();
-	ytk_sync_display();
-}
-
-static void
-handle_message_box(ytk_thing *t)
-{
-	ytk_msgbox_item *i = NULL;
-	while ((i = ytk_next_msgbox_item(YTK_MSGBOX(t), i)) != NULL)
-		if(!YTK_MSGBOX_ITEM_SEPARATOR(i))
-			free_mem(i->text);
-	ytk_pop(menu_stack);
-	ytk_delete_thing(t);
-	message_box = NULL;
-	refresh_curses();
-	ytk_display_stack(menu_stack);
-	ytk_sync_display();
-}
-
-void
-show_message_ymenu(char *from, char *msg)
-{
-	char *frombuf;
-	if (message_box == NULL)
-		message_box = ytk_new_msgbox(_("Private message"));
-	else
-		ytk_add_msgbox_separator(YTK_MSGBOX(message_box));
-
-	frombuf = get_mem(strlen(from) + strlen(_("From: ")) + 1);
-#ifdef HAVE_SNPRINTF
-	snprintf(frombuf, strlen(from) + strlen(_("From: ")) + 1, "%s%s", _("From: "), from);
-#else
-	sprintf(frombuf, "%s%s", _("From: "), from);
-#endif
-
-	ytk_add_msgbox_item(YTK_MSGBOX(message_box), str_copy(from));
-	ytk_add_msgbox_item(YTK_MSGBOX(message_box), str_copy(msg));
-	ytk_winch_thing(message_box);
-	if (!ytk_on_stack(menu_stack, message_box))
-		ytk_push(menu_stack, message_box);
-	ytk_set_escape(message_box, handle_message_box);
-#ifdef YTALK_COLOR
-	ytk_set_colors(message_box, menu_colors);
-	ytk_set_attr(message_box, menu_attr);
-#endif
-	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 }
 
