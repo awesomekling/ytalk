@@ -691,7 +691,7 @@ contact_user(fd)
 {
     register yuser *user;
     register int n;
-    size_t socklen;
+    socklen_t socklen;
     struct sockaddr_in peer;
     char *hname;
 
@@ -703,7 +703,7 @@ contact_user(fd)
     }
     (void)send_dgram(user, DELETE_INVITE);
     socklen = sizeof(struct sockaddr_in);
-    if((n = accept(fd, (struct sockaddr *) &(user->sock), (int *)&socklen)) < 0)
+    if((n = accept(fd, (struct sockaddr *) &(user->sock), &socklen)) < 0)
     {
 	free_user(user);
 	if (errno != EPIPE && errno != ECONNRESET)
@@ -717,7 +717,7 @@ contact_user(fd)
        update the title to reflect the new name
      */
     socklen = sizeof(struct sockaddr_in);
-    if (getpeername(n, (struct sockaddr *)&peer, (int *)&socklen) >= 0)
+    if (getpeername(n, (struct sockaddr *)&peer, &socklen) >= 0)
     {
         if (IN_ADDR(peer) != user->host_addr)
 	{
@@ -866,7 +866,7 @@ invite(name, send_announce)
     if (!dont_change_my_addr)
     {
     	struct sockaddr_in tmpsock;
-	unsigned int i;
+	socklen_t i;
 	int sock;
 
 	sock = socket(PF_INET, SOCK_DGRAM, 0);
@@ -881,7 +881,7 @@ invite(name, send_announce)
 		i = sizeof(struct sockaddr_in);
 
 		/* SysV tends to return 0.0.0.0 here, must check */
-		if (getsockname(sock, (struct sockaddr *) &tmpsock, (int *)&i) == 0 &&
+		if (getsockname(sock, (struct sockaddr *) &tmpsock, &i) == 0 &&
 		    tmpsock.sin_addr.s_addr != htonl(INADDR_ANY) &&
 		    tmpsock.sin_addr.s_addr != htonl(INADDR_LOOPBACK))
 		{
