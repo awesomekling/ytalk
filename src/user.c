@@ -190,6 +190,8 @@ new_user(char *name, char *hostname, char *tty)
 	generate_full_name(out);
 	out->flags = def_flags;
 
+	out->gt_buf = get_mem(MAXBUF);
+
 	if (user_list == NULL) {
 		out->unext = user_list;
 		user_list = out;
@@ -259,6 +261,7 @@ free_user(yuser *user)
 	free_mem(user->user_name);
 	free_mem(user->host_name);
 	free_mem(user->tty_name);
+	free_mem(user->gt_buf);
 	if (user->dbuf)
 		free_mem(user->dbuf);
 	if (user->output_fd > 0)
@@ -409,6 +412,7 @@ free_users(void)
 		free_mem(u->host_fqdn);
 		free_mem(u->tty_name);
 		free_mem(u->full_name);
+		free_mem(u->gt_buf);
 		if (u->term != NULL)
 			free_mem(u->term);
 		if (u->scr != NULL) {

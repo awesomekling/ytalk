@@ -150,6 +150,7 @@ typedef struct _yuser {
 	char onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
 	char got_gt;		/* currently parsing gtalk string */
+	char *gt_buf;		/* gtalk string buffer */
 	char gt_type;		/* type of current gtalk string */
 	int gt_len;		/* length of current gtalk string */
 	char got_esc;		/* received an ESC */

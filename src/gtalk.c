@@ -11,9 +11,7 @@
 void
 gtalk_process(yuser *user, ychar data)
 {
-	static char buf[201];
-
-	if (user->gt_len == (sizeof(buf) - 1))
+	if (user->gt_len == (MAXBUF - 1))
 		return;
 
 	if (user->gt_type == 0) {
@@ -23,19 +21,19 @@ gtalk_process(yuser *user, ychar data)
 
 	if (data == user->KILL || data == '\n') {
 		user->got_gt = 0;
-		buf[user->gt_len] = 0;
+		user->gt_buf[user->gt_len] = 0;
 		switch (user->gt_type) {
 		case GTALK_VERSION_MESSAGE:
 			if (user->gt.version != NULL)
 				free_mem(user->gt.version);
-			user->gt.version = gtalk_parse_version(buf);
+			user->gt.version = gtalk_parse_version(user->gt_buf);
 			retitle_all_terms();
 			break;
 		}
 		return;
 	}
 
-	buf[user->gt_len++] = data;
+	user->gt_buf[user->gt_len++] = data;
 }
 
 char *
