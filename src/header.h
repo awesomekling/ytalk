@@ -393,7 +393,6 @@ extern void redraw_all_terms();	/* term.c */
 
 #define set_raw_term			set_raw_curses
 #define set_cooked_term			set_cooked_curses
-#define term_does_scrollback()	1
 #define start_scroll_term		start_scroll_curses
 #define end_scroll_term			end_scroll_curses
 #define update_scroll_term		update_scroll_curses
