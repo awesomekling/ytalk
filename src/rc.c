@@ -246,6 +246,7 @@ set_shell(char *shell)
 
 	if (*shell == '~') {
 		pw = getpwuid(myuid);
+		endpwent();
 		if (pw != NULL) {
 			gshell = (char *) get_mem(strlen(pw->pw_dir) + strlen(shell) + 1);
 			shell++;
@@ -489,6 +490,7 @@ read_ytalkrc(void)
 	/* read the user's ytalkrc file */
 
 	pw = getpwuid(myuid);
+	endpwent();
 	if (pw != NULL) {
 		fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
 #ifdef HAVE_SNPRINTF
