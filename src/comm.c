@@ -1403,11 +1403,11 @@ my_input(yuser *user, ychar *buf, int len)
 					} else if (*buf == 2) {		/* ^B - Bold */
 						if (me->c_at & A_BOLD) {
 							me->c_at &= ~A_BOLD;
-							send_users(me, (ychar *)"[21m", 5, (ychar *)"[21m", 5);
+							send_users(me, (ychar *)"\033[21m", 5, (ychar *)"\033[21m", 5);
 						}
 						else {
 							me->c_at |= A_BOLD;
-							send_users(me, (ychar *)"[01m", 5, (ychar *)"[01m", 5);
+							send_users(me, (ychar *)"\033[01m", 5, (ychar *)"\033[01m", 5);
 						}
 						buf++, len--;
 #endif

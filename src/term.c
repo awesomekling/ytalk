@@ -1154,7 +1154,7 @@ spew_attrs(int fd, unsigned char at, unsigned char bg, unsigned char fg)
 	esc[1] = '[';
 	esc[p - 1] = 'm';
 	/* Clear all attributes */
-	write(fd, "[0m", 4);
+	write(fd, "\033[0m", 4);
 	/* Send our attributes */
 	write(fd, esc, p);
 }
@@ -1208,7 +1208,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 #ifdef YTALK_COLOR
 		spew_attrs(fd, user->c_at, user->c_fg, user->c_bg);
 		if (user->altchar)
-			write(fd, "[(0", 4);
+			write(fd, "\033[(0", 4);
 		if (user->csx)
 			write(fd, &YT_ACS_ON, 1);
 #endif
