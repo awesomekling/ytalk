@@ -217,15 +217,41 @@ vt100_process(yuser *user, char data)
 		}
 		user->vt.got_esc = 0;
 		break;
-	case 'J':		/* clear to end of screen */
+	case 'J':
 		if (user->vt.got_esc == 2) {
-			clreos_term(user);
+			switch (user->vt.av[0]) {
+			case 0:		/* clear to end of screen */
+				clreos_term(user);
+				break;
+			case 1:
+				if (user->x > 0)
+					fill_term(user, 0, 0, user->y - 1, user->cols - 1, ' ');
+				fill_term(user, user->y, 0, user->y, user->x, ' ');
+				redraw_term(user, 0);
+				break;
+			case 2:
+				fill_term(user, 0, 0, user->rows - 1, user->cols - 1, ' ');
+				redraw_term(user, 0);
+				break;
+			}
 		}
 		user->vt.got_esc = 0;
 		break;
-	case 'K':		/* clear to end of line */
+	case 'K':
 		if (user->vt.got_esc == 2) {
-			clreol_term(user);
+			switch (user->vt.av[0]) {
+				case 0:		/* clear to end of line */
+					clreol_term(user);
+					break;
+				case 1:		/* clear to beginning of line */
+					fill_term(user, user->y, 0, user->y, user->x, ' ');
+					redraw_term(user, 0);
+					break;
+				case 2:		/* clear entire line */
+					fill_term(user, user->y, 0, user->y, user->cols - 1, ' ');
+					redraw_term(user, 0);
+					break;
+			}
 		}
 		user->vt.got_esc = 0;
 		break;
