@@ -140,7 +140,7 @@ typedef struct _yuser {
 	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
 	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
-	gtalk_info gt;		/* pointer to gtalk info if gtalk user */
+	gtalk_info gt;		/* gtalk info */
 	char scroll;		/* set if currently being scrolled */
 	yachar **scrollback;	/* scrollback buffer */
 	long int scrollpos;	/* position in scrollback buffer */
