@@ -1480,22 +1480,3 @@ raw_term(user, y, x, str, len)
 #endif
 	}
 }
-
-void
-redraw_all_terms()
-{
-	register yuser *u;
-
-	switch (term_type) {
-	case 1:		/* curses */
-		redisplay_curses();
-		break;
-	default:
-		redraw_term(me, 0);
-		flush_term(me);
-		for (u = connect_list; u; u = u->next) {
-			redraw_term(u, 0);
-			flush_term(u);
-		}
-	}
-}

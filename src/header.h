@@ -384,6 +384,7 @@ extern void redraw_all_terms();	/* term.c */
 #define end_scroll_term			end_scroll_curses
 #define update_scroll_term		update_scroll_curses
 #define retitle_all_terms		retitle_all_curses
+#define redraw_all_terms		redisplay_curses
 
 extern void init_user();	/* user.c */
 extern yuser *new_user( /* name, host, tty */ );	/* user.c */
