@@ -218,7 +218,7 @@ init_userlist()
 {
 	yuser *u;
 	char *buf, *p;
-	ychar hk = 'a';
+	char hk = 'a';
 	userlist_menu = ytk_new_menu("User List");
 	for (u = connect_list; u; u = u->next) {
 		if (u != me) {
