@@ -315,7 +315,7 @@ user_title(char *buf, int size, yuser *user)
 		fmt = user_format;
 
 	if (fmt == NULL) {
-		if ((int) strlen(user->full_name) <= size)
+		if ((int) strlen(user->full_name) < size)
 			strcpy(buf, user->full_name);
 		return;
 	}
