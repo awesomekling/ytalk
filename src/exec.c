@@ -370,9 +370,7 @@ execute(char *command)
 			utx.ut_type = USER_PROCESS;
 			utx.ut_pid = getpid();
 			strcpy(utx.ut_host, "ytalk");
-			if (pututxline(&utx) == NULL) {
-				fprintf(stderr, "pututxline() failed.\n");
-			}
+			(void) pututxline(&utx);
 		}
 
 #endif /* HAVE_UTMPX_H && YTALK_SUNOS */
