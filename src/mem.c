@@ -7,13 +7,15 @@ static mem_list *glist = NULL;
 
 /* Add to linked list
  */
-mem_list *add_area(mem_list *list, yaddr addr, int size) {
+mem_list *add_area(mem_list *list, yaddr addr, int size, int line, char *file) {
 	mem_list *entry;
 	if(addr == 0)
 		return list;
 	entry = (mem_list *)malloc(sizeof(mem_list));
 	entry->addr = addr;
 	entry->size = size;
+	entry->line = line;
+	entry->file = file;
 	entry->next = list;
 	return entry;
 }
@@ -63,19 +65,20 @@ int get_size(mem_list *list, yaddr addr) {
 			size = it->size;
 			break;
 		}
+		it = it->next;
 	}
 	return size;
 }
 
 /* Allocate memory.
  */
-yaddr get_mem(int n) {
+yaddr real_get_mem(int n, int line, char *file) {
 	yaddr out;
 	if((out = (yaddr)malloc(n)) == NULL) {
 		show_error("malloc() failed");
 		bail(YTE_NO_MEM);
 	}
-	glist = add_area(glist, out, n);
+	glist = add_area(glist, out, n, line, file);
 	return out;
 }
 
@@ -114,7 +117,8 @@ void clear_all() {
 #endif
 	while(glist != NULL) {
 #ifdef YTALK_DEBUG
-		printf("%d: %d\n", (int)glist->addr, glist->size);
+		printf("%d: %d\t(%s:%d)\n", (int)glist->addr, glist->size,
+glist->file, glist->line);
 #endif
 		free_mem(glist->addr);
 	}

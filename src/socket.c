@@ -19,6 +19,7 @@
 #include "header.h"
 #include "menu.h"
 #include "socket.h"
+#include "mem.h"
 
 #ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>

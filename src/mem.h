@@ -1,12 +1,15 @@
 typedef struct t_mem_list {
 	yaddr addr;
 	int size;
+	char *file;
+	int line;
 	struct t_mem_list *next;
 } mem_list;
 
-mem_list *add_area(mem_list *, yaddr, int);
+mem_list *add_area(mem_list *, yaddr, int, int, char *);
 mem_list *del_area(mem_list *, yaddr);
-yaddr get_mem(int);
+#define get_mem(size) (real_get_mem(size, __LINE__, __FILE__))
+yaddr real_get_mem(int, int, char *);
 void free_mem(yaddr);
 yaddr realloc_mem(yaddr, int);
 void change_area(mem_list *, yaddr, yaddr, int);
