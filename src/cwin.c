@@ -441,6 +441,23 @@ close_curses(user)
 	curses_redraw();
 }
 
+#ifdef YTALK_COLOR
+void
+waddyac(WINDOW *w, yachar c)
+{
+	int x, y;
+	chtype cc = c.l;
+	getyx(w, y, x);
+	if (c.v)
+		cc = acs_map[cc];
+	if (cc == 0)
+		cc = ' ';
+	waddch(w, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
+	if (x >= COLS - 1)
+		wmove(w, y, x);
+}
+#endif
+
 void
 addch_curses(user, c)
 	yuser *user;
@@ -450,27 +467,17 @@ addch_curses(user, c)
 	register ylong c;
 #endif
 {
+#ifdef YTALK_COLOR
+	waddyac(((ywin *) (user->term))->win, c);
+#else
 	register ywin *w;
 	register int x, y;
-#ifdef YTALK_COLOR
-	chtype cc = c.l;
-#endif
-
 	w = (ywin *) (user->term);
 	getyx(w->win, y, x);
-#ifdef YTALK_COLOR
-	if (c.v) {
-		cc = acs_map[cc];
-	}
-	if (cc == 0) {
-		cc = ' ';
-	}
-	waddch(w->win, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
-#else
 	waddch(w->win, c);
-#endif
 	if (x >= COLS - 1)
 		wmove(w->win, y, x);
+#endif
 }
 
 void
@@ -692,28 +699,26 @@ end_scroll_curses(user)
 }
 
 void
-__update_scroll_curses(user)
-	yuser *user;
+__update_scroll_curses(yuser *user)
 {
-	u_short r, i;
-	ylinebuf *b = user->sca;
 	ywin *w = (ywin *) (user->term);
+	long int r, i, fb = -1;
 	werase(w->swin);
-	if (b == NULL)
-		b = user->logbot;
 	for (r = 0; r <= (user->rows - 1); r++) {
-		if (b->prev != NULL && b->line != NULL) {
-			wmove(w->swin, (user->rows - 1) - r, 0);
-			for (i = 0; ((i < user->cols) && (i < b->width)); i++) {
-#ifdef YTALK_COLOR
-				waddch(w->swin, b->line[i].l);
-#else
-				waddch(w->swin, b->line[i]);
-#endif
-			}
-			b = b->prev;
+		wmove(w->swin, r, 0);
+		if (((user->scrollpos + r) < 0) ||
+			((user->scrollpos + r ) > scrollback_lines) ||
+			((user->scrollback[user->scrollpos + r] == NULL)))
+		{
+			/* Borrow lines from active screen */
+			if (fb == -1)
+				fb = r;
+			for (i = 0; i < user->cols; i++)
+				waddyac(w->swin, user->scr[r - fb][i]);
 		} else {
-			break;
+			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i].l != '\0'); i++)
+				if ((user->scrollpos + r) >= 0)
+					waddyac(w->swin, user->scrollback[user->scrollpos + r][i]);
 		}
 	}
 	wnoutrefresh(w->swin);

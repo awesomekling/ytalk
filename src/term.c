@@ -455,31 +455,29 @@ scroll_term(user)
 {
 	register int i;
 	register yachar *c;
-	ylinebuf *b;
+	long int y;
 	int sy, sx;
 
 	if (user->sc_bot > user->sc_top) {
 		c = user->scr[user->sc_top];
 
 		if (user->sc_top == 0 && term_does_scrollback()) {
-			/* add topmost line to user's backlog */
-			if (user->backlog != NULL) {
-				for (b = user->backlog; b->next != NULL; b = b->next);
+			if (user->scrollback[scrollback_lines - 1] == NULL) {
+				for (y = 0; ((y < scrollback_lines) && (user->scrollback[y] != NULL)) ; y++);
+				if (y < (scrollback_lines - 1))
+					user->scrollback[y + 1] = NULL;
 			} else {
-				user->backlog = get_mem(sizeof(ylinebuf));
-				b = user->backlog;
-				b->line = NULL;
-				b->prev = NULL;
+				free_mem(user->scrollback[0]);
+				for (y = 0; y < scrollback_lines - 1; y++) {
+					user->scrollback[y] = user->scrollback[y + 1];
+				}
+				y = scrollback_lines - 1;
 			}
-			b->next = get_mem(sizeof(ylinebuf));
-			b->next->prev = b;
-			b->next->next = NULL;
-
-			b = b->next;
-			b->line = get_mem(user->cols * sizeof(yachar));
-			b->width = user->cols;
-			memcpy(b->line, user->scr[0], (user->cols * sizeof(yachar)));
-			user->logbot = b;
+			user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
+			memcpy(user->scrollback[y], user->scr[0], (user->cols * sizeof(yachar)));
+			user->scrollback[y][user->cols].l = '\0';
+			if (!user->scroll)
+				user->scrollpos = y;
 		}
 		for (i = user->sc_top; i < user->sc_bot; i++)
 			user->scr[i] = user->scr[i + 1];

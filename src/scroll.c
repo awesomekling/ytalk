@@ -1,60 +1,71 @@
 /* scroll.c - scrollback functions */
 #include "header.h"
+#include "mem.h"
 
 yuser *scuser;
 
-void
-scroll_up(user)
-	yuser *user;
-{
-	u_short i;
+long int scrollback_lines = 100;
 
-	if (user->logbot == NULL)
+void
+init_scroll(yuser *user)
+{
+	user->scrollback = (yachar **) get_mem(scrollback_lines * sizeof(yachar *));
+	memset(user->scrollback, 0, scrollback_lines * sizeof(yachar *));
+	user->scrollback[0] = NULL;
+	user->scrollpos = 0;
+}
+
+void
+free_scroll(yuser *user)
+{
+	long int i;
+	if (user->scrollback != NULL) {
+		for (i = 0; (i < scrollback_lines) && (user->scrollback[i]); i++)
+			free_mem(user->scrollback[i]);
+		free_mem(user->scrollback);
+	}
+}
+
+void
+scroll_up(yuser *user)
+{
+	if (user->scrollback[0] == NULL)
 		return;
 
-	if (user->scroll == 0) {
+	if (user->scroll == 0)
 		start_scroll_term(user);
-	} else {
-		if (user->sca == NULL)
-			user->sca = user->logbot;
-		for (i = 0; i < user->rows; i++)
-			if (user->sca->prev != NULL)
-				user->sca = user->sca->prev;
-			else
-				break;
-	}
 
-	user->scroll = 1;
-
+	if (user->scrollpos >= 0) {
+		if (user->scrollpos < (user->rows / 2))
+			user->scrollpos = 0;
+		else
+			user->scrollpos -= (user->rows / 2);
+		user->scroll = 1;
+	} else
+		user->scroll = 0;
 	update_scroll_term(user);
 }
 
 void
-scroll_down(user)
-	yuser *user;
+scroll_down(yuser *user)
 {
-	u_short i;
-
-	if (user->logbot == NULL)
+	if (user->scrollback[0] == NULL)
 		return;
 
-	if (user->sca == NULL) {
-		if (user->scroll) {
+	if ((user->scrollpos > (scrollback_lines - (int) user->rows - 1)) ||
+		(user->scrollback[user->scrollpos] == NULL ))
+	{
+		if (!(user->scrollback[user->scrollpos] == NULL))
+			user->scrollpos = scrollback_lines - 1;
+		user->scroll = 0;
+		end_scroll_term(user);
+	} else {
+		user->scrollpos += (user->rows / 2);
+		if (user->scrollback[user->scrollpos] == NULL) {
 			user->scroll = 0;
 			end_scroll_term(user);
-			return;
-		}
-		user->sca = user->logbot;
+		} else
+			user->scroll = 1;
 	}
-	for (i = 0; i < user->rows; i++)
-		if (user->sca->next != NULL)
-			user->sca = user->sca->next;
-		else
-			break;
-
-	if (user->sca == user->logbot) {
-		update_scroll_term(user);
-		user->sca = NULL;
-	} else
-		update_scroll_term(user);
+	update_scroll_term(user);
 }

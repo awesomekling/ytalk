@@ -14,7 +14,6 @@
  *
  */
 
-
 #include "config.h"
 
 #ifdef HAVE_NCURSES_H
@@ -131,13 +130,6 @@ typedef struct {
 	char pad[44];		/* zeroed out */
 } y_parm;
 
-typedef struct _ylinebuf {
-	struct _ylinebuf *next;
-	struct _ylinebuf *prev;
-	yachar *line;
-	u_short width;
-} ylinebuf;
-
 #define MAXARG	8		/* max ESC sequence arg count */
 
 typedef struct _yuser {
@@ -151,10 +143,9 @@ typedef struct _yuser {
 	u_short t_rows, t_cols;	/* his rows and cols on window over here */
 	u_short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
-	ylinebuf *sca;		/* scroll amount (position in log) */
 	int scroll;		/* set if currently being scrolled */
-	ylinebuf *backlog;	/* user screen backlog */
-	ylinebuf *logbot;	/* bottom of backlog */
+	yachar **scrollback;	/* scrollback buffer */
+	long int scrollpos;	/* position in scrollback buffer */
 	yachar **scr;		/* screen data */
 	int *scr_tabs;		/* screen tab positions */
 	char bump;		/* set if at far right */
@@ -329,6 +320,7 @@ extern ychar *io_ptr;		/* user input pointer */
 extern int io_len;		/* user input count */
 
 extern yuser *scuser;		/* user being scrolled */
+extern long int scrollback_lines;	/* max number of scrollback lines */
 
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
@@ -458,6 +450,8 @@ extern void winch_exec();	/* exec.c */
 
 extern void vt100_process( /* yuser, char */ );	/* vt100.c */
 
+extern void init_scroll(yuser *);
+extern void free_scroll(yuser *);
 extern void scroll_up( /* yuser */ );	/* scroll.c */
 extern void scroll_down( /* yuser */ );	/* scroll.c */
 

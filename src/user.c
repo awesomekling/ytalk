@@ -193,6 +193,8 @@ new_user(name, hostname, tty)
 		out->unext = user_list->unext;
 		user_list->unext = out;
 	}
+
+	init_scroll(out);
 	return out;
 }
 
@@ -260,6 +262,7 @@ free_user(user)
 		fd_to_user[user->fd] = NULL;
 		close(user->fd);
 	}
+	free_scroll(user);
 	free_mem(user);
 	if (connect_list == NULL && wait_list != NULL)
 		msg_term("Waiting for connection...");
@@ -376,19 +379,10 @@ free_users()
 {
 	yuser *u, *un;
 	unsigned int i;
-	ylinebuf *b, *bn;
 
 	for (u = user_list; u != NULL;) {
 		un = u->unext;
-		if (u->backlog != NULL) {
-			for (b = u->backlog; b != NULL;) {
-				bn = b->next;
-				if (b->line != NULL)
-					free_mem(b->line);
-				free_mem(b);
-				b = bn;
-			}
-		}
+		free_scroll(u);
 		free_mem(u->user_name);
 		free_mem(u->host_name);
 		free_mem(u->host_fqdn);
