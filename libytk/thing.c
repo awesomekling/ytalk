@@ -41,12 +41,3 @@ ytk_delete_thing(ytk_thing *t)
 		free_mem(t);
 	}
 }
-
-int
-ytk_visible(ytk_thing *t)
-{
-	if (t && t->win)
-		return TRUE;
-	else
-		return FALSE;
-}
