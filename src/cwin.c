@@ -190,7 +190,8 @@ curses_redraw(void)
 	clear();
 	wnoutrefresh(stdscr);
 
-	resize_ymenu();
+	if (can_ymenu())
+		resize_ymenu();
 	if (in_ymenu())
 		__refresh_ymenu();
 
