@@ -130,6 +130,13 @@ new_draw_title(w)
 		}
 	}
 	attroff(COLOR_PAIR(newui_colors) | newui_attr);
+
+	/* Redundant refresh() to work around a bug (?) in newer ncurses
+	 * versions. Without it, the top line in each user window will lose
+	 * its attributes on redraw.
+	 */
+	refresh();
+
 	free_mem(ta);
 }
 #endif
