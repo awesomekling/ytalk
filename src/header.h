@@ -198,13 +198,13 @@ typedef struct _yuser {
 #define FL_IMPORT	0x00000008L	/* auto-import enabled */
 #define FL_INVITE	0x00000010L	/* auto-invite enabled */
 #define FL_RING		0x00000020L	/* rering at all */
-#define FL_CAPS		0x00000100L	/* want caps as answers */
-#define FL_NOAUTO       0x00000200L	/* no auto-invite port */
-#define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
-#define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
-#define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
-#define FL_NEWUI	0x00004000L	/* newui on or off */
-#define FL_PROMPTQUIT	0x00008000L	/* prompt before quitting */
+#define FL_CAPS		0x00000040L	/* want caps as answers */
+#define FL_NOAUTO       0x00000080L	/* no auto-invite port */
+#define FL_PROMPTRING	0x00000100L	/* prompt before reringing */
+#define FL_BEEP		0x00000200L	/* allow ytalk to beep? */
+#define FL_IGNBRK	0x00000400L	/* don't die when ^C is pressed */
+#define FL_NEWUI	0x00000800L	/* newui on or off */
+#define FL_PROMPTQUIT	0x00001000L	/* prompt before quitting */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */
