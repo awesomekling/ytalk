@@ -609,7 +609,7 @@ ytalk_user(int fd)
 			send_import(u, user);
 
 	/* NEWUI: make sure we display the correct remote version */
-	redraw_all_terms();
+	retitle_all_terms();
 }
 
 /*
