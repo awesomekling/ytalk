@@ -478,6 +478,11 @@ scroll_term(user)
 			user->scrollback[y][user->cols].l = '\0';
 			if (!user->scroll)
 				user->scrollpos = y;
+			else
+				if (user->scrollback[scrollback_lines - 1]) {
+					update_scroll_term(user);
+					retitle_all_terms();
+				}
 		}
 		for (i = user->sc_top; i < user->sc_bot; i++)
 			user->scr[i] = user->scr[i + 1];
