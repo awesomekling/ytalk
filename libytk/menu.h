@@ -35,5 +35,7 @@ void ytk_handle_menu_input(ytk_menu *, int);
 ylong ytk_menu_item_count(ytk_menu *);
 ylong ytk_menu_width(ytk_menu *);
 ytk_menu_item *ytk_next_menu_item(ytk_menu *, ytk_menu_item *);
+ytk_menu_item *ytk_find_menu_item_with_hotkey(ytk_menu *, char);
+void ytk_select_menu_item(ytk_menu *, ytk_menu_item *);
 
 #endif /* __YTK_MENU_H__ */
