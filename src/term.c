@@ -48,6 +48,12 @@ static void (*_flush_term) ();	/* flush pending output */
 
 static int term_type = 0;
 
+#ifdef YTALK_COLOR
+char msgstr[MAXERR];		/* temporary string for bottom messages */
+char *bottom_msg = NULL;
+ylong bottom_time = 0;
+#endif
+
 #ifdef USE_SGTTY
 static int line_discipline;
 static int local_mode;
@@ -1198,29 +1204,31 @@ set_scroll_region(user, top, bottom)
  * Send a message to the terminal.
  */
 void
-msg_term(user, str)
-	yuser *user;
+msg_term(str)
 	char *str;
 {
+#ifdef YTALK_COLOR
+	bottom_msg = str;
+	bottom_time = time(NULL);
+	mvaddstr(LINES - 1, 0, str);
+	clrtoeol();
+	move(1, COLS - 1);
+	refresh();
+	return;
+#else
 	int y;
 
-	if ((y = user->y + 1) >= user->rows)
+	if ((y = me->y + 1) >= me->rows)
 		y = 0;
-	_move_term(user, y, 0);
-#ifdef YTALK_COLOR
-	_addch_termc(user, '[');
+	_move_term(me, y, 0);
+	_addch_term(me, '[');
 	while (*str)
-		_addch_termc(user, *(str++));
-	_addch_termc(user, ']');
-#else
-	_addch_term(user, '[');
-	while (*str)
-		_addch_term(user, *(str++));
-	_addch_term(user, ']');
-#endif
-	_clreol_term(user);
-	_move_term(user, user->y, user->x);
-	_flush_term(user);
+		_addch_term(me, *(str++));
+	_addch_term(me, ']');
+	_clreol_term(me);
+	_move_term(me, me->y, me->x);
+	_flush_term(me);
+#endif /* YTALK_COLOR */
 }
 
 

@@ -257,7 +257,7 @@ free_user(user)
 	}
 	free_mem(user);
 	if (connect_list == NULL && wait_list != NULL)
-		msg_term(me, "Waiting for connection...");
+		msg_term("Waiting for connection...");
 	user_winch = 1;
 }
 

@@ -219,8 +219,10 @@ Options:     -i             --    no auto-invite port\n\
 		invite(*argv, 1);
 	if (sflg)
 		execute(NULL);
-	else
-		msg_term(me, "Waiting for connection...");
+	else {
+		msg_term("Waiting for connection...");
+		redraw_all_terms();
+	}
 	main_loop();
 	bail(YTE_SUCCESS_PROMPT);
 

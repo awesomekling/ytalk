@@ -24,6 +24,17 @@
 #include <sys/types.h>
 #include <sys/param.h>
 
+#ifdef TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else
+#ifdef HAVE_SYS_TIME
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
+#endif
+
 #ifdef YTALK_HPUX
 #define _XOPEN_SOURCE_EXTENDED
 #include <sys/socket.h>
@@ -321,6 +332,11 @@ extern yuser *scuser;		/* user being scrolled */
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
 extern char *gshell;		/* stores your shell */
+#ifdef YTALK_COLOR
+extern char msgstr[MAXERR];	/* temporary string for messages */
+extern char *bottom_msg;	/* current status message */
+extern ylong bottom_time;	/* timestamp of the above */
+#endif
 
 extern char YT_ACS_ON;		/* activates vt100 acs */
 extern char YT_ACS_OFF;		/* deactivates it */

@@ -618,6 +618,10 @@ __redisplay_curses()
 	register ywin *w;
 
 	clear();
+	if (bottom_msg != NULL) {
+		mvaddstr(LINES - 1, 0, bottom_msg);
+		clrtoeol();
+	}
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
 		if (w->user->scroll) {

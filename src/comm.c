@@ -618,6 +618,7 @@ connect_user(fd)
 		show_error("connect_user: open_term() failed");
 		return;
 	}
+
 	/* check for ytalk connection */
 
 	if (user->RUB == RUBDEF) {
@@ -652,6 +653,8 @@ connect_user(fd)
 		user_winch = 1;
 		add_fd(fd, read_user);
 	}
+	sprintf(msgstr, "%s connected.", user->full_name);
+	msg_term(msgstr);
 }
 
 /*
@@ -899,8 +902,8 @@ invite(name, send_announce)
 	/* Leave an invitation for him, and announce ourselves. */
 
 	if (send_announce) {
-		(void) sprintf(errstr, "Ringing %s...", user->user_name);
-		msg_term(me, errstr);
+		(void) sprintf(msgstr, "Ringing %s...", user->full_name);
+		msg_term(msgstr);
 	}
 	if (newsock(user) != 0) {
 		free_user(user);
@@ -936,6 +939,13 @@ house_clean()
 
 	t = (ylong) time(NULL);
 
+	if (bottom_msg != NULL && bottom_time != 0) {
+		if (t - bottom_time >=10) {
+			bottom_msg = NULL;
+			redraw_all_terms();
+		}
+	}
+
 	if (t - last_auto >= 30) {
 		last_auto = t;
 		if (send_auto(LEAVE_INVITE) != 0) {
@@ -959,6 +969,8 @@ house_clean()
 				if (answer == 'n')
 					continue;
 			}
+			sprintf(msgstr, "Reringing %s\n", u->full_name);
+			msg_term(msgstr);
 			if ((rc = announce(u)) != 0) {
 				(void) send_dgram(u, DELETE_INVITE);
 				if (rc > 0)
@@ -1286,7 +1298,7 @@ my_input(user, buf, len)
 						 * char */
 					if (*buf == 27)	/* ESC */
 						break;
-					if (*buf == ALTESC) { /* ALTESC -- alternate menu key */
+					else if (*buf == ALTESC) { /* ALTESC -- alternate menu key */
 						if (!in_ymenu()) {
 							show_ymenu();
 							update_ymenu();
