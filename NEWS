@@ -1,3 +1,11 @@
+from 3.1.3 to 3.1.4
+	. added "rering all" to main menu (requested by Matthew Vernon in '99)
+	. fixed detection of `socklen_t' type on OpenBSD
+	. added --with-curses=DIR option to configure script
+	. cleaned up the configure script a bit
+	. fixed a minor problem with the no-beep mode
+	. fixed a minor signed/unsigned issue
+
 from 3.1.2 to 3.1.3
 	. maintainer change to Andreas Kling <keso@impul.se>
 	. added support for job control on BSD systems
