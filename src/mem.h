@@ -19,8 +19,8 @@ void change_area(mem_list *, yaddr, yaddr, int);
 mem_list *find_area(mem_list *, yaddr);
 int get_size(mem_list *, yaddr);
 void clear_all();
-mem_list *add_area(mem_list *, yaddr, int, int, char*);
-mem_list *del_area(mem_list*, mem_list*);
+mem_list *add_area(mem_list *, yaddr, int, int, char *);
+mem_list *del_area(mem_list *, mem_list *);
 #else
 yaddr get_mem(int);
 void free_mem(yaddr);
