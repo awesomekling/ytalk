@@ -84,7 +84,6 @@ make_win(w, height, width, row, col)
 {
     if((w->win = newwin(height, width, row, col)) == NULL)
     {
-	register ywin *w;
 	w = (ywin *)(me->term);
 	if(w->win != NULL)
 	    show_error("make_win: newwin() failed");
