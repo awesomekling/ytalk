@@ -15,4 +15,7 @@ make clean
 echo ">>> make"
 make
 echo "--- make completed with return code $?"
+echo ">>> ytalk -v"
+src/ytalk -v
+echo "--- ytalk -v finished with return code $?"
 echo "+++ Autobuild completed"
