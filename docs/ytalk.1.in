@@ -68,7 +68,6 @@ The
 option specifies the name or address of the local machine; this
 is useful on multi-homed machines, or virtual hosts, to specify which
 network interface to use for communication.
-question.
 .PP
 For each user on the command line, YTalk will attempt to connect to the talk
 daemon on the specified user's host and determine if that user has left an
