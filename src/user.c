@@ -356,8 +356,8 @@ user_title(char *buf, int size, yuser *user)
 				}
 				break;
 			case 'V':
-				if ((int) (b - buf) < (size - 5))
-					b += sprintf(b, "%d.%d.%d", VMAJOR, VMINOR, VPATCH);
+				if ((int) (b - buf) < (int) (size - strlen(PACKAGE_VERSION)))
+					b += sprintf(b, "%s", PACKAGE_VERSION);
 				break;
 			case 'S':
 				if ((int) (b - buf) < (size - 4)) {

@@ -181,7 +181,7 @@ then type 'make clean' and 'make'.\n");
 
 	if (vflg) {
 		/* print version and exit */
-		fprintf(stderr, "YTalk %d.%d.%d\n", VMAJOR, VMINOR, VPATCH);
+		fprintf(stderr, "YTalk %s\n", PACKAGE_VERSION);
 		exit(YTE_SUCCESS);
 	}
 	/* check for users */
