@@ -193,7 +193,6 @@ typedef struct _yuser {
 	/* anything below this is available for the terminal interface */
 
 	yterm term;		/* terminal cookie */
-	int ty, tx;		/* terminal's idea of Y,X (optional) */
 } yuser;
 
 #define FL_RAW		0x00000001L	/* raw input enabled */

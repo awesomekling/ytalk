@@ -12,7 +12,8 @@ void init_ymenu(void);
 
 void redo_ymenu_userlist(void);
 
-int show_error_ymenu(char *, char *);
+int show_error_ymenu(char *, char *, char *);
+void show_message_ymenu(char *, char *);
 
 void show_colormenu(void);
 

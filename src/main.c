@@ -44,7 +44,7 @@ bail(int n)
 {
 	kill_auto();
 	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
-		if (show_error_ymenu(_("Press any key to quit."), NULL) == 0) {
+		if (show_error_ymenu(_("Press any key to quit."), NULL, NULL) == 0) {
 			update_ymenu();
 			bail_loop();
 		}
@@ -85,7 +85,7 @@ show_error(char *str)
 		putc(7, stderr);
 	if (in_error == 0 && what_term() != 0 && can_ymenu()) {
 		in_error = 1;
-		if (show_error_ymenu(str, syserr) < 0) {
+		if (show_error_ymenu(str, syserr, _("Error")) < 0) {
 			show_error("show_error: show_error_ymenu() failed");
 			show_error(str);
 		} else

@@ -600,6 +600,8 @@ ytalk_user(int fd)
 		if (u != user)
 			send_import(u, user);
 
+	gtalk_send_version(user);
+
 	/* make sure we display the correct remote version */
 	retitle_all_terms();
 }
@@ -659,6 +661,8 @@ connect_user(int fd)
 		user->next = connect_list;
 		connect_list = user;
 
+		gtalk_send_version(user);
+
 		spew_term(me, fd, me->t_rows, me->t_cols);
 		user_winch = 1;
 		add_fd(fd, read_user);
@@ -669,8 +673,6 @@ connect_user(int fd)
 	sprintf(msgstr, _("%s connected."), user->full_name);
 #endif
 	msg_term(msgstr);
-
-	gtalk_send_version(user);
 }
 
 /*
