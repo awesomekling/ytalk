@@ -93,14 +93,6 @@ ytk_msgbox_width(ytk_msgbox *m)
 	return s;
 }
 
-ytk_msgbox_item *
-ytk_next_msgbox_item(ytk_msgbox *m, ytk_msgbox_item *i)
-{
-	if (i == NULL)
-		return m->first;
-	return i->next;
-}
-
 void
 ytk_handle_msgbox_input(ytk_msgbox *m, int ch)
 {
