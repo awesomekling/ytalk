@@ -56,22 +56,6 @@ ytk_is_empty_stack(ytk_stack *st)
 }
 
 int
-ytk_replace_in_stack(ytk_stack *st, ytk_thing *old, ytk_thing *new)
-{
-	ytk_stack_item *si;
-	si = st->top;
-	if (si == NULL)
-		return FALSE;
-	while (si->prev != NULL) {
-		if (si->thing == old) {
-			si->thing = new;
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-
-int
 ytk_on_stack(ytk_stack *st, ytk_thing *t)
 {
 	ytk_stack_item *si;
