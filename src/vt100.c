@@ -1,11 +1,7 @@
 /* vt100.c - terminal emulation */
 #include "header.h"
+#include "cwin.h"
 
-#ifdef HAVE_NCURSES_H
-#  include <ncurses.h>
-#else
-#  include <curses.h>
-#endif
 static unsigned long int attr_map[10] = {
 	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
 };

@@ -22,12 +22,6 @@
 /* Some systems, notably Solaris, don't have sys/signal.h */
 #include <signal.h>
 
-#ifdef HAVE_NCURSES_H
-#include <ncurses.h>
-#else
-#include <curses.h>
-#endif
-
 #include "cwin.h"
 
 typedef struct _ywin {
@@ -143,17 +137,6 @@ draw_title(ywin *w)
 	refresh();
 
 	free_mem(ta);
-}
-
-/*
- * Return number of lines per window, given "wins" windows.
- */
-static int
-win_size(int wins)
-{
-	if (wins == 0)
-		return 0;
-	return (LINES - 1) / wins;
 }
 
 /*
@@ -628,14 +611,6 @@ redisplay_curses(void)
 		__refresh_ymenu();
 	}
 	doupdate();
-}
-/*
- * Set raw mode.
- */
-void
-set_raw_curses(void)
-{
-	raw();
 }
 
 /*

@@ -20,6 +20,7 @@
 #include "socket.h"
 #include "ymenu.h"
 #include "mem.h"
+#include "cwin.h"
 
 #ifdef HAVE_IOVEC_H
 #include <iovec.h>
@@ -29,18 +30,8 @@
 #include <sys/uio.h>
 #endif
 
-#ifdef YTALK_COLOR
-#  ifdef HAVE_NCURSES_H
-#    include <ncurses.h>
-#  else
-#    include <curses.h>
-#  endif
-#endif
-
 /* this isn't the most elegant solution... */
 #define DRAINFUNC(f)	((void (*) (yuser *, void *))f)
-
-#include "cwin.h"
 
 #define IN_ADDR(s)	((s).sin_addr.s_addr)
 

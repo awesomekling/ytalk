@@ -14,6 +14,14 @@
  *
  */
 
+#ifdef HAVE_NCURSES_H
+#  include <ncurses.h>
+#else
+#  include <curses.h>
+#endif
+
+#define set_raw_curses()	raw()
+#define win_size(n)		((n) == 0 ? 0 : (LINES - 1) / (n))
 
 extern void init_curses(void);
 extern void end_curses(void);
@@ -33,7 +41,6 @@ extern void flush_curses(yuser *);
 extern void redisplay_curses(void);
 extern void refresh_curses(void);
 extern void retitle_all_curses(void);
-extern void set_raw_curses(void);
 extern void set_cooked_curses(void);
 extern void start_scroll_curses(yuser *);
 extern void end_scroll_curses(yuser *);

@@ -18,30 +18,23 @@
 #include "header.h"
 #include "mem.h"
 #include "ymenu.h"
+#include "cwin.h"
 
 #ifdef HAVE_SYS_IOCTL_H
-#include <sys/ioctl.h>
+#  include <sys/ioctl.h>
 #endif
 
 #ifdef HAVE_TERMIOS_H
-#include <termios.h>
+#  include <termios.h>
 #else
-#ifdef HAVE_SGTTY
-#include <sgtty.h>
-#ifdef hpux
-#include <sys/bsdtty.h>
+#  ifdef HAVE_SGTTY
+#    include <sgtty.h>
+#    ifdef hpux
+#      include <sys/bsdtty.h>
+#    endif
+#    define USE_SGTTY
+#  endif
 #endif
-#define USE_SGTTY
-#endif
-#endif
-
-#ifdef HAVE_NCURSES_H
-#include <ncurses.h>
-#else
-#include <curses.h>
-#endif
-
-#include "cwin.h"
 
 static int (*_open_term) (yuser *);		/* open a new terminal */
 static void (*_close_term) (yuser *);		/* close a terminal */

@@ -17,14 +17,9 @@
 
 #include "header.h"
 #include "mem.h"
-#include <pwd.h>
-#ifdef HAVE_NCURSES_H
-#include <ncurses.h>
-#else
-#include <curses.h>
-#endif
-
 #include "cwin.h"
+
+#include <pwd.h>
 
 #define YTRC_ERROR(a)	fprintf(stderr, "(%s:%d) %s\n", fname, line, a)
 
