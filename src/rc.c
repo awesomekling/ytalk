@@ -49,8 +49,8 @@ typedef struct {
 options opts[] = {
 	{"scrolling",		FL_SCROLL	},
 	{"wordwrap",		FL_WRAP		},
-	{"autoimport",		FL_IMPORT	},
-	{"autoinvite",		FL_INVITE	},
+	{"auto_import",		FL_IMPORT	},
+	{"auto_invite",		FL_INVITE	},
 	{"rering",		FL_RING		},
 	{"prompt_rering",	FL_PROMPTRING	},
 	{"beeps",		FL_BEEP		},
@@ -58,6 +58,7 @@ options opts[] = {
 	{"newui",		FL_NEWUI	},
 	{"require_caps",	FL_CAPS		},
 	{"no_invite", 		FL_NOAUTO	},
+	{"prompt_quit",		FL_PROMPTQUIT	},
 	{(char *)NULL,		0		}
 };
 
