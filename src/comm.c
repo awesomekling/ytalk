@@ -1246,10 +1246,8 @@ process_esc:
 					newline_term(user);
 				break;
 			case 13:	/* Carriage Return */
-				if (user->flags & FL_RAW)
+				if ((user->flags & FL_RAW) || (user->crlf))
 					move_term(user, user->y, 0);
-				else if (user->crlf)
-					cr_term(user);
 				else
 					newline_term(user);
 				break;

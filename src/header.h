@@ -316,7 +316,6 @@ extern void word_term(yuser *);
 extern void kill_term(yuser *);
 extern void tab_term(yuser *);
 extern void newline_term(yuser *);
-#define cr_term(u)		(move_term((u), (u)->y, 0))
 extern void lf_term(yuser *);
 extern void add_line_term(yuser *, int);
 extern void del_line_term(yuser *, int);
