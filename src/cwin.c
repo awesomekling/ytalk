@@ -403,7 +403,7 @@ scroll_curses(user)
 void
 keypad_curses(user, bf)
   yuser *user;
-  int *bf;
+  int bf;
 {
     ywin *w;
     w = (ywin *)(user->term);
