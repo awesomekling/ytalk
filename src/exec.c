@@ -326,7 +326,11 @@ execute(char *command)
 #  ifndef NeXT
 		putenv("TERM=vt100");
 #  endif
+#  ifdef HAVE_SNPRINTF
+		snprintf(yvenv, sizeof(yvenv), "YTALK_VERSION=%s", PACKAGE_VERSION);
+#  else
 		sprintf(yvenv, "YTALK_VERSION=%s", PACKAGE_VERSION);
+#  endif
 		putenv(yvenv);
 #endif
 
