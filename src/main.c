@@ -139,7 +139,7 @@ main(argc, argv)
   int argc;
   char **argv;
 {
-    int xflg = 0, sflg = 0, yflg = 0, iflg = 0;
+    int xflg = 0, sflg = 0, yflg = 0, iflg = 0, vflg = 0;
     char *prog;
 
     /* check for a 64-bit mis-compile */
@@ -174,6 +174,11 @@ then type 'make clean' and 'make'.\n");
 	    iflg++;
 	    argv++, argc--;
 	}
+	else if (strcmp(*argv, "-v") == 0)
+	{
+	    vflg++;
+	    argv++, argc--;
+	}
 	else if (strcmp(*argv, "-h") == 0)
         {
             argv++;
@@ -187,6 +192,13 @@ then type 'make clean' and 'make'.\n");
 	}
 	else
 	    argc = 0;	/* force a Usage error */
+    }
+
+    if(vflg)
+    {
+	/* print version and exit */
+	fprintf(stderr, "YTalk %d.%d.%d\n", VMAJOR, VMINOR, VPATCH);
+	(void)exit(YTE_INIT);
     }
 
     /* check for users */
