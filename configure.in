@@ -9,7 +9,10 @@ dnl Do some system detection. Don't expand this without a good reason.
 host=`uname -s`
 case "$host" in
 *SunOS*)
-  SYSTEM_DEFS=-DYTALK_SUNOS
+  SYSTEM_DEFS="-DYTALK_SUNOS"
+  ;;
+*HP-UX*)
+  SYSTEM_DEFS="-DYTALK_HPUX"
   ;;
 esac
 AC_SUBST(SYSTEM_DEFS)
