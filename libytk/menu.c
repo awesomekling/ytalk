@@ -187,7 +187,7 @@ ytk_menu_width(ytk_menu *m)
 }
 
 void
-ytk_handle_menu_input(ytk_menu *m, int ch)
+ytk_handle_menu_input(ytk_menu *m, char ch)
 {
 	ytk_menu_item *it;
 	switch (ch) {

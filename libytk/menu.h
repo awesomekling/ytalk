@@ -32,7 +32,7 @@ ytk_thing *ytk_new_menu(char *);
 ytk_menu_item *ytk_add_menu_item(ytk_menu *, char *, char, void (*) (ytk_menu_item *));
 ytk_menu_item *ytk_add_menu_toggle_item(ytk_menu *, char *, char, void (*) (ytk_menu_item *), int);
 void ytk_destroy_menu(ytk_menu *);
-void ytk_handle_menu_input(ytk_menu *, int);
+void ytk_handle_menu_input(ytk_menu *, char);
 int ytk_menu_item_count(ytk_menu *);
 int ytk_menu_width(ytk_menu *);
 ytk_menu_item *ytk_find_menu_item_with_hotkey(ytk_menu *, char);

@@ -100,7 +100,7 @@ ytk_purge_stack(ytk_stack *st)
 }
 
 int
-ytk_handle_stack_input(ytk_stack *st, int ch)
+ytk_handle_stack_input(ytk_stack *st, char ch)
 {
 	if (st->top == NULL)
 		return FALSE;
