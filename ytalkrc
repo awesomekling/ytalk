@@ -15,8 +15,8 @@ prompt_rering	= on
 
 # Off by default (tm)
 wordwrap	= off
-autoimport	= off
-autoinvite	= off
+auto_import	= off
+auto_invite	= off
 no_invite	= off
 require_caps	= off
 
