@@ -42,3 +42,7 @@ ref-add.sin
 ref-del.sin
 textdomain.c
 xopen-msg.sed
+charset.alias
+libintl.h
+ref-add.sed
+ref-del.sed
