@@ -1,5 +1,5 @@
 '''
-'''  Ytalk Version 3.1.1
+'''  Ytalk Version 3.2.0
 '''
 .de Sh
 .br
@@ -12,9 +12,9 @@
 .SH NAME
 ytalk - A multi-user chat program. 
 .SH SYNOPSIS
-ytalk [-x] [-s] [-Y] [-i] [-h hostname_or_ip] username...
+ytalk [-x] [-s] [-Y] [-i] [-v] [-h hostname_or_ip] username...
 .SH DESCRIPTION
-.I YTalk V3.1.1
+.I YTalk V3.2.0
 .PP
 YTalk is in essence a multi-user chat program.  It works almost exactly like
 the UNIX talk program and even communicates with the same talk daemon(s), but
@@ -48,6 +48,8 @@ The -s option starts your YTalk window in a shell.
 .PP
 The -i option disables the auto-invite port (meaning you won't see
 "talk to blah@blah.com", but your talk daemon will beep you instead).
+.PP
+The -v prints the version and exits.
 .PP
 The -h option specifies the name or address of the local machine; this
 is useful on multi-homed machines, or virtual hosts, to specify which
@@ -244,8 +246,10 @@ is one of
 .I prompt-rering ,
 .I caps ,
 .I noinvite ,
-.I nodelay ,
 .I asides ,
+.I ignorebreak ,
+.I beeps ,
+.I vt100 ,
 or
 .I X .
 Setting these options works just like described above.  Turning
@@ -390,11 +394,21 @@ Britt Yenne
 .br
 yenne@austin.eds.com
 
-.SH CURRENT MAINTAINER
+.SH FORMER MAINTAINERS
 
 Roger Espel Llima
 .br
 <roger.espel.llima@pobox.com>
+
+Jessica Peterson
+.br
+<angel@metawire.org>
+
+.SH CURRENT MAINTAINER
+
+Andreas Kling
+.br
+<keso@impul.se>
 
 .SH CONTRIBUTORS
 Special thanks to Carl Edman for numerous code patches, beta testing,
@@ -420,9 +434,7 @@ Evan McLean, Larry Schwimmer, J. Adam Hawkes, and Mark Musone for comments
 and ideas.
 .PP
 Thanks to Steve McIntyre for patches and ideas.
-.PP
-The README file shipped with ytalk gives detailed attributions.
 
 .SH BUGS
 Please mail any bugs to the maintainer of this version, at
-<roger.espel.llima@pobox.com>
+<keso@impul.se>

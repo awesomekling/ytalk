@@ -29,8 +29,8 @@ yuser *connect_list;		/* list of connected users */
 yuser *wait_list;		/* list of connected users */
 yuser *fd_to_user[MAX_FILES];	/* convert file descriptors to users */
 yuser *key_to_user[128];	/* convert menu ident chars to users */
-ylong def_flags = 0L;	/* default FL_* flags */
-static ylong daemon_id;	/* running daemon ID counter */
+ylong def_flags = 0L;		/* default FL_* flags */
+static ylong daemon_id;		/* running daemon ID counter */
 
 /* ---- local functions ----- */
 
@@ -181,6 +181,9 @@ char *vhost;
     me->remote.vmajor = VMAJOR;
     me->remote.vminor = VMINOR;
     me->remote.pid = getpid();
+
+    /* make sure we send CR/LF output to ourselves */
+    me->crlf = 1;
 
     close_passwd();
 }
@@ -365,6 +368,7 @@ free_users()
 	    for(i = 0; i < u->rows; i++)
 		free_mem(u->scr[i]);
 	    free_mem(u->scr);
+	    free_mem(u->scr_tabs);
 	}
 	free_mem(u);
 	u = un;

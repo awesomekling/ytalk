@@ -1,9 +1,14 @@
 dnl configure.in for YTalk
 dnl Process this file with autoconf to produce a configure script.
 
+AC_PREREQ(2.5)
+
 AC_INIT(YTalk, 3.2.0)
-AC_REVISION($LastChangedRevision: 77 $)
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_SRCDIR(src/main.c)
+AM_INIT_AUTOMAKE
+
+AC_REVISION($LastChangedRevision: 78 $)
+AM_CONFIG_HEADER(config.h)
 
 dnl Do some system detection. Don't expand this without a good reason.
 host=`uname -s`
@@ -17,6 +22,9 @@ case "$host" in
 esac
 AC_SUBST(SYSTEM_DEFS)
 
+AC_DEFINE_DIR([sysconfdir], [sysconfdir], [sysconfdir])
+AC_DEFINE_UNQUOTED(SYSTEM_YTALKRC, ["${sysconfdir}/ytalkrc"], ["Location of default ytalkrc file"])
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
@@ -26,25 +34,31 @@ AC_PROG_MAKE_SET
 dnl Sanity
 AC_CHECK_SIZEOF(long)
 
-dnl Checks for libraries.
-AC_CHECK_LIB(ncurses, initscr,, no_ncurses=1)
+ytalk_cv_curses=/usr
+AC_ARG_WITH(curses, [  --with-curses=DIR       Where ncurses is installed ],
+	[if test $withval != yes; then
+		ytalk_cv_curses=$withval
+	fi
+	if test x$ytalk_cv_curses != x/usr; then
+		LDFLAGS="-L${ytalk_cv_curses}/lib $LDFLAGS"
+		CPPFLAGS="$CPPFLAGS -I${ytalk_cv_curses}/include"
+	fi])
 
-dnl Curses is tricky; some systems have ncurses, others have curses, and
-dnl yet others require -ltermcap with -lcurses.  And using AC_CHECK_LIB
-dnl twice w/ the same arguments will use the cache value even if we give
-dnl it an "extralibs" argument, so we have to be creative with the function
-dnl to look for...
-if test "x$no_ncurses" = "x1" ; then
-  AC_CHECK_LIB(curses, initscr,, [\
-    AC_CHECK_LIB(termcap, tgetstr,, AC_MSG_ERROR(Can't find termcap library))
-    AC_CHECK_LIB(curses, endwin,, [\
-      AC_MSG_ERROR(Can't find curses or ncurses library)\
-    ], -ltermcap)\
-  ])
-else
-  dnl If we do have ncurses, check for ncurses.h 
-  AC_CHECK_HEADERS(ncurses.h)
-fi
+AC_CHECK_LIB(ncursesw, initscr,
+	[LIBS="$LIBS -lncursesw"
+	if test x$ytalk_cv_curses = x/usr -a -d /usr/include/ncursesw; then
+		CPPFLAGS="$CPPFLAGS -I/usr/include/ncursesw"
+	fi
+	AC_CHECK_HEADERS(ncurses.h)],[
+	ac_widec_possible=no
+	AC_CHECK_LIB(ncurses, initscr,
+		[LIBS="$LIBS -lncurses"
+		if test x$ytalk_cv_curses = x/usr -a -d /usr/include/ncurses; then
+			CPPFLAGS="$CPPFLAGS -I/usr/include/ncurses"
+		fi
+		AC_CHECK_HEADERS(ncurses.h)],
+		[CF_CURSES_LIBS])
+	])
 
 dnl Look for termios, and if that fails, try sgtty.
 AC_CHECK_FUNC(tcgetattr, [\
@@ -91,7 +105,9 @@ AC_TYPE_SIGNAL
 AC_HEADER_TIME
 AC_TYPE_UID_T
 
-AC_CHECK_TYPE([socklen_t], [AC_DEFINE(HAVE_SOCKLEN_T, 1, [Define to 1 if you have the `socklen_t` type])], [], [#include <sys/socket.h>])
+AC_CHECK_TYPE([socklen_t], [AC_DEFINE(HAVE_SOCKLEN_T, 1, [Define to 1 if you have the `socklen_t` type])], [], [
+	#include <sys/types.h>
+	#include <sys/socket.h>])
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
@@ -103,6 +119,7 @@ AC_CHECK_FUNCS(tcsetpgrp)
 AC_CHECK_FUNC(gethostname,,AC_MSG_ERROR(Can't run without gethostname))
 AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
 
-AC_CONFIG_FILES(Makefile)
-
-AC_OUTPUT
+AC_OUTPUT(
+Makefile
+src/Makefile
+)

@@ -1,11 +1,16 @@
 from 3.1.2 to 3.1.3
+	. maintainer change to Andreas Kling <keso@impul.se>
 	. added support for job control on BSD systems
 	. fixed the shell on Tru64 UNIX
 	. added terminal tab handling
+	. added terminal keypad capabilities
+	. separated handling of CR and LF (solves a number of problems)
+	. added "ignorebreak" mode where ^C is ignored unless running a shell
+	. added "beeps" to the .ytalkrc flag collection (applies to all beeps)
 	. added internal memory management and tracking
 	. restored compatibility with old talk daemons (broken in 3.1.2)
 	. restored command line parsing (broken on many systems in 3.1.2)
-	. removed debug code that (broke terminal raw mode in 3.1.2)
+	. removed debug code that broke terminal raw mode in 3.1.2
 	. drop getlogin() for getpwuid()
 	. removed logging(?) code
 

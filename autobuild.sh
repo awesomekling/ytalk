@@ -9,7 +9,7 @@ echo "--- Running autogen.sh ---" >> out.put
 ./autogen.sh 2>>out.put >> out.put
 echo "--- autogen.sh completed with return code $? ---" >> out.put
 echo "--- Running configure ---" >> out.put
-CFLAGS="-Wall -pedantic -Wunused -Wimplicit -Wshadow -Wformat" ./configure 2>>out.put >> out.put
+CFLAGS="-W -Wall -pedantic" ./configure 2>>out.put >> out.put
 echo "--- configure completed with return code $? ---" >> out.put
 echo "--- Running make ---" >> out.put
 make 2>>out.put >> out.put

@@ -565,6 +565,13 @@ ytalk_user(fd)
 	    return;
     }
     user->remote = parm;
+
+    /* determine whether remote user likes CRLF newlines */
+    if((user->remote.vmajor < 3) || (user->remote.vmajor == 3 && user->remote.vminor < 2))
+	user->crlf = 0;
+    else
+	user->crlf = 1;
+
     user_winch = 1;
     add_fd(fd, read_user);
 
@@ -611,6 +618,9 @@ ytalk_user(fd)
     for(u = connect_list; u; u = u->next)
 	if(u != user)
 	    send_import(u, user);
+
+    /* NEWUI: make sure we display the correct remote version */
+    redraw_all_terms();
 }
 
 /* Initial Handshaking:  read the edit keys and determine whether or not
@@ -746,12 +756,16 @@ word_wrap(user)
   register yuser *user;
 {
     register int i, x, bound;
-    static ychar temp[20];
+    static yachar temp[20];
 
     x = user->x;
     if((bound = (x >> 1)) > 20)
 	bound = 20;
+#ifdef YTALK_COLOR
+    for(i = 1; i < bound && user->scr[user->y][x-i].l != ' '; i++)
+#else
     for(i = 1; i < bound && user->scr[user->y][x-i] != ' '; i++)
+#endif
 	temp[i] = user->scr[user->y][x-i];
     if(i >= bound)
 	return -1;
@@ -1013,6 +1027,36 @@ house_clean()
 }
 
 void
+rering_all()
+{
+    yuser *u, *next;
+    int rc;
+
+    if(send_auto(LEAVE_INVITE) != 0)
+    {
+	show_error("rering_all: send_auto() failed");
+	kill_auto();
+    }
+
+    for(u = wait_list; u; u = next)
+    {
+	next = u->next;
+	(void)send_dgram(u, LEAVE_INVITE);
+	u->last_invite = (ylong)time(NULL);
+	if((rc = announce(u)) != 0)
+	{
+	    (void)send_dgram(u, DELETE_INVITE);
+	    if(rc > 0)
+		(void)sprintf(errstr, "%s refusing messages", u->full_name);
+	    else
+		(void)sprintf(errstr, "%s not logged in", u->full_name);
+	    show_error(errstr);
+	    free_user(u);
+	}
+    }
+}
+
+void
 send_winch(user)
   yuser *user;
 {
@@ -1068,10 +1112,10 @@ send_end_region()
  * users if the given user is either "me" or NULL.
  */
 void
-send_users(user, buf, len)
+send_users(user, buf, len, cl_buf, cl_len)
   yuser *user;
-  ychar *buf;
-  register int len;
+  ychar *buf, *cl_buf;
+  register int len, cl_len;
 {
     register ychar *o, *b;
     register yuser *u;
@@ -1097,7 +1141,10 @@ send_users(user, buf, len)
 	if(user->fd > 0)	/* just to be sure... */
 	{
 	    if(user->remote.vmajor > 2)
-		(void)write(user->fd, o_buf, o - o_buf);
+		if(user->crlf)
+		    (void)write(user->fd, cl_buf, cl_len);
+		else
+		    (void)write(user->fd, o_buf, o - o_buf);
 	    else
 		(void)write(user->fd, buf, b - buf);
 	}
@@ -1105,9 +1152,13 @@ send_users(user, buf, len)
     else
 	for(u = connect_list; u; u = u->next)
 	    if(u->remote.vmajor > 2)
-		(void)write(u->fd, o_buf, o - o_buf);
+		if(u->crlf)
+		    (void)write(u->fd, cl_buf, cl_len);
+		else
+		    (void)write(u->fd, o_buf, o - o_buf);
 	    else
 		(void)write(u->fd, buf, b - buf);
+
 }
 
 /* Display user input.  Emulate ANSI.
@@ -1179,12 +1230,18 @@ process_esc:
 		case 9:		/* Tab */
 		    tab_term(user);
 		    break;
-		case 10:	/* Newline */
-		    newline_term(user);
+		case 10:	/* Line Feed */
+		    if(user->crlf)
+			lf_term(user);
+		    else
+			newline_term(user);
 		    break;
-		case 13:	/* Return */
+		case 13:	/* Carriage Return */
 		    if(user->flags & FL_RAW)
 			move_term(user, user->y, 0);
+		    else
+		    if(user->crlf)
+		    	cr_term(user);
 		    else
 			newline_term(user);
 		    break;
@@ -1214,8 +1271,9 @@ my_input(user, buf, len)
   register ychar *buf;
   int len;
 {
-    register ychar *c;
-    register int i;
+    register ychar *c, *n;
+    register int i, j;
+    ychar *nbuf = 0;
 
     /* If someone's waiting for input, give it to them! */
 
@@ -1225,7 +1283,10 @@ my_input(user, buf, len)
 	io_len = len;
 	return;
     }
-
+  
+    /* Substitution buffer for LF -> CRLF */
+    if(len > 0) nbuf = get_mem(len * 2 * sizeof(ychar));
+  
     /* Process input normally */
 
     while(len > 0)
@@ -1264,10 +1325,10 @@ my_input(user, buf, len)
 		{
 		    if(*buf == me->old_rub || *buf == 8 || *buf == 0x7f)
 			*buf = me->RUB;
-		    else if(*buf == '\r')
-			*buf = '\n';
 		    else if(*buf == 3)	/* Ctrl-C */
 			bail(0);
+		    else if(*buf == '\r') /* CR */
+			*buf = '\n';
 		    else if(*buf == 27)	/* Esc */
 			break;
 		    else if(*buf == 12 || *buf == 18) /* ^L or ^R */
@@ -1275,19 +1336,31 @@ my_input(user, buf, len)
 		}
 		if((i = buf - c) > 0)
 		{
-		    if(user != NULL && user != me && !(def_flags & FL_ASIDE) && def_flags & FL_BEEP)
-			(void)putc(7, stderr);
+		    if(user != NULL && user != me && !(def_flags & FL_ASIDE))
+		    {
+			if(def_flags & FL_BEEP)
+			    (void)putc(7, stderr);
+		    }
 		    else
 		    {
-			show_input(me, c, i);
-			send_users(user, c, i);
+			for(n=nbuf,j=0;j<(buf-c);j++,n++) {
+			    if(c[j] == '\n') {
+				*(n++) = '\r';
+				*n = '\n';
+			    } else {
+				*n = c[j];
+			    }
+			}
+			j = (n - nbuf);
+			show_input(me, nbuf, j);
+			send_users(user, c, i, nbuf, j);
 		    }
 		}
 		if(len > 0)	/* we broke for a special char */
 		{
 		    if(*buf == 27) /* ESC */
 			break;
-		    if(*buf == 12 || *buf == 18) /* ^L or ^R */
+		    else if(*buf == 12 || *buf == 18) /* ^L or ^R */
 		    {
 			redraw_all_terms();
 			buf++, len--;
@@ -1306,6 +1379,8 @@ my_input(user, buf, len)
 		update_menu();
 	}
     }
+
+    if(nbuf != 0) free_mem(nbuf);
 }
 
 void

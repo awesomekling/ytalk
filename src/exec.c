@@ -182,7 +182,7 @@ exec_input(fd)
 	return;
     }
     show_input(me, buf, rc);
-    send_users(me, buf, rc);
+    send_users(me, buf, rc, buf, rc);
 }
 
 static void

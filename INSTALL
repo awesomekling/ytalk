@@ -58,7 +58,7 @@ files, but it is useful to have a look at things you can change there.
 
 To compile the program, type make and cross your fingers.  YTalk is
 fairly portable, so this _should_ work out of the box.  If it doesn't,
-please mail me with all the details at <roger.espel.llima@pobox.com>.
+please mail me with all the details at <keso@impul.se>.
 
 After the compilation, a ready to use `ytalk' executable should reside
 in the distribution directory.  Other than missing its system-wide

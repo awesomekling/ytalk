@@ -24,10 +24,10 @@ typedef struct _hostinfo {
 
 typedef struct _readdr {
     struct _readdr *next;	/* next in linked list */
-    ylong from_addr;	/* does this apply to me? */
+    ylong from_addr;		/* does this apply to me? */
     ylong from_mask;
-    ylong addr;		/* this net address [group?], */
-    ylong mask;		/* with this mask, */
+    ylong addr;			/* this net address [group?], */
+    ylong mask;			/* with this mask, */
     ylong id_addr;		/* thinks I'm at this net address, */
     ylong id_mask;		/* with this mask. */
 } readdr;
@@ -99,7 +99,7 @@ typedef struct {
 	BSD42_SOCK	addr;
 } CTL_RESPONSE42;
 
-#define	TALK_VERSION	1		/* protocol version */
+#define	TALK_VERSION	1	/* protocol version */
 
 /* Dgram Types.
  *

@@ -19,6 +19,7 @@
 
 #ifdef USE_X11
 
+#include "mem.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xresource.h>
@@ -329,7 +330,7 @@ close_xwin(user)
 void
 addch_xwin(user, ch)
   yuser *user;
-  ychar ch;
+  yachar ch;
 {
     XClearArea(display, user->win,
 	XPOS(user->tx), YPOS(user->ty),
@@ -337,7 +338,11 @@ addch_xwin(user, ch)
 	False);
     XDrawString(display, user->win, textGC,
 	XPOS(user->tx), YPOS(user->ty) + font_ascent,
-	&ch, 1);
+#ifdef YTALK_COLOR
+	(char *)&ch.l, 1);
+#else
+	(char *)&ch, 1);
+#endif
     user->tx++;
     if(user->tx >= user->t_cols)
 	user->tx--;
@@ -417,7 +422,7 @@ void
 flush_xwin(user)
   yuser *user;
 {
-    /* "user" is unused -- sorry, lint  :-) */
+    (void)user;
     XFlush(display);
 }
 

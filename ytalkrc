@@ -1,4 +1,39 @@
+# YTalk runtime configuration
+# This file will be documented after the syntax is reworked.
+#
+
+# Aliases
+
+#alias user@ realuser@
+#alias @host @realhost
+#alias friend user@host
+
+# Binding to interfaces
+#localhost hostname-or-IP-address
+
+# Default options
+
 turn scrolling on
 turn rering on
 turn prompt-rering on
 
+# Off by default (tm)
+#turn word-wrap off
+#turn auto-import off
+#turn auto-invite off
+#turn noinvite off
+#turn nodelay off
+#turn caps off
+
+# X11 options
+#turn X off
+#turn asides off
+
+# New things
+
+#turn vt100 off
+#turn newui off
+#set-colors background [bold-]foreground
+#menu-color [bold-]foreground
+#turn beeps off
+#turn ignorebreak off

@@ -1,5 +1,0 @@
-The talk daemon shipping on HP-UX 11.11 and 11.23 appears to have some type
-of error in the utmp parsing code (or somewhere else).
-
-Unless your system is using another talk daemon, it is unlikely that YTalk
-will work.

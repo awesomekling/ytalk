@@ -29,6 +29,7 @@ extern void	flush_curses	( /* yuser */ );
 extern void	redisplay_curses();
 extern void	set_raw_curses();
 extern void	set_cooked_curses();
+extern void	special_menu_curses( /* yuser, int, int, int, int */ );
 
 #ifndef getyx
 # define getyx(w,y,x)	y = w->_cury, x = w->_curx

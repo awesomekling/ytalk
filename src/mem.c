@@ -16,11 +16,16 @@ static mem_list *glist = NULL;
 /* Add to linked list
  */
 mem_list *
+#ifdef YTALK_DEBUG
 add_area(list, addr, size, line, file)
+  int line;
+  char *file;
+#else
+add_area(list, addr, size)
+#endif
   mem_list *list;
   yaddr addr;
-  int size, line;
-  char *file;
+  int size;
 {
     mem_list *entry;
     if(addr == 0)
@@ -28,8 +33,10 @@ add_area(list, addr, size, line, file)
     entry = (mem_list *)malloc(sizeof(mem_list));
     entry->addr = addr;
     entry->size = size;
+#ifdef YTALK_DEBUG
     entry->line = line;
     entry->file = file;
+#endif
     entry->next = list;
     return entry;
 }
@@ -103,23 +110,38 @@ get_size(list, addr)
 /* Allocate memory.
  */
 yaddr
+#ifdef YTALK_DEBUG
 real_get_mem(n, line, file)
-  int n, line;
+  int line;
   char *file;
+#else
+get_mem(n)
+#endif
+  int n;
 {
     yaddr out;
     if((out = (yaddr)malloc((size_t)n)) == NULL) {
 	show_error("malloc() failed");
 	bail(YTE_NO_MEM);
     }
+#ifdef YTALK_DEBUG
     glist = add_area(glist, out, n, line, file);
+#else
+    glist = add_area(glist, out, n);
+#endif
     return out;
 }
 
 /* Free and clear memory
  */
 void
+#ifdef YTALK_DEBUG
+real_free_mem(addr, line, file)
+  int line;
+  char *file;
+#else
 free_mem(addr)
+#endif
   yaddr addr;
 {
     int size;
@@ -129,7 +151,8 @@ free_mem(addr)
 	glist = del_area(glist, addr);
     } else {
 #ifdef YTALK_DEBUG
-	show_error("Free failed: Not in allocation list");
+	sprintf(errstr, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned)addr, file, line);
+	show_error(errstr);
 	bad_free++;
 #endif
     }

@@ -18,7 +18,7 @@
 #include "header.h"
 #include "mem.h"
 
-#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
+#ifdef HAVE_NCURSES_H
 # include <ncurses.h>
 #else
 # include <curses.h>
@@ -39,6 +39,11 @@ typedef struct _ywin {
 } ywin;
 
 static ywin *head;		/* head of linked list */
+
+#ifdef YTALK_COLOR
+extern int newui_colors;
+extern int newui_attr;
+#endif
 
 /* ---- local functions ---- */
 
@@ -66,10 +71,8 @@ new_ywin(user, title)
   char *title;
 {
     register ywin *out;
-    register int len;
 
-    len = strlen(title);
-    out = (ywin *)get_mem(sizeof(ywin) + len + 1);
+    out = (ywin *)get_mem(sizeof(ywin) + strlen(title) + 1);
     (void)memset(out, 0, sizeof(ywin));
     out->user = user;
     out->title = ((char *)out) + sizeof(ywin);
@@ -97,8 +100,51 @@ make_win(w, height, width, row, col)
     wmove(w->win, 0, 0);
 }
 
+#ifdef YTALK_COLOR
 static void
-draw_title(w)
+new_draw_title(w)
+  ywin *w;
+{
+    int x;
+    char *t = w->title;
+    move(w->row - 1, w->col);
+    for(x = 0; x < w->width; x++) {
+	if(x >= 1 && *t) {
+	    addch(*t | COLOR_PAIR(newui_colors) | newui_attr);
+	    t++;
+	} else if(x == (w->width - 5)) {
+	    /* FIXME: This should be optional. Add a "show_version" flag to rc. */
+	    if (w->user->remote.vmajor >= 2) {
+		addch('Y' | COLOR_PAIR(newui_colors) | newui_attr);
+		if(w->user->remote.vmajor >= 0 && w->user->remote.vmajor < 10)
+		    addch((w->user->remote.vmajor + '0') | COLOR_PAIR(newui_colors) | newui_attr);
+		else
+		    addch('?' | COLOR_PAIR(newui_colors) | newui_attr);
+		addch('.' | COLOR_PAIR(newui_colors) | newui_attr);
+		if(w->user->remote.vmajor >= 3) {
+		    if(w->user->remote.vminor >= 0 && w->user->remote.vminor < 10)
+			addch((w->user->remote.vminor + '0') | COLOR_PAIR(newui_colors) | newui_attr);
+		    else
+			addch('?' | COLOR_PAIR(newui_colors) | newui_attr);
+		} else {
+		    addch('?' | COLOR_PAIR(newui_colors) | newui_attr);
+		}
+	    } else {
+		addch('U' | COLOR_PAIR(newui_colors) | newui_attr);
+		addch('N' | COLOR_PAIR(newui_colors) | newui_attr);
+		addch('I' | COLOR_PAIR(newui_colors) | newui_attr);
+		addch('X' | COLOR_PAIR(newui_colors) | newui_attr);
+	    }
+	    x += 3;
+	} else {
+	    addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
+	}
+    }
+}
+#endif
+
+static void
+old_draw_title(w)
   ywin *w;
 {
     register int pad, x;
@@ -108,10 +154,16 @@ draw_title(w)
     move(w->row - 1, w->col);
     x = 0;
     for(; x < pad - 2; x++)
-	addch('-');
+	if(def_flags & FL_VT100)
+	    addch(ACS_HLINE);
+	else
+	    addch('-');
     if(pad >= 2)
     {
-	addch('=');
+	if(def_flags & FL_VT100)
+	    addch(ACS_RTEE);
+	else
+	    addch('=');
 	addch(' ');
 	x += 2;
     }
@@ -120,11 +172,29 @@ draw_title(w)
     if(pad >= 2)
     {
 	addch(' ');
-	addch('=');
+	if(def_flags & FL_VT100)
+	    addch(ACS_LTEE);
+	else
+	    addch('=');
 	x += 2;
     }
     for(; x < w->width; x++)
-	addch('-');
+	if(def_flags & FL_VT100)
+	    addch(ACS_HLINE);
+	else
+	    addch('-');
+}
+
+static void
+draw_title(w)
+  ywin *w;
+{
+#ifdef YTALK_COLOR
+    if(def_flags & FL_NEWUI)
+	new_draw_title(w);
+    else
+#endif
+	old_draw_title(w);
 }
 
 /* Return number of lines per window, given "wins" windows.
@@ -193,20 +263,50 @@ curses_redraw()
 static void
 curses_start()
 {
+#ifdef YTALK_COLOR
+    int i, fg, bg;
+#endif
     LINES = COLS = 0;	/* so resizes will work */
     initscr();
     noraw();
     crmode();
     noecho();
+#ifdef YTALK_COLOR
+
+# ifndef COLOR_DEFAULT
+#  define COLOR_DEFAULT (-1)
+# endif
+
+    if(has_colors())
+    {
+	start_color();
+	use_default_colors();
+	for(i=0;i<64;i++)
+	{
+	    fg = i & 7;
+	    bg = i >> 3;
+	    if(bg == COLOR_BLACK)
+		bg = COLOR_DEFAULT;
+	    init_pair(i+1, fg, bg);
+	}
+    } else {
+	/* We are on a monochrome terminal. Use reverse video for NEWUI. */
+	if(def_flags & FL_NEWUI) {
+	    newui_attr = A_REVERSE;
+	}
+    }
+#endif
     clear();
 }
 
 /* Restart curses... window size has changed.
  */
 static RETSIGTYPE
-curses_restart()
+curses_restart(sig)
+  int sig;
 {
     register ywin *w;
+    (void)sig;
 
     /* kill old windows */
 
@@ -291,6 +391,11 @@ open_curses(user, title)
 		break;
 	    }
     user->term = w;
+#ifdef YTALK_COLOR
+    user->c_at = 0;
+    user->c_bg = 0;
+    user->c_fg = 7;
+#endif
 
     /* redraw */
 
@@ -331,17 +436,39 @@ close_curses(user)
     curses_redraw();
 }
 
+static void
+raw_addch_curses(user, c)
+  yuser *user;
+  register ylong c;
+{
+    register ywin *w;
+    register int x, y;
+    w = (ywin *)(user->term);
+    getyx(w->win, y, x);
+    waddch(w->win, c);
+    if(x >= COLS-1)
+	wmove(w->win, y, x);
+}
+
 void
 addch_curses(user, c)
   yuser *user;
-  register ychar c;
+#ifdef YTALK_COLOR
+  register yachar c;
+#else
+  register ylong c;
+#endif
 {
     register ywin *w;
     register int x, y;
 
     w = (ywin *)(user->term);
     getyx(w->win, y, x);
+#ifdef YTALK_COLOR
+    waddch(w->win, c.l | COLOR_PAIR(1+(c.b | c.c<<3)) | c.a);
+#else
     waddch(w->win, c);
+#endif
     if(x >= COLS-1)
 	wmove(w->win, y, x);
 }
@@ -455,4 +582,54 @@ set_cooked_curses()
     noraw();
     crmode();
     noecho();
+}
+
+/* Curses handler for VT100 menu output.
+ * This is pretty ugly. Don't tell! :-)
+ */
+void
+special_menu_curses(user, y, x, section, len)
+  yuser *user;
+  int y, x;
+  int section;
+  int len;
+{
+    register int i;
+
+    if(y < 0 || y >= user->t_rows)
+	return;
+    if(x < 0 || x >= user->t_cols)
+	return;
+    move_curses(user, y, x);
+    switch(section) {
+	case 0:
+	    raw_addch_curses(user, ACS_ULCORNER);
+	    break;
+	case 1:
+	case 2:
+	    raw_addch_curses(user, ACS_VLINE);
+	    return;
+	    break;
+	case 3:
+	case 4:
+	    raw_addch_curses(user, ACS_DARROW);
+	    return;
+	    break;
+	case 5:
+	    raw_addch_curses(user, ACS_LLCORNER);
+	    break;
+    }
+
+    for(i=0;i<(len-2);i++) {
+	raw_addch_curses(user, ACS_HLINE);
+    }
+
+    switch(section) {
+	case 0:
+	    raw_addch_curses(user, ACS_URCORNER);
+	    break;
+	case 5:
+	    raw_addch_curses(user, ACS_LRCORNER);
+	    break;
+    }
 }

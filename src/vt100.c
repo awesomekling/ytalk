@@ -1,12 +1,19 @@
 /* vt100.c - terminal emulation */
 #include "header.h"
 
+#ifdef YTALK_COLOR
+# include <ncurses.h>
+int attr_map[10] = {
+    0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
+};
+#endif
+
 void
 vt100_process(user, data)
   yuser *user;
   char data;
 {
-    int i;
+    unsigned int i;
 
     if(data >= '0' && data <= '9' && user->got_esc > 1)
     {
@@ -28,13 +35,43 @@ vt100_process(user, data)
 	    else
 		user->got_esc = 0;
 	    break;
+#ifdef YTALK_COLOR
+	case 'm':
+	    for(i=0; i<=user->ac; i++)
+	    {
+		if(user->av[i] == 0)
+		{
+		    user->c_at = 0;
+		    user->c_bg = 0;
+		    user->c_fg = 7;
+		}
+		else if(user->av[i] <= 9)
+		    user->c_at |= attr_map[user->av[i]];
+		else if(user->av[i] >= 21 && user->av[i] <= 29)
+		    user->c_at &= ~attr_map[user->av[i] - 20];
+		else if(user->av[i] >= 30 && user->av[i] <= 37)
+		    user->c_fg = user->av[i] - 30;
+		else if(user->av[i] >= 40 && user->av[i] <= 47)
+		    user->c_bg = user->av[i] - 40;
+	    }
+	    user->got_esc = 0;
+	    break;
+#endif
 	case '7':	/* save cursor and attributes */
+	    user->sc_at = user->c_at;
+	    user->sc_bg = user->c_bg;
+	    user->sc_fg = user->c_fg;
+	    /* fall through */
 	case 's':	/* save cursor */
 	    user->sy = user->y;
 	    user->sx = user->x;
 	    user->got_esc = 0;
 	    break;
 	case '8':	/* restore cursor and attributes */
+	    user->c_at = user->sc_at;
+	    user->c_fg = user->sc_fg;
+	    user->c_bg = user->sc_bg;
+	    /* fall through */
 	case 'u':	/* restore cursor */
 	    move_term(user, user->sy, user->sx);
 	    user->got_esc = 0;
@@ -43,16 +80,24 @@ vt100_process(user, data)
 	    switch(user->av[0]) {
 		case 1:			/* keypad "application" mode */
 		    keypad_term(user, 1);
-	    break;
+		    break;
 	    }
 	    user->got_esc = 0;
 	    break;
 	case 'l':	/* clear modes */
 	    switch(user->av[0]) {
 		case 1:			/* keypad "normal" mode */
-	    keypad_term(user, 0);
+		    keypad_term(user, 0);
 		    break;
 	    }
+	    user->got_esc = 0;
+	    break;
+	case '=':
+	    keypad_term(user, 1);
+	    user->got_esc = 0;
+	    break;
+	case '>':
+	    keypad_term(user, 0);
 	    user->got_esc = 0;
 	    break;
 	case '@':
@@ -62,6 +107,12 @@ vt100_process(user, data)
 		    add_char_term(user, 1);
 		else
 		    add_char_term(user, user->av[0]);
+	    }
+	    user->got_esc = 0;
+	    break;
+	case '0':
+	    if(user->lparen) {
+		user->lparen = 0;
 	    }
 	    user->got_esc = 0;
 	    break;
@@ -75,10 +126,14 @@ vt100_process(user, data)
 	    user->got_esc = 0;
 	    break;
 	case 'B':	/* move down */
-	    if(user->av[0] == 0)
-		move_term(user, user->y + 1, user->x);
-	    else
-		move_term(user, user->y + user->av[0], user->x);
+	    if(user->lparen) {
+		user->lparen = 0;
+	    } else {
+		if(user->av[0] == 0)
+		    move_term(user, user->y + 1, user->x);
+		else
+		    move_term(user, user->y + user->av[0], user->x);
+	    }
 	    user->got_esc = 0;
 	    break;
 	case 'C':	/* move right */
@@ -118,6 +173,7 @@ vt100_process(user, data)
 		    user->scr_tabs[user->x] = 0;	/* clear tab at x */
 		}
 	    }
+	    user->got_esc = 0;
 	    break;
 	case 'J':	/* clear to end of screen */
 	    clreos_term(user);
@@ -171,6 +227,9 @@ vt100_process(user, data)
 	    set_scroll_region(user, user->av[0], user->av[1]);
 	    move_term(user, 0, 0);
 	    user->got_esc = 0;
+	    break;
+	case '(':	/* skip over lparens for now */
+	    user->lparen = 1;
 	    break;
 	default:
 	    user->got_esc = 0;

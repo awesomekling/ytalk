@@ -10,13 +10,13 @@
  * or misuse.
  * 
  * This software may be freely copied and distributed provided that
- * no part of this NOTICE is deleted or edited in any manner.
- * 
+ * no part of this NOTICE is deleted or edited in any manner.  * 
  */
 
 
 #include "header.h"
 #include "mem.h"
+#include <curses.h>
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
@@ -30,8 +30,7 @@ int show_user_list();
  * while trying to stay awake long enough to do laundry.  I hereby take
  * extra-special pains to absolve myself of any and all responsibility
  * for this source.
- */
-
+ */ 
 static void main_menu_sel();
 menu_item *menu_ptr = NULL;		/* current menu in processing */
 static int menu_len;			/* number of items in current menu */
@@ -51,6 +50,7 @@ static menu_item main_menu[] = {
     { "delete a user",		main_menu_sel,	'd' },
     { "kill all unconnected",	main_menu_sel,  'k' },
     { "options",		main_menu_sel,	'o' },
+    { "rering all",		main_menu_sel,  'r' },
     { "shell",			main_menu_sel,	's' },
     { "user list",		main_menu_sel,	'u' },
     { "output user to file",	main_menu_sel,	'w' },
@@ -164,6 +164,10 @@ main_menu_sel(key)
 	    break;
 	case 'k':	/* kill all unconnected users */
 	    kill_all_unconnected();
+	    kill_menu();
+	    break;
+	case 'r':	/* rering all */
+	    rering_all();
 	    kill_menu();
 	    break;
 	case 'o':	/* show options */
@@ -343,8 +347,10 @@ update_menu()
 
 		if(ic > ' ' && ic <= '~')
 		{
-		    if(text_pos >= menu_long && def_flags & FL_BEEP)
-			putc(7, stderr);
+		    if(text_pos >= menu_long) {
+			if(def_flags & FL_BEEP)
+			    putc(7, stderr);
+		    }
 		    else
 		    {
 			text_str[text_pos] = (char)ic;
@@ -485,7 +491,10 @@ update_menu()
 	if(menu_len + 2 <= me->t_rows)
 	{
 	    y = center(me->t_rows, menu_len + 2);
-	    raw_term(me, y++, x, "#####", menu_long + MENU_EXTRA);
+	    if((def_flags & FL_VT100) && !(def_flags & FL_XWIN))
+		special_menu_term(me, y++, x, 0, menu_long + MENU_EXTRA);
+	    else
+		raw_term(me, y++, x, "#####", menu_long + MENU_EXTRA);
 	}
 	else
 	    y = 0;
@@ -498,7 +507,10 @@ update_menu()
     for(i = menu_line; y+1 < me->t_rows && i < menu_len; i++, y++)
     {
 	c = buf;
-	*(c++) = '#';
+	if((def_flags & FL_VT100) && !(def_flags & FL_XWIN))
+	    special_menu_term(me, y, x, 1, 0);
+	else
+	    *(c++) = '#';
 	*(c++) = ' ';
 	if(menu_ptr[i].key == ' ')
 	{
@@ -537,15 +549,23 @@ update_menu()
 		*(c++) = ' ';
 	}
 	*(c++) = ' ';
-	*(c++) = '#';
-	raw_term(me, y, x, buf, c - buf);
+	if((def_flags & FL_VT100) && !(def_flags & FL_XWIN)) {
+	    special_menu_term(me, y, (x + (c-buf) + 1), 2, 0);
+	    raw_term(me, y, x+1, buf, c - buf);
+	} else {
+	    *(c++) = '#';
+	    raw_term(me, y, x, buf, c - buf);
+	}
     }
     if(y < me->t_rows)
     {
 	if(i < menu_len)
 	{
 	    c = buf;
-	    *(c++) = '#';
+	    if((def_flags & FL_VT100) && !(def_flags & FL_XWIN))
+		special_menu_term(me, y, x, 3, 0);
+	    else
+		*(c++) = '#';
 	    *(c++) = ' ';
 	    *(c++) = ' ';
 	    *(c++) = ' ';
@@ -555,13 +575,22 @@ update_menu()
 	    for(; j < menu_long; j++)
 		*(c++) = ' ';
 	    *(c++) = ' ';
-	    *(c++) = '#';
-	    raw_term(me, y, x, buf, c - buf);
+	    if((def_flags & FL_VT100) && !(def_flags & FL_XWIN)) {
+		special_menu_term(me, y, x + (c - buf) + 1, 4, 0);
+		raw_term(me, y, x+1, buf, c - buf);
+	    } else {
+		*(c++) = '#';
+		raw_term(me, y, x, buf, c - buf);
+	    }
 	    raw_term(me, y, x + 12, NULL, 0);
 	}
 	else
 	{
-	    raw_term(me, y, x, "#####", menu_long + MENU_EXTRA);
+	    if((def_flags & FL_VT100) && !(def_flags & FL_XWIN))
+		special_menu_term(me, y, x, 5, menu_long + MENU_EXTRA);
+	    else
+		raw_term(me, y, x, "#####", menu_long + MENU_EXTRA);
+		
 	    if(menu_ptr == text_menu)
 		raw_term(me, text_ypos, text_xpos + text_pos, NULL, 0);
 	    else if(menu_ptr == yes_no_menu)

@@ -23,6 +23,12 @@
 char errstr[132];	/* temporary string for errors */
 char *vhost = NULL;	/* specified virtual host */
 ylong myuid;		/* global uid */
+#ifdef YTALK_COLOR
+int newui_colors = 40;	/* TODO: change default */
+int newui_attr = 0;	/* newui output attributes */
+int raw_color = 2;	/* raw output color */
+int raw_attr = 0;	/* raw output attributes */
+#endif
 
 /* Clean up and exit.
  */
@@ -113,7 +119,10 @@ main(argc, argv)
   int argc;
   char **argv;
 {
-    int xflg = 0, sflg = 0, yflg = 0, iflg = 0, vflg = 0;
+#ifdef USE_X11
+    int xflg = 0;
+#endif
+    int sflg = 0, yflg = 0, iflg = 0, vflg = 0;
     char *prog;
 
 #ifdef YTALK_DEBUG
@@ -133,17 +142,18 @@ then type 'make clean' and 'make'.\n");
     argv++, argc--;
     while(argc > 0 && **argv == '-')
     {
-	if(strcmp(*argv, "-x") == 0
-	|| strcmp(*argv, "-nw") == 0)
-	{
-	    xflg++;	/* disable X from the command line */
-	    argv++, argc--;
-	}
-	else if(strcmp(*argv, "-Y") == 0)
+	if(strcmp(*argv, "-Y") == 0)
 	{
 	    yflg++;
 	    argv++, argc--;
 	}
+#ifdef USE_X11
+	else if(strcmp(*argv, "-x") == 0)
+	{
+	    xflg++;	/* enable X from the command line */
+	    argv++, argc--;
+	}
+#endif
 	else if(strcmp(*argv, "-i") == 0)
 	{
 	    iflg++;
@@ -182,13 +192,23 @@ then type 'make clean' and 'make'.\n");
     {
 	fprintf(stderr, 
 "Usage:    %s [options] user[@host][#tty]...\n\
-Options:     -i             --    no auto-invite port\n\
-             -x             --    do not use the X interface\n\
-             -Y             --    require caps on all y/n answers\n\
+Options:     -i             --    no auto-invite port\n"
+#ifdef USE_X11
+"             -x             --    use the X interface\n"
+#endif
+"             -Y             --    require caps on all y/n answers\n\
              -s             --    start a shell\n\
              -v             --    print program version\n\
              -h host_or_ip  --    select interface or virtual host\n", prog);
 	(void)exit(YTE_INIT);
+    }
+
+    /* check that STDIN is a valid tty device */
+
+    if(!isatty(0))
+    {
+	fprintf(stderr, "Standard input is not a valid terminal device.\n");
+	exit(1);
     }
 
     /* set up signals */
@@ -204,7 +224,7 @@ Options:     -i             --    no auto-invite port\n\
 
     /* set default options */
 
-    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING | FL_BEEP;
+    def_flags = FL_PROMPTRING | FL_RING | FL_BEEP | FL_SCROLL;
 
     /* go for it! */
 
@@ -212,8 +232,10 @@ Options:     -i             --    no auto-invite port\n\
     init_fd();
     read_ytalkrc();
     init_user(vhost);
+#ifdef USE_X11
     if(xflg)
-	def_flags &= ~FL_XWIN;
+	def_flags |= FL_XWIN;
+#endif
     if(yflg)
 	def_flags |= FL_CAPS;
     if(iflg)

@@ -17,6 +17,10 @@
 
 #include "config.h"
 
+#ifdef HAVE_NCURSES_H
+# define YTALK_COLOR
+#endif
+
 #ifndef X_DISPLAY_MISSING
 # define USE_X11
 #endif
@@ -54,8 +58,8 @@ extern char *ptsname (int);
 #endif
 
 #define VMAJOR	3	/* major version number */
-#define VMINOR	1	/* minor version number */
-#define VPATCH	1	/* patch level */
+#define VMINOR	2	/* minor version number */
+#define VPATCH	0	/* patch level */
 
 #define EIGHT_BIT_CLEAN /* take this one out if you don't want it */
 
@@ -85,6 +89,16 @@ typedef void *	yaddr;		/* any pointer address */
 typedef yaddr	yterm;		/* terminal cookie */
 typedef u_char	ychar;		/* we use unsigned chars */
 
+#ifdef YTALK_COLOR
+typedef struct {
+    u_char l;
+    int a;
+    u_char b, c;
+} yachar;
+#else
+typedef u_char	yachar;
+#endif
+
 typedef	u_int	ylong;		/* this should work both on 32-bit and 64-bit
 				 * machines  -Roger
 				 */
@@ -104,7 +118,7 @@ typedef struct {
     char pad[44];		/* zeroed out */
 } y_parm;
 
-#define MAXARG	4		/* max ESC sequence arg count */
+#define MAXARG	8		/* max ESC sequence arg count */
 
 typedef struct _yuser {
     struct _yuser *next;	/* next user in group lists */
@@ -113,10 +127,11 @@ typedef struct _yuser {
     int output_fd;		/* non-zero if output is going to a file */
     ylong flags;		/* active FL_* flags below */
     ychar edit[4];		/* edit characters */
+    int crlf;			/* 1 if users wants CRLF data */
     u_short t_rows, t_cols;	/* his rows and cols on window over here */
     u_short rows, cols;		/* his active region rows and cols over here */
     y_parm remote;		/* remote parms */
-    ychar **scr;		/* screen data */
+    yachar **scr;		/* screen data */
     int *scr_tabs;		/* screen tab positions */
     char bump;			/* set if at far right */
     ychar old_rub;		/* my actual rub character */
@@ -126,6 +141,8 @@ typedef struct _yuser {
     int sy, sx;			/* saved cursor position */
     int sc_top, sc_bot;		/* scrolling region */
     int region_set;		/* set if using a screen region */
+    int c_at, c_bg, c_fg;	/* user colors and attributes */
+    int sc_at, sc_bg, sc_fg;	/* saved colors and attributes */
     char *full_name;		/* full name (up to 50 chars) */
     char *user_name;		/* user name */
     char *host_name;		/* host name */
@@ -140,6 +157,7 @@ typedef struct _yuser {
     struct sockaddr_in orig_sock; /* original socket -- another sick hack */
     u_int av[MAXARG];		/* ESC sequence arguments */
     u_int ac;			/* ESC sequence arg count */
+    u_int lparen;		/* lparen escape? */
 
     /* out-of-band data */
 
@@ -171,6 +189,8 @@ typedef struct _yuser {
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
 #define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
+#define FL_VT100	0x00002000L	/* VT100 enhanced menus and such */
+#define FL_NEWUI	0x00004000L	/* newui on or off */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */
@@ -299,7 +319,6 @@ struct alias {
 #define ALIAS_BEFORE    1
 #define ALIAS_AFTER     2
 
-
 /* ---- global functions ---- */
 
 extern void	bail		( /* int */ );			/* main.c */
@@ -325,6 +344,8 @@ extern int	word_term	( /* yuser */ );		/* term.c */
 extern void	kill_term	( /* yuser */ );		/* term.c */
 extern void	tab_term	( /* yuser */ );		/* term.c */
 extern void	newline_term	( /* yuser */ );		/* term.c */
+extern void	cr_term		( /* yuser */ );		/* term.c */
+extern void	lf_term		( /* yuser */ );		/* term.c */
 extern void	add_line_term	( /* yuser, num */ );		/* term.c */
 extern void	del_line_term	( /* yuser, num */ );		/* term.c */
 extern void	add_char_term	( /* yuser, num */ );		/* term.c */
@@ -342,6 +363,7 @@ extern void	redraw_all_terms();				/* term.c */
 extern void	set_raw_term	();				/* term.c */
 extern void	set_cooked_term	();				/* term.c */
 extern int	term_does_asides();				/* term.c */
+extern void	special_menu_term( /* yuser, int, int, int, int) */ ); /* term.c */
 
 extern void	init_user	();				/* user.c */
 extern yuser   *new_user	( /* name, host, tty */ );	/* user.c */
@@ -367,6 +389,7 @@ extern void	show_input	( /* user, buf, len */ );	/* comm.c */
 extern void	my_input	( /* buf, len */ );		/* comm.c */
 extern void	lock_flags	( /* flags */ );		/* comm.c */
 extern void	unlock_flags	();				/* comm.c */
+extern void	rering_all	();				/* comm.c */
 
 extern void	init_socket	();				/* socket.c */
 extern void	close_all	();				/* socket.c */
