@@ -11,12 +11,7 @@ tty > /dev/null 2>&1
 isatty="$?"
 
 if [ $isatty -eq 0 ] ; then
-	colsrow=`stty -a | grep columns`
-	if [ "`echo $colsrow | egrep '[0-9]+ columns'`" != "" ] ; then
-		termcols=`echo $colsrow | sed 's/.* \([0-9]*\) columns.*/\1/'`
-	else
-		termcols=`echo $colsrow | sed 's/.*columns \([0-9]*\).*/\1/'`
-	fi
+	termcols=`stty size 2>/dev/null | cut -d' ' -f2`
 	status_offset=`expr $termcols - 5`
 fi
 
