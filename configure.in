@@ -23,10 +23,12 @@ case "$host" in
   SYSTEM_DEFS="-DYTALK_OSF1"
   ;;
 esac
+
 AC_SUBST(SYSTEM_DEFS)
+AC_DEFINE_UNQUOTED(SYSTEM_TYPE, ["$host"], [Short system name, i.e "SunOS"])
 
 AC_DEFINE_DIR([sysconfdir], [sysconfdir], [sysconfdir])
-AC_DEFINE_UNQUOTED(SYSTEM_YTALKRC, ["${sysconfdir}/ytalkrc"], ["Location of default ytalkrc file"])
+AC_DEFINE_UNQUOTED(SYSTEM_YTALKRC, ["${sysconfdir}/ytalkrc"], [Location of default ytalkrc file])
 
 dnl Checks for programs.
 AC_PROG_CC
