@@ -58,6 +58,7 @@ options opts[] = {
 	{"require_caps",	FL_CAPS		},
 	{"no_invite",		FL_NOAUTO	},
 	{"prompt_quit",		FL_PROMPTQUIT	},
+	{"instant_command",	FL_INSTANTCMD	},
 	{(char *)NULL,		0		}
 };
 
