@@ -771,7 +771,11 @@ word_wrap(user)
 	clreol_term(user);
 	newline_term(user);
 	for (i--; i >= 1; i--)
+#ifdef YTALK_COLOR
+		addch_term(user, temp[i].l);
+#else
 		addch_term(user, temp[i]);
+#endif
 	return 0;
 }
 
