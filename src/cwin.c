@@ -108,7 +108,7 @@ new_draw_title(w)
 	int x;
 	char *t = w->title;
 	if(w->user == scuser) {
-		newui_attr |= A_UNDERLINE;
+		newui_attr |= A_BOLD;
 	}
 	move(w->row - 1, w->col);
 	for (x = 0; x < w->width; x++) {
@@ -147,7 +147,7 @@ new_draw_title(w)
 		}
 	}
 	if(w->user == scuser) {
-		newui_attr &= ~A_UNDERLINE;
+		newui_attr &= ~A_BOLD;
 	}
 }
 #endif
