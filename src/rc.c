@@ -104,6 +104,7 @@ set_option(opt, value)
     else if(strcmp(opt, "beeps") == 0)
 	mask |= FL_BEEP;
 
+#ifdef USE_X11
     else if(strcmp(opt, "xwin") == 0
     || strcmp(opt, "xwindows") == 0
     || strcmp(opt, "XWindows") == 0
@@ -111,6 +112,7 @@ set_option(opt, value)
     || strcmp(opt, "x") == 0
     || strcmp(opt, "X") == 0)
 	mask |= FL_XWIN;
+#endif
 
     else if(strcmp(opt, "asides") == 0
     || strcmp(opt, "aside") == 0
