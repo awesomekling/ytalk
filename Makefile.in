@@ -80,6 +80,3 @@ uninstall:
 	$(RM) $(bindir)/$(PRG) $(mandir)/man$(manext)/$(MAN) $(sysconfdir)/$(RC)
 	@echo "Ytalk uninstalled."
 
-depend:
-	makedepend -- $(CFLAGS) -- $(SRC)
-
