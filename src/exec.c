@@ -221,9 +221,7 @@ execute(command)
 {
 	int fd;
 	char name[20], *shell;
-#ifdef HAVE_TTYNAME
 	struct stat sbuf;
-#endif
 	struct passwd *pw = NULL;
 #ifdef HAVE_TCSETPGRP
 	pid_t sid;
@@ -287,6 +285,11 @@ execute(command)
 #endif
 #endif
 
+	/* Check pty permissions and warn about potential risks. */
+	if (!command && (stat(name, &sbuf) == 0))
+		if (sbuf.st_mode & 0004)
+			msg_term("Warning: The pseudo-terminal is world-readable.");
+
 	if ((pid = fork()) == 0) {
 		(void) close(fd);
 		close_all();
@@ -345,14 +348,6 @@ execute(command)
 			perror("tcsetpgrp");
 #endif
 
-#ifdef HAVE_TTYNAME
-		/* Check pty permissions and warn about potential risks. */
-		if (!command && (stat(ttyname(0), &sbuf) == 0)) {
-			if (sbuf.st_mode & 0004) {
-				write(1, "Warning: This pseudo-terminal is world-readable.\n", 49);
-			}
-		}
-#endif
 
 		/* execute the command */
 
