@@ -282,6 +282,13 @@ execute(command)
 # endif
 #endif
 
+#ifdef TIOCSCTTY
+	/* Mark the new pty as a controlling terminal to enable
+	 * BSD-style job control.
+	 */
+	(void)ioctl(fd, TIOCSCTTY);
+#endif
+
 	/* execute the command */
 
 	if(command)
