@@ -34,6 +34,7 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
+AC_PROG_RANLIB
 
 dnl Sanity
 AC_CHECK_SIZEOF(long)
@@ -101,5 +102,7 @@ AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
 
 AC_OUTPUT(
 Makefile
+libytk/Makefile
 src/Makefile
+docs/Makefile
 )
