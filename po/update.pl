@@ -37,8 +37,8 @@ if ($LANG=~/^-(.)*/){
         print "  -P, --pot                    only generates the potfile\n";
         print "  -M, --maintain               search for missing files in POTFILES.in\n";
 	print "\nExamples of use:\n";
-        print "update.sh --pot    just creates a new pot file from the source\n";
-	print "update.sh da       created new pot file and updated the da.po file\n\n";
+        print "update.pl --pot    just creates a new pot file from the source\n";
+	print "update.pl da       created new pot file and updated the da.po file\n\n";
         print "Report bugs to <kenneth\@gnome.org>.\n";
 	exit;
     }
