@@ -309,7 +309,6 @@ extern yuser *user_list;	/* full list of invited/connected users */
 extern yuser *connect_list;	/* list of connected users */
 extern yuser *wait_list;	/* list of invited users */
 extern yuser *fd_to_user[MAX_FILES];	/* convert file descriptors to users */
-extern yuser *key_to_user[128];	/* convert menu ident chars to users */
 extern char errstr[MAXERR];	/* temporary string for errors */
 extern ylong def_flags;		/* default FL_* flags */
 extern int user_winch;		/* user window/status changed flag */

@@ -27,7 +27,6 @@ yuser *user_list;		/* list of invited/connected users */
 yuser *connect_list;		/* list of connected users */
 yuser *wait_list;		/* list of connected users */
 yuser *fd_to_user[MAX_FILES];	/* convert file descriptors to users */
-yuser *key_to_user[128];	/* convert menu ident chars to users */
 ylong def_flags = 0L;		/* default FL_* flags */
 static ylong daemon_id;		/* running daemon ID counter */
 
@@ -82,32 +81,6 @@ generate_full_name(user)
 	*c = '\0';
 }
 
-static void
-assign_key(user)
-	yuser *user;
-{
-	register ychar old;
-	static ychar key = 'a';
-
-	if (user->key != '\0' || user == me || user_list == NULL)
-		return;
-	old = key;
-	do {
-		if (key_to_user[key] == NULL) {
-			key_to_user[key] = user;
-			user->key = key;
-			return;
-		}
-		if (key == 'z')
-			key = 'A';
-		else if (key == 'Z')
-			key = 'a';
-		else
-			key++;
-	} while (old != key);
-	user->key = '\0';
-}
-
 /* ---- global functions ----- */
 
 /*
@@ -125,7 +98,6 @@ init_user(vhost)
 	wait_list = NULL;
 	daemon_id = getpid() << 10;
 	(void) memset(fd_to_user, 0, MAX_FILES * sizeof(yuser *));
-	(void) memset(key_to_user, 0, 128 * sizeof(yuser *));
 
 	/* get my username */
 
@@ -213,7 +185,7 @@ new_user(name, hostname, tty)
 		out->tty_name = str_copy("");
 	out->d_id = daemon_id++;
 	generate_full_name(out);
-	assign_key(out);
+	/*assign_key(out);*/
 	out->flags = def_flags;
 
 	/* Actually make an effort to keep the user list in order */
@@ -290,8 +262,6 @@ free_user(user)
 		fd_to_user[user->fd] = NULL;
 		close(user->fd);
 	}
-	if (user->key != '\0')
-		key_to_user[user->key] = NULL;
 	free_mem(user);
 	if (connect_list == NULL && wait_list != NULL)
 		msg_term(me, "Waiting for connection...");
