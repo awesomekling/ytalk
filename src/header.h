@@ -132,26 +132,26 @@ typedef struct _yuser {
 	int output_fd;		/* non-zero if output is going to a file */
 	ylong flags;		/* active FL_* flags below */
 	ychar edit[4];		/* edit characters */
-	int crlf;		/* 1 if users wants CRLF data */
+	char crlf;		/* 1 if users wants CRLF data */
 	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
 	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
-	int scroll;		/* set if currently being scrolled */
+	char scroll;		/* set if currently being scrolled */
 	yachar **scrollback;	/* scrollback buffer */
 	long int scrollpos;	/* position in scrollback buffer */
 	yachar **scr;		/* screen data */
 	int *scr_tabs;		/* screen tab positions */
 	char bump;		/* set if at far right */
-	int onend;		/* set if we are stomping on the far right */
+	char onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
-	short int got_esc;	/* received an ESC */
+	char got_esc;		/* received an ESC */
 	char key;		/* this user's ident letter for menus */
 	int y, x;		/* current cursor position */
 	int sy, sx;		/* saved cursor position */
 	int sc_top, sc_bot;	/* scrolling region */
-	int region_set;		/* set if using a screen region */
-	int csx;		/* set if in charset crossover mode */
-	int altchar;		/* set if in alternate charset mode */
+	char region_set;	/* set if using a screen region */
+	char csx;		/* set if in charset crossover mode */
+	char altchar;		/* set if in alternate charset mode */
 #ifdef YTALK_COLOR
 	int c_at, c_bg, c_fg;	/* user colors and attributes */
 	int sc_at, sc_bg, sc_fg;/* saved colors and attributes */
