@@ -172,6 +172,9 @@ curses_redraw(void)
 	clear();
 	wnoutrefresh(stdscr);
 
+	if (can_ymenu())
+		resize_ymenu();
+
 	row = 0;
 	for (w = head; w; w = w->next) {
 		if (w->next) {
@@ -199,8 +202,6 @@ curses_redraw(void)
 			wnoutrefresh(w->win);
 	}
 
-	if (can_ymenu())
-		resize_ymenu();
 	if (in_ymenu())
 		__refresh_ymenu();
 

@@ -427,10 +427,8 @@ resize_ymenu()
 #ifdef YTALK_COLOR
 	ytk_winch_thing(color_menu);
 #endif
-	if (!ytk_is_empty_stack(menu_stack)) {
+	if (!ytk_is_empty_stack(menu_stack))
 		ytk_winch_stack(menu_stack);
-		ytk_sync_display();
-	}
 }
 
 void
