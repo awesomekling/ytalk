@@ -210,6 +210,8 @@ static int
 win_size(wins)
 	int wins;
 {
+	if (wins == 0)
+		return 0;
 	return (LINES - 1) / wins;
 }
 
