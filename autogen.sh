@@ -9,7 +9,12 @@ tty > /dev/null 2>&1
 isatty="$?"
 
 if [ $isatty -eq 0 ] ; then
-	termcols=`stty size 2>/dev/null | cut -d' ' -f2`
+	if [ -x /usr/ucb/stty ] ; then
+		STTY="/usr/ucb/stty"
+	else
+		STTY="stty"
+	fi
+	termcols=`$STTY size 2>/dev/null | cut -d' ' -f2`
 	status_offset=`expr $termcols - 5`
 fi
 
