@@ -504,7 +504,7 @@ find_daemon(addr)
 	h->host_addr = addr;
 	h->dtype = out;
 	if (out)
-		return out;
+	    return out;
     }
     sprintf(errstr, "No talk daemon on %s", host_name(addr));
     show_error(errstr);
