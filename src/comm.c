@@ -1001,7 +1001,7 @@ house_clean()
 	if (bottom_msg != NULL && bottom_time != 0) {
 		if (t - bottom_time >= 10) {
 			bottom_msg = NULL;
-			redraw_all_terms();
+			update_message_curses();
 		}
 	}
 
