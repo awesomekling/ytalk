@@ -28,6 +28,7 @@
 #include <signal.h>
 
 #include "cwin.h"
+#include "ymenu.h"
 
 typedef struct _ywin {
 	struct _ywin *next;	/* next ywin in linked list */
@@ -247,7 +248,7 @@ curses_redraw()
 	/* make new windows */
 
 	clear();
-	refresh();
+	wnoutrefresh(stdscr);
 	row = 0;
 	for (w = head; w; w = w->next) {
 		if (w->next) {
@@ -267,13 +268,18 @@ curses_redraw()
 				bail(YTE_ERROR);
 			}
 		}
-		refresh();
+		wnoutrefresh(stdscr);
 		if (w->user->scroll) {
 			update_scroll_curses(w->user);
-			wrefresh(w->swin);
+			wnoutrefresh(w->swin);
 		} else
-			wrefresh(w->win);
+			wnoutrefresh(w->win);
 	}
+	if (in_ymenu()) {
+		resize_ymenu();
+		refresh_ymenu();
+	}
+	doupdate();
 }
 
 /*
@@ -586,9 +592,12 @@ flush_curses(user)
 
 	w = (ywin *) (user->term);
 	if (w->user->scroll)
-		wrefresh(w->swin);
+		wnoutrefresh(w->swin);
 	else
-		wrefresh(w->win);
+		wnoutrefresh(w->win);
+	if (in_ymenu())
+		refresh_ymenu();
+	doupdate();
 }
 
 void
@@ -598,6 +607,9 @@ retitle_all_curses()
 	for (w = head; w; w = w->next) {
 		draw_title(w);
 	}
+	if (in_ymenu())
+		refresh_ymenu();
+	move(LINES - 1, COLS - 1);
 	refresh();
 }
 
@@ -605,27 +617,36 @@ retitle_all_curses()
  * Clear and redisplay.
  */
 void
-redisplay_curses()
+__redisplay_curses()
 {
 	register ywin *w;
 
 	clear();
-	refresh();
+	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
 		if (w->user->scroll) {
 			update_scroll_curses(w->user);
 			draw_title(w);
-			refresh();
-			wrefresh(w->swin);
+			wnoutrefresh(stdscr);
+			wnoutrefresh(w->swin);
 		} else {
 			redraw_term(w->user, 0);
 			draw_title(w);
-			refresh();
-			wrefresh(w->win);
+			wnoutrefresh(stdscr);
+			wnoutrefresh(w->win);
 		}
+	}
+	if (in_ymenu()) {
+		refresh_ymenu();
 	}
 }
 
+void
+redisplay_curses()
+{
+	__redisplay_curses();
+	doupdate();
+}
 /*
  * Set raw mode.
  */
@@ -707,6 +728,8 @@ start_scroll_curses(user)
 		show_error("Couldn't create scrolling viewport");
 		bail(YTE_ERROR);
 	}
+	if (in_ymenu())
+		refresh_ymenu();
 }
 
 void
@@ -721,6 +744,8 @@ end_scroll_curses(user)
 		draw_title(w);
 		refresh();
 		wrefresh(w->win);
+		if (in_ymenu())
+			refresh_ymenu();
 	}
 }
 
@@ -749,6 +774,9 @@ update_scroll_curses(user)
 			break;
 		}
 	}
-	wmove(w->swin, 0, COLS - 1);
 	wrefresh(w->swin);
+	move(LINES - 1, COLS - 1);
+	refresh();
+	if (in_ymenu())
+		refresh_ymenu();
 }

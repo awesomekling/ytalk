@@ -17,7 +17,7 @@
 
 #include "header.h"
 #include <signal.h>
-#include "menu.h"
+#include "ymenu.h"
 #include "mem.h"
 
 char errstr[132];		/* temporary string for errors */
@@ -39,8 +39,8 @@ bail(n)
 {
 	kill_auto();
 	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
-		if (show_mesg("Press any key to quit.", NULL) == 0) {
-			update_menu();
+		if (show_message_ymenu("Press any key to quit.", NULL) == 0) {
+			update_ymenu();
 			bail_loop();
 		}
 	}
@@ -73,11 +73,11 @@ show_error(str)
 		putc(7, stderr);
 	if (in_error == 0 && what_term() != 0) {
 		in_error = 1;
-		if (show_error_menu(str, syserr) < 0) {
-			show_error("show_error: show_error_menu() failed");
+		if (show_error_ymenu(str, syserr) < 0) {
+			show_error("show_error: show_error_ymenu() failed");
 			show_error(str);
 		} else
-			update_menu();
+			update_ymenu();
 		in_error = 0;
 	} else {
 		fprintf(stderr, "%s: %s\n", str, syserr);
@@ -235,6 +235,7 @@ Options:     -i             --    no auto-invite port\n"
 		def_flags |= FL_PROMPTQUIT;
 
 	init_term();
+	init_ymenu();
 	init_socket();
 	for (; argc > 0; argc--, argv++)
 		invite(*argv, 1);

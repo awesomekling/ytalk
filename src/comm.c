@@ -17,7 +17,7 @@
 
 #include "header.h"
 #include "socket.h"
-#include "menu.h"
+#include "ymenu.h"
 #include "mem.h"
 
 #ifdef HAVE_IOVEC_H
@@ -1228,14 +1228,15 @@ my_input(user, buf, len)
 	while (len > 0) {
 		/* check for a menu in process */
 
-		if (menu_ptr) {
+		if (in_ymenu()) {
 			io_ptr = buf;
 			io_len = len;
-			update_menu();
+			update_ymenu();
 			buf = io_ptr;
 			len = io_len;
 			io_len = 0;
 		}
+
 		/* check for a running process */
 
 		if (running_process) {
@@ -1309,12 +1310,12 @@ my_input(user, buf, len)
 		}
 
 		/* start a menu if necessary */
-
 		if (len > 0) {
 			buf++, len--;
-			show_main_menu();
-			if (len <= 0)
-				update_menu();
+			if (len <= 0) {
+				show_ymenu();
+				update_ymenu();
+			}
 		}
 	}
 

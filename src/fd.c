@@ -16,7 +16,7 @@
 
 
 #include "header.h"
-#include "menu.h"
+#include "ymenu.h"
 
 #ifdef TIME_WITH_SYS_TIME
 #include <sys/time.h>
@@ -165,7 +165,7 @@ main_loop()
 
 		if (connect_list == NULL
 		    && wait_list == NULL
-		    && menu_ptr == NULL
+		    && in_ymenu() == 0
 		    && running_process == 0)
 			bail(0);
 
@@ -233,7 +233,7 @@ main_loop()
 			 * free time.  there.
 			 */
 			user_winch = 0;
-			update_user_menu();
+			redo_ymenu_userlist();
 		}
 	}
 }

@@ -16,7 +16,6 @@
 
 
 #include "header.h"
-#include "menu.h"
 #include "mem.h"
 #include <pwd.h>
 #include <string.h>
@@ -273,7 +272,7 @@ free_user(user)
 
 	if (connect_list == NULL
 	    && wait_list == NULL
-	    && menu_ptr == NULL
+	    && !in_ymenu()
 	    && running_process == 0)
 		bail(YTE_SUCCESS_PROMPT);
 
