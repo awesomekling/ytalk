@@ -74,7 +74,9 @@ void
 handle_quit(void *i)
 {
 	(void) i;
-	hide_ymenu();
+	if (!ytk_on_stack(menu_stack, options_menu))
+		ytk_delete_thing(options_menu);
+	ytk_purge_stack(menu_stack);
 	bail(YTE_SUCCESS);
 }
 
@@ -129,8 +131,9 @@ DEFAULT_TOGGLE(handle_autoinvite, FL_INVITE)
 DEFAULT_TOGGLE(handle_rering, FL_RING)
 DEFAULT_TOGGLE(handle_promptrering, FL_PROMPTRING)
 DEFAULT_TOGGLE(handle_promptquit, FL_PROMPTQUIT)
-	void
-	 init_ymenu()
+
+void
+init_ymenu()
 {
 	menu_stack = ytk_new_stack();
 
