@@ -1308,6 +1308,7 @@ my_input(user, buf, len)
 						buf++, len--;
 					} else if (*buf == 14) {	/* ^N - scroll down */
 						scroll_down(scuser);
+						retitle_all_terms();
 						buf++, len--;
 					} else if (*buf == 6) {	/* ^F - window forward */
 						if (scrollback_lines > 0) {
@@ -1321,6 +1322,7 @@ my_input(user, buf, len)
 						buf++, len--;
 					} else if (*buf == 16) {	/* ^P - scroll up */
 						scroll_up(scuser);
+						retitle_all_terms();
 						buf++, len--;
 					} else if (*buf == 12 || *buf == 18) {	/* ^L or ^R */
 						redraw_all_terms();
