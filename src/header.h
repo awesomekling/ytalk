@@ -145,7 +145,7 @@ typedef struct _yuser {
 	int onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
 	char got_esc;		/* received an ESC */
-	ychar key;		/* this user's ident letter for menus */
+	char key;		/* this user's ident letter for menus */
 	int y, x;		/* current cursor position */
 	int sy, sx;		/* saved cursor position */
 	int sc_top, sc_bot;	/* scrolling region */
