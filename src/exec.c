@@ -76,7 +76,7 @@ char *last_command = NULL;
 
 #ifndef HAVE_SETSID
 static int
-setsid()
+setsid(void)
 {
 #ifdef TIOCNOTTY
 	register int fd;
@@ -100,8 +100,7 @@ int needtopush = 0;
 
 #ifndef HAVE_OPENPTY
 static int
-getpty(name)
-	char *name;
+getpty(char *name)
 {
 	register int pty, tty;
 	char *tt;
@@ -173,8 +172,7 @@ getpty(name)
 #endif /* HAVE_OPENPTY */
 
 static void
-exec_input(fd)
-	int fd;
+exec_input(int fd)
 {
 	register int rc;
 	static ychar buf[MAXBUF];
@@ -193,8 +191,7 @@ exec_input(fd)
 }
 
 static void
-calculate_size(rows, cols)
-	int *rows, *cols;
+calculate_size(int *rows, int *cols)
 {
 	register yuser *u;
 
@@ -217,8 +214,7 @@ calculate_size(rows, cols)
  * shell.
  */
 void
-execute(command)
-	char *command;
+execute(char *command)
 {
 	int fd;
 	char name[20], *shell;
@@ -381,7 +377,7 @@ execute(command)
  * Send input to the command shell.
  */
 void
-update_exec()
+update_exec(void)
 {
 	write(pfd, io_ptr, (size_t) io_len);
 	io_len = 0;
@@ -391,7 +387,7 @@ update_exec()
  * Kill the command shell.
  */
 void
-kill_exec()
+kill_exec(void)
 {
 	if (!running_process)
 		return;
@@ -417,7 +413,7 @@ kill_exec()
  * Send a SIGWINCH to the process.
  */
 void
-winch_exec()
+winch_exec(void)
 {
 	int rows, cols;
 

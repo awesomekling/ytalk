@@ -369,19 +369,19 @@ extern ylong get_host_addr( /* hostname */ );	/* socket.c */
 extern char *host_name( /* addr */ );	/* socket.c */
 extern int readdress_host( /* from, to, on */ );	/* socket.c */
 
-extern void read_ytalkrc();	/* rc.c */
-extern char *resolve_alias( /* uh */ );	/* rc.c */
+extern void read_ytalkrc(void);			/* rc.c */
+extern char *resolve_alias(char *);		/* rc.c */
 
-extern void execute( /* command */ );	/* exec.c */
-extern void update_exec();	/* exec.c */
-extern void kill_exec();	/* exec.c */
-extern void winch_exec();	/* exec.c */
+extern void execute(char *);			/* exec.c */
+extern void update_exec(void);			/* exec.c */
+extern void kill_exec(void);			/* exec.c */
+extern void winch_exec(void);			/* exec.c */
 
 extern void vt100_process(yuser *, char);	/* vt100.c */
 
-extern void init_scroll(yuser *);
-extern void free_scroll(yuser *);
-extern void scroll_up( /* yuser */ );	/* scroll.c */
-extern void scroll_down( /* yuser */ );	/* scroll.c */
+extern void init_scroll(yuser *);		/* scroll.c */
+extern void free_scroll(yuser *);		/* scroll.c */
+extern void scroll_up(yuser *);			/* scroll.c */
+extern void scroll_down(yuser *);		/* scroll.c */
 
 /* EOF */
