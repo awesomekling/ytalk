@@ -31,8 +31,6 @@ extern void scroll_curses(yuser *);
 extern void keypad_curses(yuser *, int);
 extern void flush_curses(yuser *);
 extern void redisplay_curses(void);
-extern void __redisplay_curses(void);	/* redisplay, but do not sync with
-					 * remote screen */
 extern void refresh_curses(void);
 extern void retitle_all_curses(void);
 extern void set_raw_curses(void);

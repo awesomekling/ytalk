@@ -594,7 +594,7 @@ refresh_curses(void)
  * Clear and redisplay.
  */
 void
-__redisplay_curses(void)
+redisplay_curses(void)
 {
 	register ywin *w;
 
@@ -620,12 +620,6 @@ __redisplay_curses(void)
 	if (in_ymenu()) {
 		__refresh_ymenu();
 	}
-}
-
-void
-redisplay_curses(void)
-{
-	__redisplay_curses();
 	doupdate();
 }
 /*
