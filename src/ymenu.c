@@ -34,8 +34,7 @@ do_hidething(ytk_thing *t)
 	else
 		if (t != options_menu)
 			ytk_delete_thing(t);
-	clear();
-	__redisplay_curses();
+	refresh_curses();
 	ytk_sync_display();
 }
 
@@ -230,7 +229,7 @@ redo_ymenu_userlist()
 {
 	if (ytk_on_stack(menu_stack, userlist_menu) && !ytk_on_stack(menu_stack, usermenu_menu)) {
 		ytk_pop_thing(menu_stack);
-		__redisplay_curses();
+		refresh_curses();
 		if (userlist_menu != NULL) {
 			ytk_delete_thing(userlist_menu);
 			userlist_menu = NULL;
@@ -250,7 +249,7 @@ hide_ymenu()
 		delwin(t->win);
 		t->win = NULL;
 	}
-	__redisplay_curses();
+	refresh_curses();
 	ytk_sync_display();
 }
 
@@ -321,8 +320,7 @@ handle_ebox(ytk_thing *t)
 	ytk_pop_thing(menu_stack);
 	ytk_delete_thing(error_box);
 	error_box = NULL;
-	clear();
-	__redisplay_curses();
+	refresh_curses();
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 }
@@ -350,8 +348,7 @@ handle_mbox(ytk_thing *t)
 	ytk_pop_thing(menu_stack);
 	ytk_delete_thing(message_box);
 	message_box = NULL;
-	clear();
-	__redisplay_curses();
+	refresh_curses();
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 }

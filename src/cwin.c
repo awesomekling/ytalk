@@ -257,7 +257,7 @@ curses_redraw()
 		}
 		wnoutrefresh(stdscr);
 		if (w->user->scroll) {
-			update_scroll_curses(w->user);
+			__update_scroll_curses(w->user);
 			wnoutrefresh(w->swin);
 		} else
 			wnoutrefresh(w->win);
@@ -587,6 +587,34 @@ retitle_all_curses()
 	doupdate();
 }
 
+/* Refresh all visible windows
+ *
+ */
+void
+refresh_curses()
+{
+	register ywin *w;
+	wnoutrefresh(stdscr);
+	for (w = head; w; w = w->next) {
+		if (w->user->scroll) {
+			__update_scroll_curses(w->user);
+			draw_title(w);
+			touchwin(w->swin);
+			wnoutrefresh(w->swin);
+		} else {
+			draw_title(w);
+			touchwin(w->win);
+			wnoutrefresh(w->win);
+		}
+	}
+	if (in_ymenu()) {
+		__refresh_ymenu();
+	}
+	move(LINES - 1, COLS - 1);
+	wnoutrefresh(stdscr);
+	doupdate();
+}
+
 /*
  * Clear and redisplay.
  */
@@ -599,7 +627,7 @@ __redisplay_curses()
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
 		if (w->user->scroll) {
-			update_scroll_curses(w->user);
+			__update_scroll_curses(w->user);
 			draw_title(w);
 			wnoutrefresh(stdscr);
 			wnoutrefresh(w->swin);
@@ -653,7 +681,8 @@ start_scroll_curses(user)
 		bail(YTE_ERROR);
 	}
 	if (in_ymenu())
-		refresh_ymenu();
+		__refresh_ymenu();
+	doupdate();
 }
 
 void
@@ -675,7 +704,7 @@ end_scroll_curses(user)
 }
 
 void
-update_scroll_curses(user)
+__update_scroll_curses(user)
 	yuser *user;
 {
 	u_short r, i;
@@ -704,5 +733,11 @@ update_scroll_curses(user)
 	wnoutrefresh(stdscr);
 	if (in_ymenu())
 		__refresh_ymenu();
+}
+
+void
+update_scroll_curses(yuser *user)
+{
+	__update_scroll_curses(user);
 	doupdate();
 }

@@ -28,12 +28,14 @@ extern void keypad_curses( /* yuser, int */ );
 extern void flush_curses( /* yuser */ );
 extern void redisplay_curses();
 extern void __redisplay_curses(); /* redisplay, but do not sync with remote screen */
+extern void refresh_curses();
 extern void retitle_all_curses();
 extern void set_raw_curses();
 extern void set_cooked_curses();
 extern void start_scroll_curses( /* yuser */ );
 extern void end_scroll_curses( /* yuser */ );
-extern void update_scroll_curses( /* yuser */ );
+extern void update_scroll_curses(yuser *);
+extern void __update_scroll_curses(yuser *);
 
 #ifndef getyx
 #define getyx(w,y,x)	y = w->_cury, x = w->_curx
