@@ -1,39 +1,39 @@
 /* header.h */
 
-/*			   NOTICE
+/*
+ * NOTICE
  *
  * Copyright (c) 1990,1992,1993 Britt Yenne.  All rights reserved.
- * 
- * This software is provided AS-IS.  The author gives no warranty,
- * real or assumed, and takes no responsibility whatsoever for any 
- * use or misuse of this software, or any damage created by its use
- * or misuse.
- * 
- * This software may be freely copied and distributed provided that
- * no part of this NOTICE is deleted or edited in any manner.
- * 
+ *
+ * This software is provided AS-IS.  The author gives no warranty, real or
+ * assumed, and takes no responsibility whatsoever for any use or misuse of
+ * this software, or any damage created by its use or misuse.
+ *
+ * This software may be freely copied and distributed provided that no part of
+ * this NOTICE is deleted or edited in any manner.
+ *
  */
 
 
 #include "config.h"
 
 #ifdef HAVE_NCURSES_H
-# define YTALK_COLOR
+#define YTALK_COLOR
 #endif
 
 #ifndef X_DISPLAY_MISSING
-# define USE_X11
+#define USE_X11
 #endif
 
 #include <sys/types.h>
 #include <sys/param.h>
 
 #ifdef YTALK_HPUX
-# define _XOPEN_SOURCE_EXTENDED
-# include <sys/socket.h>
-# undef _XOPEN_SOURCE_EXTENDED
+#define _XOPEN_SOURCE_EXTENDED
+#include <sys/socket.h>
+#undef _XOPEN_SOURCE_EXTENDED
 #else
-# include <sys/socket.h>
+#include <sys/socket.h>
 #endif
 
 #include <netinet/in.h>
@@ -44,24 +44,24 @@
 
 /* We may not have prototypes for these functions. */
 #if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-extern int grantpt (int);
-extern int unlockpt (int);
-extern char *ptsname (int);
+extern int grantpt(int);
+extern int unlockpt(int);
+extern char *ptsname(int);
 #endif
 
 #ifdef HAVE_UNISTD_H
-# include <unistd.h>
+#include <unistd.h>
 #endif
 
 #ifdef USE_X11
-# include <X11/X.h>
+#include <X11/X.h>
 #endif
 
-#define VMAJOR	3	/* major version number */
-#define VMINOR	2	/* minor version number */
-#define VPATCH	0	/* patch level */
+#define VMAJOR	3		/* major version number */
+#define VMINOR	2		/* minor version number */
+#define VPATCH	0		/* patch level */
 
-#define EIGHT_BIT_CLEAN /* take this one out if you don't want it */
+#define EIGHT_BIT_CLEAN		/* take this one out if you don't want it */
 
 #ifdef EIGHT_BIT_CLEAN
 #define is_printable(x)  ( (((x) >= ' ' && (x) <= '~') || \
@@ -73,106 +73,107 @@ extern char *ptsname (int);
 
 /* ---- YTalk protocols ---- */
 
-/* These protocol numbers are a MAJOR HACK designed to get around the
- * fact that old versions of ytalk didn't send any version information
- * during handshaking.  Nor did they bzero() the unused portions of the
- * handshaking structures.  Argh!  These two protocol numbers were very
- * carefully picked... do not add any others and expect them to work.
- * Instead, use the "vmajor" and "vminor" fields of the y_parm structure.
+/*
+ * These protocol numbers are a MAJOR HACK designed to get around the fact
+ * that old versions of ytalk didn't send any version information during
+ * handshaking.  Nor did they bzero() the unused portions of the handshaking
+ * structures.  Argh!  These two protocol numbers were very carefully
+ * picked... do not add any others and expect them to work. Instead, use the
+ * "vmajor" and "vminor" fields of the y_parm structure.
  */
-#define YTP_OLD	20	/* YTalk versions before 3.0 */
-#define YTP_NEW	27	/* YTalk versions 3.0 and up */
+#define YTP_OLD	20		/* YTalk versions before 3.0 */
+#define YTP_NEW	27		/* YTalk versions 3.0 and up */
 
 /* ---- types ---- */
 
-typedef void *	yaddr;		/* any pointer address */
-typedef yaddr	yterm;		/* terminal cookie */
-typedef u_char	ychar;		/* we use unsigned chars */
+typedef void *yaddr;		/* any pointer address */
+typedef yaddr yterm;		/* terminal cookie */
+typedef u_char ychar;		/* we use unsigned chars */
 
 #ifdef YTALK_COLOR
 typedef struct {
-    u_char l;
-    int a;
-    u_char b, c;
+	u_char l;
+	int a;
+	u_char b, c;
 } yachar;
 #else
-typedef u_char	yachar;
+typedef u_char yachar;
 #endif
 
-typedef	u_int	ylong;		/* this should work both on 32-bit and 64-bit
-				 * machines  -Roger
-				 */
+typedef u_int ylong;		/* this should work both on 32-bit and 64-bit
+				 * machines  -Roger */
 
 #ifndef HAVE_SOCKLEN_T
-typedef int	socklen_t;
+typedef int socklen_t;
 #endif
 
 typedef struct {
-    u_char w_rows, w_cols;	/* window size FOR PROTOCOL YTP_OLD */
-    char protocol;		/* ytalk protocol -- see above */
-    char pad1;			/* zeroed out */
-    short vmajor, vminor;	/* version numbers */
-    u_short rows, cols;		/* his window size over there */
-    u_short my_rows, my_cols;	/* my window size over there */
-    ylong pid;			/* my process id */
-    char pad[44];		/* zeroed out */
+	u_char w_rows, w_cols;	/* window size FOR PROTOCOL YTP_OLD */
+	char protocol;		/* ytalk protocol -- see above */
+	char pad1;		/* zeroed out */
+	short vmajor, vminor;	/* version numbers */
+	u_short rows, cols;	/* his window size over there */
+	u_short my_rows, my_cols;	/* my window size over there */
+	ylong pid;		/* my process id */
+	char pad[44];		/* zeroed out */
 } y_parm;
 
 #define MAXARG	8		/* max ESC sequence arg count */
 
 typedef struct _yuser {
-    struct _yuser *next;	/* next user in group lists */
-    struct _yuser *unext;	/* next user in full user list */
-    int fd;			/* file descriptor */
-    int output_fd;		/* non-zero if output is going to a file */
-    ylong flags;		/* active FL_* flags below */
-    ychar edit[4];		/* edit characters */
-    int crlf;			/* 1 if users wants CRLF data */
-    u_short t_rows, t_cols;	/* his rows and cols on window over here */
-    u_short rows, cols;		/* his active region rows and cols over here */
-    y_parm remote;		/* remote parms */
-    yachar **scr;		/* screen data */
-    int *scr_tabs;		/* screen tab positions */
-    char bump;			/* set if at far right */
-    ychar old_rub;		/* my actual rub character */
-    char got_esc;		/* received an ESC */
-    ychar key;			/* this user's ident letter for menus */
-    int y, x;			/* current cursor position */
-    int sy, sx;			/* saved cursor position */
-    int sc_top, sc_bot;		/* scrolling region */
-    int region_set;		/* set if using a screen region */
-    int c_at, c_bg, c_fg;	/* user colors and attributes */
-    int sc_at, sc_bg, sc_fg;	/* saved colors and attributes */
-    char *full_name;		/* full name (up to 50 chars) */
-    char *user_name;		/* user name */
-    char *host_name;		/* host name */
-    char *host_fqdn;		/* host fully qualified name */
-    char *tty_name;		/* tty name */
-    ylong host_addr;		/* host inet address */
-    int daemon;			/* daemon type to use */
-    ylong l_id, r_id;		/* local and remote talkd invite list index */
-    ylong d_id;			/* talk daemon process id -- see socket.c */
-    ylong last_invite;		/* timestamp of last invitation sent */
-    struct sockaddr_in sock;	/* communication socket */
-    struct sockaddr_in orig_sock; /* original socket -- another sick hack */
-    u_int av[MAXARG];		/* ESC sequence arguments */
-    u_int ac;			/* ESC sequence arg count */
-    u_int lparen;		/* lparen escape? */
+	struct _yuser *next;	/* next user in group lists */
+	struct _yuser *unext;	/* next user in full user list */
+	int fd;			/* file descriptor */
+	int output_fd;		/* non-zero if output is going to a file */
+	ylong flags;		/* active FL_* flags below */
+	ychar edit[4];		/* edit characters */
+	int crlf;		/* 1 if users wants CRLF data */
+	u_short t_rows, t_cols;	/* his rows and cols on window over here */
+	u_short rows, cols;	/* his active region rows and cols over here */
+	y_parm remote;		/* remote parms */
+	yachar **scr;		/* screen data */
+	int *scr_tabs;		/* screen tab positions */
+	char bump;		/* set if at far right */
+	ychar old_rub;		/* my actual rub character */
+	char got_esc;		/* received an ESC */
+	ychar key;		/* this user's ident letter for menus */
+	int y, x;		/* current cursor position */
+	int sy, sx;		/* saved cursor position */
+	int sc_top, sc_bot;	/* scrolling region */
+	int region_set;		/* set if using a screen region */
+	int c_at, c_bg, c_fg;	/* user colors and attributes */
+	int sc_at, sc_bg, sc_fg;/* saved colors and attributes */
+	char *full_name;	/* full name (up to 50 chars) */
+	char *user_name;	/* user name */
+	char *host_name;	/* host name */
+	char *host_fqdn;	/* host fully qualified name */
+	char *tty_name;		/* tty name */
+	ylong host_addr;	/* host inet address */
+	int daemon;		/* daemon type to use */
+	ylong l_id, r_id;	/* local and remote talkd invite list index */
+	ylong d_id;		/* talk daemon process id -- see socket.c */
+	ylong last_invite;	/* timestamp of last invitation sent */
+	struct sockaddr_in sock;/* communication socket */
+	struct sockaddr_in orig_sock;	/* original socket -- another sick
+					 * hack */
+	u_int av[MAXARG];	/* ESC sequence arguments */
+	u_int ac;		/* ESC sequence arg count */
+	u_int lparen;		/* lparen escape? */
 
-    /* out-of-band data */
+	/* out-of-band data */
 
-    int dbuf_size;		/* current buffer size */
-    ychar *dbuf, *dptr;		/* buffer base and current pointer */
-    int drain;			/* remaining bytes to drain */
-    void (*dfunc)();		/* function to call with drained data */
-    int got_oob;		/* got OOB flag */
+	int dbuf_size;		/* current buffer size */
+	ychar *dbuf, *dptr;	/* buffer base and current pointer */
+	int drain;		/* remaining bytes to drain */
+	void (*dfunc) ();	/* function to call with drained data */
+	int got_oob;		/* got OOB flag */
 
-    /* anything below this is available for the terminal interface */
+	/* anything below this is available for the terminal interface */
 
-    yterm term;			/* terminal cookie */
-    int ty, tx;			/* terminal's idea of Y,X (optional) */
+	yterm term;		/* terminal cookie */
+	int ty, tx;		/* terminal's idea of Y,X (optional) */
 #ifdef USE_X11
-    Window win;			/* user's window */
+	Window win;		/* user's window */
 #endif
 } yuser;
 
@@ -184,8 +185,8 @@ typedef struct _yuser {
 #define FL_RING		0x00000020L	/* rering at all */
 #define FL_XWIN		0x00000040L	/* X Windows enabled (startup opt) */
 #define FL_ASIDE	0x00000080L	/* multiple window input/asides */
-#define FL_CAPS		0x00000100L     /* want caps as answers */
-#define FL_NOAUTO       0x00000200L     /* no auto-invite port */
+#define FL_CAPS		0x00000100L	/* want caps as answers */
+#define FL_NOAUTO       0x00000200L	/* no auto-invite port */
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
 #define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
@@ -196,9 +197,9 @@ typedef struct _yuser {
 /* ---- defines and short-cuts ---- */
 
 #ifdef NOFILE
-# define MAX_FILES	NOFILE	/* max open file descriptors */
+#define MAX_FILES	NOFILE	/* max open file descriptors */
 #else
-# define MAX_FILES	256	/* better to be too high than too low */
+#define MAX_FILES	256	/* better to be too high than too low */
 #endif
 #define CLEAN_INTERVAL	16	/* seconds between calls to house_clean() */
 #define MAXBUF		4096	/* buffer size for I/O operations */
@@ -221,12 +222,12 @@ typedef struct _yuser {
 #define V3_HOSTLEN	64	/* max hostname length */
 
 typedef struct {
-    ychar code;			/* V3_EXPORT, V3_IMPORT, or V3_ACCEPT */
-    char filler[3];
-    ylong host_addr;		/* host address */
-    ylong pid;			/* process id */
-    char name[V3_NAMELEN];	/* user name */
-    char host[V3_HOSTLEN];	/* host name */
+	ychar code;		/* V3_EXPORT, V3_IMPORT, or V3_ACCEPT */
+	char filler[3];
+	ylong host_addr;	/* host address */
+	ylong pid;		/* process id */
+	char name[V3_NAMELEN];	/* user name */
+	char host[V3_HOSTLEN];	/* host name */
 } v3_pack;
 
 #define V3_PACKLEN	sizeof(v3_pack)
@@ -235,9 +236,9 @@ typedef struct {
 #define V3_ACCEPT	103	/* accept a connection from a user */
 
 typedef struct {
-    ychar code;			/* V3_LOCKF or V3_UNLOCKF */
-    char filler[3];
-    ylong flags;		/* flags */
+	ychar code;		/* V3_LOCKF or V3_UNLOCKF */
+	char filler[3];
+	ylong flags;		/* flags */
 } v3_flags;
 
 #define V3_FLAGSLEN	sizeof(v3_flags)
@@ -245,9 +246,9 @@ typedef struct {
 #define V3_UNLOCKF	112	/* unlock my flags */
 
 typedef struct {
-    ychar code;			/* V3_YOURWIN, V3_MYWIN, or V3_REGION */
-    char filler[3];
-    u_short rows, cols;		/* window size */
+	ychar code;		/* V3_YOURWIN, V3_MYWIN, or V3_REGION */
+	char filler[3];
+	u_short rows, cols;	/* window size */
 } v3_winch;
 
 #define V3_WINCHLEN	sizeof(v3_winch)
@@ -261,10 +262,10 @@ typedef struct {
 #define V2_HOSTLEN	64
 
 typedef struct {
-    ychar code;			/* one of the V2_?? codes below */
-    char filler;
-    char name[V2_NAMELEN];	/* user name */
-    char host[V2_HOSTLEN];	/* user host */
+	ychar code;		/* one of the V2_?? codes below */
+	char filler;
+	char name[V2_NAMELEN];	/* user name */
+	char host[V2_HOSTLEN];	/* user host */
 } v2_pack;
 
 #define V2_PACKLEN	sizeof(v2_pack)
@@ -284,7 +285,7 @@ typedef struct {
 /* ---- global variables ---- */
 
 #ifndef HAVE_STRERROR
-extern char * sys_errlist[];	/* system errors */
+extern char *sys_errlist[];	/* system errors */
 #endif
 
 extern yuser *me;		/* just lil' ol' me */
@@ -298,7 +299,7 @@ extern ylong def_flags;		/* default FL_* flags */
 extern int user_winch;		/* user window/status changed flag */
 
 extern ychar *io_ptr;		/* user input pointer */
-extern int    io_len;		/* user input count */
+extern int io_len;		/* user input count */
 
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
@@ -310,9 +311,9 @@ extern int errno;
 /* aliases -- added by Roger Espel Llima (borrowed from utalk) */
 
 struct alias {
-  char from[256], to[256];
-  int type;
-  struct alias *next;
+	char from[256], to[256];
+	int type;
+	struct alias *next;
 };
 
 #define ALIAS_ALL       0
@@ -321,95 +322,95 @@ struct alias {
 
 /* ---- global functions ---- */
 
-extern void	bail		( /* int */ );			/* main.c */
-extern char    *str_copy	( /* string */ );		/* main.c */
-extern void	show_error	( /* str */ );			/* main.c */
+extern void bail( /* int */ );	/* main.c */
+extern char *str_copy( /* string */ );	/* main.c */
+extern void show_error( /* str */ );	/* main.c */
 
-extern void	init_term	();				/* term.c */
-extern void	set_terminal_size  ( /* fd, rows, cols */ );	/* term.c */
-extern void	set_terminal_flags ( /* fd */ );		/* term.c */
-extern int	what_term	();				/* term.c */
-extern void	end_term	();				/* term.c */
-extern int	open_term	( /* yuser, title */ );		/* term.c */
-extern void	close_term	( /* yuser */ );		/* term.c */
-extern void	addch_term	( /* yuser, ch */ );		/* term.c */
-extern void	move_term	( /* yuser, y, x */ );		/* term.c */
-extern void	clreol_term	( /* yuser */ );		/* term.c */
-extern void	clreos_term	( /* yuser */ );		/* term.c */
-extern void	scroll_term	( /* yuser */ );		/* term.c */
-extern void	rev_scroll_term	( /* yuser */ );		/* term.c */
-extern void	flush_term	( /* yuser */ );		/* term.c */
-extern void	rub_term	( /* yuser */ );		/* term.c */
-extern int	word_term	( /* yuser */ );		/* term.c */
-extern void	kill_term	( /* yuser */ );		/* term.c */
-extern void	tab_term	( /* yuser */ );		/* term.c */
-extern void	newline_term	( /* yuser */ );		/* term.c */
-extern void	cr_term		( /* yuser */ );		/* term.c */
-extern void	lf_term		( /* yuser */ );		/* term.c */
-extern void	add_line_term	( /* yuser, num */ );		/* term.c */
-extern void	del_line_term	( /* yuser, num */ );		/* term.c */
-extern void	add_char_term	( /* yuser, num */ );		/* term.c */
-extern void	del_char_term	( /* yuser, num */ );		/* term.c */
-extern void	redraw_term	( /* yuser, start_row */ );	/* term.c */
-extern void	keypad_term	( /* yuser, int */ );		/* term.c */
-extern void	resize_win	( /* yuser, h, w */ );		/* term.c */
-extern void	set_win_region	( /* yuser, h, w */ );		/* term.c */
-extern void	end_win_region	( /* yuser */ );		/* term.c */
-extern void	set_scroll_region( /* yuser, top, bottom */ );	/* term.c */
-extern void	msg_term	( /* yuser, str */ );		/* term.c */
-extern void	spew_term	( /* yuser, fd, rows, cols */ ); /* term.c */
-extern int	center		( /* width, n */ );		/* term.c */
-extern void	redraw_all_terms();				/* term.c */
-extern void	set_raw_term	();				/* term.c */
-extern void	set_cooked_term	();				/* term.c */
-extern int	term_does_asides();				/* term.c */
-extern void	special_menu_term( /* yuser, int, int, int, int) */ ); /* term.c */
+extern void init_term();	/* term.c */
+extern void set_terminal_size( /* fd, rows, cols */ );	/* term.c */
+extern void set_terminal_flags( /* fd */ );	/* term.c */
+extern int what_term();		/* term.c */
+extern void end_term();		/* term.c */
+extern int open_term( /* yuser, title */ );	/* term.c */
+extern void close_term( /* yuser */ );	/* term.c */
+extern void addch_term( /* yuser, ch */ );	/* term.c */
+extern void move_term( /* yuser, y, x */ );	/* term.c */
+extern void clreol_term( /* yuser */ );	/* term.c */
+extern void clreos_term( /* yuser */ );	/* term.c */
+extern void scroll_term( /* yuser */ );	/* term.c */
+extern void rev_scroll_term( /* yuser */ );	/* term.c */
+extern void flush_term( /* yuser */ );	/* term.c */
+extern void rub_term( /* yuser */ );	/* term.c */
+extern int word_term( /* yuser */ );	/* term.c */
+extern void kill_term( /* yuser */ );	/* term.c */
+extern void tab_term( /* yuser */ );	/* term.c */
+extern void newline_term( /* yuser */ );	/* term.c */
+extern void cr_term( /* yuser */ );	/* term.c */
+extern void lf_term( /* yuser */ );	/* term.c */
+extern void add_line_term( /* yuser, num */ );	/* term.c */
+extern void del_line_term( /* yuser, num */ );	/* term.c */
+extern void add_char_term( /* yuser, num */ );	/* term.c */
+extern void del_char_term( /* yuser, num */ );	/* term.c */
+extern void redraw_term( /* yuser, start_row */ );	/* term.c */
+extern void keypad_term( /* yuser, int */ );	/* term.c */
+extern void resize_win( /* yuser, h, w */ );	/* term.c */
+extern void set_win_region( /* yuser, h, w */ );	/* term.c */
+extern void end_win_region( /* yuser */ );	/* term.c */
+extern void set_scroll_region( /* yuser, top, bottom */ );	/* term.c */
+extern void msg_term( /* yuser, str */ );	/* term.c */
+extern void spew_term( /* yuser, fd, rows, cols */ );	/* term.c */
+extern int center( /* width, n */ );	/* term.c */
+extern void redraw_all_terms();	/* term.c */
+extern void set_raw_term();	/* term.c */
+extern void set_cooked_term();	/* term.c */
+extern int term_does_asides();	/* term.c */
+extern void special_menu_term( /* yuser, int, int, int, int) */ );	/* term.c */
 
-extern void	init_user	();				/* user.c */
-extern yuser   *new_user	( /* name, host, tty */ );	/* user.c */
-extern void	free_user	( /* yuser */ );		/* user.c */
-extern yuser   *find_user	( /* name, host_addr, pid */ );	/* user.c */
-extern void	generate_full_name ( /* yuser */ );		/* user.c */
-extern void	free_users	();				/* user.c */
+extern void init_user();	/* user.c */
+extern yuser *new_user( /* name, host, tty */ );	/* user.c */
+extern void free_user( /* yuser */ );	/* user.c */
+extern yuser *find_user( /* name, host_addr, pid */ );	/* user.c */
+extern void generate_full_name( /* yuser */ );	/* user.c */
+extern void free_users();	/* user.c */
 
-extern void	init_fd		();				/* fd.c */
-extern void	add_fd		( /* fd, func */ );		/* fd.c */
-extern void	remove_fd	( /* fd */ );			/* fd.c */
-extern int	full_read	( /* fd, buf, len */ );		/* fd.c */
-extern void	main_loop	();				/* fd.c */
-extern void	input_loop	();				/* fd.c */
+extern void init_fd();		/* fd.c */
+extern void add_fd( /* fd, func */ );	/* fd.c */
+extern void remove_fd( /* fd */ );	/* fd.c */
+extern int full_read( /* fd, buf, len */ );	/* fd.c */
+extern void main_loop();	/* fd.c */
+extern void input_loop();	/* fd.c */
 
-extern yuser   *invite		( /* username, announce */ );	/* comm.c */
-extern void	house_clean	();				/* comm.c */
-extern void	send_winch	( /* yuser */ );		/* comm.c */
-extern void	send_region	();				/* comm.c */
-extern void	send_end_region	();				/* comm.c */
-extern void	send_users	( /* buf, len */ );		/* comm.c */
-extern void	show_input	( /* user, buf, len */ );	/* comm.c */
-extern void	my_input	( /* buf, len */ );		/* comm.c */
-extern void	lock_flags	( /* flags */ );		/* comm.c */
-extern void	unlock_flags	();				/* comm.c */
-extern void	rering_all	();				/* comm.c */
+extern yuser *invite( /* username, announce */ );	/* comm.c */
+extern void house_clean();	/* comm.c */
+extern void send_winch( /* yuser */ );	/* comm.c */
+extern void send_region();	/* comm.c */
+extern void send_end_region();	/* comm.c */
+extern void send_users( /* buf, len */ );	/* comm.c */
+extern void show_input( /* user, buf, len */ );	/* comm.c */
+extern void my_input( /* buf, len */ );	/* comm.c */
+extern void lock_flags( /* flags */ );	/* comm.c */
+extern void unlock_flags();	/* comm.c */
+extern void rering_all();	/* comm.c */
 
-extern void	init_socket	();				/* socket.c */
-extern void	close_all	();				/* socket.c */
-extern int	send_dgram	( /* user, type */ );		/* socket.c */
-extern int	send_auto	( /* type */ );			/* socket.c */
-extern void	kill_auto	();				/* socket.c */
-extern int	newsock		( /* yuser */ );		/* socket.c */
-extern int	connect_to	( /* yuser */ );		/* socket.c */
-extern ylong	get_host_addr	( /* hostname */ );		/* socket.c */
-extern char    *host_name	( /* addr */ );			/* socket.c */
-extern void	readdress_host	( /* from, to, on */ );		/* socket.c */
+extern void init_socket();	/* socket.c */
+extern void close_all();	/* socket.c */
+extern int send_dgram( /* user, type */ );	/* socket.c */
+extern int send_auto( /* type */ );	/* socket.c */
+extern void kill_auto();	/* socket.c */
+extern int newsock( /* yuser */ );	/* socket.c */
+extern int connect_to( /* yuser */ );	/* socket.c */
+extern ylong get_host_addr( /* hostname */ );	/* socket.c */
+extern char *host_name( /* addr */ );	/* socket.c */
+extern void readdress_host( /* from, to, on */ );	/* socket.c */
 
-extern void	read_ytalkrc	();				/* rc.c */
-extern char    *resolve_alias	( /* uh */ );			/* rc.c */
+extern void read_ytalkrc();	/* rc.c */
+extern char *resolve_alias( /* uh */ );	/* rc.c */
 
-extern void	execute		( /* command */ );		/* exec.c */
-extern void	update_exec	();				/* exec.c */
-extern void	kill_exec	();				/* exec.c */
-extern void	winch_exec	();				/* exec.c */
+extern void execute( /* command */ );	/* exec.c */
+extern void update_exec();	/* exec.c */
+extern void kill_exec();	/* exec.c */
+extern void winch_exec();	/* exec.c */
 
-extern void	vt100_process	( /* yuser, char */ );		/* vt100.c */
+extern void vt100_process( /* yuser, char */ );	/* vt100.c */
 
 /* EOF */

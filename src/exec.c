@@ -1,17 +1,17 @@
 /* exec.c -- run a command inside a window */
 
-/*			   NOTICE
+/*
+ * NOTICE
  *
  * Copyright (c) 1990,1992,1993 Britt Yenne.  All rights reserved.
- * 
- * This software is provided AS-IS.  The author gives no warranty,
- * real or assumed, and takes no responsibility whatsoever for any 
- * use or misuse of this software, or any damage created by its use
- * or misuse.
- * 
- * This software may be freely copied and distributed provided that
- * no part of this NOTICE is deleted or edited in any manner.
- * 
+ *
+ * This software is provided AS-IS.  The author gives no warranty, real or
+ * assumed, and takes no responsibility whatsoever for any use or misuse of
+ * this software, or any damage created by its use or misuse.
+ *
+ * This software may be freely copied and distributed provided that no part of
+ * this NOTICE is deleted or edited in any manner.
+ *
  */
 
 
@@ -19,7 +19,7 @@
 #include <pwd.h>
 
 #ifdef HAVE_SYS_IOCTL_H
-# include <sys/ioctl.h>
+#include <sys/ioctl.h>
 #endif
 
 #ifdef HAVE_FCNTL_H
@@ -38,18 +38,18 @@
 #endif
 
 #ifdef HAVE_TERMIOS_H
-# include <termios.h>
+#include <termios.h>
 #else
-# ifdef HAVE_SGTTY_H
-#  include <sgtty.h>
-#  ifdef hpux
-#   include <sys/bsdtty.h>
-#  endif
-# endif
+#ifdef HAVE_SGTTY_H
+#include <sgtty.h>
+#ifdef hpux
+#include <sys/bsdtty.h>
+#endif
+#endif
 #endif
 
 #if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
-# define USE_DEV_PTMX
+#define USE_DEV_PTMX
 #endif
 
 int running_process = 0;	/* flag: is process running? */
@@ -63,352 +63,336 @@ static int prows, pcols;	/* saved rows, cols */
 static int
 setsid()
 {
-# ifdef TIOCNOTTY
-    register int fd;
+#ifdef TIOCNOTTY
+	register int fd;
 
-    if((fd = open("/dev/tty", O_RDWR)) >= 0)
-    {
-	ioctl(fd, TIOCNOTTY);
-	(void)close(fd);
-    }
-    return fd;
-# endif
+	if ((fd = open("/dev/tty", O_RDWR)) >= 0) {
+		ioctl(fd, TIOCNOTTY);
+		(void) close(fd);
+	}
+	return fd;
+#endif
 }
 #endif
 
 #if defined(USE_DEV_PTMX) && defined(YTALK_SUNOS)
-int needtopush=0;
+int needtopush = 0;
 #endif
 
 #ifndef SIGCHLD
-# define SIGCLD SIGCHLD
+#define SIGCLD SIGCHLD
 #endif
 
 static int
 getpty(name)
-  char *name;
+	char *name;
 {
-    register int pty, tty;
-    char *tt;
+	register int pty, tty;
+	char *tt;
 
 #ifdef USE_DEV_PTMX
-    RETSIGTYPE (*sigchld)();
-    int r = 0;
+	RETSIGTYPE(*sigchld) ();
+	int r = 0;
 #endif
 
-    /* look for a Solaris/UNIX98-type pseudo-device */
+	/* look for a Solaris/UNIX98-type pseudo-device */
 
 #ifdef USE_DEV_PTMX
-    if ((pty=open("/dev/ptmx", O_RDWR)) >= 0)
-    {
-    	/* grantpt() might want to fork/exec! */
-	sigchld = signal(SIGCHLD, SIG_DFL);
-	r |= grantpt(pty);
-	r |= unlockpt(pty);
-	tt = ptsname(pty);
-	signal(SIGCHLD, sigchld);
-	if (r == 0 && tt != NULL)
-	{
-	    (void)strcpy(name, tt);
+	if ((pty = open("/dev/ptmx", O_RDWR)) >= 0) {
+		/* grantpt() might want to fork/exec! */
+		sigchld = signal(SIGCHLD, SIG_DFL);
+		r |= grantpt(pty);
+		r |= unlockpt(pty);
+		tt = ptsname(pty);
+		signal(SIGCHLD, sigchld);
+		if (r == 0 && tt != NULL) {
+			(void) strcpy(name, tt);
 #ifdef YTALK_SUNOS
-	    needtopush=1;
+			needtopush = 1;
 #endif
-	    return pty;
+			return pty;
+		}
 	}
-    }
 #endif
 
 #ifdef HAVE_TTYNAME
 
-    /* look for an older SYSV-type pseudo device */
+	/* look for an older SYSV-type pseudo device */
 
-    if((pty = open("/dev/ptc", O_RDWR)) >= 0)
-    {
-	if((tt = ttyname(pty)) != NULL)
-	{
-	    (void)strcpy(name, tt);
-	    return pty;
+	if ((pty = open("/dev/ptc", O_RDWR)) >= 0) {
+		if ((tt = ttyname(pty)) != NULL) {
+			(void) strcpy(name, tt);
+			return pty;
+		}
+		(void) close(pty);
 	}
-	(void)close(pty);
-    }
-
 #endif
 
-    /* scan Berkeley-style */
+	/* scan Berkeley-style */
 
-    (void)strcpy(name, "/dev/ptyp0");
-    while(access(name, 0) == 0)
-    {
-	if((pty = open(name, O_RDWR)) >= 0)
-	{
-	    name[5] = 't';
-	    if((tty = open(name, O_RDWR)) >= 0)
-	    {
-		(void)close(tty);
-		return pty;
-	    }
-	    name[5] = 'p';
-	    (void)close(pty);
+	(void) strcpy(name, "/dev/ptyp0");
+	while (access(name, 0) == 0) {
+		if ((pty = open(name, O_RDWR)) >= 0) {
+			name[5] = 't';
+			if ((tty = open(name, O_RDWR)) >= 0) {
+				(void) close(tty);
+				return pty;
+			}
+			name[5] = 'p';
+			(void) close(pty);
+		}
+		/* get next pty name */
+
+		if (name[9] == 'f') {
+			name[8]++;
+			name[9] = '0';
+		} else if (name[9] == '9')
+			name[9] = 'a';
+		else
+			name[9]++;
 	}
-
-	/* get next pty name */
-
-	if(name[9] == 'f')
-	{
-	    name[8]++;
-	    name[9] = '0';
-	}
-	else if(name[9] == '9')
-	    name[9] = 'a';
-	else
-	    name[9]++;
-    }
-    errno = ENOENT;
-    return -1;
+	errno = ENOENT;
+	return -1;
 }
 
 static void
 exec_input(fd)
-  int fd;
+	int fd;
 {
-    register int rc;
-    static ychar buf[MAXBUF];
+	register int rc;
+	static ychar buf[MAXBUF];
 
-    if((rc = read(fd, buf, MAXBUF)) <= 0)
-    {
-	kill_exec();
-	errno = 0;
-	show_error("command shell terminated");
-	return;
-    }
-    show_input(me, buf, rc);
-    send_users(me, buf, rc, buf, rc);
+	if ((rc = read(fd, buf, MAXBUF)) <= 0) {
+		kill_exec();
+		errno = 0;
+		show_error("command shell terminated");
+		return;
+	}
+	show_input(me, buf, rc);
+	send_users(me, buf, rc, buf, rc);
 }
 
 static void
 calculate_size(rows, cols)
-  int *rows, *cols;
+	int *rows, *cols;
 {
-    register yuser *u;
+	register yuser *u;
 
-    *rows = me->t_rows;
-    *cols = me->t_cols;
+	*rows = me->t_rows;
+	*cols = me->t_cols;
 
-    for(u = connect_list; u; u = u->next)
-	if(u->remote.vmajor > 2)
-	{
-	    if(u->remote.my_rows > 1 && u->remote.my_rows < *rows)
-		*rows = u->remote.my_rows;
-	    if(u->remote.my_cols > 1 && u->remote.my_cols < *cols)
-		*cols = u->remote.my_cols;
-	}
+	for (u = connect_list; u; u = u->next)
+		if (u->remote.vmajor > 2) {
+			if (u->remote.my_rows > 1 && u->remote.my_rows < *rows)
+				*rows = u->remote.my_rows;
+			if (u->remote.my_cols > 1 && u->remote.my_cols < *cols)
+				*cols = u->remote.my_cols;
+		}
 }
 
 /* ---- global functions ---- */
 
-/* Execute a command inside my window.  If command is NULL, then execute
- * a shell.
+/*
+ * Execute a command inside my window.  If command is NULL, then execute a
+ * shell.
  */
 void
 execute(command)
-  char *command;
+	char *command;
 {
-    int fd;
-    char name[20], *shell;
-    struct passwd *pw = NULL;
+	int fd;
+	char name[20], *shell;
+	struct passwd *pw = NULL;
 #ifdef HAVE_TCSETPGRP
-    pid_t sid;
+	pid_t sid;
 #endif
 
-    if(me->flags & FL_LOCKED)
-    {
-	errno = 0;
-	show_error("alternate mode already running");
-	return;
-    }
-    if((fd = getpty(name)) < 0)
-    {
-	msg_term(me, "cannot get pseudo terminal");
-	return;
-    }
-
-/* init the pty a bit (inspired from the screen(1) sources, pty.c) */
+	if (me->flags & FL_LOCKED) {
+		errno = 0;
+		show_error("alternate mode already running");
+		return;
+	}
+	if ((fd = getpty(name)) < 0) {
+		msg_term(me, "cannot get pseudo terminal");
+		return;
+	}
+	/* init the pty a bit (inspired from the screen(1) sources, pty.c) */
 
 #if defined(HAVE_TCFLUSH) && defined(TCIOFLUSH)
-    tcflush(fd, TCIOFLUSH);
+	tcflush(fd, TCIOFLUSH);
 #else
-# ifdef TIOCFLUSH
-    ioctl(fd, TIOCFLUSH, NULL);
-# else
-#  ifdef TIOCEXCL
-    ioctl(fd, TIOCEXCL, NULL);
-#  endif
-# endif
+#ifdef TIOCFLUSH
+	ioctl(fd, TIOCFLUSH, NULL);
+#else
+#ifdef TIOCEXCL
+	ioctl(fd, TIOCEXCL, NULL);
+#endif
+#endif
 #endif
 
-    pw = getpwuid(myuid);
-    if(pw != NULL) {
-	shell = pw->pw_shell;
-    } else {
-	shell = "/bin/sh";
-    }
+	pw = getpwuid(myuid);
+	if (pw != NULL) {
+		shell = pw->pw_shell;
+	} else {
+		shell = "/bin/sh";
+	}
 
-    calculate_size(&prows, &pcols);
+	calculate_size(&prows, &pcols);
 
 #ifdef SIGCHLD
-    /* Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999,
-     * following hints by Jason Gunthorpe.
-     * This closes two Debian bugs (#42625, #2196).
-     */
-    signal(SIGCHLD, SIG_DFL);
+	/*
+	 * Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999,
+	 * following hints by Jason Gunthorpe. This closes two Debian bugs
+	 * (#42625, #2196).
+	 */
+	signal(SIGCHLD, SIG_DFL);
 #else
-# ifdef SIGCLD
-    signal(SIGCLD, SIG_DFL);
-# endif
+#ifdef SIGCLD
+	signal(SIGCLD, SIG_DFL);
+#endif
 #endif
 
-    if((pid = fork()) == 0)
-    {
-	(void)close(fd);
-	close_all();
+	if ((pid = fork()) == 0) {
+		(void) close(fd);
+		close_all();
 #ifdef HAVE_TCSETPGRP
-        if((sid = setsid()) < 0)
+		if ((sid = setsid()) < 0)
 #else
-        if(setsid() < 0)
+		if (setsid() < 0)
 #endif
-            exit(-1);
-        if((fd = open(name, O_RDWR)) < 0)
-            exit(-1);
+			exit(-1);
+		if ((fd = open(name, O_RDWR)) < 0)
+			exit(-1);
 
-/* This will really mess up the shell on OSF1/Tru64 UNIX,
- * so we only do it on SunOS/Solaris
- */
+		/*
+		 * This will really mess up the shell on OSF1/Tru64 UNIX, so
+		 * we only do it on SunOS/Solaris
+		 */
 #ifdef YTALK_SUNOS
-# if defined(HAVE_STROPTS_H) && defined(I_PUSH)
-	if (needtopush)
-	{
-	    ioctl(fd, I_PUSH, "ptem");
-	    ioctl(fd, I_PUSH, "ldterm");
-	}
-# endif
+#if defined(HAVE_STROPTS_H) && defined(I_PUSH)
+		if (needtopush) {
+			ioctl(fd, I_PUSH, "ptem");
+			ioctl(fd, I_PUSH, "ldterm");
+		}
+#endif
 #endif
 
-        (void)dup2(fd, 0);
-        (void)dup2(fd, 1);
-        (void)dup2(fd, 2);
+		(void) dup2(fd, 0);
+		(void) dup2(fd, 1);
+		(void) dup2(fd, 2);
 
-	/* tricky bit -- ignore WINCH */
+		/* tricky bit -- ignore WINCH */
 
 #ifdef SIGWINCH
-	signal(SIGWINCH, SIG_IGN);
+		signal(SIGWINCH, SIG_IGN);
 #endif
 
-	/* set terminal characteristics */
+		/* set terminal characteristics */
 
-	set_terminal_flags(fd);
-	set_terminal_size(fd, prows, pcols);
+		set_terminal_flags(fd);
+		set_terminal_size(fd, prows, pcols);
 #ifndef NeXT
-# ifdef HAVE_PUTENV
-	putenv("TERM=vt100");
-# endif
+#ifdef HAVE_PUTENV
+		putenv("TERM=vt100");
+#endif
 #endif
 
 #ifdef TIOCSCTTY
-	/* Mark the new pty as a controlling terminal to enable
-	 * BSD-style job control.
-	 */
-	(void)ioctl(fd, TIOCSCTTY);
+		/*
+		 * Mark the new pty as a controlling terminal to enable
+		 * BSD-style job control.
+		 */
+		(void) ioctl(fd, TIOCSCTTY);
 #endif
 
 #ifdef HAVE_TCSETPGRP
-	if(tcsetpgrp(fd, sid) < 0)
-	    perror("tcsetpgrp");
+		if (tcsetpgrp(fd, sid) < 0)
+			perror("tcsetpgrp");
 #endif
 
-	/* execute the command */
+		/* execute the command */
 
-	if(command)
-	    execl(shell, shell, "-c", command, (char *)NULL);
-	else
-	    execl(shell, shell, (char *)NULL);
-	perror("execl");
-	(void)exit(-1);
-    }
-
-    /* Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999. */
+		if (command)
+			execl(shell, shell, "-c", command, (char *) NULL);
+		else
+			execl(shell, shell, (char *) NULL);
+		perror("execl");
+		(void) exit(-1);
+	}
+	/* Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999. */
 #ifdef SIGCHLD
-    signal(SIGCHLD, SIG_IGN);
+	signal(SIGCHLD, SIG_IGN);
 #else
-# ifdef SIGCLD
-    signal(SIGCLD, SIG_IGN);
-# endif
+#ifdef SIGCLD
+	signal(SIGCLD, SIG_IGN);
+#endif
 #endif
 
-    if(pid < 0)
-    {
-	show_error("fork() failed");
-	return;
-    }
-    set_win_region(me, prows, pcols);
-    sleep(1);
-    pfd = fd;
-    running_process = 1;
-    lock_flags((ylong)(FL_RAW | FL_SCROLL));
-    set_raw_term();
-    add_fd(fd, exec_input);
+	if (pid < 0) {
+		show_error("fork() failed");
+		return;
+	}
+	set_win_region(me, prows, pcols);
+	sleep(1);
+	pfd = fd;
+	running_process = 1;
+	lock_flags((ylong) (FL_RAW | FL_SCROLL));
+	set_raw_term();
+	add_fd(fd, exec_input);
 }
 
-/* Send input to the command shell.
+/*
+ * Send input to the command shell.
  */
 void
 update_exec()
 {
-    (void)write(pfd, io_ptr, (size_t)io_len);
-    io_len = 0;
+	(void) write(pfd, io_ptr, (size_t) io_len);
+	io_len = 0;
 }
 
-/* Kill the command shell.
+/*
+ * Kill the command shell.
  */
 void
 kill_exec()
 {
-    if(!running_process)
-	return;
-    remove_fd(pfd);
-    (void)close(pfd);
-    running_process = 0;
-    unlock_flags();
-    set_cooked_term();
-    end_win_region(me);
+	if (!running_process)
+		return;
+	remove_fd(pfd);
+	(void) close(pfd);
+	running_process = 0;
+	unlock_flags();
+	set_cooked_term();
+	end_win_region(me);
 }
 
-/* Send a SIGWINCH to the process.
+/*
+ * Send a SIGWINCH to the process.
  */
 void
 winch_exec()
 {
-    int rows, cols;
+	int rows, cols;
 
-    if(!running_process)
-	return;
+	if (!running_process)
+		return;
 
-    /* if the winch has no effect, return now */
+	/* if the winch has no effect, return now */
 
-    calculate_size(&rows, &cols);
-    if(rows == prows && cols == pcols)
-    {
-	if(prows != me->rows || pcols != me->cols)
-	    set_win_region(me, prows, pcols);
-	return;
-    }
+	calculate_size(&rows, &cols);
+	if (rows == prows && cols == pcols) {
+		if (prows != me->rows || pcols != me->cols)
+			set_win_region(me, prows, pcols);
+		return;
+	}
+	/* oh well -- redo everything */
 
-    /* oh well -- redo everything */
-
-    prows = rows;
-    pcols = cols;
-    set_terminal_size(pfd, prows, pcols);
-    set_win_region(me, prows, pcols);
+	prows = rows;
+	pcols = cols;
+	set_terminal_size(pfd, prows, pcols);
+	set_win_region(me, prows, pcols);
 #ifdef SIGWINCH
-    (void)kill(pid, SIGWINCH);
+	(void) kill(pid, SIGWINCH);
 #endif
 }
