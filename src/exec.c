@@ -69,6 +69,8 @@ static int pid;			/* currently executing process id */
 static int pfd;			/* currently executing process fd */
 static int prows, pcols;	/* saved rows, cols */
 
+char *last_command = NULL;
+
 /* ---- local functions ---- */
 
 #ifndef HAVE_SETSID
@@ -179,7 +181,8 @@ exec_input(fd)
 	if ((rc = read(fd, buf, MAXBUF)) <= 0) {
 		kill_exec();
 		errno = 0;
-		show_error("Command shell terminated");
+		if (!last_command)
+			show_error("Command shell terminated");
 		return;
 	}
 	show_input(me, buf, rc);
@@ -373,6 +376,10 @@ execute(command)
 	}
 	set_win_region(me, prows, pcols);
 	sleep(1);
+
+	/* store `command' for later recollection */
+	last_command = command;
+
 	pfd = fd;
 	running_process = 1;
 	lock_flags((ylong) (FL_RAW | FL_SCROLL));
