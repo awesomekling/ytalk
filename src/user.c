@@ -22,7 +22,6 @@
 #include <pwd.h>
 #include <string.h>
 
-extern char *getlogin();
 extern int dont_change_my_addr;
 
 yuser *me;			/* my user information */
@@ -137,8 +136,6 @@ char *vhost;
     /* get my username */
 
     my_name = user_name(myuid);
-    if(my_name == NULL)
-	my_name = getlogin();
     if(my_name == NULL || my_name[0] == '\0')
     {
 	show_error("Who are you?");
