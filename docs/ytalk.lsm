@@ -1,13 +1,13 @@
 Begin3
 Title:          YTalk
-Version:        3.2.0
+Version:        4.0.0
 Entered-date:   10MAY99
 Description:    Multi-user replacement for UNIX talk
 Keywords:       chat, talk, curses
 Author:         yenne@austin.eds.com (Britt Yenne)
 Maintained-by:  keso@impul.se (Andreas Kling)
 Primary-site:   http://www.impul.se/ytalk/
-			83k ytalk-3.2.0.tar.gz
+			??k ytalk-4.0.0.tar.gz
 Original-site:  unknown
 Platforms:	Unix, Linux
 Copying-policy:	MIT
