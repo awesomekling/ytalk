@@ -33,8 +33,8 @@ typedef struct {
 } ytk_menu;
 
 ytk_thing *ytk_new_menu(char *);
-ytk_menu_item *ytk_add_menu_item(ytk_menu *, char *, char, void (*)(void *));
-ytk_menu_item *ytk_add_menu_toggle_item(ytk_menu *, char *, char, void (*)(void *), int);
+ytk_menu_item *ytk_add_menu_item(ytk_menu *, char *, char, void (*) (void *));
+ytk_menu_item *ytk_add_menu_toggle_item(ytk_menu *, char *, char, void (*) (void *), int);
 void ytk_destroy_menu(ytk_menu *);
 void ytk_handle_menu_input(ytk_menu *, int);
 ylong ytk_menu_item_count(ytk_menu *);

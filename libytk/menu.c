@@ -128,7 +128,7 @@ ytk_step_down_menu(ytk_menu *m)
 }
 
 ytk_menu_item *
-ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback)(void *))
+ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (void *))
 {
 	ytk_menu_item *new, *it;
 	new = get_mem(sizeof(ytk_menu_item));
@@ -152,7 +152,7 @@ ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback)(void *)
 }
 
 ytk_menu_item *
-ytk_add_menu_toggle_item(ytk_menu *m, char *t, char k, void (*c)(void *), int v)
+ytk_add_menu_toggle_item(ytk_menu *m, char *t, char k, void (*c) (void *), int v)
 {
 	ytk_menu_item *new;
 	new = ytk_add_menu_item(m, t, k, c);
@@ -198,7 +198,7 @@ ytk_menu_width(ytk_menu *m)
 				l += 4;
 			if (l > s)
 				s = l;
-			}
+		}
 		it = it->next;
 	}
 	return s;

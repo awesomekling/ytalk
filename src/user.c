@@ -313,7 +313,7 @@ user_title(char *buf, int size, yuser *user)
 			strcpy(buf, user->full_name);
 		return;
 	}
-	for (f = fmt, b = buf; *f && (int) (b-buf) < size;) {
+	for (f = fmt, b = buf; *f && (int) (b - buf) < size;) {
 		if (*f == '%') {
 			switch (*(++f)) {
 			case 'u':

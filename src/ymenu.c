@@ -25,7 +25,7 @@ char ukey;
 void do_hidething(ytk_thing *);
 
 void
-do_runcmd(ytk_inputbox * b)
+do_runcmd(ytk_inputbox *b)
 {
 	hide_ymenu();
 	if (b->len > 0)
@@ -34,7 +34,7 @@ do_runcmd(ytk_inputbox * b)
 }
 
 void
-do_adduser(ytk_inputbox * b)
+do_adduser(ytk_inputbox *b)
 {
 	hide_ymenu();
 	if (b->len > 0)
@@ -43,7 +43,7 @@ do_adduser(ytk_inputbox * b)
 }
 
 void
-do_hidething(ytk_thing * t)
+do_hidething(ytk_thing *t)
 {
 	(void) ytk_pop_thing(menu_stack);
 	if (t == main_menu)
@@ -55,7 +55,7 @@ do_hidething(ytk_thing * t)
 }
 
 void
-esc_userlist(ytk_thing * t)
+esc_userlist(ytk_thing *t)
 {
 	ytk_menu_item *i = NULL;
 	while ((i = ytk_next_menu_item(YTK_MENU(t), i)) != NULL) {
@@ -396,7 +396,7 @@ refresh_ymenu()
 }
 
 void
-handle_ebox(ytk_thing * t)
+handle_ebox(ytk_thing *t)
 {
 	(void) t;
 	ytk_pop_thing(menu_stack);
@@ -428,7 +428,7 @@ show_error_ymenu(char *str, char *syserr)
 }
 
 void
-handle_mbox(ytk_thing * t)
+handle_mbox(ytk_thing *t)
 {
 	(void) t;
 	ytk_pop_thing(menu_stack);

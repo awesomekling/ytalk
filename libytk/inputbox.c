@@ -6,7 +6,7 @@
 #include "ytk.h"
 
 ytk_thing *
-ytk_new_inputbox(char *title, int size, void (*callback)(ytk_inputbox *))
+ytk_new_inputbox(char *title, int size, void (*callback) (ytk_inputbox *))
 {
 	ytk_thing *new_thing;
 	ytk_inputbox *new_inputbox;

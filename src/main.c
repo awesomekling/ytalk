@@ -153,7 +153,7 @@ then type 'make clean' and 'make'.\n");
 	argv++, argc--;
 
 	while (argc > 0 && **argv == '-') {
-		for (c=(*argv)+1; *c; c++) {
+		for (c = (*argv) + 1; *c; c++) {
 			switch (*c) {
 			case 'Y': yflg++; break;
 			case 'i': iflg++; break;

@@ -724,7 +724,7 @@ __update_scroll_curses(user)
 }
 
 void
-update_scroll_curses(yuser * user)
+update_scroll_curses(yuser *user)
 {
 	__update_scroll_curses(user);
 	doupdate();

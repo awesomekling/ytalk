@@ -18,7 +18,7 @@ ytk_new_thing()
 }
 
 void
-ytk_set_escape(ytk_thing *t, void (*f)(ytk_thing *))
+ytk_set_escape(ytk_thing *t, void (*f) (ytk_thing *))
 {
 	t->escape = f;
 }
@@ -64,13 +64,13 @@ ytk_visible(ytk_thing *t)
 }
 
 void
-ytk_set_colors(ytk_thing * t, int colors)
+ytk_set_colors(ytk_thing *t, int colors)
 {
 	t->colors = colors;
 }
 
 void
-ytk_set_attr(ytk_thing * t, int attr)
+ytk_set_attr(ytk_thing *t, int attr)
 {
 	t->attr = attr;
 }

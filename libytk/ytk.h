@@ -42,14 +42,14 @@ typedef struct __ytk_thing {
 	ylong	height, width;
 	ylong	top, left;
 	char	*title;
-	void	(*escape)(struct __ytk_thing *);
+	void	(*escape) (struct __ytk_thing *);
 	int		colors;
 	int		attr;
 } ytk_thing;
 
 ytk_thing *ytk_new_thing();
 void ytk_delete_thing(ytk_thing *);
-void ytk_set_escape(ytk_thing *, void (*)(ytk_thing *));
+void ytk_set_escape(ytk_thing *, void (*) (ytk_thing *));
 void ytk_set_colors(ytk_thing *, int);
 void ytk_set_attr(ytk_thing *, int);
 
