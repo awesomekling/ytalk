@@ -222,7 +222,7 @@ init_ymenu()
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-invite"), 'v', handle_options_menu, (def_flags & FL_INVITE));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Reringing"), 'r', handle_options_menu, (def_flags & FL_RING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Beeps"), 'b', handle_options_menu, (def_flags & FL_BEEP));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Ignore break"), 'k', handle_options_menu, (def_flags & FL_IGNBRK));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Ignore break"), 'g', handle_options_menu, (def_flags & FL_IGNBRK));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Require caps"), 'c', handle_options_menu, (def_flags & FL_CAPS));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt rerings"), 'p', handle_options_menu, (def_flags & FL_PROMPTRING));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt to quit"), 'q', handle_options_menu, (def_flags & FL_PROMPTQUIT));
