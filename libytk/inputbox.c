@@ -38,7 +38,7 @@ ytk_handle_inputbox_input(ytk_inputbox *b, int ch)
 	case '\r':
 	case '\n':
 		if (b->callback != NULL)
-			b->callback((void *) b);
+			b->callback(b);
 		break;
 	case 8:
 	case 0x7f:
