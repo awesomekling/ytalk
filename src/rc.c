@@ -219,7 +219,7 @@ read_rcfile(fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on;
+	char *ptr, *cmd, *from, *to, *on, *bg, *fg;
 	char *host;
 	int i, line, found;
 
@@ -264,7 +264,9 @@ read_rcfile(fname)
 				found = 1;
 				new_alias(get_word(&ptr), get_word(&ptr));
 			} else if(strcmp(cmd, "ui_colors") == 0) {
-				switch(setcolors(get_word(&ptr), get_word(&ptr), &newui_colors, &newui_attr)) {
+				bg = get_word(&ptr);
+				fg = get_word(&ptr);
+				switch(setcolors(bg, fg, &newui_colors, &newui_attr)) {
 				case 0:
 					found = 1;
 					break;
