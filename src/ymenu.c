@@ -18,6 +18,14 @@ ytk_thing *message_box = NULL;
 char ukey;
 
 void
+do_runcmd(ytk_inputbox * b)
+{
+	hide_ymenu();
+	if (b->len > 0)
+		execute(b->data);
+}
+
+void
 do_adduser(ytk_inputbox * b)
 {
 	if (b->len > 0)
@@ -35,6 +43,15 @@ do_hidething(ytk_thing * t)
 		ytk_delete_thing(t);
 	refresh_curses();
 	ytk_sync_display();
+}
+
+void
+handle_runcmd()
+{
+	ytk_thing *c;
+	c = ytk_new_inputbox("Run command", 60, do_runcmd);
+	ytk_set_escape(c, do_hidething);
+	ytk_push_thing(menu_stack, c);
 }
 
 void
@@ -145,6 +162,7 @@ init_ymenu()
 	ytk_add_menu_separator(YTK_MENU(main_menu));
 	ytk_add_menu_item(YTK_MENU(main_menu), "Options", 'o', handle_options);
 	ytk_add_menu_item(YTK_MENU(main_menu), "Spawn shell", 's', handle_shell);
+	ytk_add_menu_item(YTK_MENU(main_menu), "Run command", 'c', handle_runcmd);
 	ytk_add_menu_separator(YTK_MENU(main_menu));
 	ytk_add_menu_item(YTK_MENU(main_menu), "Quit", 'q', handle_quit);
 	ytk_set_escape(main_menu, hide_ymenu);
