@@ -480,10 +480,33 @@ scroll_term(user)
 {
 	register int i;
 	register yachar *c;
+	ylinebuf *b;
 	int sy, sx;
 
 	if (user->sc_bot > user->sc_top) {
 		c = user->scr[user->sc_top];
+
+		if (user->sc_top == 0 && term_does_scrollback()) {
+			/* add topmost line to user's backlog */
+			if (user->backlog != NULL) {
+				for (b = user->backlog; b->next != NULL; b = b->next);
+			} else {
+				user->backlog = get_mem(sizeof(ylinebuf));
+				b = user->backlog;
+				b->line = NULL;
+				b->prev = NULL;
+			}
+			b->next = get_mem(sizeof(ylinebuf));
+			b->next->prev = b;
+			b->next->next = NULL;
+
+			b = b->next;
+			b->line = get_mem(user->cols * sizeof(yachar));
+			b->width = user->cols;
+			memcpy(b->line, user->scr[0], (user->cols * sizeof(yachar)));
+			user->logbot = b;
+		}
+
 		for (i = user->sc_top; i < user->sc_bot; i++)
 			user->scr[i] = user->scr[i + 1];
 		user->scr[user->sc_bot] = c;
@@ -1555,4 +1578,47 @@ term_does_asides()
 		return 1;
 	}
 	return 0;
+}
+
+int
+term_does_scrollback()
+{
+	switch (term_type) {
+	case 1:		/* curses */
+		return 1;
+	}
+	return 0;
+}
+
+void
+start_scroll_term(user)
+	yuser *user;
+{
+	switch (term_type) {
+	case 1:
+		start_scroll_curses(user);
+		break;
+	}
+}
+
+void
+end_scroll_term(user)
+	yuser *user;
+{
+	switch (term_type) {
+	case 1:
+		end_scroll_curses(user);
+		break;
+	}
+}
+
+void
+update_scroll_term(user)
+	yuser *user;
+{
+	switch (term_type) {
+	case 1:
+		update_scroll_curses(user);
+		break;
+	}
 }

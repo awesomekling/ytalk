@@ -33,6 +33,7 @@ typedef struct _ywin {
 	struct _ywin *next;	/* next ywin in linked list */
 	yuser *user;		/* user pointer */
 	WINDOW *win;		/* window pointer */
+	WINDOW *swin;		/* scroll viewport window */
 	int height, width;	/* height and width in characters */
 	int row, col;		/* row and column position on screen */
 	char *title;		/* window title string */
@@ -106,6 +107,9 @@ new_draw_title(w)
 {
 	int x;
 	char *t = w->title;
+	if(w->user == scuser) {
+		newui_attr |= A_UNDERLINE;
+	}
 	move(w->row - 1, w->col);
 	for (x = 0; x < w->width; x++) {
 		if (x >= 1 && *t) {
@@ -141,6 +145,9 @@ new_draw_title(w)
 		} else {
 			addch(' ' | COLOR_PAIR(newui_colors) | newui_attr);
 		}
+	}
+	if(w->user == scuser) {
+		newui_attr &= ~A_UNDERLINE;
 	}
 }
 #endif
@@ -224,6 +231,10 @@ curses_redraw()
 			delwin(w->win);
 			w->win = NULL;
 		}
+		if (w->swin) {
+			delwin(w->swin);
+			w->swin = NULL;
+		}
 		wins++;
 	}
 	if ((wsize = win_size(wins)) < 3) {
@@ -247,8 +258,20 @@ curses_redraw()
 		}
 		draw_title(w);
 		row += wsize;
+		if (w->user->scroll) {
+			w->swin = dupwin(w->win);
+			if (w->swin == NULL) {
+				end_term();
+				show_error("Couldn't create scrolling viewport");
+				bail(YTE_ERROR);
+			}
+		}
 		refresh();
-		wrefresh(w->win);
+		if (w->user->scroll) {
+			update_scroll_curses(w->user);
+			wrefresh(w->swin);
+		} else
+			wrefresh(w->win);
 	}
 }
 
@@ -318,6 +341,10 @@ curses_restart(sig)
 		if (w->win) {
 			delwin(w->win);
 			w->win = NULL;
+			if (w->user->scroll) {
+				delwin(w->swin);
+				w->swin = NULL;
+			}
 		}
 	/* restart curses */
 
@@ -554,7 +581,10 @@ flush_curses(user)
 	register ywin *w;
 
 	w = (ywin *) (user->term);
-	wrefresh(w->win);
+	if (w->user->scroll)
+		wrefresh(w->swin);
+	else
+		wrefresh(w->win);
 }
 
 /*
@@ -568,10 +598,17 @@ redisplay_curses()
 	clear();
 	refresh();
 	for (w = head; w; w = w->next) {
-		redraw_term(w->user, 0);
-		draw_title(w);
-		refresh();
-		wrefresh(w->win);
+		if (w->user->scroll) {
+			update_scroll_curses(w->user);
+			draw_title(w);
+			refresh();
+			wrefresh(w->swin);
+		} else {
+			redraw_term(w->user, 0);
+			draw_title(w);
+			refresh();
+			wrefresh(w->win);
+		}
 	}
 }
 
@@ -643,4 +680,54 @@ special_menu_curses(user, y, x, section, len)
 		raw_addch_curses(user, ACS_LRCORNER);
 		break;
 	}
+}
+
+void
+start_scroll_curses(user)
+	yuser *user;
+{
+	ywin *w = (ywin *) (user->term);
+	w->swin = dupwin(w->win);
+	if (w->swin == NULL) {
+		end_term();
+		show_error("Couldn't create scrolling viewport");
+		bail(YTE_ERROR);
+	}
+}
+
+void
+end_scroll_curses(user)
+	yuser *user;
+{
+	ywin *w = (ywin *) (user->term);
+	if (w->swin != NULL) {
+		delwin(w->swin);
+		w->swin = NULL;
+		redisplay_curses();
+	}
+}
+
+void
+update_scroll_curses(user)
+	yuser *user;
+{
+	u_short r, i;
+	ylinebuf *b = user->sca;
+	ywin *w = (ywin *) (user->term);
+	werase(w->swin);
+	if (b == NULL)
+		b = user->logbot;
+	for (r = 0; r <= (user->rows - 1); r++) {
+		if (b->prev != NULL && b->line != NULL) {
+			wmove(w->swin, (user->rows - 1) - r, 0);
+			for (i = 0; ((i < user->cols) && (i < b->width)); i++) {
+				waddch(w->swin, b->line[i].l);
+			}
+			b = b->prev;
+		} else {
+			break;
+		}
+	}
+	wmove(w->swin, 0, COLS - 1);
+	wrefresh(w->swin);
 }

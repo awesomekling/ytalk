@@ -125,6 +125,13 @@ typedef struct {
 	char pad[44];		/* zeroed out */
 } y_parm;
 
+typedef struct _ylinebuf {
+	struct _ylinebuf *next;
+	struct _ylinebuf *prev;
+	yachar *line;
+	u_short width;
+} ylinebuf;
+
 #define MAXARG	8		/* max ESC sequence arg count */
 
 typedef struct _yuser {
@@ -138,6 +145,10 @@ typedef struct _yuser {
 	u_short t_rows, t_cols;	/* his rows and cols on window over here */
 	u_short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
+	ylinebuf *sca;		/* scroll amount (position in log) */
+	int scroll;		/* set if currently being scrolled */
+	ylinebuf *backlog;	/* user screen backlog */
+	ylinebuf *logbot;	/* bottom of backlog */
 	yachar **scr;		/* screen data */
 	int *scr_tabs;		/* screen tab positions */
 	char bump;		/* set if at far right */
@@ -315,6 +326,8 @@ extern int user_winch;		/* user window/status changed flag */
 extern ychar *io_ptr;		/* user input pointer */
 extern int io_len;		/* user input count */
 
+extern yuser *scuser;	/* user being scrolled */
+
 extern int running_process;	/* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
 
@@ -381,7 +394,11 @@ extern void redraw_all_terms();	/* term.c */
 extern void set_raw_term();	/* term.c */
 extern void set_cooked_term();	/* term.c */
 extern int term_does_asides();	/* term.c */
+extern int term_does_scrollback();	/* term.c */
 extern void special_menu_term( /* yuser, int, int, int, int) */ );	/* term.c */
+extern void start_scroll_term( /* yuser */ );	/* term.c */
+extern void end_scroll_term( /* yuser */ );	/* term.c */
+extern void update_scroll_term( /* yuser */ );	/* term.c */
 
 extern void init_user();	/* user.c */
 extern yuser *new_user( /* name, host, tty */ );	/* user.c */
@@ -430,5 +447,8 @@ extern void kill_exec();	/* exec.c */
 extern void winch_exec();	/* exec.c */
 
 extern void vt100_process( /* yuser, char */ );	/* vt100.c */
+
+extern void scroll_up( /* yuser */ );	/* scroll.c */
+extern void scroll_down( /* yuser */ );	/* scroll.c */
 
 /* EOF */

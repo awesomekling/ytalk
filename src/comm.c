@@ -1259,6 +1259,8 @@ my_input(user, buf, len)
 						*buf = '\n';
 					else if (*buf == 27)	/* Esc */
 						break;
+					else if ((*buf == 14 || *buf == 15 || *buf == 16) && term_does_scrollback())	/* ^N or ^P */
+						break;
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
 						break;
 				}
@@ -1284,6 +1286,21 @@ my_input(user, buf, len)
 						 * char */
 					if (*buf == 27)	/* ESC */
 						break;
+					else if (*buf == 14 && term_does_scrollback()) {	/* ^N - scroll down */
+						scroll_down(scuser);
+						buf++, len--;
+					}
+					else if (*buf == 15 && term_does_scrollback()) {	/* ^O - next window */
+						scuser = scuser->unext;
+						if (scuser == NULL)
+							scuser = me;
+						redraw_all_terms();
+						buf++, len--;
+					}
+					else if (*buf == 16 && term_does_scrollback()) {	/* ^P - scroll up */
+						scroll_up(scuser);
+						buf++, len--;
+					}
 					else if (*buf == 12 || *buf == 18) {	/* ^L or ^R */
 						redraw_all_terms();
 						buf++, len--;
