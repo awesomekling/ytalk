@@ -46,9 +46,6 @@
 #define INADDR_LOOPBACK 0x7f000001
 #endif
 
-extern char *bottom_msg;
-extern ylong bottom_time;
-
 ychar *io_ptr;			/* user input pointer */
 int io_len = 0;			/* user input count */
 

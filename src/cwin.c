@@ -30,9 +30,6 @@
 
 #include "cwin.h"
 
-extern char *bottom_msg;
-extern ylong bottom_time;
-
 typedef struct _ywin {
 	struct _ywin *next;	/* next ywin in linked list */
 	yuser *user;		/* user pointer */
