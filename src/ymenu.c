@@ -166,9 +166,11 @@ handle_color(ytk_menu_item *i)
 #endif
 
 static void
-set_flags(ylong new_flags)
+set_flags(int togval, ylong mask)
 {
 	yuser *u;
+	ylong new_flags;
+	new_flags = (togval) ? (def_flags | mask) : (def_flags & ~mask);
 	if (def_flags != new_flags) {
 		for (u = user_list; u != NULL; u = u->unext)
 			if (!(u->flags & FL_LOCKED))
@@ -177,24 +179,21 @@ set_flags(ylong new_flags)
 	def_flags = new_flags;
 }
 
-#define DEFAULT_TOGGLE(name, mask) \
-void name(ytk_menu_item *i) { \
-	if (i->value) \
-		set_flags(def_flags | mask); \
-	else \
-		set_flags(def_flags & ~mask); \
+void
+handle_options_menu(ytk_menu_item *i) {
+	switch (i->hotkey) {
+	case 's': set_flags(i->value, FL_SCROLL); break;
+	case 'w': set_flags(i->value, FL_WRAP); break;
+	case 'i': set_flags(i->value, FL_IMPORT); break;
+	case 'v': set_flags(i->value, FL_INVITE); break;
+	case 'r': set_flags(i->value, FL_RING); break;
+	case 'b': set_flags(i->value, FL_BEEP); break;
+	case 'k': set_flags(i->value, FL_IGNBRK); break;
+	case 'c': set_flags(i->value, FL_CAPS); break;
+	case 'p': set_flags(i->value, FL_PROMPTRING); break;
+	case 'q': set_flags(i->value, FL_PROMPTQUIT); break;
+	}
 }
-
-DEFAULT_TOGGLE(handle_scrolling, FL_SCROLL)
-DEFAULT_TOGGLE(handle_wordwrap, FL_WRAP)
-DEFAULT_TOGGLE(handle_autoimport, FL_IMPORT)
-DEFAULT_TOGGLE(handle_autoinvite, FL_INVITE)
-DEFAULT_TOGGLE(handle_rering, FL_RING)
-DEFAULT_TOGGLE(handle_beeps, FL_BEEP)
-DEFAULT_TOGGLE(handle_ignbrk, FL_IGNBRK)
-DEFAULT_TOGGLE(handle_promptrering, FL_PROMPTRING)
-DEFAULT_TOGGLE(handle_promptquit, FL_PROMPTQUIT)
-DEFAULT_TOGGLE(handle_caps, FL_CAPS)
 
 void
 init_ymenu()
@@ -217,16 +216,16 @@ init_ymenu()
 #endif
 
 	options_menu = ytk_new_menu(_("Options"));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Scrolling"), 's', handle_scrolling, (def_flags & FL_SCROLL));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Word-wrap"), 'w', handle_wordwrap, (def_flags & FL_WRAP));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-import"), 'i', handle_autoimport, (def_flags & FL_IMPORT));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-invite"), 'v', handle_autoinvite, (def_flags & FL_INVITE));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Reringing"), 'r', handle_rering, (def_flags & FL_RING));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Beeps"), 'b', handle_beeps, (def_flags & FL_BEEP));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Ignore break"), 'k', handle_ignbrk, (def_flags & FL_IGNBRK));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Require caps"), 'c', handle_caps, (def_flags & FL_CAPS));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt rerings"), 'p', handle_promptrering, (def_flags & FL_PROMPTRING));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt to quit"), 'q', handle_promptquit, (def_flags & FL_PROMPTQUIT));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Scrolling"), 's', handle_options_menu, (def_flags & FL_SCROLL));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Word-wrap"), 'w', handle_options_menu, (def_flags & FL_WRAP));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-import"), 'i', handle_options_menu, (def_flags & FL_IMPORT));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-invite"), 'v', handle_options_menu, (def_flags & FL_INVITE));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Reringing"), 'r', handle_options_menu, (def_flags & FL_RING));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Beeps"), 'b', handle_options_menu, (def_flags & FL_BEEP));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Ignore break"), 'k', handle_options_menu, (def_flags & FL_IGNBRK));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Require caps"), 'c', handle_options_menu, (def_flags & FL_CAPS));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt rerings"), 'p', handle_options_menu, (def_flags & FL_PROMPTRING));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt to quit"), 'q', handle_options_menu, (def_flags & FL_PROMPTQUIT));
 	ytk_set_escape(options_menu, do_hidething);
 #ifdef YTALK_COLOR
 	ytk_set_colors(options_menu, menu_colors);
