@@ -101,7 +101,7 @@ ytk_msgbox_width(ytk_msgbox *m)
 			l = strlen(it->text);
 			if (l > s)
 				s = l;
-			}
+		}
 		it = it->next;
 	}
 	return s;
