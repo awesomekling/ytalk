@@ -513,15 +513,13 @@ scroll_curses(yuser *user)
 	wmove(w->win, user->y, user->x);
 }
 
-#ifdef HAVE_KEYPAD
 void
-keypad_curses(yuser *user, int bf)
+keypad_curses(int bf)
 {
-	ywin *w;
-	w = (ywin *) (user->term);
-	keypad(w->win, bf);
+#ifdef HAVE_KEYPAD
+	keypad(((ywin *) (me->term))->win, bf);
+#endif
 }
-#endif /* HAVE_KEYPAD */
 
 void
 flush_curses(yuser *user)

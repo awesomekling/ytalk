@@ -196,7 +196,6 @@ what_term(void)
 	return term_type;
 }
 
-#ifdef HAVE_KEYPAD
 /*
  * Change terminal keypad mode (only for me, only with curses)
  */
@@ -205,9 +204,8 @@ keypad_term(yuser *user, int bf)
 {
 	if (user != me)
 		return;
-	keypad_curses(user, bf);
+	keypad_curses(bf);
 }
-#endif /* HAVE_KEYPAD */
 
 /*
  * Abort all terminal processing.

@@ -83,7 +83,6 @@ vt100_process(yuser *user, char data)
 		}
 		user->got_esc = 0;
 		break;
-#ifdef HAVE_KEYPAD
 	case 'h':		/* set modes */
 		switch (user->av[0]) {
 		case 1:	/* keypad "application" mode */
@@ -108,7 +107,6 @@ vt100_process(yuser *user, char data)
 		keypad_term(user, 0);
 		user->got_esc = 0;
 		break;
-#endif /* HAVE_KEYPAD */
 	case '@':
 		if (user->got_esc == 2) {	/* add char */
 			if (user->av[0] == 0)
