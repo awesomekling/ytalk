@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: YTalk 3.2.0\n"
-"Report-Msgid-Bugs-To: ytalk@impul.se\n"
-"POT-Creation-Date: 2004-12-05 16:30+0100\n"
+"POT-Creation-Date: 2004-12-05 18:16+0100\n"
 "PO-Revision-Date: 2004-12-05 14:52+0100\n"
 "Last-Translator: Andreas Kling <keso@impul.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: ytalk@impul.se\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/comm.c:189 src/comm.c:191
@@ -90,12 +90,12 @@ msgstr "fork() misslyckades"
 msgid "Press any key to quit."
 msgstr "Tryck valfri tangent för att avsluta."
 
-#: src/main.c:172
+#: src/main.c:174
 #, c-format
 msgid "Unknown option '%c'\n"
 msgstr "Okänd flagga '%c'\n"
 
-#: src/main.c:188
+#: src/main.c:190
 #, c-format
 msgid ""
 "Usage:    %s [options] user[@host][#tty]...\n"
@@ -114,12 +114,11 @@ msgstr ""
 "                -v          --    skriv ut programversion\n"
 "                -h          --    visa detta hjälpmeddelande\n"
 
-#: src/main.c:200
-#, c-format
+#: src/main.c:202
 msgid "Standard input is not a valid terminal device.\n"
 msgstr "Standard-input är ej en giltig terminalenhet.\n"
 
-#: src/main.c:239 src/user.c:277
+#: src/main.c:241 src/user.c:277
 msgid "Waiting for connection..."
 msgstr "Väntar på anslutning..."
 
