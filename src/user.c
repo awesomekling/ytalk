@@ -20,6 +20,8 @@
 #include "cwin.h"
 #include "ymenu.h"
 #include "mem.h"
+
+#include <stdio.h>
 #include <pwd.h>
 
 extern int dont_change_my_addr;

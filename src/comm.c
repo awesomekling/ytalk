@@ -37,6 +37,9 @@
 #  endif
 #endif
 
+/* this isn't the most elegant solution... */
+#define DRAINFUNC(f)	((void (*) (yuser *, void *))f)
+
 #include "cwin.h"
 
 #define IN_ADDR(s)	((s).sin_addr.s_addr)
@@ -67,10 +70,7 @@ static v3_winch v3w;
  * Set up a drain of out-of-band data.
  */
 static void
-drain_user(user, len, func)
-	yuser *user;
-	int len;
-	void (*func) ();
+drain_user(yuser *user, int len, void (*func) (yuser *, void *))
 {
 	if (len > user->dbuf_size) {
 		user->dbuf_size = len + 64;
@@ -85,10 +85,7 @@ drain_user(user, len, func)
  * Send out-of-band data.
  */
 static void
-send_oob(fd, ptr, len)
-	int fd;
-	yaddr ptr;
-	int len;
+send_oob(int fd, yaddr ptr, int len)
 {
 	ychar oob, size;
 	static struct iovec iov[3];
@@ -121,8 +118,7 @@ send_oob(fd, ptr, len)
  * connected to.
  */
 static void
-send_import(to, from)
-	yuser *to, *from;
+send_import(yuser *to, yuser *from)
 {
 	if (to->remote.vmajor > 2) {
 		v3p.code = V3_IMPORT;
@@ -143,8 +139,7 @@ send_import(to, from)
  * Tell another ytalk connection to connect to a user.
  */
 static void
-send_accept(to, from)
-	yuser *to, *from;
+send_accept(yuser *to, yuser *from)
 {
 	if (to->remote.vmajor > 2) {
 		v3p.code = V3_ACCEPT;
@@ -165,9 +160,7 @@ send_accept(to, from)
  * Process a Ytalk version 2.? data packet.
  */
 static void
-v2_process(user, pack)
-	yuser *user;
-	v2_pack *pack;
+v2_process(yuser *user, v2_pack *pack)
 {
 	register yuser *u;
 	ylong host_addr;
@@ -251,9 +244,7 @@ v2_process(user, pack)
  * Process a Ytalk version 3.? data packet.
  */
 static void
-v3_process_pack(user, pack)
-	yuser *user;
-	v3_pack *pack;
+v3_process_pack(yuser *user, v3_pack *pack)
 {
 	register yuser *u, *u2;
 	ylong host_addr, pid;
@@ -336,9 +327,7 @@ v3_process_pack(user, pack)
  * their flags be locked to a particular value until they unlock them later.
  */
 static void
-v3_process_flags(user, pack)
-	yuser *user;
-	v3_flags *pack;
+v3_process_flags(yuser *user, v3_flags *pack)
 {
 	switch (pack->code) {
 	case V3_LOCKF:
@@ -354,9 +343,7 @@ v3_process_flags(user, pack)
  * Process a Ytalk version 3.? winch packet.
  */
 static void
-v3_process_winch(user, pack)
-	yuser *user;
-	v3_winch *pack;
+v3_process_winch(yuser *user, v3_winch *pack)
 {
 	switch (pack->code) {
 	case V3_YOURWIN:
@@ -385,9 +372,7 @@ v3_process_winch(user, pack)
  * function based on the type of packet.
  */
 static void
-v3_process(user, ptr)
-	yuser *user;
-	yaddr ptr;
+v3_process(yuser *user, yaddr ptr)
 {
 	ychar *str;
 
@@ -417,8 +402,7 @@ v3_process(user, ptr)
  * from the canonical input stream.
  */
 static void
-read_user(fd)
-	int fd;
+read_user(int fd)
 {
 	register ychar *c, *p;
 	register int rc;
@@ -475,7 +459,7 @@ read_user(fd)
 			if (user->got_oob) {
 				user->got_oob = 0;
 				if (*c <= V3_MAXPACK) {
-					drain_user(user, *c, v3_process);
+					drain_user(user, *c, DRAINFUNC(v3_process));
 					c++, rc--;
 					continue;
 				}
@@ -489,7 +473,7 @@ read_user(fd)
 							c++, rc--;
 							if (rc > 0) {
 								if (*c <= V3_MAXPACK) {
-									drain_user(user, *c, v3_process);
+									drain_user(user, *c, DRAINFUNC(v3_process));
 									c++, rc--;
 									break;
 								}
@@ -506,7 +490,7 @@ read_user(fd)
 
 						if (*c == V2_IMPORT || *c == V2_EXPORT
 						    || *c == V2_ACCEPT || *c == V2_AUTO) {
-							drain_user(user, V2_PACKLEN, v2_process);
+							drain_user(user, V2_PACKLEN, DRAINFUNC(v2_process));
 							/*
 							 * don't increment c
 							 * or decrement rc --
@@ -536,8 +520,7 @@ read_user(fd)
  * Initial Handshaking:  read the parameter pack from another ytalk user.
  */
 static void
-ytalk_user(fd)
-	int fd;
+ytalk_user(int fd)
 {
 	register yuser *user, *u;
 	u_short cols;
@@ -634,8 +617,7 @@ ytalk_user(fd)
  * is another ytalk user.
  */
 static void
-connect_user(fd)
-	int fd;
+connect_user(int fd)
 {
 	register yuser *user, *u;
 
@@ -644,7 +626,7 @@ connect_user(fd)
 		show_error("connect_user: unknown contact");
 		return;
 	}
-	if (full_read(fd, user->edit, 3) < 0) {
+	if (full_read(fd, (char *)user->edit, 3) < 0) {
 		free_user(user);
 		show_error("connect_user: bad read");
 		return;
@@ -702,8 +684,7 @@ connect_user(fd)
  * edit keys.
  */
 static void
-contact_user(fd)
-	int fd;
+contact_user(int fd)
 {
 	register yuser *user;
 	register int n;
@@ -756,8 +737,7 @@ contact_user(fd)
  * Do a word wrap.
  */
 static int
-word_wrap(user)
-	register yuser *user;
+word_wrap(yuser *user)
 {
 	register int i, x, bound;
 	static yachar temp[20];
@@ -790,8 +770,7 @@ word_wrap(user)
  * that instead of messing up his screen.
  */
 static int
-announce(user)
-	yuser *user;
+announce(yuser *user)
 {
 	register int rc, fd;
 
@@ -841,9 +820,7 @@ announce(user)
  * Invite a user into the conversation.
  */
 yuser *
-invite(name, send_announce)
-	register char *name;
-	int send_announce;
+invite(char *name, int send_announce)
 {
 	register int rc;
 	char *hisname, *hishost, *histty;
@@ -985,7 +962,7 @@ invite(name, send_announce)
  * Periodic housecleaning.
  */
 void
-house_clean()
+house_clean(void)
 {
 	register yuser *u, *next;
 	ylong t;
@@ -1057,7 +1034,7 @@ house_clean()
 }
 
 void
-rering_all()
+rering_all(void)
 {
 	yuser *u, *next;
 	int rc;
@@ -1091,8 +1068,7 @@ rering_all()
 }
 
 void
-send_winch(user)
-	yuser *user;
+send_winch(yuser *user)
 {
 	register yuser *u;
 
@@ -1112,7 +1088,7 @@ send_winch(user)
 }
 
 void
-send_region()
+send_region(void)
 {
 	register yuser *u;
 
@@ -1126,7 +1102,7 @@ send_region()
 }
 
 void
-send_end_region()
+send_end_region(void)
 {
 	register yuser *u;
 
@@ -1144,10 +1120,7 @@ send_end_region()
  * if the given user is either "me" or NULL.
  */
 void
-send_users(user, buf, len, cl_buf, cl_len)
-	yuser *user;
-	ychar *buf, *cl_buf;
-	register int len, cl_len;
+send_users(yuser *user, ychar *buf, int len, ychar *cl_buf, int cl_len)
 {
 	register ychar *o, *b;
 	register yuser *u;
@@ -1192,10 +1165,7 @@ send_users(user, buf, len, cl_buf, cl_len)
  * Display user input.  Emulate ANSI.
  */
 void
-show_input(user, buf, len)
-	yuser *user;
-	register ychar *buf;
-	register int len;
+show_input(yuser *user, ychar *buf, int len)
 {
 	if (user->got_esc) {
 process_esc:
@@ -1295,10 +1265,7 @@ process_esc:
  * Process keyboard input.
  */
 void
-my_input(user, buf, len)
-	yuser *user;
-	register ychar *buf;
-	int len;
+my_input(yuser *user, ychar *buf, int len)
 {
 	register ychar *c, *n;
 	register int i, j;
@@ -1397,11 +1364,11 @@ my_input(user, buf, len)
 					} else if (*buf == 2) {		/* ^B - Bold */
 						if (me->c_at & A_BOLD) {
 							me->c_at &= ~A_BOLD;
-							send_users(me, "[21m", 5, "[21m", 5);
+							send_users(me, (ychar *)"[21m", 5, (ychar *)"[21m", 5);
 						}
 						else {
 							me->c_at |= A_BOLD;
-							send_users(me, "[01m", 5, "[01m", 5);
+							send_users(me, (ychar *)"[01m", 5, (ychar *)"[01m", 5);
 						}
 						buf++, len--;
 #endif
@@ -1446,8 +1413,7 @@ my_input(user, buf, len)
 }
 
 void
-lock_flags(flags)
-	ylong flags;
+lock_flags(ylong flags)
 {
 	register yuser *u;
 
@@ -1463,7 +1429,7 @@ lock_flags(flags)
 }
 
 void
-unlock_flags()
+unlock_flags(void)
 {
 	register yuser *u;
 

@@ -178,7 +178,7 @@ typedef struct _yuser {
 	int dbuf_size;		/* current buffer size */
 	ychar *dbuf, *dptr;	/* buffer base and current pointer */
 	int drain;		/* remaining bytes to drain */
-	void (*dfunc) ();	/* function to call with drained data */
+	void (*dfunc) (struct _yuser *, void *);	/* function to call with drained data */
 	int got_oob;		/* got OOB flag */
 
 	/* anything below this is available for the terminal interface */
@@ -267,7 +267,9 @@ extern char YT_ACS_OFF;		/* deactivates it */
 
 /* ---- some machine compatibility definitions ---- */
 
+#ifndef errno
 extern int errno;
+#endif
 
 /* aliases -- added by Roger Espel Llima (borrowed from utalk) */
 
@@ -341,25 +343,27 @@ extern void generate_full_name(yuser *);
 extern void free_users(void);
 extern void user_title(char *, int, yuser *);
 
-extern void init_fd();		/* fd.c */
-extern void add_fd( /* fd, func */ );	/* fd.c */
-extern void remove_fd( /* fd */ );	/* fd.c */
-extern int full_read( /* fd, buf, len */ );	/* fd.c */
-extern void main_loop();	/* fd.c */
-extern void input_loop();	/* fd.c */
-extern void bail_loop();	/* fd.c */
+/* fd.c */
+extern void init_fd(void);
+extern void add_fd(int, void (*) (int));
+extern void remove_fd(int);
+extern int full_read(int, char *, size_t);
+extern void main_loop(void);
+extern void input_loop(void);
+extern void bail_loop(void);
 
-extern yuser *invite( /* username, announce */ );	/* comm.c */
-extern void house_clean();	/* comm.c */
-extern void send_winch( /* yuser */ );	/* comm.c */
-extern void send_region();	/* comm.c */
-extern void send_end_region();	/* comm.c */
-extern void send_users( /* buf, len */ );	/* comm.c */
-extern void show_input( /* user, buf, len */ );	/* comm.c */
-extern void my_input( /* buf, len */ );	/* comm.c */
-extern void lock_flags( /* flags */ );	/* comm.c */
-extern void unlock_flags();	/* comm.c */
-extern void rering_all();	/* comm.c */
+/* comm.c */
+extern yuser *invite(char *, int);
+extern void house_clean(void);
+extern void send_winch(yuser *);
+extern void send_region(void);
+extern void send_end_region(void);
+extern void send_users(yuser *, ychar *, int, ychar *, int);
+extern void show_input(yuser *, ychar *, int);
+extern void my_input(yuser *, ychar *, int);
+extern void lock_flags(ylong);
+extern void unlock_flags(void);
+extern void rering_all(void);
 
 /* socket.c */
 extern void init_socket(void);

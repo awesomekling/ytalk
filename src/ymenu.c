@@ -41,7 +41,7 @@ do_adduser(ytk_inputbox *b)
 {
 	hide_ymenu();
 	if (b->len > 0)
-		invite(b->data);
+		invite(b->data, 0);
 	do_hidething(YTK_THING(b));
 }
 
@@ -164,7 +164,7 @@ handle_color(void *t)
 	if (k >= '0' && k <= '7') {
 		me->c_fg = k - '0';
 		len = snprintf(buf, sizeof(buf), "%c[%dm", 27, (k - '0') + 30);
-		send_users(me, buf, len, buf, len);
+		send_users(me, (ychar *)buf, len, (ychar *)buf, len);
 	}
 	switch (k) {
 	case 'b':
@@ -175,7 +175,7 @@ handle_color(void *t)
 			me->c_at &= ~A_BOLD;
 			len = snprintf(buf, sizeof(buf), "%c[21m", 27);
 		}
-		send_users(me, buf, len, buf, len);
+		send_users(me, (ychar *)buf, len, (ychar *)buf, len);
 		break;
 	}
 	hide_ymenu();

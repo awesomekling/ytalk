@@ -399,11 +399,11 @@ kill_exec(void)
 	end_win_region(me);
 #ifdef YTALK_COLOR
 	if (me->altchar) {
-		send_users(me, "[(B", 4, "[(B", 4);
+		send_users(me, (ychar *)"[(B", 4, (ychar *)"[(B", 4);
 		me->altchar = 0;
 	}
 	if (me->csx) {
-		send_users(me, &YT_ACS_OFF, 1, &YT_ACS_OFF, 1);
+		send_users(me, (ychar *)&YT_ACS_OFF, 1, (ychar *)&YT_ACS_OFF, 1);
 		me->csx = 0;
 	}
 #endif
