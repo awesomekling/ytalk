@@ -194,6 +194,7 @@ typedef struct _yuser {
 		char type;	/* type of current gtalk string */
 		int len;	/* length of current gtalk string */
 		char *version;	/* user's GNUTALK version */
+		char *system;	/* user's *NIX flavor */
 	} gt;
 
 	/* anything below this is available for the terminal interface */

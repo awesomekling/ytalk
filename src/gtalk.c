@@ -50,6 +50,14 @@ gtalk_process(yuser *user, ychar data)
 			if (user->gt.version != NULL)
 				free_mem(user->gt.version);
 			user->gt.version = gtalk_parse_version(user->gt.buf);
+			/* find the system name (after last space character) */
+			if (user->gt.version != NULL) {
+				user->gt.system = strrchr(user->gt.version, ' ');
+				if (user->gt.system != NULL) {
+					*(user->gt.system) = '\0';
+					user->gt.system++;
+				}
+			}
 			retitle_all_terms();
 			break;
 		}
