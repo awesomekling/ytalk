@@ -375,7 +375,6 @@ extern void end_win_region( /* yuser */ );	/* term.c */
 extern void set_scroll_region( /* yuser, top, bottom */ );	/* term.c */
 extern void msg_term( /* yuser, str */ );	/* term.c */
 extern void spew_term( /* yuser, fd, rows, cols */ );	/* term.c */
-extern int center( /* width, n */ );	/* term.c */
 extern void redraw_all_terms();	/* term.c */
 extern void retitle_all_terms();/* term.c */
 extern void set_raw_term();	/* term.c */

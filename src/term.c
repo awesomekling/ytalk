@@ -1482,15 +1482,6 @@ raw_term(user, y, x, str, len)
 	}
 }
 
-int
-center(width, n)
-	int width, n;
-{
-	if (n >= width)
-		return 0;
-	return (width - n) >> 1;
-}
-
 void
 redraw_all_terms()
 {
