@@ -17,12 +17,15 @@ ytk_thing *message_box = NULL;
 
 char ukey;
 
+void do_hidething(ytk_thing *);
+
 void
 do_runcmd(ytk_inputbox * b)
 {
 	hide_ymenu();
 	if (b->len > 0)
 		execute(b->data);
+	do_hidething(YTK_THING(b));
 }
 
 void
@@ -31,6 +34,7 @@ do_adduser(ytk_inputbox * b)
 	hide_ymenu();
 	if (b->len > 0)
 		invite(b->data);
+	do_hidething(YTK_THING(b));
 }
 
 void
@@ -418,6 +422,7 @@ yes_no(char *str)
 			}
 		}
 	} while (out == 0);
+	ytk_delete_thing(yn);
 	hide_ymenu();
 	io_len = 0;
 	return out;
