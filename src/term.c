@@ -165,9 +165,17 @@ init_term()
 	/* set me up a terminal */
 
 	if (def_flags & FL_NEWUI)
+#ifdef HAVE_SNPRINTF
 		snprintf(tmpstr, MAXERR, "%s", me->full_name);
+#else
+		sprintf(tmpstr, "%s", me->full_name);
+#endif
 	else
+#ifdef HAVE_SNPRINTF
 		snprintf(tmpstr, MAXERR, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
+#else
+		sprintf(tmpstr, "YTalk version %d.%d.%d", VMAJOR, VMINOR, VPATCH);
+#endif
 
 	if (open_term(me, tmpstr) < 0) {
 		end_term();

@@ -157,7 +157,11 @@ free_mem(addr)
 		glist = del_area(glist, addr);
 	} else {
 #ifdef YTALK_DEBUG
+#ifdef HAVE_SNPRINTF
 		snprintf(errstr, MAXERR, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned) addr, file, line);
+#else
+		sprintf(errstr, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned) addr, file, line);
+#endif
 		show_error(errstr);
 		bad_free++;
 #endif

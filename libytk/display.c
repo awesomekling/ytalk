@@ -52,8 +52,13 @@ ytk_winch_thing(ytk_thing *w)
 void
 ytk_display_inputbox(ytk_thing *t)
 {
+#ifdef HAVE_SNPRINTF
 	snprintf(YTK_INPUTBOX(t)->buf, t->width + 1, " %-*s ",
-		t->width, YTK_INPUTBOX(t)->data);
+		t->width - 2, YTK_INPUTBOX(t)->data);
+#else
+	sprintf(YTK_INPUTBOX(t)->buf, " %-*s ",
+		t->width - 2, YTK_INPUTBOX(t)->data);
+#endif
 	mvwaddstr(t->win, 1, 1, YTK_INPUTBOX(t)->buf);
 	mvwaddch(t->win, 1, strlen(YTK_INPUTBOX(t)->data) + 2, ACS_CKBOARD);
 }
@@ -77,7 +82,11 @@ ytk_display_msgbox(ytk_thing *t)
 			mvwaddch(t->win, y, t->width + 1, ACS_RTEE);
 			y++;
 		} else {
-			snprintf(linebuf, t->width + 1, " %-*s ", t->width, it->text);
+#ifdef HAVE_SNPRINTF
+			snprintf(linebuf, t->width + 1, " %-*s ", t->width - 2, it->text);
+#else
+			sprintf(linebuf, " %-*s ", t->width - 2, it->text);
+#endif
 			mvwaddstr(t->win, y, 1, linebuf);
 			y++;
 		}
@@ -106,10 +115,17 @@ ytk_display_menu(ytk_thing *w)
 			if (it->selected)
 				wattron(w->win, A_REVERSE);
 			if (YTK_MENU_ITEM_TOGGLE(it))
-				snprintf(linebuf, w->width + 1, " [%c] %-*s ",
-					(it->value) ? '*' : ' ', w->width, it->text);
+#ifdef HAVE_SNPRINTF
+				snprintf(linebuf, w->width + 1, " [%c] %-*s ", (it->value) ? '*' : ' ', w->width - 6, it->text);
+#else
+				sprintf(linebuf, " [%c] %-*s ", (it->value) ? '*' : ' ', w->width - 6, it->text);
+#endif
 			else
-				snprintf(linebuf, w->width + 1, " %-*s ", w->width, it->text);
+#ifdef HAVE_SNPRINTF
+				snprintf(linebuf, w->width + 1, " %-*s ", w->width - 2, it->text);
+#else
+				sprintf(linebuf, " %-*s ", w->width - 2, it->text);
+#endif
 			if (it->hotkey)
 				linebuf[w->width - 2] = it->hotkey;
 			mvwaddstr(w->win, y, 1, linebuf);

@@ -263,13 +263,21 @@ set_shell(char *shell)
 		if (pw != NULL) {
 			gshell = (char *) get_mem(strlen(pw->pw_dir) + strlen(shell) + 1);
 			shell++;
+#ifdef HAVE_SNPRINTF
 			snprintf(gshell, strlen(pw->pw_dir) + strlen(shell) + 1, "%s%s", pw->pw_dir, shell);
+#else
+			sprintf(gshell, "%s%s", pw->pw_dir, shell);
+#endif
 		} else {
 			return 0;
 		}
 	} else {
 		gshell = (char *) get_mem(strlen(shell) + 1);
+#ifdef HAVE_SNPRINTF
 		snprintf(gshell, strlen(shell) + 1, "%s", shell);
+#else
+		sprintf(gshell, "%s", shell);
+#endif
 	}
 	return 1;
 }
@@ -500,7 +508,11 @@ read_ytalkrc()
 	pw = getpwuid(myuid);
 	if (pw != NULL) {
 		fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
+#ifdef HAVE_SNPRINTF
 		snprintf(fname, strlen(pw->pw_dir) + 10, "%s/.ytalkrc", pw->pw_dir);
+#else
+		sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
+#endif
 		read_rcfile(fname);
 		free_mem(fname);
 	}
