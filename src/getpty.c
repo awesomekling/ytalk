@@ -31,8 +31,7 @@
 
 #if !defined(HAVE_OPENPTY) || defined(YTALK_TEST)
 int
-getpty(name)
-	char *name;
+getpty(char *name)
 {
 	register int pty, tty;
 	char *tt;

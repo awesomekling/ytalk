@@ -406,6 +406,9 @@ extern void update_exec(void);
 extern void kill_exec(void);
 extern void winch_exec(void);
 
+/* getpty.c */
+extern int getpty(char *);
+
 /* vt100.c */
 extern void vt100_process(yuser *, char);
 
