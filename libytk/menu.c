@@ -240,13 +240,15 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 			m->base->escape(m->base);
 		break;
 	default:
-		it = ytk_find_menu_item_with_hotkey(m, ch);
-		if (it != NULL) {
-			ytk_select_menu_item(m, it);
-			if (YTK_MENU_ITEM_TOGGLE(it))
-				it->value = !(it->value);
-			if (it->callback != NULL)
-				it->callback((void *) it);
+		if (ch > 32) {
+			it = ytk_find_menu_item_with_hotkey(m, ch);
+			if (it != NULL) {
+				ytk_select_menu_item(m, it);
+				if (YTK_MENU_ITEM_TOGGLE(it))
+					it->value = !(it->value);
+				if (it->callback != NULL)
+					it->callback((void *) it);
+			}
 		}
 	}
 }
