@@ -42,9 +42,9 @@ label() {
 
 echo
 if [ $isatty -eq 0 ] ; then
-	echo "[37;01mAutogenerating files for YTalk[0m"
+	echo "[01mAutogenerating files for YTalk[0m"
 else
-	echo "Autogenerating files for YTalk *"
+	echo "Autogenerating files for YTalk"
 fi
 echo
 
