@@ -97,8 +97,8 @@ yaddr real_get_mem(int n, int line, char *file) {
  */
 void free_mem(yaddr addr) {
 	int size;
-	if((size = get_size(glist, addr)) != -1) {
-		memset(addr, '\0', get_size(glist, addr));
+	if((size = get_size(glist, addr)) > 0) {
+		memset(addr, '\0', size);
 		free(addr);
 		glist = del_area(glist, addr);
 	} else {
