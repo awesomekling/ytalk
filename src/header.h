@@ -21,10 +21,6 @@
 #define YTALK_COLOR
 #endif
 
-#ifndef X_DISPLAY_MISSING
-#define USE_X11
-#endif
-
 #include <sys/types.h>
 #include <sys/param.h>
 
@@ -51,10 +47,6 @@ extern char *ptsname(int);
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
-
-#ifdef USE_X11
-#include <X11/X.h>
 #endif
 
 #define VMAJOR	3		/* major version number */
@@ -195,9 +187,6 @@ typedef struct _yuser {
 
 	yterm term;		/* terminal cookie */
 	int ty, tx;		/* terminal's idea of Y,X (optional) */
-#ifdef USE_X11
-	Window win;		/* user's window */
-#endif
 } yuser;
 
 #define FL_RAW		0x00000001L	/* raw input enabled */
