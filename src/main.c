@@ -100,8 +100,11 @@ static RETSIGTYPE
 got_sig(n)
   int n;
 {
-    if(n == SIGINT)
+    if(n == SIGINT) {
+	if(def_flags & FL_IGNBRK)
+	    return;
 	bail(0);
+    }
     bail(YTE_SIGNAL);
 }
 
