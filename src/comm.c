@@ -643,7 +643,7 @@ connect_user(fd)
 		show_error("connect_user: bad read");
 		return;
 	}
-	if (open_term(user, user->full_name) < 0) {
+	if (open_term(user) < 0) {
 		free_user(user);
 		show_error("connect_user: open_term() failed");
 		return;
