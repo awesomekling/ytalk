@@ -399,7 +399,7 @@ close_curses(yuser *user)
 	curses_redraw();
 }
 
-void
+static void
 waddyac(WINDOW *w, yachar c)
 {
 	int x, y;
