@@ -32,7 +32,7 @@ static struct alias *alias0 = NULL;
 
 typedef struct {
 	char *option;
-	short flag;
+	ylong flag;
 } options;
 
 #ifdef YTALK_COLOR
@@ -131,7 +131,7 @@ getcolor(color, rc, ra)
  * 3: background color failed
  */
 static int
-setcolors(char *bg, char *fg, int *colors, int *fgattr)
+setcolors(char *bg, char *fg, int *ucolors, int *fgattr)
 {
 	int bgi, fgi;
 
@@ -143,7 +143,7 @@ setcolors(char *bg, char *fg, int *colors, int *fgattr)
 	if(!getcolor(fg, &fgi, fgattr))
 		return 3;
 
-	*colors = bgi * 8 + fgi + 1;
+	*ucolors = bgi * 8 + fgi + 1;
 
 	return 0;
 }
