@@ -39,6 +39,13 @@
 #include <string.h>
 #include <stdio.h>
 
+/* We may not have prototypes for these functions. */
+#if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
+extern int grantpt (int);
+extern int unlockpt (int);
+extern char *ptsname (int);
+#endif
+
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
