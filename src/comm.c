@@ -664,7 +664,7 @@ contact_user(fd)
 {
 	register yuser *user;
 	register int n;
-	socklen_t socklen;
+	ysocklen_t socklen;
 	struct sockaddr_in peer;
 	char *hname;
 
@@ -839,7 +839,7 @@ invite(name, send_announce)
 
 	if (!dont_change_my_addr) {
 		struct sockaddr_in tmpsock;
-		socklen_t i;
+		ysocklen_t i;
 		int sock;
 
 		sock = socket(PF_INET, SOCK_DGRAM, 0);

@@ -71,7 +71,7 @@ init_dgram(sock)
 	struct sockaddr_in *sock;
 {
 	int fd;
-	socklen_t socklen;
+	ysocklen_t socklen;
 
 	sock->sin_family = AF_INET;
 	IN_ADDR(*sock) = INADDR_ANY;
@@ -131,7 +131,7 @@ static void
 read_autoport(fd)
 	int fd;
 {
-	socklen_t socklen;
+	ysocklen_t socklen;
 	static v2_pack pack;
 	static char estr[V2_NAMELEN + V2_HOSTLEN + 20];
 	static struct sockaddr_in temp;
@@ -168,7 +168,7 @@ read_autoport(fd)
 static void
 init_autoport()
 {
-	socklen_t socklen;
+	ysocklen_t socklen;
 
 	autosock.sin_family = AF_INET;
 	IN_ADDR(autosock) = INADDR_ANY;
@@ -749,7 +749,7 @@ newsock(user)
 	yuser *user;
 {
 	int fd;
-	socklen_t socklen;
+	ysocklen_t socklen;
 
 	user->sock.sin_family = AF_INET;
 	IN_ADDR(user->sock) = INADDR_ANY;
@@ -790,7 +790,7 @@ connect_to(user)
 {
 	register yuser *u;
 	int fd;
-	socklen_t socklen;
+	ysocklen_t socklen;
 	struct sockaddr_in sock, orig_sock;
 
 	orig_sock = *(struct sockaddr_in *) & nrsp.addr;
