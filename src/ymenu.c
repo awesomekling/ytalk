@@ -433,18 +433,14 @@ resize_ymenu()
 void
 __refresh_ymenu()
 {
-	if (!ytk_is_empty_stack(menu_stack)) {
-		ytk_display_stack(menu_stack);
-	}
+	ytk_display_stack(menu_stack);
 }
 
 void
 refresh_ymenu()
 {
-	if (!ytk_is_empty_stack(menu_stack)) {
-		__refresh_ymenu();
-		ytk_sync_display();
-	}
+	__refresh_ymenu();
+	ytk_sync_display();
 }
 
 void
