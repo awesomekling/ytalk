@@ -166,7 +166,7 @@ read_autoport(fd)
 	    return;
     }
     sprintf(estr, "%s@%s", pack.name, pack.host);
-    invite(estr, 1);	/* we should be expected */
+    (void)invite(estr, 1);	/* we should be expected */
 }
 
 /* Create and initialize the auto-invitation socket.
@@ -808,7 +808,7 @@ newsock(user)
 	show_error("newsock: getsockname() failed");
 	return -1;
     }
-    place_my_address(&(user->sock), user->host_addr);
+    place_my_address((BSD42_SOCK *)&(user->sock), user->host_addr);
     if(listen(fd, 5) < 0)
     {
 	close(fd);
