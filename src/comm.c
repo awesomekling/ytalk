@@ -534,7 +534,7 @@ ytalk_user(fd)
 	show_error("ytalk_user: unknown contact");
 	return;
     }
-    if(full_read(user->fd, &parm, sizeof(y_parm)) < 0)
+    if(full_read(user->fd, (char *)&parm, sizeof(y_parm)) < 0)
     {
 	free_user(user);
 	show_error("ytalk_user: bad ytalk contact");

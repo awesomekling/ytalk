@@ -152,7 +152,7 @@ read_autoport(fd)
      * packet.
      */
     errno = 0;
-    if(full_read(fd, &pack, V2_PACKLEN) < 0 || pack.code != V2_AUTO)
+    if(full_read(fd, (char *)&pack, V2_PACKLEN) < 0 || pack.code != V2_AUTO)
     {
 	show_error("read_autoport: unknown auto-invite connection");
 	close(fd);

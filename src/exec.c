@@ -354,7 +354,7 @@ execute(command)
     sleep(1);
     pfd = fd;
     running_process = 1;
-    lock_flags(FL_RAW | FL_SCROLL);
+    lock_flags((ylong)(FL_RAW | FL_SCROLL));
     set_raw_term();
     add_fd(fd, exec_input);
 }
