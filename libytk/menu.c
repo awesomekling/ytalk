@@ -111,7 +111,7 @@ ytk_step_down_menu(ytk_menu *m)
 }
 
 ytk_menu_item *
-ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (void *))
+ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (ytk_menu_item *))
 {
 	ytk_menu_item *new;
 	new = get_mem(sizeof(ytk_menu_item));
@@ -135,7 +135,7 @@ ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (void *
 }
 
 ytk_menu_item *
-ytk_add_menu_toggle_item(ytk_menu *m, char *t, char k, void (*c) (void *), int v)
+ytk_add_menu_toggle_item(ytk_menu *m, char *t, char k, void (*c) (ytk_menu_item *), int v)
 {
 	ytk_menu_item *new;
 	new = ytk_add_menu_item(m, t, k, c);
@@ -214,7 +214,7 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 			if (YTK_MENU_ITEM_TOGGLE(it))
 				it->value = !(it->value);
 			if (it->callback != NULL)
-				it->callback((void *) it);
+				it->callback(it);
 		}
 		break;
 	case ALTESC:
@@ -230,7 +230,7 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 				if (YTK_MENU_ITEM_TOGGLE(it))
 					it->value = !(it->value);
 				if (it->callback != NULL)
-					it->callback((void *) it);
+					it->callback(it);
 			}
 		}
 	}

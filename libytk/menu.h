@@ -18,7 +18,7 @@ typedef struct __ytk_menu_item {
 	char hotkey;
 	int selected;
 	int value;
-	void (*callback) (void *);
+	void (*callback) (struct __ytk_menu_item *);
 } ytk_menu_item;
 
 typedef struct {
