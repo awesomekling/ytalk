@@ -130,7 +130,7 @@ get_word(char **p)
 }
 
 #ifdef YTALK_COLOR
-int
+static int
 getcolor(char *color, long unsigned int *rc, long unsigned int *ra)
 {
 	int i = 0, found = 0;
