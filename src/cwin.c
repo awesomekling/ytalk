@@ -623,7 +623,7 @@ special_menu_curses(user, y, x, section, len)
 		break;
 	case 3:
 	case 4:
-		raw_addch_curses(user, ACS_DARROW);
+		raw_addch_curses(user, ACS_BTEE);
 		return;
 		break;
 	case 5:
