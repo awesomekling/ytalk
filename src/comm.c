@@ -1149,7 +1149,7 @@ send_users(yuser *user, ychar *buf, int len, ychar *cbuf, int clen)
 			else
 				write(user->fd, buf, b - buf);
 		}
-	} else
+	} else {
 		for (u = connect_list; u; u = u->next)
 			if (user->remote.vmajor > 2)
 				if (u->crlf)
