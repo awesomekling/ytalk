@@ -297,6 +297,9 @@ struct alias {
 extern void bail(int);
 extern char *str_copy(char *);
 extern void show_error(char *);
+#ifdef YTALK_COLOR
+extern int ya_strlen(yachar *);
+#endif
 
 /* term.c */
 extern void init_term(void);
@@ -331,6 +334,7 @@ extern void end_win_region(yuser *);
 extern void set_scroll_region(yuser *, int, int);
 extern void msg_term(char *);
 extern void spew_term(yuser *, int, int, int);
+extern void spew_line(int, yachar *, int);
 extern void redraw_all_terms(void);
 
 #define set_raw_term			set_raw_curses
