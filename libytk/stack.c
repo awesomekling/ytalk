@@ -88,6 +88,7 @@ ytk_on_stack(ytk_stack *st, ytk_thing *t)
 	while (si->prev != NULL) {
 		if (si->thing == t)
 			return TRUE;
+		si = si->prev;
 	}
 	return FALSE;
 }
