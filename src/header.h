@@ -342,6 +342,7 @@ extern void msg_term(char *);
 extern void spew_term(yuser *, int, int, int);
 extern void spew_line(int, yachar *, int);
 extern void redraw_all_terms(void);
+extern char *get_tcstr(char *);
 
 #define set_raw_term			set_raw_curses
 #define set_cooked_term			set_cooked_curses

@@ -37,6 +37,10 @@ extern unsigned long int menu_colors;
 extern unsigned long int menu_attr;
 #endif
 
+/* keypad escape sequences and their lengths */
+static char *tcku, *tckd;
+static int tckul, tckdl;
+
 static yuser *menu_user;
 
 static void do_hidething(ytk_thing *);
@@ -229,6 +233,13 @@ handle_options_menu(ytk_menu_item *i) {
 void
 init_ymenu()
 {
+	/* extract the termcap strings we want for keypad up/down */
+	tcku = get_tcstr("ku");
+	tckd = get_tcstr("kd");
+	tckul = strlen(tcku);
+	tckdl = strlen(tckd);
+
+	/* build us a couple of menus */
 	menu_stack = ytk_new_stack();
 
 	main_menu = ytk_new_menu(_("Main Menu"));
@@ -498,13 +509,30 @@ void
 update_ymenu()
 {
 	char ch;
+	int i;
 	while (io_len > 0) {
 		if (!ytk_is_empty_stack(menu_stack)) {
-			ch = *(io_ptr++);
-			io_len--;
-			if (io_len > 0 && (ch == 27 || ch == ALTESC))
-				for (; io_len > 0; io_ptr++, io_len--);
-			ytk_handle_stack_input(menu_stack, ch);
+			if ((io_len >= tckul) && (memcmp(io_ptr, tcku, tckul) == 0)) {
+				for (i = 0; i < tckul; i++)
+					io_ptr++, io_len--;
+				ytk_handle_stack_key(menu_stack, YTK_KEYUP);
+				ytk_display_stack(menu_stack);
+				ytk_sync_display();
+				continue;
+			} else if ((io_len >= tckdl) && (memcmp(io_ptr, tckd, tckdl) == 0)) {
+				for (i = 0; i < tckdl; i++)
+					io_ptr++, io_len--;
+				ytk_handle_stack_key(menu_stack, YTK_KEYDOWN);
+				ytk_display_stack(menu_stack);
+				ytk_sync_display();
+				continue;
+			} else {
+				ch = *(io_ptr++);
+				io_len--;
+				if (io_len > 0 && (ch == 27 || ch == ALTESC))
+					for (; io_len > 0; io_ptr++, io_len--);
+				ytk_handle_stack_input(menu_stack, ch);
+			}
 			ytk_display_stack(menu_stack);
 			ytk_sync_display();
 		} else {

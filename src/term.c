@@ -22,6 +22,7 @@
 #include "mem.h"
 #include "ymenu.h"
 #include "cwin.h"
+#include <termcap.h>
 
 #ifdef HAVE_SYS_IOCTL_H
 #  include <sys/ioctl.h>
@@ -44,6 +45,8 @@ static yachar emptyc;
 
 char *bottom_msg = NULL;
 ylong bottom_time = 0;
+
+static char *tcbp, *tcap, *tcapp;
 
 #ifdef USE_SGTTY
 static int line_discipline;
@@ -125,6 +128,43 @@ user_yac(yuser *user, char c, yachar *ac)
 }
 #endif
 
+static void
+init_termcap(void)
+{
+	char *term;
+	int success;
+	tcbp = get_mem(4096);
+	tcap = get_mem(4096);
+	if ((term = getenv("TERM")) == NULL) {
+		fprintf(stderr, "TERM not set.\n");
+		exit(YTE_INIT);
+	}
+	success = tgetent(tcbp, term);
+	if (success < 0) {
+		fprintf(stderr, "Couldn't access termcap database.\n");
+		exit(YTE_INIT);
+	} else if (success == 0) {
+		fprintf(stderr, "Unknown terminal type: %s\n", term);
+		exit(YTE_INIT);
+	}
+	/* activate keypad capabilities */
+	printf("%s", get_tcstr("ks"));
+}
+
+static void
+end_termcap(void)
+{
+	printf("%s", get_tcstr("ke"));
+	free_mem(tcap);
+	free_mem(tcbp);
+}
+
+char *
+get_tcstr(char *id)
+{
+	return tgetstr(id, &tcapp);
+}
+
 /*
  * Initialize terminal and input characteristics.
  */
@@ -146,6 +186,9 @@ init_term(void)
 #else
 	init_termios();
 #endif
+
+	/* we want to look for some magic strings in the tc library */
+	init_termcap();
 
 	/* it's all about curses from here on */
 	init_curses();
@@ -218,6 +261,7 @@ end_term(void)
 {
 	if (term_type == 1)
 		end_curses();
+	end_termcap();
 	term_type = 0;
 }
 
