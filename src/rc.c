@@ -52,9 +52,11 @@ options opts[] = {
 	{"prompt_rering",	FL_PROMPTRING	},
 	{"beeps",		FL_BEEP		},
 	{"ignore_break",	FL_IGNBRK	},
+#ifdef YTALK_COLOR
 	{"newui",		FL_NEWUI	},
+#endif
 	{"require_caps",	FL_CAPS		},
-	{"no_invite", 		FL_NOAUTO	},
+	{"no_invite",		FL_NOAUTO	},
 	{"prompt_quit",		FL_PROMPTQUIT	},
 	{(char *)NULL,		0		}
 };
@@ -232,9 +234,12 @@ read_rcfile(fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on, *bg, *fg, *shell;
+	char *ptr, *cmd, *from, *to, *on, *shell;
 	char *host;
 	int i, line, found;
+#ifdef YTALK_COLOR
+	char *fg, *bg;
+#endif
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return;
@@ -281,6 +286,7 @@ read_rcfile(fname)
 					fprintf(stderr, "Not enough parameters for alias on line %d in %s\n", line, fname);
 					bail(YTE_INIT);
 				}
+#ifdef YTALK_COLOR
 			} else if(strcmp(cmd, "ui_colors") == 0) {
 				bg = get_word(&ptr);
 				fg = get_word(&ptr);
@@ -301,6 +307,7 @@ read_rcfile(fname)
 					bail(YTE_INIT);
 					break;
 				}
+#endif /* YTALK_COLOR */
 			} else if(strcmp(cmd, "readdress") == 0) {
 				found = 1;
 				from = get_word(&ptr);
