@@ -282,9 +282,9 @@ extern void set_terminal_size( /* fd, rows, cols */ );	/* term.c */
 extern void set_terminal_flags( /* fd */ );	/* term.c */
 extern int what_term();		/* term.c */
 extern void end_term();		/* term.c */
-extern int open_term( /* yuser, title */ );	/* term.c */
-extern void close_term( /* yuser */ );	/* term.c */
-extern void addch_term( /* yuser, ch */ );	/* term.c */
+extern int open_term(yuser *);
+extern void close_term(yuser *);
+extern void addch_term(yuser *, ychar);
 extern void move_term( /* yuser, y, x */ );	/* term.c */
 extern void clreol_term( /* yuser */ );	/* term.c */
 extern void clreos_term( /* yuser */ );	/* term.c */

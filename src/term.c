@@ -256,8 +256,7 @@ open_term(yuser *user)
  * Close a user window.
  */
 void
-close_term(user)
-	register yuser *user;
+close_term(yuser *user)
 {
 	register int i;
 
@@ -278,9 +277,7 @@ close_term(user)
  * Place a character.
  */
 void
-addch_term(user, c)
-	register yuser *user;
-	register ychar c;
+addch_term(yuser *user, ychar c)
 {
 #ifdef YTALK_COLOR
 	yachar ac;
