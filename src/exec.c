@@ -48,6 +48,14 @@
 #endif
 #endif
 
+#ifdef HAVE_OPENPTY
+#ifdef HAVE_UTIL_H
+#include <util.h>
+#else
+int openpty(int *, int *, char *, struct termios *, struct winsize *);
+#endif
+#endif
+
 #if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT) && defined(HAVE_UNLOCKPT)
 #define USE_DEV_PTMX
 #endif
@@ -206,12 +214,22 @@ execute(command)
 #ifdef HAVE_TCSETPGRP
 	pid_t sid;
 #endif
+#ifdef HAVE_OPENPTY
+	int fds;
+#endif
 
 	if (me->flags & FL_LOCKED) {
 		errno = 0;
 		show_error("alternate mode already running");
 		return;
 	}
+
+#ifdef HAVE_OPENPTY
+	/* Try openpty() first. 666 ttys are no fun. */
+	if (openpty(&fd, &fds, name, NULL, NULL) == 0) {
+		close(fds);
+	} else
+#endif
 	if ((fd = getpty(name)) < 0) {
 		msg_term(me, "cannot get pseudo terminal");
 		return;
