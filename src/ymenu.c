@@ -424,6 +424,11 @@ can_ymenu()
 void
 resize_ymenu()
 {
+	ytk_winch_thing(main_menu);
+	ytk_winch_thing(options_menu);
+#ifdef YTALK_COLOR
+	ytk_winch_thing(color_menu);
+#endif
 	if (!ytk_is_empty_stack(menu_stack)) {
 		ytk_winch_stack(menu_stack);
 		ytk_sync_display();
