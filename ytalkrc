@@ -13,21 +13,20 @@
 
 # Default options
 
-turn scrolling on
-turn rering on
-turn prompt-rering on
+scrolling = on
+rering = on
+prompt_rering = on
 
 # Off by default (tm)
-#turn word-wrap off
-#turn auto-import off
-#turn auto-invite off
-#turn noinvite off
-#turn caps off
+#wordwrap = off
+#autoimport = off
+#autoinvite = off
+#no_invite off
+#require_caps = off
 
 # New things
 
-#turn newui off
-#set-colors background [bold-]foreground
-#menu-color [bold-]foreground
-#turn beeps on
-#turn ignorebreak off
+#newui = off
+#ui_colors background [bold-]foreground
+#beeps = on
+#ignorebreak = off
