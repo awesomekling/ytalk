@@ -9,6 +9,7 @@
 #define YTK_MENU_ITEM_TOGGLE(a)		(YTK_MENU_ITEM_NORMAL(a) && a->value != -1)
 #define YTK_MENU_ITEM_SEPARATOR(a)	(a && !a->text)
 
+#define ytk_next_menu_item(m, i)	((i == NULL) ? m->first : i->next)
 #define ytk_add_menu_separator(a)	ytk_add_menu_item(a, NULL, 0, NULL)
 
 typedef struct __ytk_menu_item {
@@ -34,7 +35,6 @@ void ytk_destroy_menu(ytk_menu *);
 void ytk_handle_menu_input(ytk_menu *, int);
 int ytk_menu_item_count(ytk_menu *);
 int ytk_menu_width(ytk_menu *);
-ytk_menu_item *ytk_next_menu_item(ytk_menu *, ytk_menu_item *);
 ytk_menu_item *ytk_find_menu_item_with_hotkey(ytk_menu *, char);
 void ytk_select_menu_item(ytk_menu *, ytk_menu_item *);
 

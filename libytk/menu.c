@@ -187,14 +187,6 @@ ytk_menu_width(ytk_menu *m)
 	return s;
 }
 
-ytk_menu_item *
-ytk_next_menu_item(ytk_menu *m, ytk_menu_item *i)
-{
-	if (i == NULL)
-		return m->first;
-	return i->next;
-}
-
 void
 ytk_handle_menu_input(ytk_menu *m, int ch)
 {
