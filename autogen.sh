@@ -52,7 +52,7 @@ test -f "ChangeLog" \
 	|| frown "Failed to touch ChangeLog"
 
 echo "Running $ACLOCAL..."
-WANT_ACLOCAL="1.8" $ACLOCAL -I m4 2>/dev/null || exit 1
+WANT_ACLOCAL="1.9" $ACLOCAL -I m4 2>/dev/null || exit 1
 test -f "aclocal.m4" \
 	&& smile \
 	|| frown "Failed to generate aclocal.m4"
@@ -64,7 +64,7 @@ test -f "config.h.in" \
 	|| frown "Failed to generate config.h.in"
 
 echo "Running $AUTOMAKE..."
-WANT_AUTOMAKE="1.8" $AUTOMAKE --add-missing --copy --ignore-deps || exit 1
+WANT_AUTOMAKE="1.9" $AUTOMAKE --add-missing --copy --ignore-deps || exit 1
 test -f "Makefile.in" \
 	&& smile \
 	|| frown "Failed to generate Makefile.in"
