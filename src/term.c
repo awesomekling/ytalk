@@ -951,6 +951,7 @@ resize_win(user, height, width)
 		user->scr_tabs[j] = 0;
 	}
 	/* rightmost column is always last tab on line */
+	user->scr_tabs[width - 1] = 1;
     }
     for(i = new_y + 1; i < height; i++)
     {
