@@ -21,7 +21,7 @@ ytk_set_escape(ytk_thing *t, void (*f) (ytk_thing *))
 }
 
 void
-ytk_destroy_thing(ytk_thing *t)
+ytk_delete_thing(ytk_thing *t)
 {
 	if (t->win != NULL) {
 		delwin(t->win);
@@ -38,19 +38,14 @@ ytk_destroy_thing(ytk_thing *t)
 		case YTK_T_MSGBOX:
 			ytk_destroy_msgbox(YTK_MSGBOX(t));
 			break;
-#ifdef YTALK_DEBUG
 		default:
-			fprintf(stderr, "ytk_destroy_thing(): Unknown thing type %u\n", t->type);
+#ifdef YTALK_DEBUG
+			fprintf(stderr, "ytk_delete_thing(): Unknown thing type %u\n", t->type);
 #endif
+			return;
 		}
+		free_mem(t);
 	}
-}
-
-void
-ytk_delete_thing(ytk_thing *t)
-{
-	ytk_destroy_thing(t);
-	free_mem(t);
 }
 
 int
