@@ -22,7 +22,6 @@ turn prompt-rering on
 #turn auto-import off
 #turn auto-invite off
 #turn noinvite off
-#turn nodelay off
 #turn caps off
 
 # X11 options
@@ -35,5 +34,5 @@ turn prompt-rering on
 #turn newui off
 #set-colors background [bold-]foreground
 #menu-color [bold-]foreground
-#turn beeps off
+#turn beeps on
 #turn ignorebreak off
