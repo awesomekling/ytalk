@@ -592,8 +592,8 @@ retitle_all_curses()
 	ywin *w;
 	for (w = head; w; w = w->next) {
 		draw_title(w);
-		refresh();
 	}
+	refresh();
 }
 
 /*
