@@ -8,7 +8,7 @@ echo ">>> autogen.sh"
 ./autogen.sh
 echo "--- autogen.sh completed with return code $?"
 echo ">>> configure"
-CFLAGS="$CFLAGS -W -Wall -pedantic" ./configure $AUTOCONF_ARGS
+./configure $AUTOCONF_ARGS
 echo "--- configure completed with return code $?"
 echo ">>> make clean"
 make clean
