@@ -123,7 +123,6 @@ void
 init_user(vhost)
 char *vhost;
 {
-    int my_uid;
     char *my_name, *my_vhost;
     char my_host[100];
 
@@ -133,11 +132,10 @@ char *vhost;
     daemon_id = getpid() << 10;
     (void)memset(fd_to_user, 0, MAX_FILES * sizeof(yuser *));
     (void)memset(key_to_user, 0, 128 * sizeof(yuser *));
-    my_uid = getuid();
 
     /* get my username */
 
-    my_name = user_name(my_uid);
+    my_name = user_name(myuid);
     if(my_name == NULL)
 	my_name = getlogin();
     if(my_name == NULL || my_name[0] == '\0')
