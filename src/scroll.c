@@ -18,7 +18,7 @@ scroll_up(user)
 		if (user->sca == NULL)
 			user->sca = user->logbot;
 		for (i = 0; i < user->rows; i++)
-			if(user->sca->prev != NULL)
+			if (user->sca->prev != NULL)
 				user->sca = user->sca->prev;
 			else
 				break;
@@ -46,8 +46,7 @@ scroll_down(user)
 		}
 		user->sca = user->logbot;
 	}
-
-	for (i = 0; i < user->rows ; i++)
+	for (i = 0; i < user->rows; i++)
 		if (user->sca->next != NULL)
 			user->sca = user->sca->next;
 		else

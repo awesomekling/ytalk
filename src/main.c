@@ -38,8 +38,8 @@ bail(n)
 	int n;
 {
 	kill_auto();
-	if(n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
-		if(show_mesg("Press any key to quit.", NULL) == 0) {
+	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
+		if (show_mesg("Press any key to quit.", NULL) == 0) {
 			update_menu();
 			bail_loop();
 		}
@@ -169,7 +169,7 @@ then type 'make clean' and 'make'.\n");
 			sflg++;	/* immediately start a shell */
 			argv++, argc--;
 		} else if (strcmp(*argv, "-q") == 0) {
-			qflg++; /* prompt quit */
+			qflg++;	/* prompt quit */
 			argv++, argc--;
 		} else
 			argc = 0;	/* force a Usage error */

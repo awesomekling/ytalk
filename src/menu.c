@@ -714,7 +714,7 @@ show_option_menu()
 	option_menu[i].key = 'p';
 	i++;
 
-	if(def_flags & FL_PROMPTQUIT)
+	if (def_flags & FL_PROMPTQUIT)
 		option_menu[i].item = "don't prompt before quitting";
 	else
 		option_menu[i].item = "prompt before quitting";

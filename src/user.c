@@ -344,7 +344,7 @@ free_users()
 		if (u->backlog != NULL) {
 			for (b = u->backlog; b != NULL;) {
 				bn = b->next;
-				if(b->line != NULL)
+				if (b->line != NULL)
 					free_mem(b->line);
 				free_mem(b);
 				b = bn;

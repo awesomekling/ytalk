@@ -1289,21 +1289,18 @@ my_input(user, buf, len)
 					else if (*buf == 14 && term_does_scrollback()) {	/* ^N - scroll down */
 						scroll_down(scuser);
 						buf++, len--;
-					}
-					else if (*buf == 6 && term_does_scrollback()) {		/* ^F - window forward */
+					} else if (*buf == 6 && term_does_scrollback()) {	/* ^F - window forward */
 						do {
 							scuser = scuser->unext;
-						} while(scuser && scuser->scr == NULL);
+						} while (scuser && scuser->scr == NULL);
 						if (scuser == NULL)
 							scuser = me;
 						retitle_all_terms();
 						buf++, len--;
-					}
-					else if (*buf == 16 && term_does_scrollback()) {	/* ^P - scroll up */
+					} else if (*buf == 16 && term_does_scrollback()) {	/* ^P - scroll up */
 						scroll_up(scuser);
 						buf++, len--;
-					}
-					else if (*buf == 12 || *buf == 18) {	/* ^L or ^R */
+					} else if (*buf == 12 || *buf == 18) {	/* ^L or ^R */
 						redraw_all_terms();
 						buf++, len--;
 					}

@@ -506,7 +506,6 @@ scroll_term(user)
 			memcpy(b->line, user->scr[0], (user->cols * sizeof(yachar)));
 			user->logbot = b;
 		}
-
 		for (i = user->sc_top; i < user->sc_bot; i++)
 			user->scr[i] = user->scr[i + 1];
 		user->scr[user->sc_bot] = c;
@@ -1325,7 +1324,6 @@ spew_line(fd, buf, len)
 			esc[p - 1] = 'm';
 			write(fd, esc, p);
 		}
-
 		if (v != buf->v) {
 			if (buf->v)
 				(void) write(fd, &YT_ACS_ON, 1);
