@@ -39,7 +39,7 @@ ytk_find_menu_item_with_hotkey(ytk_menu *m, char k)
 {
 	ytk_menu_item *it;
 
-	if (m->first == NULL || m->first->next == NULL)
+	if (m->first == NULL)
 		return NULL;
 
 	it = m->first;
@@ -56,7 +56,7 @@ ytk_find_selected_menu_item(ytk_menu *m)
 {
 	ytk_menu_item *it;
 
-	if (m->first == NULL || m->first->next == NULL)
+	if (m->first == NULL)
 		return NULL;
 
 	it = m->first;
