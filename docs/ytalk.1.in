@@ -42,7 +42,7 @@ You can specify multiple user names on the command line, ie:
 .sp
 	ytalk george fred@hissun.edu marc@grumpy.cc
 .PP
-The 
+The
 .B -x
 option enables the X11 interface (described below).
 .PP
