@@ -25,6 +25,7 @@
 #define YTK_MENU(w)		((ytk_menu *)w->object)
 #define YTK_INPUTBOX(w)	((ytk_inputbox *)w->object)
 #define YTK_MSGBOX(w)	((ytk_msgbox *)w->object)
+#define YTK_THING(o)	(o->base)
 
 #define YTK_T_NULL		0
 #define YTK_T_MENU		1
