@@ -52,9 +52,6 @@ static void (*_flush_term) ();	/* flush pending output */
 
 static int term_type = 0;
 
-extern int raw_color;
-extern int raw_attr;
-
 #ifdef USE_SGTTY
 static int line_discipline;
 static int local_mode;
@@ -1430,53 +1427,5 @@ spew_term(user, fd, rows, cols)
 			if (++y >= user->t_rows)
 				y = 0;
 		}
-	}
-}
-
-/*
- * Draw some raw characters to the screen without updating any buffers.
- * Whoever uses this should know what they're doing.  It should always be
- * followed by a redraw_term() before calling any of the normal term
- * functions again.
- *
- * If the given string is not as long as the given length, then the string is
- * repeated to fill the given length.
- *
- * This is an unadvertised function.
- */
-void
-raw_term(user, y, x, str, len)
-	yuser *user;
-	int y, x;
-	ychar *str;
-	int len;
-{
-	register ychar *c;
-#ifdef YTALK_COLOR
-	yachar ac;
-	ac.l = 0;
-	ac.a = raw_attr;
-	ac.b = raw_color;
-	ac.c = 0;
-	ac.v = 0;
-#endif
-
-	if (y < 0 || y >= user->t_rows)
-		return;
-	if (x < 0 || x >= user->t_cols)
-		return;
-	_move_term(user, y, x);
-
-	for (c = str; len > 0; len--, c++) {
-		if (*c == '\0')
-			c = str;
-		if (!is_printable(*c))
-			return;
-#ifdef YTALK_COLOR
-		ac.l = *c;
-		_addch_term(user, ac);
-#else
-		_addch_term(user, *c);
-#endif
 	}
 }

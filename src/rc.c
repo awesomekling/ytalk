@@ -30,8 +30,6 @@ extern char *vhost;
 #ifdef YTALK_COLOR
 extern int newui_colors;
 extern int newui_attr;
-extern int raw_color;
-extern int raw_attr;
 #endif
 
 static struct alias *alias0 = NULL;
@@ -212,7 +210,6 @@ read_rcfile(fname)
 	struct alias *a;
 #ifdef YTALK_COLOR
 	int uicolor, uiattr;
-	int mcolor, mattr;
 #endif
 
 	if ((fp = fopen(fname, "r")) == NULL) {
@@ -240,19 +237,6 @@ read_rcfile(fname)
 			}
 			readdress_host(arg1, arg2, arg3);
 #ifdef YTALK_COLOR
-		} else if (strcmp(w, "menu-color") == 0) {
-			arg1 = get_word(&ptr);
-			if (arg1 == NULL) {
-				errline = line_no;
-				break;
-			}
-			if (getcolor(arg1, &mcolor, &mattr) < 0) {
-				errline = line_no;
-				break;
-			} else {
-				raw_color = mcolor;
-				raw_attr = mattr;
-			}
 		} else if (strcmp(w, "set-colors") == 0) {
 			arg1 = get_word(&ptr);
 			arg2 = get_word(&ptr);

@@ -26,8 +26,6 @@ ylong myuid;			/* global uid */
 #ifdef YTALK_COLOR
 int newui_colors = 40;		/* TODO: change default */
 int newui_attr = 0;		/* newui output attributes */
-int raw_color = 2;		/* raw output color */
-int raw_attr = 0;		/* raw output attributes */
 #endif
 
 /*
