@@ -57,6 +57,13 @@ AC_CHECK_LIB(ncurses, initscr,
 	AC_CHECK_HEADERS(ncurses.h)],
 	[CF_CURSES_LIBS])
 
+dnl Check for keypad()
+AC_CHECK_LIB(ncurses, keypad,
+	[AC_DEFINE(HAVE_KEYPAD, 1, [Define to 1 if you have keypad()])],
+[AC_CHECK_LIB(curses, keypad,
+	[AC_DEFINE(HAVE_KEYPAD, 1, [Define to 1 if you have keypad()])],
+[])])
+
 dnl Look for termios, and if that fails, try sgtty.
 AC_CHECK_FUNC(tcgetattr, [\
   AC_CHECK_HEADERS(termios.h,, no_termios=1)], no_termios=1)
