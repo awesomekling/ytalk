@@ -5,10 +5,10 @@
 
 #include "ytk.h"
 
-#define YTK_MSGBOX_ITEM_SEPARATOR(a)	(a && !a->text)
+#define YTK_MSGBOX_ITEM_SEPARATOR(a)	((a) && !(a)->text)
 
-#define ytk_next_msgbox_item(m, i)	((i == NULL) ? m->first : i->next)
-#define ytk_add_msgbox_separator(a)	ytk_add_msgbox_item(a, NULL)
+#define ytk_next_msgbox_item(m, i)	(((i) == NULL) ? (m)->first : (i)->next)
+#define ytk_add_msgbox_separator(a)	ytk_add_msgbox_item((a), NULL)
 
 typedef struct __ytk_msgbox_item {
 	struct __ytk_msgbox_item *prev;

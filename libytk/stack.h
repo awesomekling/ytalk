@@ -5,7 +5,7 @@
 
 #include "ytk.h"
 
-#define ytk_is_empty_stack(s)		((s == NULL) || (s->top == NULL))
+#define ytk_is_empty_stack(s)		(((s) == NULL) || ((s)->top == NULL))
 
 typedef struct __ytk_stack_item {
 	ytk_thing *thing;

@@ -5,12 +5,12 @@
 
 #include "ytk.h"
 
-#define YTK_MENU_ITEM_NORMAL(a)		(a && a->hotkey && a->text)
-#define YTK_MENU_ITEM_TOGGLE(a)		(YTK_MENU_ITEM_NORMAL(a) && a->value != -1)
-#define YTK_MENU_ITEM_SEPARATOR(a)	(a && !a->text)
+#define YTK_MENU_ITEM_NORMAL(a)		((a) && (a)->hotkey && (a)->text)
+#define YTK_MENU_ITEM_TOGGLE(a)		(YTK_MENU_ITEM_NORMAL(a) && (a)->value != -1)
+#define YTK_MENU_ITEM_SEPARATOR(a)	((a) && !(a)->text)
 
-#define ytk_next_menu_item(m, i)	((i == NULL) ? m->first : i->next)
-#define ytk_add_menu_separator(a)	ytk_add_menu_item(a, NULL, 0, NULL)
+#define ytk_next_menu_item(m, i)	(((i) == NULL) ? (m)->first : (i)->next)
+#define ytk_add_menu_separator(a)	ytk_add_menu_item((a), NULL, 0, NULL)
 
 typedef struct __ytk_menu_item {
 	struct __ytk_menu_item *prev;

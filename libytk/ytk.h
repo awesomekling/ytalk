@@ -19,9 +19,9 @@
 # define FALSE 0
 #endif
 
-#define YTK_MENU(t)		((ytk_menu *)t->object)
-#define YTK_INPUTBOX(t)	((ytk_inputbox *)t->object)
-#define YTK_MSGBOX(t)	((ytk_msgbox *)t->object)
+#define YTK_MENU(t)		((ytk_menu *)(t)->object)
+#define YTK_INPUTBOX(t)	((ytk_inputbox *)(t)->object)
+#define YTK_MSGBOX(t)	((ytk_msgbox *)(t)->object)
 #define YTK_THING(o)	(o->base)
 
 #define YTK_T_NULL		0
@@ -29,9 +29,9 @@
 #define YTK_T_INPUTBOX	2
 #define YTK_T_MSGBOX	3
 
-#define ytk_set_escape(t, e)	(t->escape = e)
-#define ytk_set_colors(t, c)	(t->colors = c)
-#define ytk_set_attr(t, a)		(t->attr = a)
+#define ytk_set_escape(t, e)	((t)->escape = (e))
+#define ytk_set_colors(t, c)	((t)->colors = (c))
+#define ytk_set_attr(t, a)		((t)->attr = (a))
 
 typedef struct __ytk_thing {
 	void	*object;
