@@ -44,7 +44,7 @@ bail(n)
 {
 	kill_auto();
 	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
-		if (show_message_ymenu("Press any key to quit.") == 0) {
+		if (show_message_ymenu(_("Press any key to quit.")) == 0) {
 			update_ymenu();
 			bail_loop();
 		}
@@ -140,6 +140,12 @@ main(argc, argv)
 	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0, hflg = 0;
 	char *prog, *c;
 
+#ifdef ENABLE_NLS
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
+#endif
+
 #ifdef YTALK_DEBUG
 	/* check for a 64-bit mis-compile */
 	if (sizeof(ylong) != 4) {
@@ -165,7 +171,7 @@ then type 'make clean' and 'make'.\n");
 			case 'v': vflg++; break;
 			case 'h': hflg++; break;
 			default:
-				fprintf(stderr, "Unknown option '%c'\n", *c);
+				fprintf(stderr, _("Unknown option '%c'\n"), *c);
 				return YTE_INIT;
 			}
 		}
@@ -181,19 +187,19 @@ then type 'make clean' and 'make'.\n");
 
 	if (argc <= 0 || hflg) {
 		fprintf(stderr,
-			"Usage:    %s [options] user[@host][#tty]...\n\
+			_("Usage:    %s [options] user[@host][#tty]...\n\
 Options:     -i             --    no auto-invite port\n\
              -Y             --    require caps on all y/n answers\n\
              -s             --    start a shell\n\
              -q             --    prompt before quitting\n\
              -v             --    print program version\n\
-             -h             --    show this help message\n", prog);
+             -h             --    show this help message\n"), prog);
 		exit(YTE_INIT);
 	}
 	/* check that STDIN is a valid tty device */
 
 	if (!isatty(0)) {
-		fprintf(stderr, "Standard input is not a valid terminal device.\n");
+		fprintf(stderr, _("Standard input is not a valid terminal device.\n"));
 		exit(1);
 	}
 	/* set up signals */
@@ -232,7 +238,7 @@ Options:     -i             --    no auto-invite port\n\
 	if (sflg)
 		execute(NULL);
 	else {
-		msg_term("Waiting for connection...");
+		msg_term(_("Waiting for connection..."));
 		redraw_all_terms();
 	}
 	main_loop();

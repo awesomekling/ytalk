@@ -105,7 +105,7 @@ init_user(vhost)
 
 	my_name = user_name(myuid);
 	if (my_name == NULL || my_name[0] == '\0') {
-		show_error("Who are you?");
+		show_error(_("Who are you?"));
 		bail(YTE_ERROR);
 	}
 	/* get my hostname */
@@ -213,9 +213,9 @@ free_user(user)
 	/* print a disco message */
 
 #ifdef HAVE_SNPRINTF
-	snprintf(msgstr, MAXERR, "%s disconnected.", user->full_name);
+	snprintf(msgstr, MAXERR, _("%s disconnected."), user->full_name);
 #else
-	sprintf(msgstr, "%s disconnected.", user->full_name);
+	sprintf(msgstr, _("%s disconnected."), user->full_name);
 #endif
 	msg_term(msgstr);
 
@@ -274,7 +274,7 @@ free_user(user)
 	free_scroll(user);
 	free_mem(user);
 	if (connect_list == NULL && wait_list != NULL)
-		msg_term("Waiting for connection...");
+		msg_term(_("Waiting for connection..."));
 	user_winch = 1;
 
 	redraw_all_terms();

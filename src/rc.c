@@ -318,7 +318,7 @@ read_rcfile(fname)
 					def_flags |= opts[i].flag;
 					break;
 				case -1:
-					YTRC_ERROR("Invalid bool option.");
+					YTRC_ERROR(_("Invalid bool option."));
 					bail(YTE_INIT);
 					break;
 				case 0:
@@ -334,7 +334,7 @@ read_rcfile(fname)
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				if (!new_alias(from, to)) {
-					YTRC_ERROR("Not enough parameters for alias.");
+					YTRC_ERROR(_("Not enough parameters for alias."));
 					bail(YTE_INIT);
 				}
 #ifdef YTALK_COLOR
@@ -352,15 +352,15 @@ read_rcfile(fname)
 					found = 1;
 					break;
 				case 1:
-					YTRC_ERROR("You must specify both foreground and background.");
+					YTRC_ERROR(_("You must specify both foreground and background."));
 					bail(YTE_INIT);
 					break;
 				case 2:
-					YTRC_ERROR("Invalid foreground color.");
+					YTRC_ERROR(_("Invalid foreground color."));
 					bail(YTE_INIT);
 					break;
 				case 3:
-					YTRC_ERROR("Invalid background color.");
+					YTRC_ERROR(_("Invalid background color."));
 					bail(YTE_INIT);
 					break;
 				}
@@ -375,31 +375,31 @@ read_rcfile(fname)
 					found = 1;
 					break;
 				case 1:
-					YTRC_ERROR("Cannot resolve \"from\" address.");
+					YTRC_ERROR(_("Cannot resolve \"from\" address."));
 					bail(YTE_INIT);
 					break;
 				case 2:
-					YTRC_ERROR("Cannot resolve \"to\" address.");
+					YTRC_ERROR(_("Cannot resolve \"to\" address."));
 					bail(YTE_INIT);
 					break;
 				case 3:
-					YTRC_ERROR("Cannot resolve \"on\" address.");
+					YTRC_ERROR(_("Cannot resolve \"on\" address."));
 					bail(YTE_INIT);
 					break;
 				case 4:
-					YTRC_ERROR("From and to are the same host.");
+					YTRC_ERROR(_("From and to are the same host."));
 					bail(YTE_INIT);
 					break;
 				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
 				if (vhost != NULL) {
-					YTRC_ERROR("Virtual host already set.");
+					YTRC_ERROR(_("Virtual host already set."));
 					bail(YTE_INIT);
 				}
 				tmp = get_word(&ptr);
 				if (tmp == NULL) {
-					YTRC_ERROR("Missing hostname.");
+					YTRC_ERROR(_("Missing hostname."));
 					bail(YTE_INIT);
 				}
 				vhost = (char *) get_mem(1 + strlen(tmp));
@@ -418,7 +418,7 @@ read_rcfile(fname)
 				found = 1;
 				tmp = get_word(&ptr);
 				if (!set_shell(tmp)) {
-					YTRC_ERROR("Shell cannot be empty.");
+					YTRC_ERROR(_("Shell cannot be empty."));
 				}
 			} else if (strcmp(cmd, "history_rows") == 0) {
 				found = 1;
@@ -426,7 +426,7 @@ read_rcfile(fname)
 				if (tmp != NULL)
 					scrollback_lines = strtol(tmp, NULL, 10);
 			} else {
-				YTRC_ERROR("Unknown option.");
+				YTRC_ERROR(_("Unknown option."));
 				bail(YTE_INIT);
 			}
 		}

@@ -186,9 +186,9 @@ v2_process(user, pack)
 	if ((host_addr = get_host_addr(host)) == (ylong) - 1) {
 		errno = 0;
 #ifdef HAVE_SNPRINTF
-		snprintf(errstr, MAXERR, "unknown host: '%s'", host);
+		snprintf(errstr, MAXERR, _("Unknown host: '%s'"), host);
 #else
-		sprintf(errstr, "unknown host: '%s'", host);
+		sprintf(errstr, _("Unknown host: '%s'"), host);
 #endif
 		show_error(errstr);
 		show_error("port from ytalk V2.? failed");
@@ -204,9 +204,9 @@ v2_process(user, pack)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
 #ifdef HAVE_SNPRINTF
-			snprintf(estr, sizeof(estr), "Import %s@%s?", name, host);
+			snprintf(estr, sizeof(estr), _("Import %s@%s?"), name, host);
 #else
-			sprintf(estr, "Import %s@%s?", name, host);
+			sprintf(estr, _("Import %s@%s?"), name, host);
 #endif
 			if (yes_no(estr) == 'n')
 				break;
@@ -280,9 +280,9 @@ v3_process_pack(user, pack)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
 #ifdef HAVE_SNPRINTF
-			snprintf(estr, sizeof(estr), "Import %s@%s?", name, host);
+			snprintf(estr, sizeof(estr), _("Import %s@%s?"), name, host);
 #else
-			sprintf(estr, "Import %s@%s?", name, host);
+			sprintf(estr, _("Import %s@%s?"), name, host);
 #endif
 			if (yes_no(estr) == 'n')
 				break;
@@ -690,9 +690,9 @@ connect_user(fd)
 		add_fd(fd, read_user);
 	}
 #ifdef HAVE_SNPRINTF
-	snprintf(msgstr, MAXERR, "%s connected.", user->full_name);
+	snprintf(msgstr, MAXERR, _("%s connected."), user->full_name);
 #else
-	sprintf(msgstr, "%s connected.", user->full_name);
+	sprintf(msgstr, _("%s connected."), user->full_name);
 #endif
 	msg_term(msgstr);
 }
@@ -743,7 +743,7 @@ contact_user(fd)
 			user->host_name = str_copy(hname);
 			user->host_fqdn = str_copy(hname);
 			generate_full_name(user);
-			show_error("Connection from unexpected host!");
+			show_error(_("Connection from unexpected host!"));
 		}
 	}
 	user->fd = n;
@@ -947,9 +947,9 @@ invite(name, send_announce)
 
 	if (send_announce) {
 #ifdef HAVE_SNPRINTF
-		snprintf(msgstr, MAXERR, "Ringing %s...", user->full_name);
+		snprintf(msgstr, MAXERR, _("Ringing %s..."), user->full_name);
 #else
-		sprintf(msgstr, "Ringing %s...", user->full_name);
+		sprintf(msgstr, _("Ringing %s..."), user->full_name);
 #endif
 		msg_term(msgstr);
 	}
@@ -963,15 +963,15 @@ invite(name, send_announce)
 		send_dgram(user, DELETE_INVITE);
 		if (rc > 0)
 #ifdef HAVE_SNPRINTF
-			snprintf(errstr, MAXERR, "%s refusing messages", user->full_name);
+			snprintf(errstr, MAXERR, _("%s refusing messages"), user->full_name);
 #else
-			sprintf(errstr, "%s refusing messages", user->full_name);
+			sprintf(errstr, _("%s refusing messages"), user->full_name);
 #endif
 		else
 #ifdef HAVE_SNPRINTF
-			snprintf(errstr, MAXERR, "%s not logged in", user->full_name);
+			snprintf(errstr, MAXERR, _("%s not logged in"), user->full_name);
 #else
-			sprintf(errstr, "%s not logged in", user->full_name);
+			sprintf(errstr, _("%s not logged in"), user->full_name);
 #endif
 		show_error(errstr);
 		free_user(user);
@@ -1020,9 +1020,9 @@ house_clean()
 				if (input_flag)
 					continue;
 #ifdef HAVE_SNPRINTF
-				snprintf(estr, sizeof(estr), "Rering %s?", u->full_name);
+				snprintf(estr, sizeof(estr), _("Rering %s?"), u->full_name);
 #else
-				sprintf(estr, "Rering %s?", u->full_name);
+				sprintf(estr, _("Rering %s?"), u->full_name);
 #endif
 				answer = yes_no(estr);
 				t = (ylong) time(NULL);
@@ -1030,24 +1030,24 @@ house_clean()
 					continue;
 			}
 #ifdef HAVE_SNPRINTF
-			snprintf(msgstr, MAXERR, "Reringing %s\n", u->full_name);
+			snprintf(msgstr, MAXERR, _("Reringing %s\n"), u->full_name);
 #else
-			sprintf(msgstr, "Reringing %s\n", u->full_name);
+			sprintf(msgstr, _("Reringing %s\n"), u->full_name);
 #endif
 			msg_term(msgstr);
 			if ((rc = announce(u)) != 0) {
 				send_dgram(u, DELETE_INVITE);
 				if (rc > 0)
 #ifdef HAVE_SNPRINTF
-					snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
+					snprintf(errstr, MAXERR, _("%s refusing messages"), u->full_name);
 #else
-					sprintf(errstr, "%s refusing messages", u->full_name);
+					sprintf(errstr, _("%s refusing messages"), u->full_name);
 #endif
 				else
 #ifdef HAVE_SNPRINTF
-					snprintf(errstr, MAXERR, "%s not logged in", u->full_name);
+					snprintf(errstr, MAXERR, _("%s not logged in"), u->full_name);
 #else
-					sprintf(errstr, "%s not logged in", u->full_name);
+					sprintf(errstr, _("%s not logged in"), u->full_name);
 #endif
 				show_error(errstr);
 				free_user(u);
@@ -1074,15 +1074,15 @@ rering_all()
 			send_dgram(u, DELETE_INVITE);
 			if (rc > 0)
 #ifdef HAVE_SNPRINTF
-				snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
+				snprintf(errstr, MAXERR, _("%s refusing messages"), u->full_name);
 #else
-				sprintf(errstr, "%s refusing messages", u->full_name);
+				sprintf(errstr, _("%s refusing messages"), u->full_name);
 #endif
 			else
 #ifdef HAVE_SNPRINTF
-				snprintf(errstr, MAXERR, "%s not logged in", u->full_name);
+				snprintf(errstr, MAXERR, _("%s not logged in"), u->full_name);
 #else
-				sprintf(errstr, "%s not logged in", u->full_name);
+				sprintf(errstr, _("%s not logged in"), u->full_name);
 #endif
 			show_error(errstr);
 			free_user(u);

@@ -183,9 +183,9 @@ exec_input(fd)
 		kill_exec();
 		errno = 0;
 		if (!last_command)
-			msg_term("Command shell terminated.");
+			msg_term(_("Command shell terminated."));
 		else
-			msg_term("Command execution finished.");
+			msg_term(_("Command execution finished."));
 		return;
 	}
 	show_input(me, buf, rc);
@@ -230,18 +230,18 @@ execute(command)
 
 	if (me->flags & FL_LOCKED) {
 		errno = 0;
-		show_error("A command is already executing.");
+		show_error(_("A command is already executing."));
 		return;
 	}
 #ifdef HAVE_OPENPTY
 	if (openpty(&fd, &fds, name, NULL, NULL) < 0) {
-		msg_term("Cannot allocate pseudo-terminal.");
+		msg_term(_("Cannot allocate pseudo-terminal."));
 		return;
 	}
 	close(fds);
 #else
 	if ((fd = getpty(name)) < 0) {
-		msg_term("Cannot allocate pseudo-terminal.");
+		msg_term(_("Cannot allocate pseudo-terminal."));
 		return;
 	}
 #endif
@@ -286,7 +286,7 @@ execute(command)
 	/* Check pty permissions and warn about potential risks. */
 	if (!command && (stat(name, &sbuf) == 0))
 		if (sbuf.st_mode & 0004)
-			msg_term("Warning: The pseudo-terminal is world-readable.");
+			msg_term(_("Warning: The pseudo-terminal is world-readable."));
 
 	if ((pid = fork()) == 0) {
 		close(fd);
@@ -356,7 +356,7 @@ execute(command)
 #endif
 
 	if (pid < 0) {
-		show_error("fork() failed");
+		show_error(_("fork() failed"));
 		return;
 	}
 
