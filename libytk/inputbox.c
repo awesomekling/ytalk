@@ -57,7 +57,7 @@ ytk_handle_inputbox_input(ytk_inputbox *b, int ch)
 			b->base->escape(b->base);
 		break;
 	default:
-		if (ch >= 32)
+		if (is_printable(ch))
 			if (b->len < (b->size)) {
 				b->data[b->len++] = ch;
 				b->data[b->len] = '\0';

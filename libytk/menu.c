@@ -223,7 +223,7 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 			m->base->escape(m->base);
 		break;
 	default:
-		if (ch > 32) {
+		if (is_printable(ch)) {
 			it = ytk_find_menu_item_with_hotkey(m, ch);
 			if (it != NULL) {
 				ytk_select_menu_item(m, it);
