@@ -31,6 +31,8 @@ int newui_attr = 0;		/* newui output attributes */
 int menu_colors = 0;		/* TODO: change default */
 int menu_attr = 0;
 #endif
+char *title_format = NULL;
+char *user_format = NULL;
 
 /*
  * Clean up and exit.
@@ -75,7 +77,7 @@ show_error(str)
 
 	if (def_flags & FL_BEEP)
 		putc(7, stderr);
-	if (in_error == 0 && what_term() != 0) {
+	if (in_error == 0 && what_term() != 0 && can_ymenu()) {
 		in_error = 1;
 		if (show_error_ymenu(str, syserr) < 0) {
 			show_error("show_error: show_error_ymenu() failed");
