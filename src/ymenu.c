@@ -74,68 +74,55 @@ esc_userlist(ytk_thing *t)
 }
 
 void
-handle_runcmd(void *item)
+handle_main_menu(ytk_menu_item *i)
 {
-	ytk_thing *c;
-	(void) item;
-	c = ytk_new_inputbox(_("Run command"), 60, do_runcmd);
-	ytk_set_escape(c, do_hidething);
+	ytk_thing *b;
+	switch (i->hotkey) {
+	case 'a':
+		b = ytk_new_inputbox(_("Add user"), 60, do_adduser);
+		ytk_set_escape(b, do_hidething);
 #ifdef YTALK_COLOR
-	ytk_set_colors(c, menu_colors);
-	ytk_set_attr(c, menu_attr);
+		ytk_set_colors(b, menu_colors);
+		ytk_set_attr(b, menu_attr);
 #endif
-	ytk_push(menu_stack, c);
-}
-
-void
-handle_adduser(void *item)
-{
-	ytk_thing *a;
-	(void) item;
-	a = ytk_new_inputbox(_("Add user"), 60, do_adduser);
-	ytk_set_escape(a, do_hidething);
+		ytk_push(menu_stack, b);
+		break;
+	case 'c':
+		b = ytk_new_inputbox(_("Run command"), 60, do_runcmd);
+		ytk_set_escape(b, do_hidething);
 #ifdef YTALK_COLOR
-	ytk_set_colors(a, menu_colors);
-	ytk_set_attr(a, menu_attr);
+		ytk_set_colors(b, menu_colors);
+		ytk_set_attr(b, menu_attr);
 #endif
-	ytk_push(menu_stack, a);
+		ytk_push(menu_stack, b);
+		break;
+	case 'o':
+		ytk_push(menu_stack, options_menu);
+		break;
+	case 's':
+		hide_ymenu();
+		execute(NULL);
+		break;
+	case 'u':
+		init_userlist();
+		ytk_push(menu_stack, userlist_menu);
+		break;
+	case 'q':
+		ytk_purge_stack(menu_stack);
+		bail(YTE_SUCCESS);
+		break;
+	}
 }
 
 void
-handle_shell(void *t)
-{
-	(void) t;
-	hide_ymenu();
-	execute(NULL);
-}
-
-void
-handle_usermenu(void *i)
+handle_usermenu(ytk_menu_item *i)
 {
 	init_usermenu(((ytk_menu_item *) i)->hotkey);
 	ytk_push(menu_stack, usermenu_menu);
 }
 
 void
-handle_userlist(void *i)
-{
-	(void) i;
-	init_userlist();
-	ytk_push(menu_stack, userlist_menu);
-}
-
-void
-handle_quit(void *i)
-{
-	(void) i;
-	if (!ytk_on_stack(menu_stack, options_menu))
-		ytk_delete_thing(options_menu);
-	ytk_purge_stack(menu_stack);
-	bail(YTE_SUCCESS);
-}
-
-void
-handle_rering_all(void *i)
+handle_rering_all(ytk_menu_item *i)
 {
 	(void) i;
 	esc_userlist(userlist_menu);
@@ -144,9 +131,9 @@ handle_rering_all(void *i)
 }
 
 void
-handle_kill_unconnected(void *t)
+handle_kill_unconnected(ytk_menu_item *i)
 {
-	(void) t;
+	(void) i;
 	esc_userlist(userlist_menu);
 	hide_ymenu();
 	while (wait_list)
@@ -155,9 +142,9 @@ handle_kill_unconnected(void *t)
 
 #ifdef YTALK_COLOR
 void
-handle_color(void *t)
+handle_color(ytk_menu_item *i)
 {
-	char k = ((ytk_menu_item *)(t))->hotkey;
+	char k = i->hotkey;
 	char buf[8];
 	int len;
 
@@ -168,7 +155,7 @@ handle_color(void *t)
 	}
 	switch (k) {
 	case 'b':
-		if (((ytk_menu_item *)t)->value) {
+		if (i->value) {
 			me->c_at |= A_BOLD;
 			len = snprintf(buf, sizeof(buf), "%c[01m", 27);
 		} else {
@@ -194,16 +181,9 @@ set_flags(ylong new_flags)
 	def_flags = new_flags;
 }
 
-void
-handle_options(void *i)
-{
-	(void) i;
-	ytk_push(menu_stack, options_menu);
-}
-
 #define DEFAULT_TOGGLE(name, mask) \
-void name(void *i) { \
-	if (((ytk_menu_item *)i)->value) \
+void name(ytk_menu_item *i) { \
+	if (i->value) \
 		set_flags(def_flags | mask); \
 	else \
 		set_flags(def_flags & ~mask); \
@@ -226,14 +206,14 @@ init_ymenu()
 	menu_stack = ytk_new_stack();
 
 	main_menu = ytk_new_menu(_("Main Menu"));
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Add another user"), 'a', handle_adduser);
-	ytk_add_menu_item(YTK_MENU(main_menu), _("User list"), 'u', handle_userlist);
+	ytk_add_menu_item(YTK_MENU(main_menu), _("Add another user"), 'a', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), _("User list"), 'u', handle_main_menu);
 	ytk_add_menu_separator(YTK_MENU(main_menu));
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Options"), 'o', handle_options);
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Spawn shell"), 's', handle_shell);
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Run command"), 'c', handle_runcmd);
+	ytk_add_menu_item(YTK_MENU(main_menu), _("Options"), 'o', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), _("Spawn shell"), 's', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), _("Run command"), 'c', handle_main_menu);
 	ytk_add_menu_separator(YTK_MENU(main_menu));
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Quit"), 'q', handle_quit);
+	ytk_add_menu_item(YTK_MENU(main_menu), _("Quit"), 'q', handle_main_menu);
 	ytk_set_escape(main_menu, do_hidething);
 #ifdef YTALK_COLOR
 	ytk_set_colors(main_menu, menu_colors);
@@ -276,10 +256,10 @@ init_ymenu()
 }
 
 void
-handle_disconnect_user(void *t)
+handle_disconnect_user(ytk_menu_item *i)
 {
 	yuser *u;
-	(void) t;
+	(void) i;
 	for (u = user_list; u; u = u->unext)
 		if (u->key == ukey) {
 			free_user(u);
@@ -297,7 +277,7 @@ init_usermenu(char k)
 		if (u->key == k) {
 			usermenu_menu = ytk_new_menu(u->full_name);
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
-			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_quit);
+			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', NULL);	/* FIXME: Fix me! */
 			ukey = k;
 			ytk_set_escape(usermenu_menu, do_hidething);
 #ifdef YTALK_COLOR
