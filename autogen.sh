@@ -11,7 +11,7 @@ echo "Cleaning up..."
 rm -rf aclocal.m4 autom4te.cache configure config.h.in Makefile.in
 
 echo "Setting up gettext..."
-./setup-gettext ||
+autopoint -f || \
 	{ echo "FATAL: You need GNU gettext" 2>&1; exit 1; }
 
 echo "Touching \"required\" files..."

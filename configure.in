@@ -126,7 +126,6 @@ AC_CHECK_FUNC(gethostname,,AC_MSG_ERROR(Can't run without gethostname))
 AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
 
 AC_OUTPUT(
-	m4/Makefile
 	intl/Makefile
 	po/Makefile.in 
 	Makefile
