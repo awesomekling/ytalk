@@ -247,18 +247,3 @@ ytk_handle_menu_input(ytk_menu *m, int ch)
 		}
 	}
 }
-
-void
-ytk_dump_menu(ytk_menu *m)
-{
-	ytk_menu_item *it;
-	if (m->first == NULL)
-		return;
-	printf("BEGIN ytk_dump_menu()\n\ttitle=\"%s\"\n", m->base->title);
-	it = m->first;
-	while (it != NULL) {
-		printf("\ttext=\"%s\", hotkey='%c', selected=%d, value=%d\n", it->text, it->hotkey, it->selected, it->value);
-		it = it->next;
-	}
-	printf("END ytk_dump_menu()\n");
-}
