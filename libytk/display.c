@@ -149,6 +149,8 @@ ytk_display_thing(ytk_thing *t)
 			exit(1);
 
 #ifdef YTALK_COLOR
+	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
+
 	wborder(t->win,
 		ACS_VLINE | COLOR_PAIR(t->colors) | t->attr,
 		ACS_VLINE | COLOR_PAIR(t->colors) | t->attr,
@@ -180,6 +182,10 @@ ytk_display_thing(ytk_thing *t)
 		ytk_display_msgbox(t);
 		break;
 	}
+
+#ifdef YTALK_COLOR
+	wattroff(t->win, COLOR_PAIR(t->colors) | t->attr);
+#endif
 
 	wnoutrefresh(t->win);
 }
