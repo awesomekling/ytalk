@@ -142,7 +142,12 @@ ytk_display_thing(ytk_thing *t)
 
 	wattron(t->win, A_REVERSE);
 
-	box(t->win, 0, 0);
+	wborder(t->win, 
+		ACS_VLINE | A_REVERSE, ACS_VLINE | A_REVERSE,
+		ACS_HLINE | A_REVERSE, ACS_HLINE | A_REVERSE,
+		ACS_ULCORNER | A_REVERSE, ACS_URCORNER | A_REVERSE,
+		ACS_LLCORNER | A_REVERSE, ACS_LRCORNER | A_REVERSE
+	);
 
 	wattron(t->win, A_BOLD);
 	mvwaddstr(t->win, 0, (t->width / 2) - (strlen(t->title)) / 2, t->title);
