@@ -162,7 +162,9 @@ set_option(opt, value)
 		 || strcmp(opt, "pr") == 0)
 		mask |= FL_PROMPTRING;
 
-	else if (strcmp(opt, "prompt-quit") == 0)
+	else if (strcmp(opt, "prompt-quit") == 0
+		|| strcmp(opt, "promptquit") == 0
+		|| strcmp(opt, "pq") == 0)
 		mask |= FL_PROMPTQUIT;
 
 	else if (strcmp(opt, "beeps") == 0)
