@@ -298,9 +298,9 @@ execute(command)
 	/* execute the command */
 
 	if(command)
-	    execl(shell, shell, "-c", command, NULL);
+	    execl(shell, shell, "-c", command, (char *)NULL);
 	else
-	    execl(shell, shell, NULL);
+	    execl(shell, shell, (char *)NULL);
 	perror("execl");
 	(void)exit(-1);
     }
