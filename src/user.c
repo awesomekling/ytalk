@@ -305,6 +305,7 @@ void
 user_title(char *buf, int size, yuser *user)
 {
 	char *f, *b, *fmt;
+	long int i;
 
 	if (user == me)
 		fmt = title_format;
@@ -348,6 +349,12 @@ user_title(char *buf, int size, yuser *user)
 			case 'V':
 				if ((int) (b - buf) < (size - 5))
 					b += sprintf(b, "%d.%d.%d", VMAJOR, VMINOR, VPATCH);
+				break;
+			case 'S':
+				if ((int) (b - buf) < (size - 4)) {
+					for (i = 0; (i < scrollback_lines) && (user->scrollback[i] != NULL); i++);
+					b += sprintf(b, "%d%%", (i == 0) ? 100 : (int) (((float) (user->scrollpos + 1) / (float) i) * 100));
+				}
 				break;
 			case 's':
 				if (scrollback_lines > 0) {
