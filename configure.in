@@ -79,6 +79,8 @@ AC_TYPE_SIGNAL
 AC_HEADER_TIME
 AC_TYPE_UID_T
 
+AC_CHECK_TYPE([socklen_t], [AC_DEFINE(HAVE_SOCKLEN_T, 1, [Define to 1 if you have the `socklen_t` type])], [], [#include <sys/socket.h>])
+
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS(putenv strerror ttyname ptsname grantpt unlockpt)
