@@ -24,7 +24,9 @@
 # include <curses.h>
 #endif
 
-#include <sys/signal.h>
+/* Some systems, notably Solaris, don't have sys/signal.h */
+#include <signal.h>
+
 #include "cwin.h"
 
 typedef struct _ywin {
