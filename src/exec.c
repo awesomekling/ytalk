@@ -272,7 +272,11 @@ execute(command)
     {
 	close(fd);
 	close_all();
+#ifdef HAVE_TCSETPGRP
         if((sid = setsid()) < 0)
+#else
+        if(setsid() < 0)
+#endif
             exit(-1);
         if((fd = open(name, O_RDWR)) < 0)
             exit(-1);
