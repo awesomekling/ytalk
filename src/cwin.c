@@ -500,6 +500,9 @@ addch_curses(user, c)
 	if (c.v) {
 		cc = acs_map[cc];
 	}
+	if (cc == 0) {
+		cc = ' ';
+	}
 	waddch(w->win, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
 #else
 	waddch(w->win, c);
