@@ -250,6 +250,19 @@ execute(command)
     }
 
     calculate_size(&prows, &pcols);
+
+#ifdef SIGCHLD
+    /* Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999,
+     * following hints by Jason Gunthorpe.
+     * This closes two Debian bugs (#42625, #2196).
+     */
+    signal(SIGCHLD, SIG_DFL);
+#else
+# ifdef SIGCLD
+    signal(SIGCLD, SIG_DFL);
+# endif
+#endif
+
     if((pid = fork()) == 0)
     {
 	close(fd);
@@ -304,6 +317,16 @@ execute(command)
 	perror("execl");
 	(void)exit(-1);
     }
+
+    /* Modified by P. Maragakis (Maragakis@mpq.mpg.de) Aug 10, 1999. */
+#ifdef SIGCHLD
+    signal(SIGCHLD, SIG_IGN);
+#else
+# ifdef SIGCLD
+    signal(SIGCLD, SIG_IGN);
+# endif
+#endif
+
     if(pid < 0)
     {
 	show_error("fork() failed");
