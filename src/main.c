@@ -123,8 +123,8 @@ main(argc, argv)
 	int argc;
 	char **argv;
 {
-	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0;
-	char *prog;
+	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0, hflg = 0;
+	char *prog, *c;
 
 #ifdef YTALK_DEBUG
 	/* check for a 64-bit mis-compile */
@@ -140,28 +140,22 @@ then type 'make clean' and 'make'.\n");
 
 	prog = *argv;
 	argv++, argc--;
+
 	while (argc > 0 && **argv == '-') {
-		if (strcmp(*argv, "-Y") == 0) {
-			yflg++;
-			argv++, argc--;
-		} else if (strcmp(*argv, "-i") == 0) {
-			iflg++;
-			argv++, argc--;
-		} else if (strcmp(*argv, "-v") == 0) {
-			vflg++;
-			argv++, argc--;
-		} else if (strcmp(*argv, "-h") == 0) {
-			argv++;
-			vhost = *argv++;
-			argc -= 2;
-		} else if (strcmp(*argv, "-s") == 0) {
-			sflg++;	/* immediately start a shell */
-			argv++, argc--;
-		} else if (strcmp(*argv, "-q") == 0) {
-			qflg++;	/* prompt quit */
-			argv++, argc--;
-		} else
-			argc = 0;	/* force a Usage error */
+		for (c=(*argv)+1; *c; c++) {
+			switch (*c) {
+			case 'Y': yflg++; break;
+			case 'i': iflg++; break;
+			case 's': iflg++; break;
+			case 'q': qflg++; break;
+			case 'v': vflg++; break;
+			case 'h': hflg++; break;
+			default:
+				fprintf(stderr, "Unknown option '%c'\n", *c);
+				return YTE_INIT;
+			}
+		}
+		argv++, argc--;
 	}
 
 	if (vflg) {
@@ -171,7 +165,7 @@ then type 'make clean' and 'make'.\n");
 	}
 	/* check for users */
 
-	if (argc <= 0) {
+	if (argc <= 0 || hflg) {
 		fprintf(stderr,
 			"Usage:    %s [options] user[@host][#tty]...\n\
 Options:     -i             --    no auto-invite port\n\
@@ -179,7 +173,7 @@ Options:     -i             --    no auto-invite port\n\
              -s             --    start a shell\n\
              -q             --    prompt before quitting\n\
              -v             --    print program version\n\
-             -h host_or_ip  --    select interface or virtual host\n", prog);
+             -h             --    show this help message\n", prog);
 		(void) exit(YTE_INIT);
 	}
 	/* check that STDIN is a valid tty device */
