@@ -45,6 +45,7 @@ bail(n)
 	}
 	end_term();
 	free_users();
+	free_mem(gshell);
 	clear_all();
 	(void) exit(n == YTE_SUCCESS_PROMPT ? YTE_SUCCESS : n);
 }
