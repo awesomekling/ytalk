@@ -6,7 +6,7 @@
 #include "ytk.h"
 
 void ytk_display_thing(ytk_thing *);
-void ytk_sync_display();
+void ytk_sync_display(void);
 void ytk_display_stack(ytk_stack *);
 void ytk_winch_thing(ytk_thing *);
 

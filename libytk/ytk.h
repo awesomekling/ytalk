@@ -41,7 +41,7 @@ typedef struct __ytk_thing {
 	int		attr;
 } ytk_thing;
 
-ytk_thing *ytk_new_thing();
+ytk_thing *ytk_new_thing(void);
 void ytk_delete_thing(ytk_thing *);
 void ytk_set_escape(ytk_thing *, void (*) (ytk_thing *));
 void ytk_set_colors(ytk_thing *, int);
