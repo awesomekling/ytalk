@@ -172,6 +172,7 @@ typedef struct _yuser {
 #define FL_PROMPTRING	0x00000400L	/* prompt before reringing */
 #define FL_BEEP		0x00000800L	/* allow ytalk to beep? */
 #define FL_IGNBRK	0x00001000L	/* don't die when ^C is pressed */
+#define FL_MESG		0x00002000L	/* don't show tty-messages */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */

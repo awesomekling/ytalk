@@ -205,7 +205,7 @@ Options:     -i             --    no auto-invite port\n\
 
     /* set default options */
 
-    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING | FL_BEEP;
+    def_flags = FL_XWIN | FL_PROMPTRING | FL_RING | FL_BEEP | FL_MESG;
 
     /* go for it! */
 
@@ -219,6 +219,9 @@ Options:     -i             --    no auto-invite port\n\
 	def_flags |= FL_CAPS;
     if(iflg)
 	def_flags |= FL_NOAUTO;
+
+    if(!(def_flags & FL_MESG))
+	chmod(ttyname(0) ,600);
 
     init_term();
     init_socket();
