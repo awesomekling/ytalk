@@ -489,8 +489,10 @@ yes_no(char *str)
 	(void) ytk_pop_thing(menu_stack);
 	if (ytk_is_empty_stack(menu_stack))
 		hide_ymenu();
-	else
+	else {
+		refresh_curses();
 		refresh_ymenu();
+	}
 	io_len = 0;
 	return out;
 }
