@@ -177,7 +177,7 @@ exec_input(fd)
 	if ((rc = read(fd, buf, MAXBUF)) <= 0) {
 		kill_exec();
 		errno = 0;
-		show_error("command shell terminated");
+		show_error("Command shell terminated");
 		return;
 	}
 	show_input(me, buf, rc);
