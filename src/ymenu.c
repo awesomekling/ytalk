@@ -5,6 +5,7 @@
 
 #include "ytk.h"
 #include "ymenu.h"
+#include "cwin.h"
 
 ytk_stack *menu_stack = NULL;
 ytk_thing *main_menu = NULL;

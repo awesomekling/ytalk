@@ -24,5 +24,7 @@ void ytk_push_thing(ytk_stack *, ytk_thing *);
 ytk_thing *ytk_pop_thing(ytk_stack *);
 int ytk_handle_stack_input(ytk_stack *, int);
 void ytk_winch_stack(ytk_stack *);
+int ytk_on_stack(ytk_stack *, ytk_thing *);
+int ytk_is_empty_stack(ytk_stack *);
 
 #endif /* __YTK_STACK_H__ */
