@@ -235,7 +235,13 @@ read_rcfile(fname)
 		i = 0;
 		line++;
 
+		if(*ptr == '#')
+			continue;
+
 		cmd = get_word(&ptr);
+
+		if(cmd == NULL)
+			continue;
 
 		while(opts[i].option != NULL) {
 			if (strcmp(cmd, opts[i].option) == 0) {
