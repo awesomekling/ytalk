@@ -107,7 +107,6 @@ AC_PROG_GCC_TRADITIONAL
 AC_CHECK_FUNCS(snprintf putenv strerror ttyname ptsname grantpt unlockpt)
 AC_CHECK_FUNCS(setsid tcflush strcpy)
 AC_CHECK_FUNCS(sigprocmask sigsetmask sighold, break)
-AC_CHECK_FUNCS(tcsetpgrp)
 
 AC_CHECK_FUNC(gethostname,,AC_MSG_ERROR(Can't run without gethostname))
 AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
