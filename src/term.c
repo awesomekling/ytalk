@@ -289,6 +289,8 @@ close_term(user)
 	    free_mem(user->scr[i]);
 	free_mem(user->scr);
 	user->scr = NULL;
+	free_mem(user->scr_tabs);
+	user->scr_tabs = NULL;
 	user->t_rows = user->rows = 0;
 	user->t_cols = user->cols = 0;
     }
@@ -545,7 +547,17 @@ void
 tab_term(user)
   register yuser *user;
 {
-    move_term(user, user->y, (user->x + 8) & 0xfff8);
+    int i;
+    /* Find nearest tab and jump to it. */
+    if(user->x < user->t_cols) {
+	for(i=(user->x+1);i<=user->t_cols;i++) {
+	    if(user->scr_tabs[i] == 1) {
+		move_term(user, user->y, i);
+		break;
+	    }
+	}
+    }
+    /* move_term(user, user->y, (user->x + 8) & 0xfff8); */
 }
 
 /* Process a newline.
@@ -923,13 +935,23 @@ resize_win(user, height, width)
 
     /* fill in the missing portions */
 
-    if(width > user->t_cols)
+    if(width > user->t_cols) {
 	for(i = 0; i <= new_y; i++)
 	{
 	    user->scr[i] = (ychar *)realloc_mem(user->scr[i], width);
 	    for(j = user->t_cols; j < width; j++)
 		user->scr[i][j] = ' ';
 	}
+
+	user->scr_tabs = realloc_mem(user->scr_tabs, width * sizeof(int));
+	for(j = user->t_cols; j < width; j++) {
+	    if(j % 8 == 0)
+		user->scr_tabs[j] = 1;
+	    else
+		user->scr_tabs[j] = 0;
+	}
+	/* rightmost column is always last tab on line */
+    }
     for(i = new_y + 1; i < height; i++)
     {
 	c = user->scr[i] = (ychar *)get_mem(width);

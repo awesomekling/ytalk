@@ -99,6 +99,7 @@ typedef struct _yuser {
     u_short rows, cols;		/* his active region rows and cols over here */
     y_parm remote;		/* remote parms */
     ychar **scr;		/* screen data */
+    int *scr_tabs;		/* screen tab positions */
     char bump;			/* set if at far right */
     ychar old_rub;		/* my actual rub character */
     char got_esc;		/* received an ESC */
