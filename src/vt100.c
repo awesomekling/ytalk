@@ -256,7 +256,7 @@ vt100_process(yuser *user, char data)
 		}
 		user->got_esc = 0;
 		break;
-	case '(':		/* skip over lparens for now */
+	case '(':
 		user->lparen = 1;
 		break;
 	default:
