@@ -13,7 +13,6 @@ init_scroll(yuser *user)
 	if (scrollback_lines > 0) {
 		user->scrollback = (yachar **) get_mem(scrollback_lines * sizeof(yachar *));
 		memset(user->scrollback, 0, scrollback_lines * sizeof(yachar *));
-		user->scrollback[0] = NULL;
 		user->scrollpos = 0;
 	}
 }
