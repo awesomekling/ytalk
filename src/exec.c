@@ -230,7 +230,6 @@ execute(command)
 		show_error("alternate mode already running");
 		return;
 	}
-
 #ifdef HAVE_OPENPTY
 	/* Try openpty() first. 666 ttys are no fun. */
 	if (openpty(&fd, &fds, name, NULL, NULL) == 0) {
