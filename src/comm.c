@@ -1145,12 +1145,14 @@ process_esc:
 		    else
 			user->got_esc = 0;
 		    break;
-		case '7':	/* save cursor */
+		case '7':	/* save cursor and attributes */
+		case 's':	/* save cursor */
 		    user->sy = user->y;
 		    user->sx = user->x;
 		    user->got_esc = 0;
 		    break;
-		case '8':	/* restore cursor */
+		case '8':	/* restore cursor and attributes */
+		case 'u':	/* restore cursor */
 		    move_term(user, user->sy, user->sx);
 		    user->got_esc = 0;
 		    break;
