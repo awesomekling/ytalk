@@ -101,6 +101,7 @@ init_user(char *vhost)
 	char *my_name, *my_vhost;
 	char my_host[100];
 
+	me = NULL;
 	user_list = NULL;
 	connect_list = NULL;
 	wait_list = NULL;
@@ -167,8 +168,13 @@ new_user(char *name, char *hostname, char *tty)
 	/* find the host address */
 
 	if (hostname == NULL || *hostname == '\0') {
-		hostname = me->host_name;
-		addr = me->host_addr;
+		if (me != NULL) {
+			hostname = me->host_name;
+			addr = me->host_addr;
+		} else {
+			show_error("new_user: Cannot run with empty local host");
+			return NULL;
+		}
 	} else if ((addr = get_host_addr(hostname)) == (ylong) - 1) {
 #ifdef HAVE_SNPRINTF
 		snprintf(errstr, MAXERR, "new_user: bad host: '%s'", hostname);
