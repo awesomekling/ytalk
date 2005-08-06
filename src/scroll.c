@@ -23,13 +23,15 @@
 #include "cwin.h"
 #include "mem.h"
 
-yuser *scuser;
+#include <assert.h>
 
-long int scrollback_lines = 100;
+yuser *scuser;						/* User currently being scrolled. */
+long int scrollback_lines = 100;	/* Maximum number of scrollback lines. */
 
 void
 init_scroll(yuser *user)
 {
+	/* Initialize scrollback (if we're keeping more than 0 lines) */
 	if (scrollback_lines > 0) {
 		user->scrollback = (yachar **) get_mem(scrollback_lines * sizeof(yachar *));
 		memset(user->scrollback, 0, scrollback_lines * sizeof(yachar *));
@@ -40,9 +42,10 @@ init_scroll(yuser *user)
 void
 free_scroll(yuser *user)
 {
+	/* Loop through the user's scrollback buffer and free each stored line. */
 	long int i;
 	if (scrollback_lines > 0) {
-		if (user->scrollback != NULL) {
+		if (!user->scrollback) {
 			for (i = 0; (i < scrollback_lines) && (user->scrollback[i]); i++)
 				free_mem(user->scrollback[i]);
 			free_mem(user->scrollback);
@@ -53,48 +56,88 @@ free_scroll(yuser *user)
 void
 scroll_up(yuser *user)
 {
-	if (scrollback_lines == 0 || user->scrollback[0] == NULL)
+	/* Check that we're actually using scrollback and that at least one
+	 * line has been logged. */
+	if (!scrollback_lines || !user->scrollback[0])
 		return;
 
-	if (user->scroll == 0)
+	/* If we're not in scrolling mode, tell the terminal interface to
+	 * get into character. */
+	if (!scrolling(user))
 		start_scroll_term(user);
 
-	if (user->scrollpos >= 0) {
+	/* If we've scrolled below 0, we're done scrolling, so turn off the
+	 * scroll view. */
+	if (user->scrollpos < 0) {
+		disable_scrolling(user);
+	} else {
+		/* If there is less than half a screen of scrollback data left,
+		 * just hit the bottom. Otherwise, scroll up half a screen. */
 		if (user->scrollpos < (user->rows / 2))
 			user->scrollpos = 0;
 		else
 			user->scrollpos -= (user->rows / 2);
-		user->scroll = 1;
-	} else
-		user->scroll = 0;
+		/* Mark this user as scrolling. */
+		enable_scrolling(user);
+	}
+
+	/* Update the terminal. */
 	update_scroll_term(user);
 }
 
 void
 scroll_down(yuser *user)
 {
-	long int i;
-	if (scrollback_lines == 0 || user->scrollback[0] == NULL)
+	/* Check that we're actually using scrollback and that at least one
+	 * line has been logged. */
+	if (!scrollback_lines || !user->scrollback[0])
 		return;
 
+	/* If we've got less than half a screen left to scroll down,
+	 * scroll to last row and return to active screen. */
 	if ((user->scrollpos > (scrollback_lines - ((int) user->rows / 2))) ||
-		(user->scrollback[user->scrollpos] == NULL ))
+		!user->scrollback[user->scrollpos])
 	{
-		if (!(user->scrollback[user->scrollpos] == NULL)) {
-			for (i = 0; (i < scrollback_lines) && (user->scrollback[i] != NULL); i++);
-			user->scrollpos = i - 1;
+		/* If we're not already at rock bottom... */
+		if (user->scrollback[user->scrollpos]) {
+			scroll_to_last(user);
 		}
-		user->scroll = 0;
-		end_scroll_term(user);
+		disable_scrolling(user);
 	} else {
+		/* Scroll down half a screen. */
 		user->scrollpos += (user->rows / 2);
-		if (user->scrollback[user->scrollpos] == NULL) {
-			for (i = 0; (i < scrollback_lines) && (user->scrollback[i] != NULL); i++);
-			user->scrollpos = i - 1;
-			user->scroll = 0;
-			end_scroll_term(user);
-		} else
-			user->scroll = 1;
+		/* If we hit the floor, return to active screen and turn
+		 * off scrolling. */
+		if (!user->scrollback[user->scrollpos]) {
+			scroll_to_last(user);
+			disable_scrolling(user);
+		} else {
+			enable_scrolling(user);
+		}
 	}
+
+	/* If we're done scrolling this user, notify the terminal interface. */
+	if (!scrolling(user))
+		end_scroll_term(user);
+
+	/* Update the terminal. */
 	update_scroll_term(user);
+}
+
+void
+scroll_to_last(yuser *user)
+{
+	long int i;
+
+	/* These SHOULD be checked in the calling function, but we throw
+	 * in some assert()s here to be on the safe side. */
+	assert(user);
+	assert(scrollback_lines);
+	assert(user->scrollback[0]);
+
+	/* Locate the last scrollback line. */
+	for (i = 0; (i < scrollback_lines) && user->scrollback[i]; i++);
+
+	/* Scroll to last line. */
+	user->scrollpos = i - 1;
 }

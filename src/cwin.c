@@ -190,16 +190,16 @@ curses_redraw(void)
 		}
 		draw_title(w);
 		row += wsize;
-		if (w->user->scroll) {
+		if (scrolling(w->user)) {
 			w->swin = dupwin(w->win);
-			if (w->swin == NULL) {
+			if (!w->swin) {
 				end_term();
 				show_error("Couldn't create scrolling viewport");
 				bail(YTE_ERROR);
 			}
 		}
 		wnoutrefresh(stdscr);
-		if (w->user->scroll) {
+		if (scrolling(w->user)) {
 			__update_scroll_curses(w->user);
 			wnoutrefresh(w->swin);
 		} else
@@ -281,7 +281,7 @@ curses_restart(int sig)
 		if (w->win) {
 			delwin(w->win);
 			w->win = NULL;
-			if (w->user->scroll) {
+			if (scrolling(w->user)) {
 				delwin(w->swin);
 				w->swin = NULL;
 			}
@@ -396,7 +396,7 @@ close_curses(yuser *user)
 		}
 	}
 	delwin(w->win);
-	if (user->scroll)
+	if (scrolling(user))
 		delwin(w->swin);
 	free_mem(w);
 	w = NULL;
@@ -531,7 +531,7 @@ flush_curses(yuser *user)
 	register ywin *w;
 
 	w = (ywin *) (user->term);
-	if (w->user->scroll)
+	if (scrolling(w->user))
 		wnoutrefresh(w->swin);
 	else
 		wnoutrefresh(w->win);
@@ -564,7 +564,7 @@ refresh_curses(void)
 	register ywin *w;
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
-		if (w->user->scroll) {
+		if (scrolling(w->user)) {
 			__update_scroll_curses(w->user);
 			draw_title(w);
 			touchwin(w->swin);
@@ -598,7 +598,7 @@ redisplay_curses(void)
 
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
-		if (w->user->scroll) {
+		if (scrolling(w->user)) {
 			__update_scroll_curses(w->user);
 			draw_title(w);
 			wnoutrefresh(stdscr);
@@ -632,7 +632,7 @@ start_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
 	w->swin = dupwin(w->win);
-	if (w->swin == NULL) {
+	if (!w->swin) {
 		end_term();
 		show_error("Couldn't create scrolling viewport");
 		bail(YTE_ERROR);
@@ -646,7 +646,7 @@ void
 end_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
-	if (w->swin != NULL) {
+	if (!w->swin) {
 		delwin(w->swin);
 		w->swin = NULL;
 		redraw_term(user, 0);
@@ -664,14 +664,14 @@ __update_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
 	long int r, i, fb = -1;
-	if (w->swin == NULL)
+	if (!w->swin)
 		return;
 	werase(w->swin);
 	for (r = 0; r <= (user->rows - 1); r++) {
 		wmove(w->swin, r, 0);
-		if (((user->scrollpos + r) < 0) ||
-			((user->scrollpos + r ) >= scrollback_lines) ||
-			((user->scrollback[user->scrollpos + r] == NULL)))
+		if ((user->scrollpos + r) < 0 ||
+			(user->scrollpos + r) >= scrollback_lines ||
+			(!user->scrollback[user->scrollpos + r]))
 		{
 			/* Borrow lines from active screen */
 			if (fb == -1)

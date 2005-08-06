@@ -464,7 +464,7 @@ scroll_term(yuser *user)
 #else
 			user->scrollback[y][user->cols] = '\0';
 #endif
-			if (!user->scroll)
+			if (!scrolling(user))
 				user->scrollpos = y;
 			else
 				if (user->scrollback[scrollback_lines - 1]) {
