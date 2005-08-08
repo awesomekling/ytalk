@@ -38,7 +38,7 @@ mem_list *
 add_area(mem_list *list, yaddr addr, int size, int line, char *file)
 {
 	mem_list *entry;
-	if (addr == 0)
+	if (!addr)
 		return list;
 	entry = malloc(sizeof(mem_list));
 	entry->addr = addr;
@@ -46,22 +46,10 @@ add_area(mem_list *list, yaddr addr, int size, int line, char *file)
 	entry->line = line;
 	entry->file = file;
 	entry->prev = NULL;
-	if(list != NULL)
+	if (list)
 		list->prev = entry;
 	entry->next = list;
 	return entry;
-}
-
-mem_list *
-find_area(mem_list *list, yaddr addr)
-{
-	mem_list *it = list;
-	while(it != NULL) {
-		if(it->addr == addr)
-			break;
-		it = it->next;
-	}
-	return it;
 }
 
 /*
@@ -70,20 +58,20 @@ find_area(mem_list *list, yaddr addr)
 mem_list *
 del_area(mem_list *list, mem_list *entry)
 {
-	if(list == entry)
+	if (list == entry)
 		list = entry->next;
 
-	if(entry->next == NULL && entry->prev == NULL) {
+	if (!entry->next && !entry->prev) {
 		free(entry);
 		return NULL;
 	}
 
-	if(entry->prev != NULL)
+	if (entry->prev)
 		entry->prev->next = entry->next;
 	else
 		entry->next->prev = NULL;
 
-	if(entry->next != NULL)
+	if (entry->next)
 		entry->next->prev = entry->prev;
 	else
 		entry->prev->next = NULL;
@@ -100,7 +88,7 @@ void
 change_area(mem_list *list, yaddr addr, yaddr new_addr, int size)
 {
 	mem_list *it = list;
-	while (it != NULL) {
+	while (it) {
 		if (it->addr == addr) {
 			it->addr = new_addr;
 			it->size = size;
@@ -120,7 +108,7 @@ get_size(mem_list *list, yaddr addr)
 {
 	mem_list *it = list;
 	int size = -1;
-	while (it != NULL) {
+	while (it) {
 		if (it->addr == addr) {
 			size = it->size;
 			break;
@@ -142,7 +130,8 @@ get_mem(int n)
 #endif
 {
 	yaddr out;
-	if ((out = malloc((size_t) n)) == NULL) {
+	out = malloc((size_t) n);
+	if (!out) {
 		show_error("malloc() failed");
 		bail(YTE_NO_MEM);
 	}
@@ -165,8 +154,12 @@ free_mem(yaddr addr)
 void
 real_free_mem(yaddr addr, int line, char *file)
 {
-	mem_list *entry;
-	if((entry = find_area(glist, addr)) != NULL) {
+	mem_list *entry = glist;
+	for (entry = glist; entry; entry = entry->next) {
+		if (entry->addr == addr)
+			break;
+	}
+	if (entry) {
 		memset(entry->addr, '\0', (size_t) entry->size);
 		free(entry->addr);
 		glist = del_area(glist, entry);
@@ -189,13 +182,14 @@ yaddr
 realloc_mem(yaddr p, int n)
 {
 	yaddr out;
-	if (p == NULL) {
+	if (!p) {
 #ifdef YTALK_DEBUG
 		realloc_null++;
 #endif
 		return get_mem(n);
 	}
-	if ((out = (yaddr) realloc(p, (size_t) n)) == NULL) {
+	out = realloc(p, (size_t) n);
+	if (!out) {
 		show_error("realloc() failed");
 		bail(YTE_NO_MEM);
 	}
@@ -213,8 +207,8 @@ void
 clear_all()
 {
 	mem_list *it;
-	fprintf(stderr, "Clearing memory\n");
-	while (glist != NULL) {
+	fprintf(stderr, "Freeing memory\n");
+	while (glist) {
 		fprintf(stderr, "0x%lx: %d\t(%s:%d)\n", (long unsigned) glist->addr, glist->size,
 			glist->file, glist->line
 		 );

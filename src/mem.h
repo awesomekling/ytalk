@@ -34,13 +34,15 @@ typedef struct __mem_list {
 yaddr real_get_mem(int, int, char *);
 void real_free_mem(yaddr, int, char *);
 void change_area(mem_list *, yaddr, yaddr, int);
-mem_list *find_area(mem_list *, yaddr);
 int get_size(mem_list *, yaddr);
 void clear_all(void);
 mem_list *add_area(mem_list *, yaddr, int, int, char *);
 mem_list *del_area(mem_list *, mem_list *);
 #else
 yaddr get_mem(int);
+
+#define free_mem(addr) (free(addr))
+
 void free_mem(yaddr);
 #endif /* YTALK_DEBUG */
 
