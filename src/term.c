@@ -267,9 +267,10 @@ keypad_term(yuser *user, int bf)
 void
 end_term(void)
 {
-	if (term_type == 1)
+	if (term_type == 1) {
 		end_curses();
-	end_termcap();
+		end_termcap();
+	}
 	term_type = 0;
 }
 
