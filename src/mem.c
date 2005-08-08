@@ -144,13 +144,7 @@ get_mem(int n)
 /*
  * Free and clear memory
  */
-#ifndef YTALK_DEBUG
-void
-free_mem(yaddr addr)
-{
-	free(addr);
-}
-#else
+#ifdef YTALK_DEBUG
 void
 real_free_mem(yaddr addr, int line, char *file)
 {
