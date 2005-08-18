@@ -273,7 +273,7 @@ set_shell(char *shell)
 	return 1;
 }
 
-static int
+static void
 read_rcfile(char *fname)
 {
 	FILE *fp;
@@ -285,7 +285,7 @@ read_rcfile(char *fname)
 #endif
 
 	if ((fp = fopen(fname, "r")) == NULL)
-		return 0;
+		return;
 
 	line = 0;
 	while (fgets(buf, BUFSIZ, fp)) {
@@ -317,7 +317,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Invalid bool value '%s'"), fname, line, value);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				case 0:
 					def_flags &= ~opts[i].flag;
 					break;
@@ -337,7 +337,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Insufficient alias paramaters"), fname, line);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				}
 #ifdef YTALK_COLOR
 			} else if (strcmp(cmd, "menu_colors") == 0) {
@@ -360,7 +360,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: You must specify both background and foreground colors"), fname, line);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				case 2:
 #ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
@@ -368,7 +368,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				case 3:
 #ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
@@ -376,7 +376,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				}
 #endif /* YTALK_COLOR */
 			} else if (strcmp(cmd, "readdress") == 0) {
@@ -395,7 +395,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Couldn't resolve 'from' address '%s'"), fname, line, from);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				case 2:
 #ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
@@ -403,7 +403,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				case 3:
 #ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
@@ -411,7 +411,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				case 4:
 #ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
@@ -419,7 +419,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
@@ -430,7 +430,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Virtual host already set to '%s'"), fname, line, vhost);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				}
 				tmp = get_word(&ptr);
 				if (tmp == NULL) {
@@ -440,7 +440,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Missing hostname"), fname, line);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				}
 				vhost = (char *) realloc_mem(vhost, 1 + strlen(tmp));
 				strcpy(vhost, tmp);
@@ -464,7 +464,7 @@ read_rcfile(char *fname)
 					sprintf(ebuf, _("%s:%d: Shell cannot be empty"), fname, line);
 #endif
 					show_error(ebuf);
-					return 0;
+					return;
 				}
 			} else if (strcmp(cmd, "history_rows") == 0) {
 				found = 1;
@@ -478,13 +478,12 @@ read_rcfile(char *fname)
 				sprintf(ebuf, _("%s:%d: Unknown option '%s'"), fname, line, cmd);
 #endif
 				show_error(ebuf);
-				return 0;
+				return;
 			}
 		}
 	}
 
 	fclose(fp);
-	return 1;
 }
 
 /* ---- global functions ---- */
@@ -544,13 +543,11 @@ read_ytalkrc(void)
 	yuser *u;
 	char *fname;
 	struct passwd *pw;
-	int status;
 
 	/* read the system ytalkrc file */
 
 #ifdef SYSTEM_YTALKRC
-	if (!read_rcfile(SYSTEM_YTALKRC))
-		return;
+	read_rcfile(SYSTEM_YTALKRC);
 #endif
 
 	/* read the user's ytalkrc file */
@@ -564,10 +561,8 @@ read_ytalkrc(void)
 #else
 		sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
 #endif
-		status = read_rcfile(fname);
+		read_rcfile(fname);
 		free_mem(fname);
-		if (!status)
-			return;
 	}
 
 	/* set all default flags */
