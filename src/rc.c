@@ -287,6 +287,7 @@ read_rcfile(char *fname)
 	if ((fp = fopen(fname, "r")) == NULL)
 		return;
 
+	errno = 0;
 	line = 0;
 	while (fgets(buf, BUFSIZ, fp)) {
 		ptr = buf;
