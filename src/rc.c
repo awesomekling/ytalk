@@ -538,7 +538,7 @@ resolve_alias(char *uh)
 		return uh;
 }
 
-int
+void
 read_ytalkrc(void)
 {
 	yuser *u;
@@ -550,7 +550,7 @@ read_ytalkrc(void)
 
 #ifdef SYSTEM_YTALKRC
 	if (!read_rcfile(SYSTEM_YTALKRC))
-		return 0;
+		return;
 #endif
 
 	/* read the user's ytalkrc file */
@@ -567,7 +567,7 @@ read_ytalkrc(void)
 		status = read_rcfile(fname);
 		free_mem(fname);
 		if (!status)
-			return 0;
+			return;
 	}
 
 	/* set all default flags */
@@ -576,5 +576,4 @@ read_ytalkrc(void)
 		if (!(u->flags & FL_LOCKED))
 			u->flags = def_flags;
 
-	return 1;
 }

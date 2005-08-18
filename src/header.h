@@ -399,7 +399,7 @@ extern char *host_name(ylong);
 extern int readdress_host(char *, char *, char *);
 
 /* rc.c */
-extern int read_ytalkrc(void);
+extern void read_ytalkrc(void);
 extern char *resolve_alias(char *);
 
 /* exec.c */
