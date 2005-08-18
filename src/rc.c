@@ -25,8 +25,6 @@
 
 #include <pwd.h>
 
-#define YTRC_ERROR(a)	fprintf(stderr, "(%s:%d) %s\n", fname, line, a)
-
 #define IS_WHITE(c)	\
 	((c)==' '  ||	\
 	 (c)=='\t' ||	\
@@ -84,6 +82,8 @@ static colors cols[] = {
 	{(char *)NULL,		0		}
 };
 #endif
+
+static char ebuf[MAXERR];
 
 /* ---- local functions ---- */
 
@@ -252,7 +252,7 @@ set_shell(char *shell)
 		pw = getpwuid(myuid);
 		endpwent();
 		if (pw != NULL) {
-			gshell = (char *) get_mem(strlen(pw->pw_dir) + strlen(shell) + 1);
+			gshell = (char *) realloc_mem(gshell, strlen(pw->pw_dir) + strlen(shell) + 1);
 			shell++;
 #ifdef HAVE_SNPRINTF
 			snprintf(gshell, strlen(pw->pw_dir) + strlen(shell) + 1, "%s%s", pw->pw_dir, shell);
@@ -263,7 +263,7 @@ set_shell(char *shell)
 			return 0;
 		}
 	} else {
-		gshell = (char *) get_mem(strlen(shell) + 1);
+		gshell = (char *) realloc_mem(gshell, strlen(shell) + 1);
 #ifdef HAVE_SNPRINTF
 		snprintf(gshell, strlen(shell) + 1, "%s", shell);
 #else
@@ -273,19 +273,19 @@ set_shell(char *shell)
 	return 1;
 }
 
-static void
+static int
 read_rcfile(char *fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on, *tmp;
+	char *ptr, *cmd, *from, *to, *on, *tmp, *value;
 	int i, line, found;
 #ifdef YTALK_COLOR
 	char *fg, *bg;
 #endif
 
 	if ((fp = fopen(fname, "r")) == NULL)
-		return;
+		return 0;
 
 	line = 0;
 	while (fgets(buf, BUFSIZ, fp)) {
@@ -305,14 +305,19 @@ read_rcfile(char *fname)
 		while (opts[i].option != NULL) {
 			if (strcmp(cmd, opts[i].option) == 0) {
 				found = 1;
-				switch (get_bool(get_word(&ptr))) {
+				value = get_word(&ptr);
+				switch (get_bool(value)) {
 				case 1:
 					def_flags |= opts[i].flag;
 					break;
 				case -1:
-					YTRC_ERROR(_("Invalid bool option."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Invalid bool value '%s'"), fname, line, value);
+#else
+					sprintf(ebuf, _("%s:%d: Invalid bool value '%s'"), fname, line, value);
+#endif
+					show_error(ebuf);
+					return 0;
 				case 0:
 					def_flags &= ~opts[i].flag;
 					break;
@@ -326,8 +331,13 @@ read_rcfile(char *fname)
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				if (!new_alias(from, to)) {
-					YTRC_ERROR(_("Not enough parameters for alias."));
-					bail(YTE_INIT);
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Insufficient alias paramaters"), fname, line);
+#else
+					sprintf(ebuf, _("%s:%d: Insufficient alias paramaters"), fname, line);
+#endif
+					show_error(ebuf);
+					return 0;
 				}
 #ifdef YTALK_COLOR
 			} else if (strcmp(cmd, "menu_colors") == 0) {
@@ -344,17 +354,29 @@ read_rcfile(char *fname)
 					found = 1;
 					break;
 				case 1:
-					YTRC_ERROR(_("You must specify both foreground and background."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: You must specify both background and foreground colors"), fname, line);
+#else
+					sprintf(ebuf, _("%s:%d: You must specify both background and foreground colors"), fname, line);
+#endif
+					show_error(ebuf);
+					return 0;
 				case 2:
-					YTRC_ERROR(_("Invalid foreground color."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
+#else
+					sprintf(ebuf, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
+#endif
+					show_error(ebuf);
+					return 0;
 				case 3:
-					YTRC_ERROR(_("Invalid background color."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
+#else
+					sprintf(ebuf, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
+#endif
+					show_error(ebuf);
+					return 0;
 				}
 #endif /* YTALK_COLOR */
 			} else if (strcmp(cmd, "readdress") == 0) {
@@ -367,50 +389,82 @@ read_rcfile(char *fname)
 					found = 1;
 					break;
 				case 1:
-					YTRC_ERROR(_("Cannot resolve \"from\" address."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'from' address '%s'"), fname, line, from);
+#else
+					sprintf(ebuf, _("%s:%d: Couldn't resolve 'from' address '%s'"), fname, line, from);
+#endif
+					show_error(ebuf);
+					return 0;
 				case 2:
-					YTRC_ERROR(_("Cannot resolve \"to\" address."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
+#else
+					sprintf(ebuf, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
+#endif
+					show_error(ebuf);
+					return 0;
 				case 3:
-					YTRC_ERROR(_("Cannot resolve \"on\" address."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
+#else
+					sprintf(ebuf, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
+#endif
+					show_error(ebuf);
+					return 0;
 				case 4:
-					YTRC_ERROR(_("From and to are the same host."));
-					bail(YTE_INIT);
-					break;
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
+#else
+					sprintf(ebuf, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
+#endif
+					show_error(ebuf);
+					return 0;
 				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
 				if (vhost != NULL) {
-					YTRC_ERROR(_("Virtual host already set."));
-					bail(YTE_INIT);
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Virtual host already set to '%s'"), fname, line, vhost);
+#else
+					sprintf(ebuf, _("%s:%d: Virtual host already set to '%s'"), fname, line, vhost);
+#endif
+					show_error(ebuf);
+					return 0;
 				}
 				tmp = get_word(&ptr);
 				if (tmp == NULL) {
-					YTRC_ERROR(_("Missing hostname."));
-					bail(YTE_INIT);
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Missing hostname"), fname, line);
+#else
+					sprintf(ebuf, _("%s:%d: Missing hostname"), fname, line);
+#endif
+					show_error(ebuf);
+					return 0;
 				}
-				vhost = (char *) get_mem(1 + strlen(tmp));
+				vhost = (char *) realloc_mem(vhost, 1 + strlen(tmp));
 				strcpy(vhost, tmp);
 			} else if (strcmp(cmd, "title_format") == 0) {
 				found = 1;
 				tmp = get_string(&ptr);
-				title_format = (char *) get_mem(1 + strlen(tmp));
+				title_format = (char *) realloc_mem(title_format, 1 + strlen(tmp));
 				strcpy(title_format, tmp);
 			} else if (strcmp(cmd, "user_format") == 0) {
 				found = 1;
 				tmp = get_string(&ptr);
-				user_format = (char *) get_mem(1 + strlen(tmp));
+				user_format = (char *) realloc_mem(user_format, 1 + strlen(tmp));
 				strcpy(user_format, tmp);
 			} else if (strcmp(cmd, "shell") == 0) {
 				found = 1;
 				tmp = get_word(&ptr);
 				if (!set_shell(tmp)) {
-					YTRC_ERROR(_("Shell cannot be empty."));
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Shell cannot be empty"), fname, line);
+#else
+					sprintf(ebuf, _("%s:%d: Shell cannot be empty"), fname, line);
+#endif
+					show_error(ebuf);
+					return 0;
 				}
 			} else if (strcmp(cmd, "history_rows") == 0) {
 				found = 1;
@@ -418,13 +472,19 @@ read_rcfile(char *fname)
 				if (tmp != NULL)
 					scrollback_lines = strtol(tmp, NULL, 10);
 			} else {
-				YTRC_ERROR(_("Unknown option."));
-				bail(YTE_INIT);
+#ifndef HAVE_SNPRINTF
+				snprintf(ebuf, MAXERR, _("%s:%d: Unknown option '%s'"), fname, line, cmd);
+#else
+				sprintf(ebuf, _("%s:%d: Unknown option '%s'"), fname, line, cmd);
+#endif
+				show_error(ebuf);
+				return 0;
 			}
 		}
 	}
 
 	fclose(fp);
+	return 1;
 }
 
 /* ---- global functions ---- */
@@ -478,17 +538,19 @@ resolve_alias(char *uh)
 		return uh;
 }
 
-void
+int
 read_ytalkrc(void)
 {
 	yuser *u;
 	char *fname;
 	struct passwd *pw;
+	int status;
 
 	/* read the system ytalkrc file */
 
 #ifdef SYSTEM_YTALKRC
-	read_rcfile(SYSTEM_YTALKRC);
+	if (!read_rcfile(SYSTEM_YTALKRC))
+		return 0;
 #endif
 
 	/* read the user's ytalkrc file */
@@ -502,8 +564,10 @@ read_ytalkrc(void)
 #else
 		sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
 #endif
-		read_rcfile(fname);
+		status = read_rcfile(fname);
 		free_mem(fname);
+		if (!status)
+			return 0;
 	}
 
 	/* set all default flags */
@@ -511,4 +575,6 @@ read_ytalkrc(void)
 	for (u = user_list; u != NULL; u = u->unext)
 		if (!(u->flags & FL_LOCKED))
 			u->flags = def_flags;
+
+	return 1;
 }

@@ -238,7 +238,8 @@ Options:     -i             --    no auto-invite port\n\
 
 	errno = 0;
 	init_fd();
-	read_ytalkrc();
+	if (!read_ytalkrc())
+		bail(YTE_INIT);
 	init_user(vhost);
 	if (yflg)
 		def_flags |= FL_CAPS;
