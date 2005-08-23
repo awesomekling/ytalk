@@ -159,7 +159,7 @@ scrolled_amount(yuser *user)
 	for (i = 0; i < scrollback_lines && user->scrollback[i]; i++);
 
 	/* If the scrollback buffer is empty, we're at 100%. */
-	if (i == 0 || i == user->scrollpos)
+	if (i == 0)
 		return 100;
 
 	/* Return the scrolled amount in percent. */
