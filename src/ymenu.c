@@ -67,7 +67,7 @@ static void
 do_save_user_to_file(ytk_inputbox *b)
 {
 	hide_ymenu();
-	if (menu_user && menu_user != me && b && b->len > 0)
+	if (menu_user && b && b->len > 0)
 		save_user_to_file(menu_user, b->data);
 }
 
@@ -299,7 +299,7 @@ handle_disconnect_user(ytk_menu_item *i)
 {
 	(void) i;
 	hide_ymenu();
-	if (menu_user && menu_user != me)
+	if (menu_user)
 		free_user(menu_user);
 }
 
@@ -332,7 +332,7 @@ view_user_info(ytk_menu_item *item)
 
 	(void) item;
 
-	if (menu_user == NULL || menu_user == me)
+	if (!menu_user)
 		return;
 
 	info_box = ytk_new_msgbox(_("User information"));
@@ -392,21 +392,29 @@ view_user_info(ytk_menu_item *item)
 static void
 init_usermenu(char k)
 {
-	yuser *u;
-	for (u = user_list; u; u = u->unext)
-		if (u->key == k) {
-			usermenu_menu = ytk_new_menu(u->full_name);
-			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("User information"), 'i', view_user_info);
-			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
-			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_save_to_file);
-			ytk_set_escape(usermenu_menu, do_hidething);
-#ifdef YTALK_COLOR
-			ytk_set_colors(usermenu_menu, menu_colors);
-			ytk_set_attr(usermenu_menu, menu_attr);
-#endif
-			menu_user = u;
+	yuser *user;
+	for (user = user_list; user; user = user->unext)
+		if (user->key == k)
 			break;
-		}
+
+	if (!user) {
+		if (k != me->key)
+			return;
+		user = me;
+	}
+
+	usermenu_menu = ytk_new_menu(user->full_name);
+	ytk_add_menu_item(YTK_MENU(usermenu_menu), _("User information"), 'i', view_user_info);
+	if (user != me) {
+		ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
+	}
+	ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_save_to_file);
+	ytk_set_escape(usermenu_menu, do_hidething);
+#ifdef YTALK_COLOR
+	ytk_set_colors(usermenu_menu, menu_colors);
+	ytk_set_attr(usermenu_menu, menu_attr);
+#endif
+	menu_user = user;
 }
 
 static void
@@ -447,6 +455,10 @@ init_userlist()
 			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_userlist_menu);
 		}
 	}
+	ytk_add_menu_separator(YTK_MENU(userlist_menu));
+	buf = get_mem(48 * sizeof(char));
+	sprintf(buf, "Me (%.36s)", me->full_name);
+	ytk_add_menu_item(YTK_MENU(userlist_menu), buf, me->key, handle_userlist_menu);
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
 	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Rering all unconnected"), 'R', handle_userlist_menu);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Kill all unconnected"), 'K', handle_userlist_menu);
