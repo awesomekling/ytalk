@@ -5,6 +5,8 @@ TODO before YTalk 4 can be released:
 
 * sizeof(yachar) is 6 bytes. This is ridiculous.
 
+* User viewports clear when resizing one vertical unit.
+
 * Make some silly snprintf() wrapper for sprintf() so we can get rid
   of all the #ifdef HAVE_SNPRINTF crap.
 
