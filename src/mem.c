@@ -173,14 +173,20 @@ real_free_mem(yaddr addr, int line, char *file)
  * Reallocate memory.
  */
 yaddr
+#ifdef YTALK_DEBUG
+real_realloc_mem(yaddr p, int n, int line, char *file)
+#else
 realloc_mem(yaddr p, int n)
+#endif /* YTALK_DEBUG */
 {
 	yaddr out;
 	if (!p) {
 #ifdef YTALK_DEBUG
 		realloc_null++;
-#endif
+		return real_get_mem(n, line, file);
+#else
 		return get_mem(n);
+#endif
 	}
 	out = realloc(p, (size_t) n);
 	if (!out) {
