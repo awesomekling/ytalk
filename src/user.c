@@ -150,6 +150,9 @@ init_user(char *vhost)
 	/* make sure we send CR/LF output to ourselves */
 	me->crlf = 1;
 
+	/* my key is '@' */
+	me->key = '@';
+
 	/* i am the first scrolled user */
 	scuser = me;
 
