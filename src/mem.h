@@ -35,11 +35,7 @@ typedef struct __mem_list {
 extern yaddr real_get_mem(int, int, char *);
 extern yaddr real_realloc_mem(yaddr, int, int, char *);
 extern void real_free_mem(yaddr, int, char *);
-extern void change_area(mem_list *, yaddr, yaddr, int);
-extern int get_size(mem_list *, yaddr);
 extern void clear_all(void);
-extern mem_list *add_area(mem_list *, yaddr, int, int, char *);
-extern mem_list *del_area(mem_list *, mem_list *);
 #else
 
 #define free_mem(addr) (free(addr))

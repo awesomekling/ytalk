@@ -34,7 +34,7 @@ static mem_list *glist = NULL;
 /*
  * Add to linked list
  */
-mem_list *
+static mem_list *
 add_area(mem_list *list, yaddr addr, int size, int line, char *file)
 {
 	mem_list *entry;
@@ -55,7 +55,7 @@ add_area(mem_list *list, yaddr addr, int size, int line, char *file)
 /*
  * Delete from linked list. There are many -> in this funktion.. Try to stay concentrated.
  */
-mem_list *
+static mem_list *
 del_area(mem_list *list, mem_list *entry)
 {
 	if (list == entry)
@@ -84,7 +84,7 @@ del_area(mem_list *list, mem_list *entry)
 /*
  * Change stored size
  */
-void
+static void
 change_area(mem_list *list, yaddr addr, yaddr new_addr, int size)
 {
 	mem_list *it = list;
@@ -100,23 +100,6 @@ change_area(mem_list *list, yaddr addr, yaddr new_addr, int size)
 	bad_realloc++;
 }
 
-/*
- * Size to clear where the pointer points
- */
-int
-get_size(mem_list *list, yaddr addr)
-{
-	mem_list *it = list;
-	int size = -1;
-	while (it) {
-		if (it->addr == addr) {
-			size = it->size;
-			break;
-		}
-		it = it->next;
-	}
-	return size;
-}
 #endif /* YTALK_DEBUG */
 
 /*
