@@ -97,7 +97,7 @@ draw_title(ywin *w)
 	int rl = 0, rj = 0;
 	char *ta, *t;
 	t = ta = (char *) get_mem(COLS * sizeof(char));
-	user_title(t, COLS - 1, w->user);
+	user_title(w->user, t, COLS - 1);
 	move(w->row - 1, w->col);
 #ifdef YTALK_COLOR
 	attron(COLOR_PAIR(ui_colors) | ui_attr);

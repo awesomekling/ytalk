@@ -366,41 +366,49 @@ save_user_to_file(yuser *user, char *filename)
 }
 
 void
-user_title(char *buf, int size, yuser *user)
+user_title(yuser *user, char *buf, int size)
 {
 	char *f, *b, *fmt;
-	long int i;
 
-	if (user == me)
-		fmt = title_format;
-	else
-		fmt = user_format;
+	/* Use "title_format" for our own title bar, and "user_format"
+	 * for everyone else's. */
+	fmt = (user == me) ? title_format : user_format;
 
-	if (fmt == NULL) {
-		if ((int) strlen(user->full_name) < size)
-			strcpy(buf, user->full_name);
+	/* If no format spec was found, use the user's full_name. */
+	if (!fmt) {
+		strncpy(buf, user->full_name, size);
 		return;
 	}
+
 	for (f = fmt, b = buf; *f && (int) (b - buf) < size;) {
 		if (*f == '%') {
 			switch (*(++f)) {
 			case 'u':
+				/* %u - Username */
 				if ((int) (b - buf) < (size - (int) strlen(user->user_name)))
 					b += sprintf(b, "%s", user->user_name);
 				break;
 			case 'h':
+				/* %h - Hostname */
 				if ((int) (b - buf) < (size - (int) strlen(user->host_name)))
 					b += sprintf(b, "%s", user->host_name);
 				break;
 			case 'f':
+				/* %f - Fully Qualified Domain Name */
 				if ((int) (b - buf) < (size - (int) strlen(user->host_fqdn)))
 					b += sprintf(b, "%s", user->host_fqdn);
 				break;
 			case 't':
+				/* %t - Terminal */
 				if ((int) (b - buf) < (size - (int) strlen(user->tty_name)))
 					b += sprintf(b, "%s", user->tty_name);
 				break;
 			case 'U':
+				/* %U - UNIX flavor
+				 * From SYSTEM_TYPE if user == me
+				 * From gtalk version message if remote speaks "YTalk extended" gtalk
+				 * "?" if unknown
+				 */
 				if (user == me) {
 					if ((int) (b - buf) < (size - (int) strlen(SYSTEM_TYPE)))
 						b += sprintf(b, "%s", SYSTEM_TYPE);
@@ -413,6 +421,12 @@ user_title(char *buf, int size, yuser *user)
 				}
 				break;
 			case 'v':
+				/* %v - Client version
+				 * "Yx.x" for YTalk 3+
+				 * "Y2.?" for YTalk 2
+				 * "GNU" for GNU talk
+				 * "BSD" for generic/unknown BSD-compatible talk clients
+				 */
 				if ((int) (b - buf) < (size - 4)) {
 					if (user->remote.vmajor > 2)
 						b += sprintf(b, "Y%d.%d", user->remote.vmajor, user->remote.vminor);
@@ -425,39 +439,40 @@ user_title(char *buf, int size, yuser *user)
 				}
 				break;
 			case 'V':
+				/* %V - Program version ("Program 3.2.1-SVN") */
 				if ((int) (b - buf) < (int) (size - strlen(PACKAGE_VERSION)))
 					b += sprintf(b, "%s", PACKAGE_VERSION);
 				break;
 			case 'S':
-				if ((int) (b - buf) < (size - 4)) {
-					for (i = 0; (i < scrollback_lines) && (user->scrollback[i] != NULL); i++);
-					b += sprintf(b, "%d%%", (i == 0) ? 100 : (int) (((float) (user->scrollpos + 1) / (float) i) * 100));
-				}
+				/* %S - Scrolled amount
+				 * 100% when not scrolling, between 100% and 0% when scrolling.
+				 */
+				if ((int) (b - buf) < (size - 4))
+					b += sprintf(b, "%d%%", scrolled_amount(user));
 				break;
 			case 's':
-				if (scrollback_lines > 0) {
-					if (user == scuser)
-						*b = '*';
-					else
-						*b = ' ';
-				} else {
-					*b = ' ';
-				}
-				b++;
+				/* %s - Scrolling indicator:
+				 * '*' for user being scrolled,
+				 * ' ' for everyone else (or when scrollback isn't use)
+				 */
+				if (scrollback_lines)
+					*(b++) = (user == scuser) ? '*' : ' ';
+				else
+					*(b++) = ' ';
 				break;
 			case '%':
+				/* %% - Percent sign */
 				*(b++) ='%';
 				break;
 			case '!':
+				/* %! - Alignment break, this needs explanation (FIXME) */
 				*(b++) = 9;
 				break;
 			}
 		} else {
-			if (*f == 9)
-				*b = 32;
-			else
-				*b = *f;
-			b++;
+			/* Tabs ('\t') are changed to spaces (' ') to avoid curses
+			 * terminal breakage. */
+			*(b++) = (*f == '\t') ? ' ' : *f;
 		}
 		f++;
 	}
