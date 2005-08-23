@@ -448,11 +448,29 @@ read_rcfile(char *fname)
 			} else if (strcmp(cmd, "title_format") == 0) {
 				found = 1;
 				tmp = get_string(&ptr);
+				if (!tmp) {
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Missing format string for %s"), fname, line, cmd);
+#else
+					sprintf(ebuf, _("%s:%d: Missing format string for %s"), fname, line, cmd);
+#endif
+					show_error(ebuf);
+					return;
+				}
 				title_format = (char *) realloc_mem(title_format, 1 + strlen(tmp));
 				strcpy(title_format, tmp);
 			} else if (strcmp(cmd, "user_format") == 0) {
 				found = 1;
 				tmp = get_string(&ptr);
+				if (!tmp) {
+#ifdef HAVE_SNPRINTF
+					snprintf(ebuf, MAXERR, _("%s:%d: Missing format string for %s"), fname, line, cmd);
+#else
+					sprintf(ebuf, _("%s:%d: Missing format string for %s"), fname, line, cmd);
+#endif
+					show_error(ebuf);
+					return;
+				}
 				user_format = (char *) realloc_mem(user_format, 1 + strlen(tmp));
 				strcpy(user_format, tmp);
 			} else if (strcmp(cmd, "shell") == 0) {
