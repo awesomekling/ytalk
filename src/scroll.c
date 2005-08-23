@@ -44,12 +44,10 @@ free_scroll(yuser *user)
 {
 	/* Loop through the user's scrollback buffer and free each stored line. */
 	long int i;
-	if (scrollback_lines > 0) {
-		if (!user->scrollback) {
-			for (i = 0; (i < scrollback_lines) && (user->scrollback[i]); i++)
-				free_mem(user->scrollback[i]);
-			free_mem(user->scrollback);
-		}
+	if (scrollback_lines && user->scrollback) {
+		for (i = 0; (i < scrollback_lines) && (user->scrollback[i]); i++)
+			free_mem(user->scrollback[i]);
+		free_mem(user->scrollback);
 	}
 }
 
