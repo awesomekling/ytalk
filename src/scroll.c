@@ -141,3 +141,27 @@ scroll_to_last(yuser *user)
 	/* Scroll to last line. */
 	user->scrollpos = i - 1;
 }
+
+int
+scrolled_amount(yuser *user)
+{
+	long int i;
+
+	assert(user);
+
+	/* If we're not using scrollback, or this user isn't being scrolled,
+	 * we can return 100 right here. */
+	if (!scrollback_lines || !scrolling(user))
+		return 100;
+
+	/* Count the number of scrollback entries. This is pretty expensive
+	 * compared to adding a member to yuser. (FIXME) */
+	for (i = 0; i < scrollback_lines && user->scrollback[i]; i++);
+
+	/* If the scrollback buffer is empty, we're at 100%. */
+	if (i == 0 || i == user->scrollpos)
+		return 100;
+
+	/* Return the scrolled amount in percent. */
+	return (int) ( (float) user->scrollpos / (float) i * 100 );
+}
