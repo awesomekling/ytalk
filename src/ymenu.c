@@ -396,7 +396,7 @@ init_usermenu(char k)
 	for (u = user_list; u; u = u->unext)
 		if (u->key == k) {
 			usermenu_menu = ytk_new_menu(u->full_name);
-			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("User information"), 'x', view_user_info);
+			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("User information"), 'i', view_user_info);
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
 			ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_save_to_file);
 			ytk_set_escape(usermenu_menu, do_hidething);
