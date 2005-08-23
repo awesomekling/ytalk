@@ -646,7 +646,7 @@ void
 end_scroll_curses(yuser *user)
 {
 	ywin *w = (ywin *) (user->term);
-	if (!w->swin) {
+	if (w->swin) {
 		delwin(w->swin);
 		w->swin = NULL;
 		redraw_term(user, 0);
