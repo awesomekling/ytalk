@@ -179,11 +179,7 @@ new_user(char *name, char *hostname, char *tty)
 			return NULL;
 		}
 	} else if ((addr = get_host_addr(hostname)) == (ylong) - 1) {
-#ifdef HAVE_SNPRINTF
 		snprintf(errstr, MAXERR, "new_user: bad host: '%s'", hostname);
-#else
-		sprintf(errstr, "new_user: bad host: '%s'", hostname);
-#endif
 		show_error(errstr);
 		return NULL;
 	}
@@ -225,11 +221,7 @@ free_user(yuser *user)
 
 	/* print a disco message */
 
-#ifdef HAVE_SNPRINTF
 	snprintf(msgstr, MAXERR, _("%s disconnected."), user->full_name);
-#else
-	sprintf(msgstr, _("%s disconnected."), user->full_name);
-#endif
 	msg_term(msgstr);
 
 	/* make sure we're not stuck scrolling a long gone user */
@@ -360,11 +352,7 @@ save_user_to_file(yuser *user, char *filename)
 		show_error(_("Couldn't close output file."));
 		return;
 	}
-#ifdef HAVE_SNPRINTF
 	snprintf(msgbuf, sizeof(msgbuf), _("Wrote %lu lines."), lines);
-#else
-	sprintf(msgbuf, _("Wrote %lu lines."), lines);
-#endif
 	msg_term(msgbuf);
 }
 

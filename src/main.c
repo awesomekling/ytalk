@@ -263,3 +263,19 @@ Options:     -i             --    no auto-invite port\n\
 
 	return 0;		/* make lint happy */
 }
+
+#ifndef HAVE_SNPRINTF
+int
+snprintf(char *buf, size_t len, char const *fmt, ...)
+{
+	int ret;
+	va_list ap;
+
+	(void) len;
+
+	va_start(ap, fmt);
+	ret = vsprintf(buf, fmt, ap);
+	va_end(ap);
+	return ret;
+}
+#endif

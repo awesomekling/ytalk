@@ -92,11 +92,7 @@ gtalk_send_version(yuser *user)
 	char *buf;
 	int len;
 	buf = get_mem(strlen(me->user_name) + strlen(PACKAGE_VERSION) + strlen(SYSTEM_TYPE) + 32);
-#ifdef HAVE_SNPRINTF
 	len = snprintf(buf, strlen(me->user_name) + strlen(PACKAGE_VERSION) + strlen(SYSTEM_TYPE) + 32,
-#else
-	len = sprintf(buf,
-#endif
 						"%c%c%s %d YTALK %s %s%c\n",
 						GTALK_ESCAPE,
 						GTALK_VERSION_MESSAGE,

@@ -254,21 +254,13 @@ set_shell(char *shell)
 		if (pw != NULL) {
 			gshell = (char *) realloc_mem(gshell, strlen(pw->pw_dir) + strlen(shell) + 1);
 			shell++;
-#ifdef HAVE_SNPRINTF
 			snprintf(gshell, strlen(pw->pw_dir) + strlen(shell) + 1, "%s%s", pw->pw_dir, shell);
-#else
-			sprintf(gshell, "%s%s", pw->pw_dir, shell);
-#endif
 		} else {
 			return 0;
 		}
 	} else {
 		gshell = (char *) realloc_mem(gshell, strlen(shell) + 1);
-#ifdef HAVE_SNPRINTF
 		snprintf(gshell, strlen(shell) + 1, "%s", shell);
-#else
-		sprintf(gshell, "%s", shell);
-#endif
 	}
 	return 1;
 }
@@ -312,11 +304,7 @@ read_rcfile(char *fname)
 					def_flags |= opts[i].flag;
 					break;
 				case -1:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Invalid bool value '%s'"), fname, line, value);
-#else
-					sprintf(ebuf, _("%s:%d: Invalid bool value '%s'"), fname, line, value);
-#endif
 					show_error(ebuf);
 					return;
 				case 0:
@@ -332,11 +320,7 @@ read_rcfile(char *fname)
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				if (!new_alias(from, to)) {
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Insufficient alias paramaters"), fname, line);
-#else
-					sprintf(ebuf, _("%s:%d: Insufficient alias paramaters"), fname, line);
-#endif
 					show_error(ebuf);
 					return;
 				}
@@ -355,27 +339,15 @@ read_rcfile(char *fname)
 					found = 1;
 					break;
 				case 1:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: You must specify both background and foreground colors"), fname, line);
-#else
-					sprintf(ebuf, _("%s:%d: You must specify both background and foreground colors"), fname, line);
-#endif
 					show_error(ebuf);
 					return;
 				case 2:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
-#else
-					sprintf(ebuf, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
-#endif
 					show_error(ebuf);
 					return;
 				case 3:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
-#else
-					sprintf(ebuf, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
-#endif
 					show_error(ebuf);
 					return;
 				}
@@ -390,56 +362,32 @@ read_rcfile(char *fname)
 					found = 1;
 					break;
 				case 1:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'from' address '%s'"), fname, line, from);
-#else
-					sprintf(ebuf, _("%s:%d: Couldn't resolve 'from' address '%s'"), fname, line, from);
-#endif
 					show_error(ebuf);
 					return;
 				case 2:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
-#else
-					sprintf(ebuf, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
-#endif
 					show_error(ebuf);
 					return;
 				case 3:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
-#else
-					sprintf(ebuf, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
-#endif
 					show_error(ebuf);
 					return;
 				case 4:
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
-#else
-					sprintf(ebuf, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
-#endif
 					show_error(ebuf);
 					return;
 				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
 				if (vhost != NULL) {
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Virtual host already set to '%s'"), fname, line, vhost);
-#else
-					sprintf(ebuf, _("%s:%d: Virtual host already set to '%s'"), fname, line, vhost);
-#endif
 					show_error(ebuf);
 					return;
 				}
 				tmp = get_word(&ptr);
 				if (tmp == NULL) {
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Missing hostname"), fname, line);
-#else
-					sprintf(ebuf, _("%s:%d: Missing hostname"), fname, line);
-#endif
 					show_error(ebuf);
 					return;
 				}
@@ -449,11 +397,7 @@ read_rcfile(char *fname)
 				found = 1;
 				tmp = get_string(&ptr);
 				if (!tmp) {
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Missing format string for %s"), fname, line, cmd);
-#else
-					sprintf(ebuf, _("%s:%d: Missing format string for %s"), fname, line, cmd);
-#endif
 					show_error(ebuf);
 					return;
 				}
@@ -463,11 +407,7 @@ read_rcfile(char *fname)
 				found = 1;
 				tmp = get_string(&ptr);
 				if (!tmp) {
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Missing format string for %s"), fname, line, cmd);
-#else
-					sprintf(ebuf, _("%s:%d: Missing format string for %s"), fname, line, cmd);
-#endif
 					show_error(ebuf);
 					return;
 				}
@@ -477,11 +417,7 @@ read_rcfile(char *fname)
 				found = 1;
 				tmp = get_word(&ptr);
 				if (!set_shell(tmp)) {
-#ifdef HAVE_SNPRINTF
 					snprintf(ebuf, MAXERR, _("%s:%d: Shell cannot be empty"), fname, line);
-#else
-					sprintf(ebuf, _("%s:%d: Shell cannot be empty"), fname, line);
-#endif
 					show_error(ebuf);
 					return;
 				}
@@ -491,11 +427,7 @@ read_rcfile(char *fname)
 				if (tmp != NULL)
 					scrollback_lines = strtol(tmp, NULL, 10);
 			} else {
-#ifndef HAVE_SNPRINTF
 				snprintf(ebuf, MAXERR, _("%s:%d: Unknown option '%s'"), fname, line, cmd);
-#else
-				sprintf(ebuf, _("%s:%d: Unknown option '%s'"), fname, line, cmd);
-#endif
 				show_error(ebuf);
 				return;
 			}
@@ -575,11 +507,7 @@ read_ytalkrc(void)
 	endpwent();
 	if (pw != NULL) {
 		fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
-#ifdef HAVE_SNPRINTF
 		snprintf(fname, strlen(pw->pw_dir) + 10, "%s/.ytalkrc", pw->pw_dir);
-#else
-		sprintf(fname, "%s/.ytalkrc", pw->pw_dir);
-#endif
 		read_rcfile(fname);
 		free_mem(fname);
 	}

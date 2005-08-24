@@ -175,11 +175,7 @@ v2_process(yuser *user, v2_pack *pack)
 	host[V2_HOSTLEN] = '\0';
 	if ((host_addr = get_host_addr(host)) == (ylong) - 1) {
 		errno = 0;
-#ifdef HAVE_SNPRINTF
 		snprintf(errstr, MAXERR, _("Unknown host: '%s'"), host);
-#else
-		sprintf(errstr, _("Unknown host: '%s'"), host);
-#endif
 		show_error(errstr);
 		show_error("port from ytalk V2.? failed");
 		free_mem(host);
@@ -196,21 +192,13 @@ v2_process(yuser *user, v2_pack *pack)
 		if (find_user(name, host_addr, (ylong) - 1) != NULL)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
-#ifdef HAVE_SNPRINTF
 			snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, _("Import %s@%s?"), name, host);
-#else
-			sprintf(estr, _("Import %s@%s?"), name, host);
-#endif
 			if (yes_no(estr) == 'n')
 				break;
 		}
 		/* invite him but don't ring him */
 
-#ifdef HAVE_SNPRINTF
 		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "%s@%s", name, host);
-#else
-		sprintf(estr, "%s@%s", name, host);
-#endif
 		invite(estr, 0);
 
 		/* now tell him to connect to us */
@@ -230,11 +218,7 @@ v2_process(yuser *user, v2_pack *pack)
 		send_accept(u, user);
 		break;
 	case V2_ACCEPT:
-#ifdef HAVE_SNPRINTF
 		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "%s@%s", name, host);
-#else
-		sprintf(estr, "%s@%s", name, host);
-#endif
 		invite(estr, 1);	/* we should be expected */
 		break;
 	}
@@ -275,21 +259,13 @@ v3_process_pack(yuser *user, v3_pack *pack)
 		if (find_user(name, host_addr, pid) != NULL)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
-#ifdef HAVE_SNPRINTF
 			snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, _("Import %s@%s?"), name, host);
-#else
-			sprintf(estr, _("Import %s@%s?"), name, host);
-#endif
 			if (yes_no(estr) == 'n')
 				break;
 		}
 		/* invite him but don't ring him */
 
-#ifdef HAVE_SNPRINTF
 		snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, "%s@%s", name, host);
-#else
-		sprintf(estr, "%s@%s", name, host);
-#endif
 		u2 = invite(estr, 0);
 
 		/*
@@ -317,11 +293,7 @@ v3_process_pack(yuser *user, v3_pack *pack)
 		send_accept(u, user);
 		break;
 	case V3_ACCEPT:
-#ifdef HAVE_SNPRINTF
 		snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, "%s@%s", name, host);
-#else
-		sprintf(estr, "%s@%s", name, host);
-#endif
 		invite(estr, 1);	/* we should be expected */
 		break;
 	}
@@ -683,11 +655,7 @@ connect_user(int fd)
 		user_winch = 1;
 		add_fd(fd, read_user);
 	}
-#ifdef HAVE_SNPRINTF
 	snprintf(msgstr, MAXERR, _("%s connected."), user->full_name);
-#else
-	sprintf(msgstr, _("%s connected."), user->full_name);
-#endif
 	msg_term(msgstr);
 }
 
@@ -935,11 +903,7 @@ invite(char *name, int send_announce)
 	/* Leave an invitation for him, and announce ourselves. */
 
 	if (send_announce) {
-#ifdef HAVE_SNPRINTF
 		snprintf(msgstr, MAXERR, _("Ringing %s..."), user->full_name);
-#else
-		sprintf(msgstr, _("Ringing %s..."), user->full_name);
-#endif
 		msg_term(msgstr);
 	}
 	if (newsock(user) != 0) {
@@ -951,17 +915,9 @@ invite(char *name, int send_announce)
 	if (send_announce && (rc = announce(user)) != 0) {
 		send_dgram(user, DELETE_INVITE);
 		if (rc > 0)
-#ifdef HAVE_SNPRINTF
 			snprintf(errstr, MAXERR, _("%s refusing messages"), user->full_name);
-#else
-			sprintf(errstr, _("%s refusing messages"), user->full_name);
-#endif
 		else
-#ifdef HAVE_SNPRINTF
 			snprintf(errstr, MAXERR, _("%s not logged in"), user->full_name);
-#else
-			sprintf(errstr, _("%s not logged in"), user->full_name);
-#endif
 		show_error(errstr);
 		free_user(user);
 		return NULL;
@@ -1008,36 +964,20 @@ house_clean(void)
 			if (def_flags & FL_PROMPTRING) {
 				if (input_flag)
 					continue;
-#ifdef HAVE_SNPRINTF
 				snprintf(estr, sizeof(estr), _("Rering %s?"), u->full_name);
-#else
-				sprintf(estr, _("Rering %s?"), u->full_name);
-#endif
 				answer = yes_no(estr);
 				t = (ylong) time(NULL);
 				if (answer == 'n')
 					continue;
 			}
-#ifdef HAVE_SNPRINTF
 			snprintf(msgstr, MAXERR, _("Reringing %s\n"), u->full_name);
-#else
-			sprintf(msgstr, _("Reringing %s\n"), u->full_name);
-#endif
 			msg_term(msgstr);
 			if ((rc = announce(u)) != 0) {
 				send_dgram(u, DELETE_INVITE);
 				if (rc > 0)
-#ifdef HAVE_SNPRINTF
 					snprintf(errstr, MAXERR, _("%s refusing messages"), u->full_name);
-#else
-					sprintf(errstr, _("%s refusing messages"), u->full_name);
-#endif
 				else
-#ifdef HAVE_SNPRINTF
 					snprintf(errstr, MAXERR, _("%s not logged in"), u->full_name);
-#else
-					sprintf(errstr, _("%s not logged in"), u->full_name);
-#endif
 				show_error(errstr);
 				free_user(u);
 			}
@@ -1062,17 +1002,9 @@ rering_all(void)
 		if ((rc = announce(u)) != 0) {
 			send_dgram(u, DELETE_INVITE);
 			if (rc > 0)
-#ifdef HAVE_SNPRINTF
 				snprintf(errstr, MAXERR, _("%s refusing messages"), u->full_name);
-#else
-				sprintf(errstr, _("%s refusing messages"), u->full_name);
-#endif
 			else
-#ifdef HAVE_SNPRINTF
 				snprintf(errstr, MAXERR, _("%s not logged in"), u->full_name);
-#else
-				sprintf(errstr, _("%s not logged in"), u->full_name);
-#endif
 			show_error(errstr);
 			free_user(u);
 		}

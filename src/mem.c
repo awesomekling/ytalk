@@ -141,11 +141,7 @@ real_free_mem(yaddr addr, int line, char *file)
 		free(entry->addr);
 		glist = del_area(glist, entry);
 	} else {
-#  ifdef HAVE_SNPRINTF
 		snprintf(errstr, MAXERR, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned) addr, file, line);
-#  else
-		sprintf(errstr, "Free failed: Not in allocation list: 0x%lx (%s:%d)", (long unsigned) addr, file, line);
-#  endif
 		show_error(errstr);
 		bad_free++;
 	}

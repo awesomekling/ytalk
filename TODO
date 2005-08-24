@@ -7,9 +7,6 @@ TODO before YTalk 4 can be released:
 
 * User viewports clear when resizing one vertical unit.
 
-* Make some silly snprintf() wrapper for sprintf() so we can get rid
-  of all the #ifdef HAVE_SNPRINTF crap.
-
 * Changing scrollback buffer size and then reloading config -> craziness.
 
 * There is a bug with YTK when the talkd isn't up at first call.

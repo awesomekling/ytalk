@@ -307,6 +307,9 @@ extern int ya_strlen(yachar *);
 #else
 #  define ya_strlen(a) strlen((char *)(a))
 #endif
+#ifndef HAVE_SNPRINTF
+int snprintf(char *buf, size_t len, char const *fmt, ...);
+#endif
 
 /* term.c */
 extern void init_term(void);
