@@ -91,8 +91,12 @@ static void
 esc_userlist(ytk_thing *t)
 {
 	ytk_menu_item *i = NULL;
+
+	/* Loop through the user list menu and free all the username
+	 * strings. This won't be necessary once YTK copies the strings
+	 * instead. */
 	while ((i = ytk_next_menu_item(YTK_MENU(t), i)) != NULL) {
-		if (i->hotkey >= 'a' && i->hotkey <= 'z') {
+		if ((i->hotkey >= 'a' && i->hotkey <= 'z') || i->hotkey == '@') {
 			free_mem(i->text);
 		}
 	}
