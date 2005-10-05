@@ -50,25 +50,42 @@ static void init_usermenu(char);
 static void
 do_runcmd(ytk_inputbox *b)
 {
+	/* XXX: This isn't the most beautiful way to do this, but since
+	 * execute() locks for at least 1 full second, it's better to remove
+	 * the menu before calling it.
+	 *
+	 * However, since hide_ymenu() deletes the shell command, we have
+	 * to make a copy of it first.
+	 */
+
+	char *command = NULL;
+
+	if (b->len > 0) {
+		command = str_copy(b->data);
+	}
+
 	hide_ymenu();
-	if (b->len > 0)
-		execute(b->data);
+
+	if (command != NULL) {
+		execute(command);
+		free_mem(command);
+	}
 }
 
 static void
 do_adduser(ytk_inputbox *b)
 {
-	hide_ymenu();
 	if (b->len > 0)
 		invite(b->data, 0);
+	hide_ymenu();
 }
 
 static void
 do_save_user_to_file(ytk_inputbox *b)
 {
-	hide_ymenu();
 	if (menu_user && b && b->len > 0)
 		save_user_to_file(menu_user, b->data);
+	hide_ymenu();
 }
 
 static void
@@ -495,8 +512,14 @@ hide_ymenu()
 {
 	ytk_thing *t;
 	while ((t = ytk_pop(menu_stack))) {
-		delwin(t->win);
-		t->win = NULL;
+		if (t != main_menu && t != options_menu && t != color_menu && t != userlist_menu) {
+			ytk_delete_thing(t);
+		} else if (t == userlist_menu) {
+			esc_userlist(userlist_menu);
+		} else {
+			delwin(t->win);
+			t->win = NULL;
+		}
 	}
 	refresh_curses();
 	ytk_sync_display();
