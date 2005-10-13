@@ -540,8 +540,6 @@ close_all(void)
 	for (u = user_list; u; u = u->unext) {
 		if (u->fd > 0)
 			close(u->fd);
-		if (u->output_fd > 0)
-			close(u->output_fd);
 	}
 	if (autofd > 0)
 		close(autofd);

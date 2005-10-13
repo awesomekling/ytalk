@@ -484,12 +484,6 @@ read_user(int fd)
 				*(p++) = *c;
 			}
 			if (p > buf) {
-				if (user->output_fd > 0)
-					if (write(user->output_fd, buf, p - buf) <= 0) {
-						show_error("write to user output file failed");
-						close(user->output_fd);
-						user->output_fd = 0;
-					}
 				show_input(user, buf, p - buf);
 			}
 		}

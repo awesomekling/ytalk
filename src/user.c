@@ -272,8 +272,6 @@ free_user(yuser *user)
 		free_mem(user->gt.buf);
 	if (user->dbuf)
 		free_mem(user->dbuf);
-	if (user->output_fd > 0)
-		close(user->output_fd);
 	if (user->fd) {
 		remove_fd(user->fd);
 		fd_to_user[user->fd] = NULL;

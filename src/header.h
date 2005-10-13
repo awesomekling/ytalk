@@ -133,7 +133,6 @@ typedef struct _yuser {
 	struct _yuser *next;	/* next user in group lists */
 	struct _yuser *unext;	/* next user in full user list */
 	int fd;			/* file descriptor */
-	int output_fd;		/* non-zero if output is going to a file */
 	ylong flags;		/* active FL_* flags below */
 	ychar edit[4];		/* edit characters */
 	char crlf;		/* 1 if users wants CRLF data */
