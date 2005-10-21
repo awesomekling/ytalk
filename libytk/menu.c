@@ -29,7 +29,7 @@ ytk_new_menu(char *title)
 	new_thing = ytk_new_thing();
 	new_menu = get_mem(sizeof(ytk_menu));
 	new_menu->base = new_thing;
-	new_thing->title = title;
+	new_thing->title = str_copy(title);
 	new_menu->first = NULL;
 	new_menu->last = NULL;
 	new_thing->object = new_menu;
@@ -41,11 +41,16 @@ void
 ytk_destroy_menu(ytk_menu *m)
 {
 	ytk_menu_item *it, *itn;
-	if (m->first == NULL)
+
+	if (m->first == NULL) {
+		free_mem(m);
 		return;
+	}
 	it = m->first;
 	while (it != NULL) {
 		itn = it->next;
+		if (it->text != NULL)
+			free_mem(it->text);
 		free_mem(it);
 		it = itn;
 	}
@@ -133,7 +138,7 @@ ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (ytk_me
 {
 	ytk_menu_item *new;
 	new = get_mem(sizeof(ytk_menu_item));
-	new->text = text;
+	new->text = str_copy(text);
 	new->hotkey = hotkey;
 	new->callback = callback;
 	new->selected = FALSE;

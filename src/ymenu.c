@@ -107,16 +107,7 @@ do_hidething(ytk_thing *t)
 static void
 esc_userlist(ytk_thing *t)
 {
-	ytk_menu_item *i = NULL;
-
-	/* Loop through the user list menu and free all the username
-	 * strings. This won't be necessary once YTK copies the strings
-	 * instead. */
-	while ((i = ytk_next_menu_item(YTK_MENU(t), i)) != NULL) {
-		if ((i->hotkey >= 'a' && i->hotkey <= 'z') || i->hotkey == '@') {
-			free_mem(i->text);
-		}
-	}
+	(void) t;
 	do_hidething(t);
 }
 
@@ -442,12 +433,11 @@ static void
 init_userlist()
 {
 	yuser *u;
-	char *buf, *p;
+	char buf[54], *p;
 	char hk = 'a';
 	userlist_menu = ytk_new_menu(_("User List"));
 	for (u = connect_list; u; u = u->next) {
 		if (u != me) {
-			buf = get_mem(54 * sizeof(char));
 			p = buf
 			 + sprintf(buf, "%-24.24s %03dx%03d [%03dx%03d] ",
 			       u->full_name, u->remote.cols, u->remote.rows,
@@ -467,7 +457,6 @@ init_userlist()
 	}
 	for (u = wait_list; u; u = u->next) {
 		if (u != me) {
-			buf = get_mem(54 * sizeof(char));
 			p = buf
 			 + sprintf(buf, "%-24.24s               %13.13s",
 				   u->full_name, _("<unconnected>")
@@ -477,7 +466,6 @@ init_userlist()
 		}
 	}
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
-	buf = get_mem(48 * sizeof(char));
 	sprintf(buf, "Me (%.36s)", me->full_name);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), buf, me->key, handle_userlist_menu);
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
@@ -668,9 +656,7 @@ int
 yes_no(char *str)
 {
 	ytk_thing *yn;
-	char *p;
 	int out = 0;
-	p = str_copy(str);
 	yn = ytk_new_msgbox(NULL);
 	ytk_add_msgbox_item(YTK_MSGBOX(yn), str);
 #ifdef YTALK_COLOR
@@ -703,6 +689,5 @@ yes_no(char *str)
 		refresh_ymenu();
 	}
 	io_len = 0;
-	free_mem(p);
 	return out;
 }

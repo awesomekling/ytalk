@@ -57,6 +57,8 @@ ytk_delete_thing(ytk_thing *t)
 #endif
 			return;
 		}
+		if (t->title != NULL)
+			free_mem(t->title);
 		free_mem(t);
 	}
 }
