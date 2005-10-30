@@ -21,7 +21,6 @@
 #include "ytk.h"
 #include "ymenu.h"
 #include "cwin.h"
-#include "gtalk.h"
 
 static ytk_stack *menu_stack = NULL;
 static ytk_thing *main_menu = NULL;
