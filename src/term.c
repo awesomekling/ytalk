@@ -87,7 +87,6 @@ init_sgtty(void)
 	me->RUB = RUBDEF;
 	me->KILL = sgttyb.sg_kill;
 	me->WORD = ltchars.t_werasc;
-	me->CLR = '\024';	/* ^T */
 }
 #else
 static void
@@ -113,7 +112,6 @@ init_termios(void)
 #else
 	me->WORD = '\027';	/* ^W */
 #endif
-	me->CLR = '\024';	/* ^T */
 }
 #endif
 

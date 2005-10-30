@@ -134,7 +134,7 @@ typedef struct _yuser {
 	struct _yuser *unext;	/* next user in full user list */
 	int fd;			/* file descriptor */
 	ylong flags;		/* active FL_* flags below */
-	ychar edit[4];		/* edit characters */
+	ychar edit[3];		/* edit characters */
 	char crlf;		/* 1 if users wants CRLF data */
 	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
 	unsigned short rows, cols;	/* his active region rows and cols over here */
@@ -230,7 +230,6 @@ typedef struct _yuser {
 #define RUB	edit[0]
 #define KILL	edit[1]
 #define WORD	edit[2]
-#define CLR	edit[3]
 #define RUBDEF	0xfe
 
 #define ALTESC	0x18		/* alternate escape key (^X) */
