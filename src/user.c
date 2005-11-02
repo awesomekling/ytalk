@@ -327,7 +327,7 @@ save_user_to_file(yuser *user, char *filename)
 	unsigned short r;
 
 	/* Let's not overwrite or underprotect */
-	fd = open(filename, O_CREAT | O_WRONLY, 0600);
+	fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0600);
 	if (fd < 0) {
 		show_error(_("Couldn't open file for writing."));
 		return;
