@@ -3,7 +3,7 @@ TODO before YTalk 4 can be released:
 
 * Wide character support (HELP, please!)
 
-* sizeof(yachar) is 6 bytes. This is ridiculous.
+* sizeof(yachar) is 12 bytes. This is beyond ridiculous.
 
 * User viewports clear when resizing one vertical unit.
 
