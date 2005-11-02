@@ -191,19 +191,17 @@ handle_color(ytk_menu_item *i)
 	int len;
 
 	if (k >= '0' && k <= '7') {
-		me->c_fg = k - '0';
+		me->yac.foreground = k - '0';
 		len = snprintf(buf, sizeof(buf), "%c[%dm", 27, (k - '0') + 30);
 		send_users(me, (ychar *)buf, len, (ychar *)buf, len);
 	}
 	switch (k) {
 	case 'b':
-		if (i->value) {
-			me->c_at |= A_BOLD;
-			len = snprintf(buf, sizeof(buf), "%c[01m", 27);
-		} else {
-			me->c_at &= ~A_BOLD;
-			len = snprintf(buf, sizeof(buf), "%c[21m", 27);
-		}
+		if (i->value)
+			me->yac.attributes |= YATTR_BOLD;
+		else
+			me->yac.attributes &= ~YATTR_BOLD;
+		len = snprintf(buf, sizeof(buf), "\033[%d1m", (i->value ? 0 : 2));
 		send_users(me, (ychar *)buf, len, (ychar *)buf, len);
 		break;
 	}
@@ -298,7 +296,7 @@ init_ymenu()
 	ytk_add_menu_item(YTK_MENU(color_menu), _("Cyan"), '6', handle_color);
 	ytk_add_menu_item(YTK_MENU(color_menu), _("White"), '7', handle_color);
 	ytk_add_menu_separator(YTK_MENU(color_menu));
-	ytk_add_menu_toggle_item(YTK_MENU(color_menu), _("Bold"), 'b', handle_color, (me->c_at & A_BOLD));
+	ytk_add_menu_toggle_item(YTK_MENU(color_menu), _("Bold"), 'b', handle_color, (me->yac.attributes & YATTR_BOLD));
 	ytk_set_escape(color_menu, do_hidething);
 	ytk_set_colors(color_menu, menu_colors);
 	ytk_set_attr(color_menu, menu_attr);
@@ -526,11 +524,11 @@ show_colormenu()
 {
 	ytk_menu_item *it;
 
-	it = ytk_find_menu_item_with_hotkey(YTK_MENU(color_menu), (me->c_fg + '0'));
+	it = ytk_find_menu_item_with_hotkey(YTK_MENU(color_menu), (me->yac.foreground + '0'));
 	ytk_select_menu_item(YTK_MENU(color_menu), it);
 
 	it = ytk_find_menu_item_with_hotkey(YTK_MENU(color_menu), 'b');
-	it->value = ((me->c_at & A_BOLD) != 0);
+	it->value = (me->yac.attributes & YATTR_BOLD) != 0;
 
 	ytk_push(menu_stack, color_menu);
 	ytk_display_stack(menu_stack);

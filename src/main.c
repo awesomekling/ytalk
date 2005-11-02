@@ -124,11 +124,8 @@ str_copy(char *str)
 int
 ya_strlen(yachar *str)
 {
-	yachar *p;
 	int ret;
-
-	for (p = str, ret = 0; p->l; p++, ret++);
-
+	for (ret = 0; str->data; ++str, ++ret);
 	return ret;
 }
 #endif /* YTALK_COLOR */

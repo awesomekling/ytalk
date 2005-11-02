@@ -360,9 +360,9 @@ open_curses(yuser *user)
 			}
 	user->term = w;
 #ifdef YTALK_COLOR
-	user->c_at = 0;
-	user->c_bg = 0;
-	user->c_fg = 7;
+	user->yac.attributes = 0;
+	user->yac.background = 0;
+	user->yac.foreground = 7;
 #endif
 
 	/* redraw */
@@ -408,9 +408,9 @@ waddyac(WINDOW *w, yachar c)
 {
 	int x, y;
 #ifdef YTALK_COLOR
-	chtype cc = c.l;
+	chtype cc = c.data;
 	getyx(w, y, x);
-	if (c.v) {
+	if (c.alternate_charset) {
 		switch (cc) {
 		case 'l': cc = ACS_ULCORNER; break;
 		case 'm': cc = ACS_LLCORNER; break;
@@ -434,7 +434,17 @@ waddyac(WINDOW *w, yachar c)
 	}
 	if (cc == 0)
 		cc = ' ';
-	waddch(w, cc | COLOR_PAIR(1 + (c.b | c.c << 3)) | c.a);
+	if (c.attributes & YATTR_BOLD)
+		cc |= A_BOLD;
+	if (c.attributes & YATTR_DIM)
+		cc |= A_DIM;
+	if (c.attributes & YATTR_UNDERLINE)
+		cc |= A_UNDERLINE;
+	if (c.attributes & YATTR_BLINK)
+		cc |= A_BLINK;
+	if (c.attributes & YATTR_REVERSE)
+		cc |= A_REVERSE;
+	waddch(w, cc | COLOR_PAIR(1 + (c.foreground | c.background << 3)));
 	if (x >= COLS - 1)
 		wmove(w, y, x);
 #else
@@ -680,7 +690,7 @@ __update_scroll_curses(yuser *user)
 				waddyac(w->swin, user->scr[r - fb][i]);
 		} else {
 #ifdef YTALK_COLOR
-			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i].l != '\0'); i++)
+			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i].data != '\0'); i++)
 #else
 			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i] != '\0'); i++)
 #endif

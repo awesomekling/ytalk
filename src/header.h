@@ -93,9 +93,19 @@ typedef yaddr yterm;		/* terminal cookie */
 typedef unsigned char ychar;		/* we use unsigned chars */
 
 #ifdef YTALK_COLOR
+
+#define YATTR_BOLD      0x01
+#define YATTR_DIM       0x02
+#define YATTR_UNDERLINE 0x04
+#define YATTR_BLINK     0x08
+#define YATTR_REVERSE   0x10
+
 typedef struct {
-	int a;
-	unsigned char l, b, c, v;
+	unsigned char data;
+	unsigned int background : 4;
+	unsigned int foreground : 4;
+	unsigned int attributes : 7;
+	unsigned int alternate_charset : 1;
 } yachar;
 #else
 typedef unsigned char yachar;
@@ -153,8 +163,8 @@ typedef struct _yuser {
 	char csx;		/* set if in charset crossover mode */
 	char altchar;		/* set if in alternate charset mode */
 #ifdef YTALK_COLOR
-	int c_at, c_bg, c_fg;	/* user colors and attributes */
-	int sc_at, sc_bg, sc_fg;/* saved colors and attributes */
+	yachar yac;
+	yachar saved_yac;
 #endif
 	char *full_name;	/* full name (up to 50 chars) */
 	char *user_name;	/* user name */
@@ -341,7 +351,6 @@ extern void set_scroll_region(yuser *, int, int);
 extern void msg_term(char *);
 extern void spew_term(yuser *, int, int, int);
 extern void spew_line(int, yachar *, int);
-extern void redraw_all_terms(void);
 extern char *get_tcstr(char *);
 
 #define set_raw_term			set_raw_curses

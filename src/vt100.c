@@ -23,8 +23,17 @@
 #include "cwin.h"
 
 #ifdef YTALK_COLOR
-static unsigned long int attr_map[10] = {
-	0, A_BOLD, A_DIM, 0, A_UNDERLINE, A_BLINK, 0, A_REVERSE, 0, 0
+static unsigned char attr_map[10] = {
+	0,
+	YATTR_BOLD,
+	YATTR_DIM,
+	0,
+	YATTR_UNDERLINE,
+	YATTR_BLINK,
+	0,
+	YATTR_REVERSE,
+	0,
+	0
 };
 #endif
 
@@ -69,17 +78,17 @@ vt100_process(yuser *user, char data)
 	case 'm':
 		for (i = 0; i <= user->vt.ac; i++) {
 			if (user->vt.av[i] == 0) {
-				user->c_at = 0;
-				user->c_bg = 0;
-				user->c_fg = 7;
+				user->yac.attributes = 0;
+				user->yac.background = 0;
+				user->yac.foreground = 7;
 			} else if (user->vt.av[i] <= 9)
-				user->c_at |= attr_map[user->vt.av[i]];
+				user->yac.attributes |= attr_map[user->vt.av[i]];
 			else if (user->vt.av[i] >= 21 && user->vt.av[i] <= 29)
-				user->c_at &= ~attr_map[user->vt.av[i] - 20];
+				user->yac.attributes &= ~attr_map[user->vt.av[i] - 20];
 			else if (user->vt.av[i] >= 30 && user->vt.av[i] <= 37)
-				user->c_fg = user->vt.av[i] - 30;
+				user->yac.foreground = user->vt.av[i] - 30;
 			else if (user->vt.av[i] >= 40 && user->vt.av[i] <= 47)
-				user->c_bg = user->vt.av[i] - 40;
+				user->yac.background = user->vt.av[i] - 40;
 		}
 		user->vt.got_esc = 0;
 		break;
@@ -322,9 +331,9 @@ vt100_process(yuser *user, char data)
 		break;
 	case '7':		/* save cursor and attributes */
 #ifdef YTALK_COLOR
-		user->sc_at = user->c_at;
-		user->sc_bg = user->c_bg;
-		user->sc_fg = user->c_fg;
+		user->saved_yac.attributes = user->yac.attributes;
+		user->saved_yac.background = user->yac.background;
+		user->saved_yac.foreground = user->yac.foreground;
 #endif
 		user->sy = user->y;
 		user->sx = user->x;
@@ -332,9 +341,9 @@ vt100_process(yuser *user, char data)
 		break;
 	case '8':		/* restore cursor and attributes */
 #ifdef YTALK_COLOR
-		user->c_at = user->sc_at;
-		user->c_fg = user->sc_fg;
-		user->c_bg = user->sc_bg;
+		user->yac.attributes = user->saved_yac.attributes;
+		user->yac.background = user->saved_yac.background;
+		user->yac.foreground = user->saved_yac.foreground;
 #endif
 		move_term(user, user->sy, user->sx);
 		user->vt.got_esc = 0;

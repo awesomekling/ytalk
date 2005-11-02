@@ -117,13 +117,13 @@ init_termios(void)
 
 #ifdef YTALK_COLOR
 static void
-user_yac(yuser *user, char c, yachar *ac)
+user_yac(yuser *user, char data, yachar *ac)
 {
-	ac->l = c;
-	ac->a = user->c_at;
-	ac->b = user->c_fg;
-	ac->c = user->c_bg;
-	ac->v = user->altchar ^ user->csx;
+	ac->attributes = user->yac.attributes;
+	ac->background = user->yac.background;
+	ac->foreground = user->yac.foreground;
+	ac->data = data;
+	ac->alternate_charset = user->altchar ^ user->csx;
 }
 #endif
 
@@ -179,10 +179,10 @@ init_term(void)
 {
 
 #ifdef YTALK_COLOR
-	emptyc.l = ' ';
-	emptyc.a = 0;
-	emptyc.b = 7;
-	emptyc.c = 0;
+	emptyc.data = ' ';
+	emptyc.attributes = 0;
+	emptyc.background = 0;
+	emptyc.foreground = 7;
 #else
 	emptyc = ' ';
 #endif /* YTALK_COLOR */
@@ -459,7 +459,7 @@ scroll_term(yuser *user)
 			user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
 			memcpy(user->scrollback[y], user->scr[0], (user->cols * sizeof(yachar)));
 #ifdef YTALK_COLOR
-			user->scrollback[y][user->cols].l = '\0';
+			user->scrollback[y][user->cols].data = '\0';
 #else
 			user->scrollback[y][user->cols] = '\0';
 #endif
@@ -549,9 +549,9 @@ word_term(yuser *user)
 	register int x;
 
 #ifdef YTALK_COLOR
-	for (x = user->x - 1; x >= 0 && user->scr[user->y][x].l == ' '; x--)
+	for (x = user->x - 1; x >= 0 && user->scr[user->y][x].data == ' '; x--)
 		continue;
-	for (; x >= 0 && user->scr[user->y][x].l != ' '; x--)
+	for (; x >= 0 && user->scr[user->y][x].data != ' '; x--)
 		continue;
 #else
 	for (x = user->x - 1; x >= 0 && user->scr[user->y][x] == ' '; x--)
@@ -777,7 +777,7 @@ add_char_term(yuser *user, int num)
 	i = user->cols - user->x - num;
 	c = user->scr[user->y] + user->cols - num - 1;
 #ifdef YTALK_COLOR
-	while (i > 0 && c->l == ' ')
+	while (i > 0 && c->data == ' ')
 #else
 	while (i > 0 && *c == ' ')
 #endif
@@ -811,7 +811,7 @@ del_char_term(yuser *user, int num)
 	i = user->cols - user->x - num;
 	c = user->scr[user->y] + user->cols - 1;
 #ifdef YTALK_COLOR
-	while (i > 0 && c->l == ' ')
+	while (i > 0 && c->data == ' ')
 #else
 	while (i > 0 && *c == ' ')
 #endif
@@ -879,7 +879,7 @@ first_interesting_row(yuser *user, int height, int width)
 		i = (width > user->t_cols) ? user->t_cols : width;
 		for (c = user->scr[j]; i > 0; i--, c++)
 #ifdef YTALK_COLOR
-			if (c->l != ' ')
+			if (c->data != ' ')
 #else
 			if (*c != ' ')
 #endif
@@ -1123,19 +1123,54 @@ spew_line(int fd, yachar *buf, int len)
 	write(fd, (char *)buf, len);
 }
 #else
+static void
+spew_attrs(int fd, yachar *yac)
+{
+	char esc[30] = "\033[0m\033[";
+	int p = 6;
+	if (yac->attributes & YATTR_BOLD) {
+		esc[p++] = '1';
+		esc[p++] = ';';
+	}
+	if (yac->attributes & YATTR_DIM) {
+		esc[p++] = '2';
+		esc[p++] = ';';
+	}
+	if (yac->attributes & YATTR_UNDERLINE) {
+		esc[p++] = '4';
+		esc[p++] = ';';
+	}
+	if (yac->attributes & YATTR_BLINK) {
+		esc[p++] = '5';
+		esc[p++] = ';';
+	}
+	if (yac->attributes & YATTR_REVERSE) {
+		esc[p++] = '7';
+		esc[p++] = ';';
+	}
+	esc[p++] = '3';
+	esc[p++] = '0' + yac->foreground;
+	esc[p++] = ';';
+	esc[p++] = '4';
+	esc[p++] = '0' + yac->background;
+	esc[p++] = 'm';
+	/* Send our attributes */
+	write(fd, esc, p);
+}
 
-/* Toggle attributes */
-#define DO_ATTR(attr, val) \
-    if (buf->a & attr) { \
-		acur |= attr; \
-		if (!(alast & attr)) { \
-		    p += sprintf(esc + p, "%d;", val); \
+#define DO_ATTR(attr, num) \
+	if (buf->attributes & attr) { \
+		if (!last.attributes & attr) { \
+			esc[p++] = num; \
+			esc[p++] = ';'; \
 		} \
-    } else { \
-		if (alast & attr) { \
-		    p += sprintf(esc + p, "%d;", val+20); \
+	} else { \
+		if (last.attributes & attr) { \
+			esc[p++] = '2'; \
+			esc[p++] = num; \
+			esc[p++] = ';'; \
 		} \
-    }
+	}
 
 /*
  * Spew terminal line contents to a file descriptor.
@@ -1143,81 +1178,59 @@ spew_line(int fd, yachar *buf, int len)
 void
 spew_line(int fd, yachar *buf, int len)
 {
-	int a, b, c, v, p;
-	int alast, acur;
+	yachar last;
+	int v, p;
 	char esc[30];
 	if (len <= 0)
 		return;
-	a = b = c = -1;
 	v = 0;
-	alast = acur = 0;
+	memcpy(&last, buf, sizeof(yachar));
+	spew_attrs(fd, buf);
 	for (; len; buf++, len--) {
 		p = 2;
-		if (a != buf->a) {
-			acur = 0;
-			if (!buf->a) {
-				strcpy(esc + p, "0;");
-				p += 2;
-			} else {
-				DO_ATTR(A_BOLD, 1);
-				DO_ATTR(A_DIM, 2);
-				DO_ATTR(A_UNDERLINE, 4);
-				DO_ATTR(A_BLINK, 5);
-				DO_ATTR(A_REVERSE, 7);
-			}
-			alast = acur;
-		}
-		if (b != buf->b)
-			p += sprintf(esc + p, "%d;", 30 + buf->b);
-		if (c != buf->c)
-			p += sprintf(esc + p, "%d;", 40 + buf->c);
 
+		if (last.attributes != buf->attributes) {
+			if (!buf->attributes) {
+				esc[p++] = '0';
+				esc[p++] = ';';
+			} else {
+				DO_ATTR(YATTR_BOLD,      '1')
+				DO_ATTR(YATTR_DIM,       '2')
+				DO_ATTR(YATTR_UNDERLINE, '4')
+				DO_ATTR(YATTR_BLINK,     '5')
+				DO_ATTR(YATTR_REVERSE,   '7')
+			}
+		}
+		if (last.foreground != buf->foreground) {
+			esc[p++] = '3';
+			esc[p++] = '0' + buf->foreground;
+			esc[p++] = ';';
+		}
+		if (last.background != buf->background) {
+			esc[p++] = '4';
+			esc[p++] = '0' + buf->background;
+			esc[p++] = ';';
+		}
 		if (p != 2) {
-			a = buf->a;
-			b = buf->b;
-			c = buf->c;
 			esc[0] = 27;
 			esc[1] = '[';
 			esc[p - 1] = 'm';
+			esc[p] = 0;
 			write(fd, esc, p);
 		}
-		if (v != buf->v) {
-			if (buf->v)
-				write(fd, &YT_ACS_ON, 1);
-			else
-				write(fd, &YT_ACS_OFF, 1);
-		}
-		v = buf->v;
 
-		write(fd, &buf->l, 1);
+		if (v != buf->alternate_charset) {
+			/* Beware of the backwards logic ;-) */
+			write(fd, v ? "\xF" : "\xE", 1);
+			v = buf->alternate_charset;
+		}
+
+		write(fd, &buf->data, 1);
+
+		memcpy(&last, buf, sizeof(yachar));
 	}
 }
 
-static void
-spew_attrs(int fd, unsigned char at, unsigned char bg, unsigned char fg)
-{
-	char esc[30];
-	int p = 2;
-	if (at & A_BOLD)
-		p += sprintf(esc + p, "%d;", 1);
-	if (at & A_DIM)
-		p += sprintf(esc + p, "%d;", 2);
-	if (at & A_UNDERLINE)
-		p += sprintf(esc + p, "%d;", 4);
-	if (at & A_BLINK)
-		p += sprintf(esc + p, "%d;", 5);
-	if (at & A_REVERSE)
-		p += sprintf(esc + p, "%d;", 7);
-	p += sprintf(esc + p, "%d;", 30 + bg);
-	p += sprintf(esc + p, "%d;", 40 + fg);
-	esc[0] = 27;
-	esc[1] = '[';
-	esc[p - 1] = 'm';
-	/* Clear all attributes */
-	write(fd, "\033[0m", 4);
-	/* Send our attributes */
-	write(fd, esc, p);
-}
 #endif /* YTALK_COLOR */
 
 /*
@@ -1240,7 +1253,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 		for (;;) {
 			for (c = e = user->scr[y], len = cols; len > 0; len--, c++)
 #ifdef YTALK_COLOR
-				if (c->l != ' ')
+				if (c->data != ' ')
 #else
 				if (*c != ' ')
 #endif
@@ -1266,7 +1279,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 		write(fd, tmp, strlen(tmp));
 
 #ifdef YTALK_COLOR
-		spew_attrs(fd, user->c_at, user->c_fg, user->c_bg);
+		spew_attrs(fd, &user->yac);
 		if (user->altchar)
 			write(fd, "\033[(0", 4);
 		if (user->csx)
@@ -1288,7 +1301,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 			}
 			for (c = e = user->scr[y], len = user->t_cols; len > 0; len--, c++)
 #ifdef YTALK_COLOR
-				if (c->l != ' ')
+				if (c->data != ' ')
 #else
 				if (*c != ' ')
 #endif

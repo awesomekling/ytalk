@@ -720,7 +720,7 @@ word_wrap(yuser *user)
 	if ((bound = (x >> 1)) > 20)
 		bound = 20;
 #ifdef YTALK_COLOR
-	for (i = 1; i < bound && user->scr[user->y][x - i].l != ' '; i++)
+	for (i = 1; i < bound && user->scr[user->y][x - i].data != ' '; i++)
 #else
 	for (i = 1; i < bound && user->scr[user->y][x - i] != ' '; i++)
 #endif
@@ -732,7 +732,7 @@ word_wrap(yuser *user)
 	newline_term(user);
 	for (i--; i >= 1; i--)
 #ifdef YTALK_COLOR
-		addch_term(user, temp[i].l);
+		addch_term(user, temp[i].data);
 #else
 		addch_term(user, temp[i]);
 #endif
@@ -1331,13 +1331,12 @@ my_input(yuser *user, ychar *buf, int len)
 						show_colormenu();
 						buf++, len--;
 					} else if (*buf == 2) {		/* ^B - Bold */
-						if (me->c_at & A_BOLD) {
-							me->c_at &= ~A_BOLD;
-							send_users(me, (ychar *)"\033[21m", 5, (ychar *)"\033[21m", 5);
-						}
-						else {
-							me->c_at |= A_BOLD;
+						if (me->yac.attributes & YATTR_BOLD) {
+							me->yac.attributes &= ~YATTR_BOLD;
 							send_users(me, (ychar *)"\033[01m", 5, (ychar *)"\033[01m", 5);
+						} else {
+							me->yac.attributes |= YATTR_BOLD;
+							send_users(me, (ychar *)"\033[21m", 5, (ychar *)"\033[21m", 5);
 						}
 						buf++, len--;
 #endif
