@@ -82,9 +82,13 @@ do_adduser(ytk_inputbox *b)
 static void
 do_save_user_to_file(ytk_inputbox *b)
 {
+	char *filename = NULL;
 	if (menu_user && b && b->len > 0)
-		save_user_to_file(menu_user, b->data);
+		filename = str_copy(b->data);
 	hide_ymenu();
+	save_user_to_file(menu_user, filename);
+	if (filename)
+		free_mem(filename);
 }
 
 static void
