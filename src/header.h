@@ -94,10 +94,8 @@ typedef unsigned char ychar;		/* we use unsigned chars */
 
 #ifdef YTALK_COLOR
 typedef struct {
-	unsigned char l;
 	int a;
-	unsigned char b, c;
-	unsigned char v;
+	unsigned char l, b, c, v;
 } yachar;
 #else
 typedef unsigned char yachar;
