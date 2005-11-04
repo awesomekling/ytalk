@@ -194,7 +194,7 @@ typedef struct _yuser {
 		unsigned int ac;	/* ESC sequence arg count */
 		BITFIELD(lparen, 1);    /* lparen escape? */
 		BITFIELD(hash, 1);      /* hash escape? */
-		BITFIELD(got_esc, 1);   /* received an ESC */
+		BITFIELD(got_esc, 3);   /* received an ESC */
 	} vt;
 
 	struct {
