@@ -92,6 +92,8 @@ typedef void *yaddr;		/* any pointer address */
 typedef yaddr yterm;		/* terminal cookie */
 typedef unsigned char ychar;		/* we use unsigned chars */
 
+#define BITFIELD(name, size) unsigned int name : size
+
 #ifdef YTALK_COLOR
 
 #define YATTR_BOLD      0x01
@@ -102,10 +104,10 @@ typedef unsigned char ychar;		/* we use unsigned chars */
 
 typedef struct {
 	unsigned char data;
-	unsigned int background : 4;
-	unsigned int foreground : 4;
-	unsigned int attributes : 7;
-	unsigned int alternate_charset : 1;
+	BITFIELD(background, 4);
+	BITFIELD(foreground, 4);
+	BITFIELD(attributes, 7);
+	BITFIELD(alternate_charset, 1);
 } yachar;
 #else
 typedef unsigned char yachar;
@@ -143,25 +145,25 @@ typedef struct _yuser {
 	int fd;			/* file descriptor */
 	ylong flags;		/* active FL_* flags below */
 	ychar edit[3];		/* edit characters */
-	char crlf;		/* 1 if users wants CRLF data */
 	unsigned short t_rows, t_cols;	/* his rows and cols on window over here */
 	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
-	char scroll;		/* set if currently being scrolled */
 	yachar **scrollback;	/* scrollback buffer */
 	long int scrollpos;	/* position in scrollback buffer */
 	yachar **scr;		/* screen data */
 	int *scr_tabs;		/* screen tab positions */
-	char bump;		/* set if at far right */
-	char onend;		/* set if we are stomping on the far right */
 	ychar old_rub;		/* my actual rub character */
 	char key;		/* this user's ident letter for menus */
 	int y, x;		/* current cursor position */
 	int sy, sx;		/* saved cursor position */
 	int sc_top, sc_bot;	/* scrolling region */
-	char region_set;	/* set if using a screen region */
-	char csx;		/* set if in charset crossover mode */
-	char altchar;		/* set if in alternate charset mode */
+	BITFIELD(region_set, 1);        /* set if using a screen region */
+	BITFIELD(csx, 1);               /* set if in charset crossover mode */
+	BITFIELD(altchar, 1);           /* set if in alternate charset mode */
+	BITFIELD(bump, 1);              /* set if at far right */
+	BITFIELD(onend, 1);             /* set if we are stomping on the far right */
+	BITFIELD(crlf, 1);              /* 1 if users wants CRLF data */
+	BITFIELD(scroll, 1);            /* set if currently being scrolled */
 #ifdef YTALK_COLOR
 	yachar yac;
 	yachar saved_yac;
@@ -188,20 +190,20 @@ typedef struct _yuser {
 	int got_oob;		/* got OOB flag */
 
 	struct {
-		char got_esc;		/* received an ESC */
 		short int av[MAXARG];	/* ESC sequence arguments */
 		unsigned int ac;	/* ESC sequence arg count */
-		char lparen;		/* lparen escape? */
-		char hash;		/* hash escape? */
+		BITFIELD(lparen, 1);    /* lparen escape? */
+		BITFIELD(hash, 1);      /* hash escape? */
+		BITFIELD(got_esc, 1);   /* received an ESC */
 	} vt;
 
 	struct {
-		char got_gt;	/* currently parsing gtalk string */
 		char *buf;	/* gtalk string buffer */
 		char type;	/* type of current gtalk string */
 		int len;	/* length of current gtalk string */
 		char *version;	/* user's GNUTALK version */
 		char *system;	/* user's *NIX flavor */
+		BITFIELD(got_gt, 1);
 	} gt;
 
 	/* anything below this is available for the terminal interface */
