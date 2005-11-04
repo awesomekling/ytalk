@@ -1242,7 +1242,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 	register yachar *c, *e;
 	register int len;
 	int y;
-	static char tmp[20];
+	char buffer[20];
 
 	if (user->region_set) {
 		y = 0;
@@ -1275,8 +1275,8 @@ spew_term(yuser *user, int fd, int rows, int cols)
 
 		/* move the cursor to the correct place */
 
-		sprintf(tmp, "%c[%d;%dH", 27, user->y + 1, user->x + 1);
-		write(fd, tmp, strlen(tmp));
+		len = snprintf(buffer, sizeof(buffer), "\033[%d;%dH", user->y + 1, user->x + 1);
+		write(fd, buffer, len);
 
 #ifdef YTALK_COLOR
 		spew_attrs(fd, &user->yac);
