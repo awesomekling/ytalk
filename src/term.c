@@ -1109,7 +1109,9 @@ set_scroll_region(yuser *user, int top, int bottom)
 void
 msg_term(char *str)
 {
-	bottom_msg = str;
+	if (bottom_msg != NULL)
+		free_mem(bottom_msg);
+	bottom_msg = str_copy(str);
 	bottom_time = time(NULL);
 	update_message_curses();
 	return;

@@ -936,6 +936,7 @@ house_clean(void)
 
 	if (bottom_msg != NULL && bottom_time != 0) {
 		if (t - bottom_time >= 10) {
+			free_mem(bottom_msg);
 			bottom_msg = NULL;
 			update_message_curses();
 		}
