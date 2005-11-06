@@ -430,11 +430,15 @@ scroll_term(yuser *user)
 		c = user->scr[user->sc_top];
 
 		if (user->sc_top == 0 && scrollback_lines > 0) {
+			/* Check whether we need to displace the scrollback buffer. */
 			if (user->scrollback[scrollback_lines - 1] == NULL) {
-				for (y = 0; ((y < scrollback_lines) && (user->scrollback[y] != NULL)) ; y++);
-				if (y < (scrollback_lines - 1))
-					user->scrollback[y + 1] = NULL;
+				/* There is unused room in the buffer. */
+				y = user->scrollend;
+				if (y < (scrollback_lines - 1)) {
+					user->scrollend++;
+				}
 			} else {
+				/* Displace the buffer one step to make room. */
 				free_mem(user->scrollback[0]);
 				for (y = 0; y < scrollback_lines - 1; y++) {
 					user->scrollback[y] = user->scrollback[y + 1];

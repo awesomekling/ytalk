@@ -144,6 +144,7 @@ typedef struct _yuser {
 	unsigned short rows, cols;	/* his active region rows and cols over here */
 	y_parm remote;		/* remote parms */
 	yachar **scrollback;	/* scrollback buffer */
+	long int scrollend;             /* highest used index in scrollback buffer */
 	long int scrollpos;	/* position in scrollback buffer */
 	yachar **scr;		/* screen data */
 	int *scr_tabs;		/* screen tab positions */
@@ -418,7 +419,6 @@ extern void init_scroll(yuser *);
 extern void free_scroll(yuser *);
 extern void scroll_up(yuser *);
 extern void scroll_down(yuser *);
-extern void scroll_to_last(yuser *);
 extern int scrolled_amount(yuser *);
 #define scrolling(user)				((user)->scroll == 1)
 #define enable_scrolling(user)		((user)->scroll = 1)

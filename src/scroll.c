@@ -98,7 +98,8 @@ scroll_down(yuser *user)
 	{
 		/* If we're not already at rock bottom... */
 		if (user->scrollback[user->scrollpos]) {
-			scroll_to_last(user);
+			/* Scroll to last line. */
+			user->scrollpos = user->scrollend;
 		}
 		disable_scrolling(user);
 	} else {
@@ -107,7 +108,8 @@ scroll_down(yuser *user)
 		/* If we hit the floor, return to active screen and turn
 		 * off scrolling. */
 		if (!user->scrollback[user->scrollpos]) {
-			scroll_to_last(user);
+			/* Scroll to last line. */
+			user->scrollpos = user->scrollend;
 			disable_scrolling(user);
 		} else {
 			enable_scrolling(user);
@@ -120,24 +122,6 @@ scroll_down(yuser *user)
 
 	/* Update the terminal. */
 	update_scroll_term(user);
-}
-
-void
-scroll_to_last(yuser *user)
-{
-	long int i;
-
-	/* These SHOULD be checked in the calling function, but we throw
-	 * in some assert()s here to be on the safe side. */
-	assert(user);
-	assert(scrollback_lines);
-	assert(user->scrollback[0]);
-
-	/* Locate the last scrollback line. */
-	for (i = 0; (i < scrollback_lines) && user->scrollback[i]; i++);
-
-	/* Scroll to last line. */
-	user->scrollpos = i - 1;
 }
 
 int
