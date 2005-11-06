@@ -74,13 +74,10 @@ bail(int n)
 void
 show_error(char *str)
 {
-	register char *syserr;
+	char *syserr;
 	static int in_error = 0;
 
-	if (errno == 0)
-		syserr = "";
-	else
-		syserr = strerror(errno);
+	syserr = errno ? strerror(errno) : NULL;
 
 	if (def_flags & FL_BEEP)
 		putc(7, stderr);
@@ -93,7 +90,7 @@ show_error(char *str)
 			update_ymenu();
 		in_error = 0;
 	} else {
-		if (syserr && *syserr != '\0')
+		if (syserr)
 			fprintf(stderr, "%s: %s\n", str, syserr);
 		else
 			fprintf(stderr, "%s\n", str);

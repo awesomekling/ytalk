@@ -608,7 +608,7 @@ show_error_ymenu(char *str, char *syserr, char *title)
 	else
 		ytk_add_msgbox_separator(YTK_MSGBOX(error_box));
 	ytk_add_msgbox_item(YTK_MSGBOX(error_box), str);
-	if (syserr && (strlen(syserr) > 0))
+	if (syserr)
 		ytk_add_msgbox_item(YTK_MSGBOX(error_box), syserr);
 	ytk_winch_thing(error_box);
 	if (!ytk_on_stack(menu_stack, error_box))
