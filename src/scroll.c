@@ -127,23 +127,24 @@ scroll_down(yuser *user)
 int
 scrolled_amount(yuser *user)
 {
-	long int i;
+	double amount;
+	int cutoff;
 
 	assert(user);
 
 	/* If we're not using scrollback, or this user isn't being scrolled,
+	 * or this user hasn't got anything in the scrollback buffer yet,
 	 * we can return 100 right here. */
-	if (!scrollback_lines || !scrolling(user))
+	if (!scrollback_lines || !scrolling(user) || !user->scrollend)
 		return 100;
 
-	/* Count the number of scrollback entries. This is pretty expensive
-	 * compared to adding a member to yuser. (FIXME) */
-	for (i = 0; i < scrollback_lines && user->scrollback[i]; i++);
+	/* Do a little ceil() without ceil() since ceil() needs -lm */
+	amount = (double) user->scrollpos / (double) user->scrollend * 100;
+	cutoff = amount;
 
-	/* If the scrollback buffer is empty, we're at 100%. */
-	if (i == 0)
-		return 100;
+	if (amount != cutoff )
+		cutoff++;
 
 	/* Return the scrolled amount in percent. */
-	return (int) ( (float) user->scrollpos / (float) i * 100 );
+	return cutoff;
 }
