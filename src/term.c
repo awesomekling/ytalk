@@ -115,7 +115,6 @@ init_termios(void)
 }
 #endif
 
-#ifdef YTALK_COLOR
 static void
 user_yac(yuser *user, char data, yachar *ac)
 {
@@ -125,7 +124,6 @@ user_yac(yuser *user, char data, yachar *ac)
 	ac->data = data;
 	ac->alternate_charset = user->altchar ^ user->csx;
 }
-#endif
 
 static void
 init_termcap(void)
@@ -177,15 +175,10 @@ get_tcstr(char *id)
 void
 init_term(void)
 {
-
-#ifdef YTALK_COLOR
 	emptyc.data = ' ';
 	emptyc.attributes = 0;
 	emptyc.background = 0;
 	emptyc.foreground = 7;
-#else
-	emptyc = ' ';
-#endif /* YTALK_COLOR */
 
 #ifdef USE_SGTTY
 	init_sgtty();
@@ -314,11 +307,9 @@ void
 addch_term(yuser *user, ychar c)
 {
 	yachar ac;
-#ifdef YTALK_COLOR
+
 	user_yac(user, c, &ac);
-#else
-	ac = c;
-#endif
+
 	if (is_printable(c)) {
 		addch_curses(user, ac);
 		user->scr[user->y][user->x] = ac;
@@ -359,11 +350,9 @@ fill_term(yuser *user, int y1, int x1, int y2, int x2, ychar c)
 {
 	int y, x;
 	yachar ac;
-#ifdef YTALK_COLOR
+
 	user_yac(user, c, &ac);
-#else
-	ac = c;
-#endif
+
 	for (y = y1; y <= y2; y++)
 		for (x = x1; x <= x2; x++)
 			user->scr[y][x] = ac;
@@ -380,11 +369,7 @@ clreol_term(yuser *user)
 	register yachar *c;
 	yachar nc;
 
-#ifdef YTALK_COLOR
 	user_yac(user, ' ', &nc);
-#else
-	nc = ' ';
-#endif
 
 	if (user->cols < user->t_cols) {
 		c = user->scr[user->y] + user->x;
@@ -458,11 +443,9 @@ scroll_term(yuser *user)
 			}
 			user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
 			memcpy(user->scrollback[y], user->scr[0], (user->cols * sizeof(yachar)));
-#ifdef YTALK_COLOR
+
 			user->scrollback[y][user->cols].data = '\0';
-#else
-			user->scrollback[y][user->cols] = '\0';
-#endif
+
 			if (!scrolling(user))
 				user->scrollpos = y;
 			else
@@ -548,17 +531,10 @@ word_term(yuser *user)
 {
 	register int x;
 
-#ifdef YTALK_COLOR
 	for (x = user->x - 1; x >= 0 && user->scr[user->y][x].data == ' '; x--)
 		continue;
 	for (; x >= 0 && user->scr[user->y][x].data != ' '; x--)
 		continue;
-#else
-	for (x = user->x - 1; x >= 0 && user->scr[user->y][x] == ' '; x--)
-		continue;
-	for (; x >= 0 && user->scr[user->y][x] != ' '; x--)
-		continue;
-#endif
 	if ((user->x - (++x)) <= 0)
 		return;
 	move_term(user, user->y, x);
@@ -776,11 +752,8 @@ add_char_term(yuser *user, int num)
 
 	i = user->cols - user->x - num;
 	c = user->scr[user->y] + user->cols - num - 1;
-#ifdef YTALK_COLOR
+
 	while (i > 0 && c->data == ' ')
-#else
-	while (i > 0 && *c == ' ')
-#endif
 		c--, i--;
 	if (i <= 0) {
 		clreol_term(user);
@@ -810,11 +783,8 @@ del_char_term(yuser *user, int num)
 
 	i = user->cols - user->x - num;
 	c = user->scr[user->y] + user->cols - 1;
-#ifdef YTALK_COLOR
+
 	while (i > 0 && c->data == ' ')
-#else
-	while (i > 0 && *c == ' ')
-#endif
 		c--, i--;
 	if (i <= 0) {
 		clreol_term(user);
@@ -878,11 +848,7 @@ first_interesting_row(yuser *user, int height, int width)
 	while (j != user->y) {
 		i = (width > user->t_cols) ? user->t_cols : width;
 		for (c = user->scr[j]; i > 0; i--, c++)
-#ifdef YTALK_COLOR
 			if (c->data != ' ')
-#else
-			if (*c != ' ')
-#endif
 				break;
 		if (i > 0)
 			break;
@@ -1118,13 +1084,6 @@ msg_term(char *str)
 }
 
 
-#ifndef YTALK_COLOR
-void
-spew_line(int fd, yachar *buf, int len)
-{
-	write(fd, (char *)buf, len);
-}
-#else
 static void
 spew_attrs(int fd, yachar *yac)
 {
@@ -1233,8 +1192,6 @@ spew_line(int fd, yachar *buf, int len)
 	}
 }
 
-#endif /* YTALK_COLOR */
-
 /*
  * Spew terminal contents to a file descriptor.
  */
@@ -1254,19 +1211,10 @@ spew_term(yuser *user, int fd, int rows, int cols)
 			rows = user->rows;
 		for (;;) {
 			for (c = e = user->scr[y], len = cols; len > 0; len--, c++)
-#ifdef YTALK_COLOR
 				if (c->data != ' ')
-#else
-				if (*c != ' ')
-#endif
 					e = c + 1;
-#ifdef YTALK_COLOR
 			if (e != user->scr[y])
 				spew_line(fd, user->scr[y], e - user->scr[y]);
-#else
-			if (e != user->scr[y])
-				write(fd, user->scr[y], e - user->scr[y]);
-#endif
 			if (++y >= rows)
 				break;
 			if (user->crlf)
@@ -1280,40 +1228,25 @@ spew_term(yuser *user, int fd, int rows, int cols)
 		len = snprintf(buffer, sizeof(buffer), "\033[%d;%dH", user->y + 1, user->x + 1);
 		write(fd, buffer, len);
 
-#ifdef YTALK_COLOR
 		spew_attrs(fd, &user->yac);
 		if (user->altchar)
 			write(fd, "\033[(0", 4);
 		if (user->csx)
 			write(fd, &YT_ACS_ON, 1);
-#endif
 
 	} else {
 		y = first_interesting_row(user, rows, cols);
 		for (;;) {
 			if (y == user->y) {
-#ifdef YTALK_COLOR
 				if (user->x > 0)
 					spew_line(fd, user->scr[y], user->x);
-#else
-				if (user->x > 0)
-					write(fd, user->scr[y], user->x);
-#endif
 				break;
 			}
 			for (c = e = user->scr[y], len = user->t_cols; len > 0; len--, c++)
-#ifdef YTALK_COLOR
 				if (c->data != ' ')
-#else
-				if (*c != ' ')
-#endif
 					e = c + 1;
 			if (e != user->scr[y])
-#ifdef YTALK_COLOR
 				spew_line(fd, user->scr[y], e - user->scr[y]);
-#else
-				write(fd, user->scr[y], e - user->scr[y]);
-#endif
 			if (user->crlf)
 				write(fd, "\r\n", 2);
 			else

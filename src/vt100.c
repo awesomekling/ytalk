@@ -22,7 +22,6 @@
 #include "header.h"
 #include "cwin.h"
 
-#ifdef YTALK_COLOR
 static unsigned char attr_map[10] = {
 	0,
 	YATTR_BOLD,
@@ -35,7 +34,6 @@ static unsigned char attr_map[10] = {
 	0,
 	0
 };
-#endif
 
 char YT_ACS_ON = '\xE';
 char YT_ACS_OFF = '\xF';
@@ -74,7 +72,6 @@ vt100_process(yuser *user, char data)
 	case '#':
 		user->vt.hash = 1;
 		break;
-#ifdef YTALK_COLOR
 	case 'm':
 		for (i = 0; i <= user->vt.ac; i++) {
 			if (user->vt.av[i] == 0) {
@@ -92,7 +89,6 @@ vt100_process(yuser *user, char data)
 		}
 		user->vt.got_esc = 0;
 		break;
-#endif
 	case 's':		/* save cursor */
 		if (user->vt.got_esc == 2) {
 			user->sy = user->y;
@@ -330,21 +326,17 @@ vt100_process(yuser *user, char data)
 		user->vt.got_esc = 0;
 		break;
 	case '7':		/* save cursor and attributes */
-#ifdef YTALK_COLOR
 		user->saved_yac.attributes = user->yac.attributes;
 		user->saved_yac.background = user->yac.background;
 		user->saved_yac.foreground = user->yac.foreground;
-#endif
 		user->sy = user->y;
 		user->sx = user->x;
 		user->vt.got_esc = 0;
 		break;
 	case '8':		/* restore cursor and attributes */
-#ifdef YTALK_COLOR
 		user->yac.attributes = user->saved_yac.attributes;
 		user->yac.background = user->saved_yac.background;
 		user->yac.foreground = user->saved_yac.foreground;
-#endif
 		move_term(user, user->sy, user->sx);
 		user->vt.got_esc = 0;
 		break;

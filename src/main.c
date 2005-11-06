@@ -30,12 +30,10 @@ char msgstr[MAXERR];		/* temporary string for bottom messages */
 char *vhost = NULL;		/* specified virtual host */
 ylong myuid;			/* global uid */
 char *gshell = NULL;		/* global shell */
-#ifdef YTALK_COLOR
 unsigned long int ui_colors = 40;		/* TODO: change default */
 unsigned long int ui_attr = 0;		/* UI output attributes */
 unsigned long int menu_colors = 0;		/* TODO: change default */
 unsigned long int menu_attr = 0;
-#endif
 char *title_format = NULL;
 char *user_format = NULL;
 
@@ -120,7 +118,6 @@ str_copy(char *str)
 	return out;
 }
 
-#ifdef YTALK_COLOR
 int
 ya_strlen(yachar *str)
 {
@@ -128,7 +125,6 @@ ya_strlen(yachar *str)
 	for (ret = 0; str->data; ++str, ++ret);
 	return ret;
 }
-#endif /* YTALK_COLOR */
 
 /*
  * Process signals.

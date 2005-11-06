@@ -35,10 +35,8 @@
 
 extern char *vhost;
 
-#ifdef YTALK_COLOR
 extern unsigned long int ui_colors, ui_attr;
 extern unsigned long int menu_colors, menu_attr;
-#endif
 
 static struct alias *alias0 = NULL;
 
@@ -47,12 +45,10 @@ typedef struct {
 	long int flag;
 } options;
 
-#ifdef YTALK_COLOR
 typedef struct {
 	char *color;
 	unsigned long int value;
 } colors;
-#endif
 
 static options opts[] = {
 	{"scrolling",		FL_SCROLL	},
@@ -69,7 +65,6 @@ static options opts[] = {
 	{(char *)NULL,		0		}
 };
 
-#ifdef YTALK_COLOR
 static colors cols[] = {
 	{"black",		COLOR_BLACK	},
 	{"red",			COLOR_RED	},
@@ -81,7 +76,6 @@ static colors cols[] = {
 	{"white",		COLOR_WHITE	},
 	{(char *)NULL,		0		}
 };
-#endif
 
 static char ebuf[MAXERR];
 
@@ -128,7 +122,6 @@ get_word(char **p)
 	return out;
 }
 
-#ifdef YTALK_COLOR
 static int
 getcolor(char *color, long unsigned int *rc, long unsigned int *ra)
 {
@@ -179,7 +172,6 @@ setcolors(char *bg, char *fg, long unsigned int *ucolors, long unsigned int *fga
 
 	return 0;
 }
-#endif				/* YTALK_COLOR */
 
 /*
  * Returns 1 for on,y,yes or 1 and 0 for off, n, no or 0.
@@ -272,9 +264,7 @@ read_rcfile(char *fname)
 	char buf[BUFSIZ];
 	char *ptr, *cmd, *from, *to, *on, *tmp, *value;
 	int i, line, found;
-#ifdef YTALK_COLOR
 	char *fg, *bg;
-#endif
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return;
@@ -324,7 +314,6 @@ read_rcfile(char *fname)
 					show_error(ebuf);
 					return;
 				}
-#ifdef YTALK_COLOR
 			} else if (strcmp(cmd, "menu_colors") == 0) {
 				bg = get_word(&ptr);
 				fg = get_word(&ptr);
@@ -351,7 +340,6 @@ read_rcfile(char *fname)
 					show_error(ebuf);
 					return;
 				}
-#endif /* YTALK_COLOR */
 			} else if (strcmp(cmd, "readdress") == 0) {
 				found = 1;
 				from = get_word(&ptr);

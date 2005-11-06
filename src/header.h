@@ -94,8 +94,6 @@ typedef unsigned char ychar;		/* we use unsigned chars */
 
 #define BITFIELD(name, size) unsigned int name : size
 
-#ifdef YTALK_COLOR
-
 #define YATTR_BOLD      0x01
 #define YATTR_DIM       0x02
 #define YATTR_UNDERLINE 0x04
@@ -109,9 +107,6 @@ typedef struct {
 	BITFIELD(attributes, 7);
 	BITFIELD(alternate_charset, 1);
 } yachar;
-#else
-typedef unsigned char yachar;
-#endif
 
 typedef unsigned int ylong;		/* this should work both on 32-bit and 64-bit
 				 * machines  -Roger */
@@ -164,10 +159,8 @@ typedef struct _yuser {
 	BITFIELD(onend, 1);             /* set if we are stomping on the far right */
 	BITFIELD(crlf, 1);              /* 1 if users wants CRLF data */
 	BITFIELD(scroll, 1);            /* set if currently being scrolled */
-#ifdef YTALK_COLOR
 	yachar yac;
 	yachar saved_yac;
-#endif
 	char *full_name;	/* full name (up to 50 chars) */
 	char *user_name;	/* user name */
 	char *host_name;	/* host name */
@@ -310,11 +303,7 @@ struct alias {
 extern void bail(int);
 extern char *str_copy(char *);
 extern void show_error(char *);
-#ifdef YTALK_COLOR
 extern int ya_strlen(yachar *);
-#else
-#  define ya_strlen(a) strlen((char *)(a))
-#endif
 #ifndef HAVE_SNPRINTF
 int snprintf(char *buf, size_t len, char const *fmt, ...);
 #endif

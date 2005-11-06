@@ -88,9 +88,7 @@ ytk_display_msgbox(ytk_thing *t)
 
 	linebuf = get_mem(t->width * sizeof(char) + 1);
 
-#ifdef YTALK_COLOR
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
-#endif
 
 	while ((it = ytk_next_msgbox_item(YTK_MSGBOX(t), it))) {
 		if (YTK_MSGBOX_ITEM_SEPARATOR(it)) {
@@ -115,9 +113,7 @@ ytk_display_menu(ytk_thing *t)
 	int y = 1;
 
 	linebuf = get_mem(t->width * sizeof(char) + 1);
-#ifdef YTALK_COLOR
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
-#endif
 
 	while ((it = ytk_next_menu_item(YTK_MENU(t), it))) {
 		if (YTK_MENU_ITEM_SEPARATOR(it)) {
@@ -150,7 +146,6 @@ ytk_display_thing(ytk_thing *t)
 		if (!ytk_create_window(t))
 			return;
 
-#ifdef YTALK_COLOR
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
 	wborder(t->win,
@@ -163,9 +158,6 @@ ytk_display_thing(ytk_thing *t)
 		ACS_LLCORNER | COLOR_PAIR(t->colors) | t->attr,
 		ACS_LRCORNER | COLOR_PAIR(t->colors) | t->attr
 	);
-#else
-	wborder(t->win, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-#endif
 
 	if (t->title != NULL) {
 		wattron(t->win, A_BOLD);
@@ -185,9 +177,7 @@ ytk_display_thing(ytk_thing *t)
 		break;
 	}
 
-#ifdef YTALK_COLOR
 	wattroff(t->win, COLOR_PAIR(t->colors) | t->attr);
-#endif
 
 	wnoutrefresh(t->win);
 }

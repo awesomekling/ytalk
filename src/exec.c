@@ -362,7 +362,6 @@ kill_exec(void)
 	unlock_flags();
 	set_cooked_term();
 	end_win_region(me);
-#ifdef YTALK_COLOR
 	if (me->altchar) {
 		send_users(me, (ychar *)"\033[(B", 4, (ychar *)"\033[(B", 4);
 		me->altchar = 0;
@@ -371,7 +370,6 @@ kill_exec(void)
 		send_users(me, (ychar *)&YT_ACS_OFF, 1, (ychar *)&YT_ACS_OFF, 1);
 		me->csx = 0;
 	}
-#endif
 }
 
 /*

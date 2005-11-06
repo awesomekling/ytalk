@@ -38,10 +38,8 @@ typedef struct _ywin {
 
 static ywin *head;		/* head of linked list */
 
-#ifdef YTALK_COLOR
 extern long unsigned int ui_colors;
 extern long unsigned int ui_attr;
-#endif
 
 /* ---- local functions ---- */
 
@@ -99,11 +97,7 @@ draw_title(ywin *w)
 	t = ta = (char *) get_mem(COLS * sizeof(char));
 	user_title(w->user, t, COLS - 1);
 	move(w->row - 1, w->col);
-#ifdef YTALK_COLOR
 	attron(COLOR_PAIR(ui_colors) | ui_attr);
-#else
-	attron(A_REVERSE);
-#endif
 	for (x = 0; x < w->width; x++) {
 		if (x >= 1 && *t && !rj) {
 			/* Do we want the rest on the right? */
@@ -127,11 +121,7 @@ draw_title(ywin *w)
 			addch(' ');
 		}
 	}
-#ifdef YTALK_COLOR
 	attroff(COLOR_PAIR(ui_colors) | ui_attr);
-#else
-	attroff(A_REVERSE);
-#endif
 
 	/* Redundant refresh() to work around a bug (?) in newer ncurses
 	 * versions. Without it, the top line in each user window will lose
@@ -219,9 +209,8 @@ static void
 curses_start(void)
 {
 	char *term;
-#ifdef YTALK_COLOR
 	short i, fg, bg;
-#endif
+
 	/*
 	 * This little snippet is currently on probation. Although the
 	 * comment implies it would be absolutely necessary to keep it
@@ -236,7 +225,6 @@ curses_start(void)
 	noraw();
 	crmode();
 	noecho();
-#ifdef YTALK_COLOR
 
 #  ifndef COLOR_DEFAULT
 #    define COLOR_DEFAULT (-1)
@@ -262,7 +250,6 @@ curses_start(void)
 		 */
 		ui_attr = A_REVERSE;
 	}
-#endif
 	clear();
 }
 
@@ -359,11 +346,9 @@ open_curses(yuser *user)
 				break;
 			}
 	user->term = w;
-#ifdef YTALK_COLOR
 	user->yac.attributes = 0;
 	user->yac.background = 0;
 	user->yac.foreground = 7;
-#endif
 
 	/* redraw */
 
@@ -407,8 +392,8 @@ static void
 waddyac(WINDOW *w, yachar c)
 {
 	int x, y;
-#ifdef YTALK_COLOR
 	chtype cc = c.data;
+
 	getyx(w, y, x);
 	if (c.alternate_charset) {
 		switch (cc) {
@@ -447,33 +432,13 @@ waddyac(WINDOW *w, yachar c)
 	waddch(w, cc | COLOR_PAIR(1 + (c.foreground | c.background << 3)));
 	if (x >= COLS - 1)
 		wmove(w, y, x);
-#else
-	getyx(w, y, x);
-	waddch(w, c);
-	if (x >= COLS - 1)
-		wmove(w, y, x);
-#endif
 }
 
-#ifdef YTALK_COLOR
 void
 addch_curses(yuser *user, yachar c)
 {
 	waddyac(((ywin *) (user->term))->win, c);
 }
-#else
-void
-addch_curses(yuser *user, ylong c)
-{
-	register ywin *w;
-	register int x, y;
-	w = (ywin *) (user->term);
-	getyx(w->win, y, x);
-	waddch(w->win, c);
-	if (x >= COLS - 1)
-		wmove(w->win, y, x);
-}
-#endif /* YTALK_COLOR */
 
 void
 move_curses(yuser *user, int y, int x)
@@ -689,11 +654,7 @@ __update_scroll_curses(yuser *user)
 			for (i = 0; i < user->cols; i++)
 				waddyac(w->swin, user->scr[r - fb][i]);
 		} else {
-#ifdef YTALK_COLOR
 			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i].data != '\0'); i++)
-#else
-			for (i = 0; (i < user->cols) && (user->scrollback[user->scrollpos + r][i] != '\0'); i++)
-#endif
 				if ((user->scrollpos + r) >= 0)
 					waddyac(w->swin, user->scrollback[user->scrollpos + r][i]);
 		}

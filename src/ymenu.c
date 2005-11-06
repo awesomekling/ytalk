@@ -29,12 +29,10 @@ static ytk_thing *usermenu_menu = NULL;
 static ytk_thing *userlist_menu = NULL;
 static ytk_thing *error_box = NULL;
 
-#ifdef YTALK_COLOR
 static ytk_thing *color_menu = NULL;
 
 extern unsigned long int menu_colors;
 extern unsigned long int menu_attr;
-#endif
 
 /* keypad escape sequences and their lengths */
 static char *tcku, *tckd;
@@ -97,11 +95,7 @@ do_hidething(ytk_thing *t)
 	ytk_pop(menu_stack);
 	if (t == main_menu)
 		hide_ymenu();
-#ifdef YTALK_COLOR
 	else if (t != options_menu && t != color_menu)
-#else
-	else if (t != options_menu)
-#endif
 		ytk_delete_thing(t);
 	refresh_curses();
 	ytk_sync_display();
@@ -122,19 +116,15 @@ handle_main_menu(ytk_menu_item *i)
 	case 'a':
 		b = ytk_new_inputbox(_("Add user"), 60, do_adduser);
 		ytk_set_escape(b, do_hidething);
-#ifdef YTALK_COLOR
 		ytk_set_colors(b, menu_colors);
 		ytk_set_attr(b, menu_attr);
-#endif
 		ytk_push(menu_stack, b);
 		break;
 	case 'c':
 		b = ytk_new_inputbox(_("Run command"), 60, do_runcmd);
 		ytk_set_escape(b, do_hidething);
-#ifdef YTALK_COLOR
 		ytk_set_colors(b, menu_colors);
 		ytk_set_attr(b, menu_attr);
-#endif
 		ytk_push(menu_stack, b);
 		break;
 	case 'o':
@@ -186,7 +176,6 @@ do_reloadrc(ytk_menu_item *i)
 	redraw_all_terms();
 }
 
-#ifdef YTALK_COLOR
 static void
 handle_color(ytk_menu_item *i)
 {
@@ -211,7 +200,6 @@ handle_color(ytk_menu_item *i)
 	}
 	hide_ymenu();
 }
-#endif
 
 static void
 set_flags(int togval, ylong mask)
@@ -265,10 +253,8 @@ init_ymenu()
 	ytk_add_menu_separator(YTK_MENU(main_menu));
 	ytk_add_menu_item(YTK_MENU(main_menu), _("Quit"), 'q', handle_main_menu);
 	ytk_set_escape(main_menu, do_hidething);
-#ifdef YTALK_COLOR
 	ytk_set_colors(main_menu, menu_colors);
 	ytk_set_attr(main_menu, menu_attr);
-#endif
 
 	options_menu = ytk_new_menu(_("Options"));
 	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Scrolling"), 's', handle_options_menu, (def_flags & FL_SCROLL));
@@ -284,12 +270,9 @@ init_ymenu()
 	ytk_add_menu_separator(YTK_MENU(options_menu));
 	ytk_add_menu_item(YTK_MENU(options_menu), _("Reload ytalkrc"), 'R', do_reloadrc);
 	ytk_set_escape(options_menu, do_hidething);
-#ifdef YTALK_COLOR
 	ytk_set_colors(options_menu, menu_colors);
 	ytk_set_attr(options_menu, menu_attr);
-#endif
 
-#ifdef YTALK_COLOR
 	color_menu = ytk_new_menu(_("Color Menu"));
 	ytk_add_menu_item(YTK_MENU(color_menu), _("Black"), '0', handle_color);
 	ytk_add_menu_item(YTK_MENU(color_menu), _("Red"), '1', handle_color);
@@ -304,7 +287,6 @@ init_ymenu()
 	ytk_set_escape(color_menu, do_hidething);
 	ytk_set_colors(color_menu, menu_colors);
 	ytk_set_attr(color_menu, menu_attr);
-#endif
 }
 
 static void
@@ -323,10 +305,8 @@ handle_save_to_file(ytk_menu_item *i)
 	(void) i;
 	b = ytk_new_inputbox(_("Enter filename:"), 60, do_save_user_to_file);
 	ytk_set_escape(b, do_hidething);
-#ifdef YTALK_COLOR
 	ytk_set_colors(b, menu_colors);
 	ytk_set_attr(b, menu_attr);
-#endif
 	ytk_push(menu_stack, b);
 }
 
@@ -393,10 +373,8 @@ view_user_info(ytk_menu_item *item)
 		ytk_add_msgbox_item(YTK_MSGBOX(info_box), edit_chars);
 	}
 	ytk_set_escape(info_box, do_hidething);
-#ifdef YTALK_COLOR
 	ytk_set_colors(info_box, menu_colors);
 	ytk_set_attr(info_box, menu_attr);
-#endif
 	ytk_push(menu_stack, info_box);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
@@ -423,10 +401,8 @@ init_usermenu(char k)
 	}
 	ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_save_to_file);
 	ytk_set_escape(usermenu_menu, do_hidething);
-#ifdef YTALK_COLOR
 	ytk_set_colors(usermenu_menu, menu_colors);
 	ytk_set_attr(usermenu_menu, menu_attr);
-#endif
 	menu_user = user;
 }
 
@@ -473,10 +449,8 @@ init_userlist()
 	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Rering all unconnected"), 'R', handle_userlist_menu);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Kill all unconnected"), 'K', handle_userlist_menu);
 	ytk_set_escape(userlist_menu, esc_userlist);
-#ifdef YTALK_COLOR
 	ytk_set_colors(userlist_menu, menu_colors);
 	ytk_set_attr(userlist_menu, menu_attr);
-#endif
 }
 
 void
@@ -522,7 +496,6 @@ show_ymenu()
 	ytk_sync_display();
 }
 
-#ifdef YTALK_COLOR
 void
 show_colormenu()
 {
@@ -538,7 +511,6 @@ show_colormenu()
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 }
-#endif
 
 void
 update_ymenu()
@@ -599,9 +571,7 @@ resize_ymenu()
 {
 	ytk_winch_thing(main_menu);
 	ytk_winch_thing(options_menu);
-#ifdef YTALK_COLOR
 	ytk_winch_thing(color_menu);
-#endif
 	if (!ytk_is_empty_stack(menu_stack))
 		ytk_winch_stack(menu_stack);
 }
@@ -644,10 +614,8 @@ show_error_ymenu(char *str, char *syserr, char *title)
 	if (!ytk_on_stack(menu_stack, error_box))
 		ytk_push(menu_stack, error_box);
 	ytk_set_escape(error_box, handle_error_box);
-#ifdef YTALK_COLOR
 	ytk_set_colors(error_box, menu_colors);
 	ytk_set_attr(error_box, menu_attr);
-#endif
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();
 	return 0;
@@ -660,10 +628,8 @@ yes_no(char *str)
 	int out = 0;
 	yn = ytk_new_msgbox(NULL);
 	ytk_add_msgbox_item(YTK_MSGBOX(yn), str);
-#ifdef YTALK_COLOR
 	ytk_set_colors(yn, menu_colors);
 	ytk_set_attr(yn, menu_attr);
-#endif
 	ytk_push(menu_stack, yn);
 	ytk_display_stack(menu_stack);
 	ytk_sync_display();

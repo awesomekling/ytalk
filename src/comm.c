@@ -719,11 +719,7 @@ word_wrap(yuser *user)
 	x = user->x;
 	if ((bound = (x >> 1)) > 20)
 		bound = 20;
-#ifdef YTALK_COLOR
 	for (i = 1; i < bound && user->scr[user->y][x - i].data != ' '; i++)
-#else
-	for (i = 1; i < bound && user->scr[user->y][x - i] != ' '; i++)
-#endif
 		temp[i] = user->scr[user->y][x - i];
 	if (i >= bound)
 		return -1;
@@ -731,11 +727,7 @@ word_wrap(yuser *user)
 	clreol_term(user);
 	newline_term(user);
 	for (i--; i >= 1; i--)
-#ifdef YTALK_COLOR
 		addch_term(user, temp[i].data);
-#else
-		addch_term(user, temp[i]);
-#endif
 	return 0;
 }
 
@@ -1194,14 +1186,12 @@ process_esc:
 				else
 					newline_term(user);
 				break;
-#ifdef YTALK_COLOR
 			case 14:
 				user->csx = 1;
 				break;
 			case 15:
 				user->csx = 0;
 				break;
-#endif
 			case 27:	/* Escape */
 				user->vt.got_esc = 1;
 				user->vt.ac = 0;
@@ -1288,12 +1278,10 @@ my_input(yuser *user, ychar *buf, int len)
 						*buf = '\n';
 					else if (*buf == 27 || *buf == ALTESC)	/* Esc or ALTESC */
 						break;
-#ifdef YTALK_COLOR
 					else if (*buf == 11)	/* ^K - Color menu */
 						break;
 					else if (*buf == 2)		/* ^B - Bold */
 						break;
-#endif
 					else if (*buf == 14 || *buf == 6 || *buf == 16)	/* ^N, ^F or ^P */
 						break;
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
@@ -1327,7 +1315,6 @@ my_input(yuser *user, ychar *buf, int len)
 							update_ymenu();
 						}
 						buf++, len--;
-#ifdef YTALK_COLOR
 					} else if (*buf == 11) {	/* ^K - Color menu ;) */
 						show_colormenu();
 						buf++, len--;
@@ -1340,7 +1327,6 @@ my_input(yuser *user, ychar *buf, int len)
 							send_users(me, (ychar *)"\033[21m", 5, (ychar *)"\033[21m", 5);
 						}
 						buf++, len--;
-#endif
 					} else if (*buf == 14) {	/* ^N - scroll down */
 						scroll_down(scuser);
 						retitle_all_terms();
