@@ -370,6 +370,7 @@ kill_exec(void)
 		send_users(me, (ychar *)&YT_ACS_OFF, 1, (ychar *)&YT_ACS_OFF, 1);
 		me->csx = 0;
 	}
+	me->yac.alternate_charset = 0;
 }
 
 /*

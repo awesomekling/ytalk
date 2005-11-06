@@ -1188,9 +1188,11 @@ process_esc:
 				break;
 			case 14:
 				user->csx = 1;
+				user->yac.alternate_charset = user->altchar ^ user->csx;
 				break;
 			case 15:
 				user->csx = 0;
+				user->yac.alternate_charset = user->altchar ^ user->csx;
 				break;
 			case 27:	/* Escape */
 				user->vt.got_esc = 1;

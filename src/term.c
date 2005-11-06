@@ -116,16 +116,6 @@ init_termios(void)
 #endif
 
 static void
-user_yac(yuser *user, char data, yachar *ac)
-{
-	ac->attributes = user->yac.attributes;
-	ac->background = user->yac.background;
-	ac->foreground = user->yac.foreground;
-	ac->data = data;
-	ac->alternate_charset = user->altchar ^ user->csx;
-}
-
-static void
 init_termcap(void)
 {
 	char *term, *tcks;
@@ -306,13 +296,11 @@ close_term(yuser *user)
 void
 addch_term(yuser *user, ychar c)
 {
-	yachar ac;
-
-	user_yac(user, c, &ac);
+	user->yac.data = c;
 
 	if (is_printable(c)) {
-		addch_curses(user, ac);
-		user->scr[user->y][user->x] = ac;
+		addch_curses(user, user->yac);
+		user->scr[user->y][user->x] = user->yac;
 		if (++(user->x) >= user->cols) {
 			user->bump = 1;
 			user->x = user->cols - 1;
@@ -349,14 +337,12 @@ void
 fill_term(yuser *user, int y1, int x1, int y2, int x2, ychar c)
 {
 	int y, x;
-	yachar ac;
 
-	user_yac(user, c, &ac);
+	user->yac.data = c;
 
 	for (y = y1; y <= y2; y++)
 		for (x = x1; x <= x2; x++)
-			user->scr[y][x] = ac;
-	return;
+			user->scr[y][x] = user->yac;
 }
 
 /*
@@ -367,20 +353,19 @@ clreol_term(yuser *user)
 {
 	register int j;
 	register yachar *c;
-	yachar nc;
 
-	user_yac(user, ' ', &nc);
+	user->yac.data = ' ';
 
 	if (user->cols < user->t_cols) {
 		c = user->scr[user->y] + user->x;
 		for (j = user->x; j < user->cols; j++)
-			addch_curses(user, *(c++) = nc);
+			addch_curses(user, *(c++) = user->yac);
 		move_term(user, user->y, user->x);
 	} else {
 		clreol_curses(user);
 		c = user->scr[user->y] + user->x;
 		for (j = user->x; j < user->cols; j++)
-			*(c++) = nc;
+			*(c++) = user->yac;
 	}
 }
 

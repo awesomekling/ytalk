@@ -154,6 +154,7 @@ vt100_process(yuser *user, char data)
 		if (user->vt.lparen == 1) {
 			user->altchar = 0;
 			user->vt.lparen = 0;
+			user->yac.alternate_charset = user->altchar ^ user->csx;
 		} else {
 			if (user->y != user->rows) {
 				if (user->vt.av[0] == 0)
@@ -322,21 +323,18 @@ vt100_process(yuser *user, char data)
 		if (user->vt.lparen == 1) {
 			user->altchar = 1;
 			user->vt.lparen = 0;
+			user->yac.alternate_charset = user->altchar ^ user->csx;
 		}
 		user->vt.got_esc = 0;
 		break;
 	case '7':		/* save cursor and attributes */
-		user->saved_yac.attributes = user->yac.attributes;
-		user->saved_yac.background = user->yac.background;
-		user->saved_yac.foreground = user->yac.foreground;
+		user->saved_yac = user->yac;
 		user->sy = user->y;
 		user->sx = user->x;
 		user->vt.got_esc = 0;
 		break;
 	case '8':		/* restore cursor and attributes */
-		user->yac.attributes = user->saved_yac.attributes;
-		user->yac.background = user->saved_yac.background;
-		user->yac.foreground = user->saved_yac.foreground;
+		user->yac = user->saved_yac;
 		move_term(user, user->sy, user->sx);
 		user->vt.got_esc = 0;
 		break;
