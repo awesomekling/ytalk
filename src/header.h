@@ -396,7 +396,6 @@ extern int newsock(yuser *);
 extern int connect_to(yuser *);
 extern ylong get_host_addr(char *);
 extern char *host_name(ylong);
-extern int readdress_host(char *, char *, char *);
 
 /* rc.c */
 extern void read_ytalkrc(void);

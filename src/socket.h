@@ -40,16 +40,6 @@ typedef struct _hostinfo {
 	int dtype;		/* active daemon types bitmask */
 } hostinfo;
 
-typedef struct _readdr {
-	struct _readdr *next;	/* next in linked list */
-	ylong from_addr;	/* does this apply to me? */
-	ylong from_mask;
-	ylong addr;		/* this net address [group?], */
-	ylong mask;		/* with this mask, */
-	ylong id_addr;		/* thinks I'm at this net address, */
-	ylong id_mask;		/* with this mask. */
-} readdr;
-
 extern struct _talkd talkd[MAXDAEMON + 1];
 extern int daemons;
 

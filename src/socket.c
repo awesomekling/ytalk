@@ -49,7 +49,6 @@ static int autofd = -1;		/* auto invite socket fd */
 static struct sockaddr_in autosock;	/* auto invite socket */
 static ylong autoid[MAXDAEMON + 1];	/* auto invite seq numbers */
 static ylong announce_id = 0;	/* announce sequence id */
-static readdr *readdr_list = NULL;	/* list of re-addresses */
 
 #define IN_ADDR(s)	((s).sin_addr.s_addr)
 #define IN_PORT(s)	((s).sin_port)
@@ -213,18 +212,7 @@ init_autoport(void)
 static void
 place_my_address(BSD42_SOCK *sock, ylong addr)
 {
-	register readdr *r;
-
-	for (r = readdr_list; r != NULL; r = r->next)
-		if (((r->from_addr & r->from_mask) == (me->host_addr & r->from_mask))
-		    && ((addr & r->mask) == r->addr)) {
-			addr = (r->id_addr & r->id_mask) |
-			 (me->host_addr & (~(r->id_mask)));
-			IN_ADDR(*sock) = addr;
-			break;
-		}
-	if (r == NULL)
-		IN_ADDR(*sock) = me->host_addr;
+	IN_ADDR(*sock) = me->host_addr;
 	sock->sin_family = htons(AF_INET);
 }
 
@@ -481,20 +469,6 @@ find_daemon(ylong addr)
 	snprintf(errstr, MAXERR, _("No talk daemon on %s"), host_name(addr));
 	show_error(errstr);
 	return 0;
-}
-
-static ylong
-make_net_mask(ylong addr)
-{
-	if (addr & (ylong) 0xff)
-		return (ylong) 0xffffffff;
-	if (addr & (ylong) 0xffff)
-		return (ylong) 0xffffff00;
-	if (addr & (ylong) 0xffffff)
-		return (ylong) 0xffff0000;
-	if (addr)
-		return (ylong) 0xff000000;
-	return (ylong) 0;
 }
 
 /* ---- global functions ---- */
@@ -871,50 +845,4 @@ host_name(ylong addr)
 			if (strchr(*s, '.'))
 				return *s;
 	return (char *) host->h_name;
-}
-
-/*
- * Re-address a given host ("from_id") to the given address or host id
- * ("to_id") when communicating with some other host id ("on_id"). This is
- * useful especially over routers where "foo.com" is known as the
- * differently-addressed "bar.com" to host "xyzzy.com".
- */
-int
-readdress_host(char *from_id, char *to_id, char *on_id)
-{
-	register readdr *new;
-	ylong from_addr, to_addr, on_addr;
-	ylong from_mask, to_mask, on_mask;
-
-	if ((from_addr = get_host_addr(from_id)) == (ylong) - 1) {
-		return 1;
-	}
-	if ((to_addr = get_host_addr(to_id)) == (ylong) - 1) {
-		return 2;
-	}
-	if ((on_addr = get_host_addr(on_id)) == (ylong) - 1) {
-		return 3;
-	}
-	from_mask = make_net_mask(from_addr);
-	to_mask = make_net_mask(to_addr);
-	on_mask = make_net_mask(on_addr);
-
-#if 0
-	if ((from_addr & from_mask) != (me->host_addr & from_mask))
-		return;
-#endif
-	if (from_addr == to_addr)
-		return 4;
-
-	new = (readdr *) get_mem(sizeof(readdr));
-	new->addr = on_addr;
-	new->mask = on_mask;
-	new->from_addr = from_addr;
-	new->from_mask = from_mask;
-	new->id_addr = to_addr;
-	new->id_mask = to_mask;
-	new->next = readdr_list;
-	readdr_list = new;
-
-	return 0;
 }

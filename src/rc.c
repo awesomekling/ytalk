@@ -340,32 +340,6 @@ read_rcfile(char *fname)
 					show_error(ebuf);
 					return;
 				}
-			} else if (strcmp(cmd, "readdress") == 0) {
-				found = 1;
-				from = get_word(&ptr);
-				to   = get_word(&ptr);
-				on   = get_word(&ptr);
-				switch (readdress_host(from, to, on)) {
-				case 0:
-					found = 1;
-					break;
-				case 1:
-					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'from' address '%s'"), fname, line, from);
-					show_error(ebuf);
-					return;
-				case 2:
-					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'to' address '%s'"), fname, line, to);
-					show_error(ebuf);
-					return;
-				case 3:
-					snprintf(ebuf, MAXERR, _("%s:%d: Couldn't resolve 'on' address '%s'"), fname, line, on);
-					show_error(ebuf);
-					return;
-				case 4:
-					snprintf(ebuf, MAXERR, _("%s:%d: 'from' and 'to' are the same host"), fname, line);
-					show_error(ebuf);
-					return;
-				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
 				if (vhost != NULL) {

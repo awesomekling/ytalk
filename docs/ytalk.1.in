@@ -287,58 +287,6 @@ command in your .ytalkrc file.  The syntax is:
 .TP 12
 .B "localhost \fIhostname-or-IP-address\fR"
 
-.Sh "SETTING RE-ADDRESS MODES"
-The purpose of readdressing is to allow Ytalk connections across
-point-to-point network gateways where the local machines know themselves
-by a different address (and typically hostname) than the remote machines.
-The basic syntax of a readdress command is this:
-.sp
-	readdress
-.I from-address
-.I to-address
-.I domain
-.PP
-The
-.I readdress
-statement simply makes a claim that the machine(s) in
-.I domain
-communicate with the machine(s) at
-.I from-address
-by sending a packet to
-.I to-address .
-Since most users have no use for this whatsoever, I'll describe it only
-briefly.
-.PP
-THIS IS NOT ROUTING.  For example, my machine at home is connected via
-PPP to the network at my office.  My machine at home thinks its ethernet
-address is 192.188.253.1 and its hostname is "talisman.com".  The network
-at my office has the address 192.67.141.0.  When I'm connected via PPP,
-my home machine is placed into the office network as address 192.67.141.9
-with hostname "talisman.austin.eds.com".
-.PP
-YTalk needs to know that if it is running on domain 192.67.141.0 and
-receives packets from 192.188.253.1 that it should respond to
-192.67.141.9, not 192.188.253.1.  right?  right.  okay, okay, okay.
-I put this line into my .ytalkrc on both ends:
-.sp
-	readdress talisman talisman.austin.eds.com 192.67.141.0
-.PP
-On my home end, this translates to:
-.sp
-	readdress 192.188.253.1 192.67.141.9 192.67.141.0
-.PP
-which tells my home machine to advertise itself as "192.67.141.9" instead
-of "192.188.253.1" when YTalk-ing to machines on the network "192.67.141.0".
-On the office end, the readdress command translates to:
-.sp
-	readdress 192.67.141.9 192.67.141.9 192.67.141.0
-.PP
-which the office machines basically ignore.
-.PP
-Note that, in this case, the problem could also have been solved by
-telling the home YTalk to use the 192.67.141.0 interface, when doing
-YTalk requests across the PPP link.
-
 .SH FILES
 
 /usr/local/etc/ytalkrc
