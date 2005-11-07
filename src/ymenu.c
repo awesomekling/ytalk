@@ -45,6 +45,18 @@ static void init_userlist(void);
 static void init_usermenu(char);
 
 static void
+recolor_menus()
+{
+	ytk_set_colors(main_menu, menu_colors);
+	ytk_set_attr(main_menu, menu_attr);
+	ytk_set_colors(options_menu, menu_colors);
+	ytk_set_attr(options_menu, menu_attr);
+	ytk_set_colors(color_menu, menu_colors);
+	ytk_set_attr(color_menu, menu_attr);
+}
+
+
+static void
 do_runcmd(ytk_inputbox *b)
 {
 	/* XXX: This isn't the most beautiful way to do this, but since
@@ -173,6 +185,7 @@ do_reloadrc(ytk_menu_item *i)
 	(void) i;
 	hide_ymenu();
 	read_ytalkrc();
+	recolor_menus();
 	redraw_all_terms();
 }
 
