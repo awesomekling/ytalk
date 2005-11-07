@@ -210,7 +210,7 @@ init_autoport(void)
  * host I'm sending to.
  */
 static void
-place_my_address(BSD42_SOCK *sock, ylong addr)
+place_my_address(BSD42_SOCK *sock)
 {
 	IN_ADDR(*sock) = me->host_addr;
 	sock->sin_family = htons(AF_INET);
@@ -236,7 +236,7 @@ sendit(ylong addr, int d)
 
 	if (d == ntalk) {
 		nmsg.vers = TALK_VERSION;
-		place_my_address(&(nmsg.ctl_addr), addr);
+		place_my_address(&(nmsg.ctl_addr));
 		mtype = &(nmsg.type);
 		rtype = &(nrsp.type);
 	} else if (d == otalk) {
@@ -247,7 +247,7 @@ sendit(ylong addr, int d)
 		strncpy(omsg.l_name, nmsg.l_name, NAME_SIZE);
 		strncpy(omsg.r_name, nmsg.r_name, NAME_SIZE);
 		strncpy(omsg.r_tty, nmsg.r_tty, TTY_SIZE);
-		place_my_address(&(omsg.ctl_addr), addr);
+		place_my_address(&(omsg.ctl_addr));
 		mtype = &(omsg.type);
 		rtype = &(orsp.type);
 	} else {
@@ -391,10 +391,10 @@ find_daemon(ylong addr)
 	m2 = nmsg;
 	/* m1.ctl_addr = talkd[otalk].sock; */
 	memcpy(&m1.ctl_addr, &talkd[otalk].sock, sizeof(m1.ctl_addr));
-	place_my_address(&(m1.ctl_addr), addr);
+	place_my_address(&(m1.ctl_addr));
 	/* m2.ctl_addr = talkd[ntalk].sock; */
 	memcpy(&m2.ctl_addr, &talkd[ntalk].sock, sizeof(m2.ctl_addr));
-	place_my_address(&(m2.ctl_addr), addr);
+	place_my_address(&(m2.ctl_addr));
 	m1.type = m2.type = LOOK_UP;
 	m1.id_num = m2.id_num = htonl(0);
 	m1.r_tty[0] = m2.r_tty[0] = '\0';
@@ -738,7 +738,7 @@ newsock(yuser *user)
 		show_error("newsock: getsockname() failed");
 		return -1;
 	}
-	place_my_address((BSD42_SOCK *) & (user->sock), user->host_addr);
+	place_my_address((BSD42_SOCK *) & (user->sock));
 	if (listen(fd, 5) < 0) {
 		close(fd);
 		show_error("newsock: listen() failed");

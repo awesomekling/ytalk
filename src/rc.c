@@ -262,7 +262,7 @@ read_rcfile(char *fname)
 {
 	FILE *fp;
 	char buf[BUFSIZ];
-	char *ptr, *cmd, *from, *to, *on, *tmp, *value;
+	char *ptr, *cmd, *from, *to, *tmp, *value;
 	int i, line, found;
 	char *fg, *bg;
 
