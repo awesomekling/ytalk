@@ -27,15 +27,6 @@
 /* Some systems, notably Solaris, don't have sys/signal.h */
 #include <signal.h>
 
-typedef struct _ywin {
-	struct _ywin *next;	/* next ywin in linked list */
-	yuser *user;		/* user pointer */
-	WINDOW *win;		/* window pointer */
-	WINDOW *swin;		/* scroll viewport window */
-	int height, width;	/* height and width in characters */
-	int row, col;		/* row and column position on screen */
-} ywin;
-
 static ywin *head;		/* head of linked list */
 
 extern long unsigned int ui_colors;

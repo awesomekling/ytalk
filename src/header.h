@@ -20,6 +20,13 @@
 
 #include "config.h"
 
+#ifdef HAVE_NCURSES_H
+#  include <ncurses.h>
+#else
+#  include <curses.h>
+#endif
+
+
 #ifdef ENABLE_NLS
 #  ifdef HAVE_LOCALE_H
 #    include <locale.h>
@@ -200,10 +207,18 @@ typedef struct _yuser {
 		BITFIELD(got_gt, 1);
 	} gt;
 
-	/* anything below this is available for the terminal interface */
+	void *term;                     /* terminal cookie */
 
-	yterm term;		/* terminal cookie */
 } yuser;
+
+typedef struct _ywin {
+	struct _ywin *next;             /* next ywin in linked list */
+	yuser *user;                    /* user pointer */
+	WINDOW *win;                    /* window pointer */
+	WINDOW *swin;                   /* scroll viewport window */
+	int height, width;              /* height and width in characters */
+	int row, col;                   /* row and column position on screen */
+} ywin;
 
 #define FL_RAW		0x00000001L	/* raw input enabled */
 #define FL_SCROLL	0x00000002L	/* scrolling enabled */

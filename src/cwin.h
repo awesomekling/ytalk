@@ -18,12 +18,6 @@
  *
  */
 
-#ifdef HAVE_NCURSES_H
-#  include <ncurses.h>
-#else
-#  include <curses.h>
-#endif
-
 #define set_raw_curses()	raw()
 #define win_size(n)		((n) == 0 ? 0 : (LINES - 1) / (n))
 
