@@ -1335,10 +1335,9 @@ my_input(yuser *user, ychar *buf, int len)
 						buf++, len--;
 					} else if (*buf == 6) {	/* ^F - window forward */
 						if (scrollback_lines > 0) {
-							do {
-								scuser = scuser->unext;
-							} while (scuser && scuser->scr == NULL);
-							if (scuser == NULL)
+							if (((ywin *)scuser->term)->next)
+								scuser = ((ywin *)scuser->term)->next->user;
+							else
 								scuser = me;
 							retitle_all_terms();
 						}
