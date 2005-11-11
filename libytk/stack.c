@@ -70,14 +70,14 @@ ytk_on_stack(ytk_stack *st, ytk_thing *t)
 {
 	ytk_stack_item *si;
 	if (st->top == NULL || t == NULL)
-		return FALSE;
+		return false;
 	si = st->top;
 	while (si != NULL) {
 		if (si->thing == t)
-			return TRUE;
+			return true;
 		si = si->prev;
 	}
-	return FALSE;
+	return false;
 }
 
 void
@@ -122,22 +122,22 @@ int
 ytk_handle_stack_key(ytk_stack *st, int key)
 {
 	if (st->top == NULL)
-		return FALSE;
+		return false;
 	switch (st->top->thing->type) {
 	case YTK_T_MENU:
 		ytk_handle_menu_key(YTK_MENU(st->top->thing), key);
 		break;
 	default:
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 int
 ytk_handle_stack_input(ytk_stack *st, char ch)
 {
 	if (st->top == NULL)
-		return FALSE;
+		return false;
 
 	switch (st->top->thing->type) {
 	case YTK_T_MENU:
@@ -154,5 +154,5 @@ ytk_handle_stack_input(ytk_stack *st, char ch)
 		fprintf(stderr, "ytk_handle_stack_input(): Got input for unsupported thing type %d.\n", st->top->thing->type);
 #endif
 	}
-	return TRUE;
+	return true;
 }

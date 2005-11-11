@@ -30,13 +30,6 @@
 # include <curses.h>
 #endif
 
-#ifndef TRUE
-# define TRUE 1
-#endif
-#ifndef FALSE
-# define FALSE 0
-#endif
-
 #define YTK_MENU(t)		((ytk_menu *)(t)->object)
 #define YTK_INPUTBOX(t)	((ytk_inputbox *)(t)->object)
 #define YTK_MSGBOX(t)	((ytk_msgbox *)(t)->object)

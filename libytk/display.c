@@ -44,11 +44,11 @@ ytk_create_window(ytk_thing *t)
 #ifdef YTALK_DEBUG
 		fprintf(stderr, "ytk_create_window(): Thing type %d does not support windows.\n", t->type);
 #endif
-		return FALSE;
+		return false;
 	}
 
 	if ((rows > LINES) || (cols > COLS))
-		return FALSE;
+		return false;
 
 	t->height = rows;
 	t->width = cols;
@@ -58,7 +58,7 @@ ytk_create_window(ytk_thing *t)
 		t->height + 2, t->width + 2,
 		t->top, t->left
 	);
-	return TRUE;
+	return true;
 }
 
 void

@@ -96,9 +96,9 @@ ytk_select_menu_item(ytk_menu *m, ytk_menu_item *i)
 {
 	ytk_menu_item *it;
 	if ((it = ytk_find_selected_menu_item(m))) {
-		it->selected = FALSE;
+		it->selected = false;
 	}
-	i->selected = TRUE;
+	i->selected = true;
 }
 
 void
@@ -112,8 +112,8 @@ ytk_step_up_menu(ytk_menu *m)
 	while (YTK_MENU_ITEM_SEPARATOR(it->prev))
 		it = it->prev;
 	if (it->prev != NULL) {
-		it->prev->selected = TRUE;
-		p->selected = FALSE;
+		it->prev->selected = true;
+		p->selected = false;
 	}
 }
 
@@ -128,8 +128,8 @@ ytk_step_down_menu(ytk_menu *m)
 	while (YTK_MENU_ITEM_SEPARATOR(it->next))
 		it = it->next;
 	if (it->next != NULL) {
-		it->next->selected = TRUE;
-		p->selected = FALSE;
+		it->next->selected = true;
+		p->selected = false;
 	}
 }
 
@@ -141,13 +141,13 @@ ytk_add_menu_item(ytk_menu *m, char *text, char hotkey, void (*callback) (ytk_me
 	new->text = str_copy(text);
 	new->hotkey = hotkey;
 	new->callback = callback;
-	new->selected = FALSE;
+	new->selected = false;
 	new->value = -1;
 	new->next = NULL;
 	new->prev = NULL;
 
 	if (m->last == NULL) {
-		new->selected = TRUE;
+		new->selected = true;
 		m->first = new;
 	} else {
 		m->last->next = new;

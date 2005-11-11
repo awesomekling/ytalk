@@ -26,6 +26,13 @@
 #  include <curses.h>
 #endif
 
+#ifdef HAVE_STDBOOL_H
+#  include <stdbool.h>
+#else
+typedef unsigned char bool;
+#  define true 1
+#  define false 0
+#endif
 
 #ifdef ENABLE_NLS
 #  ifdef HAVE_LOCALE_H
@@ -284,7 +291,7 @@ extern int io_len;		/* user input count */
 extern yuser *scuser;		/* user being scrolled */
 extern long int scrollback_lines;	/* max number of scrollback lines */
 
-extern int running_process;	/* flag: is process running? */
+extern bool running_process;        /* flag: is process running? */
 extern ylong myuid;		/* stores your uid */
 extern char *gshell;		/* stores your shell */
 extern char *title_format;

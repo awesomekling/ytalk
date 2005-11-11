@@ -78,12 +78,12 @@ int openpty(int *, int *, char *, struct termios *, struct winsize *);
 static struct utmpx utx;
 #endif
 
-int running_process = 0;	/* flag: is process running? */
+bool running_process = false;       /* flag: is process running? */
 static int pid;			/* currently executing process id */
 static int pfd;			/* currently executing process fd */
 static int prows, pcols;	/* saved rows, cols */
 
-char *last_command = NULL;
+static bool last_command_was_empty = false;
 
 /* ---- local functions ---- */
 
@@ -120,7 +120,7 @@ exec_input(int fd)
 	if ((rc = read(fd, buf, MAXBUF)) <= 0) {
 		kill_exec();
 		errno = 0;
-		if (!last_command)
+		if (last_command_was_empty)
 			msg_term(_("Command shell terminated."));
 		else
 			msg_term(_("Command execution finished."));
@@ -328,11 +328,11 @@ execute(char *command)
 	/* give the forked process some time to get dressed. */
 	sleep(1);
 
-	/* store `command' for later recollection */
-	last_command = command;
+	/* remember whether `command' was empty or not */
+	last_command_was_empty = (command == NULL);
 
 	pfd = fd;
-	running_process = 1;
+	running_process = true;
 	lock_flags((ylong) (FL_RAW | FL_SCROLL));
 	set_raw_term();
 	add_fd(fd, exec_input);
@@ -358,7 +358,7 @@ kill_exec(void)
 		return;
 	remove_fd(pfd);
 	close(pfd);
-	running_process = 0;
+	running_process = false;
 	unlock_flags();
 	set_cooked_term();
 	end_win_region(me);
