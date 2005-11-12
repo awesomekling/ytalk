@@ -1323,10 +1323,10 @@ my_input(yuser *user, ychar *buf, int len)
 					} else if (*buf == 2) {		/* ^B - Bold */
 						if (me->yac.attributes & YATTR_BOLD) {
 							me->yac.attributes &= ~YATTR_BOLD;
-							send_users(me, (ychar *)"\033[01m", 5, (ychar *)"\033[01m", 5);
+							send_users(me, (ychar *)"\033[21m", 5, (ychar *)"\033[21m", 5);
 						} else {
 							me->yac.attributes |= YATTR_BOLD;
-							send_users(me, (ychar *)"\033[21m", 5, (ychar *)"\033[21m", 5);
+							send_users(me, (ychar *)"\033[1m", 4, (ychar *)"\033[1m", 4);
 						}
 						buf++, len--;
 					} else if (*buf == 14) {	/* ^N - scroll down */
