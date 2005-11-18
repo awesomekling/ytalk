@@ -216,6 +216,7 @@ Options:     -i             --    no auto-invite port\n\
 	signal(SIGQUIT, got_sig);
 	signal(SIGABRT, got_sig);
 	signal(SIGPIPE, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 
 	/* save the uid for later use */
 	myuid = getuid();
