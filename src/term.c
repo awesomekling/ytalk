@@ -422,15 +422,16 @@ scroll_term(yuser *user)
 				if (y < (scrollback_lines - 1)) {
 					user->scrollend++;
 				}
+				user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
 			} else {
 				/* Displace the buffer one step to make room. */
-				free_mem(user->scrollback[0]);
+				yachar *oldest = user->scrollback[0];
 				for (y = 0; y < scrollback_lines - 1; y++) {
 					user->scrollback[y] = user->scrollback[y + 1];
 				}
 				y = scrollback_lines - 1;
+				user->scrollback[y] = realloc_mem(oldest, (user->cols + 1) * sizeof(yachar));
 			}
-			user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
 			memcpy(user->scrollback[y], user->scr[0], (user->cols * sizeof(yachar)));
 
 			user->scrollback[y][user->cols].data = '\0';
