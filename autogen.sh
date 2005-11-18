@@ -68,25 +68,29 @@ autopoint -f >/dev/null 2>&1 \
 
 
 label "Running $ACLOCAL..."
-WANT_ACLOCAL="1.9" $ACLOCAL -I m4 2>/dev/null || exit 1
+WANT_ACLOCAL="1.9" $ACLOCAL -I m4 2>/dev/null \
+	|| frown "Failed to run $ACLOCAL"
 test -f "aclocal.m4" \
 	&& smile \
 	|| frown "Failed to generate aclocal.m4"
 
 label "Running $AUTOHEADER..."
-WANT_AUTOHEADER="2.59" $AUTOHEADER || exit 1
+WANT_AUTOHEADER="2.59" $AUTOHEADER \
+	|| frown "Failed to run $AUTOHEADER"
 test -f "config.h.in" \
 	&& smile \
 	|| frown "Failed to generate config.h.in"
 
 label "Running $AUTOMAKE..."
-WANT_AUTOMAKE="1.9" $AUTOMAKE --add-missing --copy --ignore-deps || exit 1
+WANT_AUTOMAKE="1.9" $AUTOMAKE --add-missing --copy --ignore-deps \
+	|| frown "Failed to run $AUTOMAKE"
 test -f "Makefile.in" \
 	&& smile \
 	|| frown "Failed to generate Makefile.in"
 
 label "Running $AUTOCONF..."
-WANT_AUTOCONF="2.59" $AUTOCONF || exit 1
+WANT_AUTOCONF="2.59" $AUTOCONF \
+	|| frown "Failed to run $AUTOCONF"
 test -f configure \
 	&& smile \
 	frown "Failed to generate configure"
