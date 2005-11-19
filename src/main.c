@@ -75,20 +75,20 @@ void
 show_error(char *str)
 {
 	char *syserr;
-	static int in_error = 0;
+	static bool in_error = false;
 
 	syserr = errno ? strerror(errno) : NULL;
 
 	if (def_flags & FL_BEEP)
 		putc(7, stderr);
-	if (in_error == 0 && what_term() != 0 && can_ymenu()) {
-		in_error = 1;
+	if (!in_error && what_term() != 0 && can_ymenu()) {
+		in_error = true;
 		if (show_error_ymenu(str, syserr, _("Error")) < 0) {
 			show_error("show_error: show_error_ymenu() failed");
 			show_error(str);
 		} else
 			update_ymenu();
-		in_error = 0;
+		in_error = false;
 	} else {
 		if (syserr)
 			fprintf(stderr, "%s: %s\n", str, syserr);
