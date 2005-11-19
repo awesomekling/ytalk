@@ -141,8 +141,9 @@ got_sig(int n)
 int
 main(int argc, char **argv)
 {
-	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0, hflg = 0;
-	char *prog, *c;
+	bool flag_v = false;
+	bool flag_h = false;
+	char *c;
 
 #ifdef ENABLE_NLS
 	if (setlocale(LC_ALL, "")) {
@@ -165,18 +166,13 @@ then type 'make clean' and 'make'.\n");
 
 	/* search for options */
 
-	prog = *argv;
 	argv++, argc--;
 
 	while (argc > 0 && **argv == '-') {
 		for (c = (*argv) + 1; *c; c++) {
 			switch (*c) {
-			case 'Y': yflg++; break;
-			case 'i': iflg++; break;
-			case 's': iflg++; break;
-			case 'q': qflg++; break;
-			case 'v': vflg++; break;
-			case 'h': hflg++; break;
+			case 'v': flag_v = true; break;
+			case 'h': flag_h = true; break;
 			default:
 				fprintf(stderr, _("Unknown option '%c'\n"), *c);
 				return YTE_INIT;
@@ -185,22 +181,18 @@ then type 'make clean' and 'make'.\n");
 		argv++, argc--;
 	}
 
-	if (vflg) {
+	if (flag_v) {
 		/* print version and exit */
 		fprintf(stderr, "YTalk %s\n", PACKAGE_VERSION);
 		exit(YTE_SUCCESS);
 	}
 	/* check for users */
 
-	if (argc <= 0 || hflg) {
+	if (argc <= 0 || flag_h) {
 		fprintf(stderr,
-			_("Usage:    %s [options] user[@host][#tty]...\n\
-Options:     -i             --    no auto-invite port\n\
-             -Y             --    require caps on all y/n answers\n\
-             -s             --    start a shell\n\
-             -q             --    prompt before quitting\n\
-             -v             --    print program version\n\
-             -h             --    show this help message\n"), prog);
+			_("Usage:    ytalk [options] user[@host][#tty]...\n\
+Options:     -v    print program version\n\
+             -h    show this help message\n"));
 		exit(YTE_INIT);
 	}
 	/* check that STDIN is a valid tty device */
@@ -231,24 +223,16 @@ Options:     -i             --    no auto-invite port\n\
 	init_fd();
 	read_ytalkrc();
 	init_user(vhost);
-	if (yflg)
-		def_flags |= FL_CAPS;
-	if (iflg)
-		def_flags |= FL_NOAUTO;
-	if (qflg)
-		def_flags |= FL_PROMPTQUIT;
-
 	init_term();
 	init_ymenu();
 	init_socket();
 	for (; argc > 0; argc--, argv++)
 		invite(*argv, 1);
-	if (sflg)
-		execute(NULL);
-	else {
-		msg_term(_("Waiting for connection..."));
-		redraw_all_terms();
-	}
+
+
+	msg_term(_("Waiting for connection..."));
+	redraw_all_terms();
+
 	main_loop();
 	bail(YTE_SUCCESS_PROMPT);
 

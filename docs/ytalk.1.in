@@ -12,7 +12,7 @@
 .SH NAME
 ytalk - A multi-user chat program.
 .SH SYNOPSIS
-.BI "ytalk [-sYivqh] " username...
+.BI "ytalk [-vh] " username...
 .SH DESCRIPTION
 .I YTalk @VERSION@
 .PP
@@ -41,23 +41,6 @@ field may be formatted in several different ways:
 You can specify multiple user names on the command line, ie:
 .sp
 	ytalk george fred@hissun.edu marc@grumpy.cc
-.PP
-The
-.B -s
-option starts your YTalk window in a shell.
-.PP
-The
-.B -Y
-option requires a capital Y or N as an answer to any yes/no question.
-.PP
-The
-.B -i
-option disables the auto-invite port (meaning you won't see
-"talk to blah@blah.com", but your talk daemon will beep you instead).
-.PP
-The
-.B -q
-option causes YTalk to prompt you before quitting.
 .PP
 The
 .B -v
@@ -174,7 +157,7 @@ windowed message like:
 .PP
 and he will be prompted for a yes/no answer.  This, in my opinion, is much
 preferable to blitting the announcement message and messing up user B's
-screen. The command-line option "-i" turns this off.
+screen.
 
 .SH RUNTIME OPTIONS
 When you select Options off of the main menu, you are given the opportunity
