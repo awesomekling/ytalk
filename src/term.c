@@ -408,41 +408,14 @@ scroll_term(yuser *user)
 {
 	register int i;
 	register yachar *c;
-	long int y;
 	int sy, sx;
 
 	if (user->sc_bot > user->sc_top) {
 		c = user->scr[user->sc_top];
 
 		if (user->sc_top == 0 && scrollback_lines > 0) {
-			/* Check whether we need to displace the scrollback buffer. */
-			if (user->scrollback[scrollback_lines - 1] == NULL) {
-				/* There is unused room in the buffer. */
-				y = user->scrollend;
-				if (y < (scrollback_lines - 1)) {
-					user->scrollend++;
-				}
-				user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
-			} else {
-				/* Displace the buffer one step to make room. */
-				yachar *oldest = user->scrollback[0];
-				for (y = 0; y < scrollback_lines - 1; y++) {
-					user->scrollback[y] = user->scrollback[y + 1];
-				}
-				y = scrollback_lines - 1;
-				user->scrollback[y] = realloc_mem(oldest, (user->cols + 1) * sizeof(yachar));
-			}
-			memcpy(user->scrollback[y], user->scr[0], (user->cols * sizeof(yachar)));
-
-			user->scrollback[y][user->cols].data = '\0';
-
-			if (!scrolling(user))
-				user->scrollpos = y;
-			else
-				if (user->scrollback[scrollback_lines - 1]) {
-					update_scroll_term(user);
-					retitle_all_terms();
-				}
+			/* Add this line to the user's scrollback buffer. */
+			scroll_add_line(user, user->scr[0]);
 		}
 		for (i = user->sc_top; i < user->sc_bot; i++)
 			user->scr[i] = user->scr[i + 1];

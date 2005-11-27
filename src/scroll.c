@@ -148,3 +148,39 @@ scrolled_amount(yuser *user)
 	/* Return the scrolled amount in percent. */
 	return cutoff;
 }
+
+void
+scroll_add_line(yuser *user, yachar *line)
+{
+	long int y;
+
+	if (!scrollback_lines)
+		return;
+
+	if (user->scrollback[scrollback_lines - 1] == NULL) {
+		/* There is unused room in this user's scrollback buffer. */
+		y = user->scrollend;
+		if (y < scrollback_lines - 1)
+			user->scrollend++;
+		user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
+	} else {
+		/* Displace the history buffer one step to make room. */
+		yachar *oldest = user->scrollback[0];
+		for (y = 0; y < scrollback_lines - 1; ++y) {
+			user->scrollback[y] = user->scrollback[y + 1];
+		}
+		user->scrollback[y] = realloc_mem(oldest, (user->cols + 1) * sizeof(yachar));
+	}
+	memcpy(user->scrollback[y], line, (user->cols * sizeof(yachar)));
+
+	/* Null-terminate the string. */
+	user->scrollback[y][user->cols].data = 0;
+
+	if (!scrolling(user))
+		user->scrollpos = y;
+	else
+		if (user->scrollback[scrollback_lines - 1]) {
+			update_scroll_term(user);
+			retitle_all_terms();
+		}
+}
