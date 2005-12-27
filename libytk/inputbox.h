@@ -26,6 +26,7 @@
 typedef struct __ytk_inputbox {
 	ytk_thing *base;
 	char *data;
+	char *buf;
 	unsigned int size;
 	unsigned int len;
 	void (*callback) (struct __ytk_inputbox *);
