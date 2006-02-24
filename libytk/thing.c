@@ -22,7 +22,7 @@
 #include "ytk.h"
 
 ytk_thing *
-ytk_new_thing(void)
+ytk_new_thing()
 {
 	ytk_thing *new;
 	new = get_mem(sizeof(ytk_thing));

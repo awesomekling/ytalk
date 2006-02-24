@@ -41,7 +41,7 @@ static int tckul, tckdl;
 static yuser *menu_user;
 
 static void do_hidething(ytk_thing *);
-static void init_userlist(void);
+static void init_userlist();
 static void init_usermenu(char);
 
 static void

@@ -183,7 +183,7 @@ ytk_display_thing(ytk_thing *t)
 }
 
 void
-ytk_sync_display(void)
+ytk_sync_display()
 {
 	move(LINES - 1, COLS - 1);
 	wnoutrefresh(stdscr);

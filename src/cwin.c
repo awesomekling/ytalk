@@ -127,7 +127,7 @@ draw_title(ywin *w)
  * Break down and redraw all user windows.
  */
 static void
-curses_redraw(void)
+curses_redraw()
 {
 	register ywin *w;
 	register int row, wins, wsize;
@@ -197,7 +197,7 @@ curses_redraw(void)
  * Start curses and set all options.
  */
 static void
-curses_start(void)
+curses_start()
 {
 	char *term;
 	short i, fg, bg;
@@ -283,7 +283,7 @@ curses_restart(int sig)
 /* ---- global functions ---- */
 
 void
-init_curses(void)
+init_curses()
 {
 	curses_start();
 	refresh();
@@ -298,7 +298,7 @@ init_curses(void)
 }
 
 void
-end_curses(void)
+end_curses()
 {
 	move(LINES - 1, 0);
 	clrtoeol();
@@ -507,7 +507,7 @@ flush_curses(yuser *user)
 }
 
 void
-retitle_all_curses(void)
+retitle_all_curses()
 {
 	ywin *w;
 	for (w = head; w; w = w->next) {
@@ -525,7 +525,7 @@ retitle_all_curses(void)
  *
  */
 void
-refresh_curses(void)
+refresh_curses()
 {
 	register ywin *w;
 	wnoutrefresh(stdscr);
@@ -553,7 +553,7 @@ refresh_curses(void)
  * Clear and redisplay.
  */
 void
-redisplay_curses(void)
+redisplay_curses()
 {
 	register ywin *w;
 
@@ -586,7 +586,7 @@ redisplay_curses(void)
  * Set cooked mode.
  */
 void
-set_cooked_curses(void)
+set_cooked_curses()
 {
 	noraw();
 	crmode();
@@ -665,7 +665,7 @@ update_scroll_curses(yuser *user)
 }
 
 void
-update_message_curses(void)
+update_message_curses()
 {
 	move(LINES - 1, 0);
 	if (bottom_msg != NULL)

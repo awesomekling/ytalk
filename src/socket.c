@@ -169,7 +169,7 @@ read_autoport(int fd)
  * Create and initialize the auto-invitation socket.
  */
 static void
-init_autoport(void)
+init_autoport()
 {
 	ysocklen_t socklen;
 
@@ -477,7 +477,7 @@ find_daemon(ylong addr)
  * Initialize sockets and message parameters.
  */
 void
-init_socket(void)
+init_socket()
 {
 	/* init daemons in order of preference */
 
@@ -506,7 +506,7 @@ init_socket(void)
  * it does not gracefully shut systems down.
  */
 void
-close_all(void)
+close_all()
 {
 	register yuser *u;
 	register int d;
@@ -701,7 +701,7 @@ send_auto(unsigned char type)
  * Shut down the auto-invitation system.
  */
 void
-kill_auto(void)
+kill_auto()
 {
 	if (autofd < 0)
 		return;

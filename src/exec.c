@@ -89,7 +89,7 @@ static bool last_command_was_empty = false;
 
 #ifndef HAVE_SETSID
 static int
-setsid(void)
+setsid()
 {
 #ifdef TIOCNOTTY
 	register int fd;
@@ -342,7 +342,7 @@ execute(char *command)
  * Send input to the command shell.
  */
 void
-update_exec(void)
+update_exec()
 {
 	write(pfd, io_ptr, (size_t) io_len);
 	io_len = 0;
@@ -352,7 +352,7 @@ update_exec(void)
  * Kill the command shell.
  */
 void
-kill_exec(void)
+kill_exec()
 {
 	if (!running_process)
 		return;
@@ -377,7 +377,7 @@ kill_exec(void)
  * Send a SIGWINCH to the process.
  */
 void
-winch_exec(void)
+winch_exec()
 {
 	int rows, cols;
 

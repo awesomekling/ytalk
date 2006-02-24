@@ -332,11 +332,11 @@ int snprintf(char *buf, size_t len, char const *fmt, ...);
 #endif
 
 /* term.c */
-extern void init_term(void);
+extern void init_term();
 extern void set_terminal_size(int, int, int);
 extern void set_terminal_flags(int);
-extern int what_term(void);
-extern void end_term(void);
+extern int what_term();
+extern void end_term();
 extern int open_term(yuser *);
 extern void close_term(yuser *);
 extern void addch_term(yuser *, ychar);
@@ -382,52 +382,52 @@ extern yuser *new_user(char *, char *, char *);
 extern void free_user(yuser *);
 extern yuser *find_user(char *, ylong, ylong);
 extern void generate_full_name(yuser *);
-extern void free_users(void);
+extern void free_users();
 extern void user_title(yuser *, char *, int);
 extern void save_user_to_file(yuser *, char *);
 
 /* fd.c */
-extern void init_fd(void);
+extern void init_fd();
 extern void add_fd(int, void (*) (int));
 extern void remove_fd(int);
 extern int full_read(int, char *, size_t);
-extern void main_loop(void);
-extern void input_loop(void);
-extern void bail_loop(void);
+extern void main_loop();
+extern void input_loop();
+extern void bail_loop();
 
 /* comm.c */
 extern yuser *invite(char *, int);
-extern void house_clean(void);
+extern void house_clean();
 extern void send_winch(yuser *);
-extern void send_region(void);
-extern void send_end_region(void);
+extern void send_region();
+extern void send_end_region();
 extern void send_users(yuser *, ychar *, int, ychar *, int);
 extern void show_input(yuser *, ychar *, int);
 extern void my_input(yuser *, ychar *, int);
 extern void lock_flags(ylong);
-extern void unlock_flags(void);
-extern void rering_all(void);
+extern void unlock_flags();
+extern void rering_all();
 
 /* socket.c */
-extern void init_socket(void);
-extern void close_all(void);
+extern void init_socket();
+extern void close_all();
 extern int send_dgram(yuser *, unsigned char);
 extern int send_auto(unsigned char);
-extern void kill_auto(void);
+extern void kill_auto();
 extern int newsock(yuser *);
 extern int connect_to(yuser *);
 extern ylong get_host_addr(char *);
 extern char *host_name(ylong);
 
 /* rc.c */
-extern void read_ytalkrc(void);
+extern void read_ytalkrc();
 extern char *resolve_alias(char *);
 
 /* exec.c */
 extern void execute(char *);
-extern void update_exec(void);
-extern void kill_exec(void);
-extern void winch_exec(void);
+extern void update_exec();
+extern void kill_exec();
+extern void winch_exec();
 
 /* getpty.c */
 extern int getpty(char *);

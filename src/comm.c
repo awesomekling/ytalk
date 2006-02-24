@@ -916,7 +916,7 @@ invite(char *name, int send_announce)
  * Periodic housecleaning.
  */
 void
-house_clean(void)
+house_clean()
 {
 	register yuser *u, *next;
 	ylong t;
@@ -973,7 +973,7 @@ house_clean(void)
 }
 
 void
-rering_all(void)
+rering_all()
 {
 	yuser *u, *next;
 	int rc;
@@ -1019,7 +1019,7 @@ send_winch(yuser *user)
 }
 
 void
-send_region(void)
+send_region()
 {
 	register yuser *u;
 
@@ -1033,7 +1033,7 @@ send_region(void)
 }
 
 void
-send_end_region(void)
+send_end_region()
 {
 	register yuser *u;
 
@@ -1382,7 +1382,7 @@ lock_flags(ylong flags)
 }
 
 void
-unlock_flags(void)
+unlock_flags()
 {
 	register yuser *u;
 

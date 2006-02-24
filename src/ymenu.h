@@ -18,23 +18,23 @@
  *
  */
 
-void update_ymenu(void);
-void show_ymenu(void);
-void hide_ymenu(void);
-void resize_ymenu(void);
+void update_ymenu();
+void show_ymenu();
+void hide_ymenu();
+void resize_ymenu();
 
-void refresh_ymenu(void);
-void __refresh_ymenu(void);
+void refresh_ymenu();
+void __refresh_ymenu();
 
-void init_ymenu(void);
+void init_ymenu();
 
-void redo_ymenu_userlist(void);
+void redo_ymenu_userlist();
 
 int show_error_ymenu(char *, char *, char *);
 void show_message_ymenu(char *, char *);
 
-void show_colormenu(void);
+void show_colormenu();
 
-int can_ymenu(void);
-int in_ymenu(void);
+int can_ymenu();
+int in_ymenu();
 int yes_no(char *);

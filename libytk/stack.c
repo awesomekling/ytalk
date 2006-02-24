@@ -22,7 +22,7 @@
 #include "ytk.h"
 
 ytk_stack *
-ytk_new_stack(void)
+ytk_new_stack()
 {
 	ytk_stack *new;
 	new = get_mem(sizeof(ytk_stack));

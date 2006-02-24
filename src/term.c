@@ -61,7 +61,7 @@ static struct termios tio;
 
 #ifdef USE_SGTTY
 static void
-init_sgtty(void)
+init_sgtty()
 {
 	if (ioctl(0, TIOCGETD, &line_discipline) < 0) {
 		show_error("TIOCGETD");
@@ -90,7 +90,7 @@ init_sgtty(void)
 }
 #else
 static void
-init_termios(void)
+init_termios()
 {
 	/* get edit chars */
 
@@ -116,7 +116,7 @@ init_termios(void)
 #endif
 
 static void
-init_termcap(void)
+init_termcap()
 {
 	char *term, *tcks;
 	int success;
@@ -141,7 +141,7 @@ init_termcap(void)
 }
 
 static void
-end_termcap(void)
+end_termcap()
 {
 	char *tcke;
 	tcke = get_tcstr("ke");
@@ -163,7 +163,7 @@ get_tcstr(char *id)
  * Initialize terminal and input characteristics.
  */
 void
-init_term(void)
+init_term()
 {
 	emptyc.data = ' ';
 	emptyc.attributes = 0;
@@ -226,7 +226,7 @@ set_terminal_flags(int fd)
 }
 
 int
-what_term(void)
+what_term()
 {
 	return term_type;
 }
@@ -246,7 +246,7 @@ keypad_term(yuser *user, int bf)
  * Abort all terminal processing.
  */
 void
-end_term(void)
+end_term()
 {
 	if (term_type == 1) {
 		end_curses();

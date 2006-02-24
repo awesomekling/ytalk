@@ -43,7 +43,7 @@ static struct fd_func tag[MAX_FILES];	/* one function per file descriptor */
  * Initialize fdset data.
  */
 void
-init_fd(void)
+init_fd()
 {
 	FD_ZERO(&fdset);
 }
@@ -102,7 +102,7 @@ full_read(int fd, char *buf, size_t len)
 static ylong lastping, curtime;
 
 void
-main_loop(void)
+main_loop()
 {
 	register int fd, rc;
 	struct timeval tv;
@@ -231,7 +231,7 @@ main_loop(void)
  * definition library.  Hack?  maybe.  Fun, tho.
  */
 void
-input_loop(void)
+input_loop()
 {
 	register int fd, rc;
 	struct timeval tv;
@@ -298,7 +298,7 @@ input_loop(void)
 }
 
 void
-bail_loop(void)
+bail_loop()
 {
 	fd_set stdin_set;
 	char keypress;

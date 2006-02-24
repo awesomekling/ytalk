@@ -56,7 +56,7 @@ user_name(ylong uid)
 }
 
 static void
-close_passwd(void)
+close_passwd()
 {
 	if (passwd_opened) {
 		endpwent();
@@ -472,7 +472,7 @@ user_title(yuser *user, char *buf, int size)
  * Clear out the user list, freeing memory as we go.
  */
 void
-free_users(void)
+free_users()
 {
 	yuser *u, *un;
 	unsigned int i;

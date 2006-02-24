@@ -451,7 +451,7 @@ resolve_alias(char *uh)
 }
 
 void
-read_ytalkrc(void)
+read_ytalkrc()
 {
 	yuser *u;
 	char *fname;
