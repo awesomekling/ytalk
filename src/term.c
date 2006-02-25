@@ -1082,77 +1082,135 @@ spew_attrs(int fd, yachar *yac)
 	write(fd, esc, p);
 }
 
-#define DO_ATTR(attr, num) \
-	if (buf->attributes & attr) { \
-		if (!last.attributes & attr) { \
-			esc[p++] = num; \
-			esc[p++] = ';'; \
+#define DO_ATTRIBUTE( attr, num ) \
+	if( current->attributes & attr ) { \
+		if( !last->attributes & attr ) { \
+			spew_buffer[b++] = num; \
+			spew_buffer[b++] = ';'; \
 		} \
 	} else { \
-		if (last.attributes & attr) { \
-			esc[p++] = '2'; \
-			esc[p++] = num; \
-			esc[p++] = ';'; \
+		if( last->attributes & attr ) { \
+			spew_buffer[b++] = '2'; \
+			spew_buffer[b++] = num; \
+			spew_buffer[b++] = ';'; \
 		} \
 	}
 
-/*
- * Spew terminal line contents to a file descriptor.
- */
+static char *spew_buffer = NULL;
+static int spew_buffer_size = 0;
+
 void
-spew_line(int fd, yachar *buf, int len)
+spew_free()
 {
-	yachar last;
-	int v, p;
-	char esc[30];
-	if (len <= 0)
-		return;
-	v = 0;
-	memcpy(&last, buf, sizeof(yachar));
-	spew_attrs(fd, buf);
-	for (; len; buf++, len--) {
-		p = 2;
-
-		if (last.attributes != buf->attributes) {
-			if (!buf->attributes) {
-				esc[p++] = '0';
-				esc[p++] = ';';
-			} else {
-				DO_ATTR(YATTR_BOLD,      '1')
-				DO_ATTR(YATTR_DIM,       '2')
-				DO_ATTR(YATTR_UNDERLINE, '4')
-				DO_ATTR(YATTR_BLINK,     '5')
-				DO_ATTR(YATTR_REVERSE,   '7')
-			}
-		}
-		if (last.foreground != buf->foreground) {
-			esc[p++] = '3';
-			esc[p++] = '0' + buf->foreground;
-			esc[p++] = ';';
-		}
-		if (last.background != buf->background) {
-			esc[p++] = '4';
-			esc[p++] = '0' + buf->background;
-			esc[p++] = ';';
-		}
-		if (p != 2) {
-			esc[0] = 27;
-			esc[1] = '[';
-			esc[p - 1] = 'm';
-			esc[p] = 0;
-			write(fd, esc, p);
-		}
-
-		if (v != buf->alternate_charset) {
-			/* Beware of the backwards logic ;-) */
-			write(fd, v ? "\xF" : "\xE", 1);
-			v = buf->alternate_charset;
-		}
-
-		write(fd, &buf->data, 1);
-
-		memcpy(&last, buf, sizeof(yachar));
+	if( spew_buffer != NULL )
+	{
+		free_mem( spew_buffer );
 	}
+	spew_buffer_size = 0;
+}
+
+static void
+spew_alloc( int length )
+{
+	/* Allocate 32 times the line length for good measure. */
+	int wanted_size = length << 5;
+
+	if( spew_buffer_size < wanted_size )
+	{
+		spew_buffer = realloc_mem( spew_buffer, wanted_size );
+		spew_buffer_size = wanted_size;
+	}
+}
+
+void
+spew_line( int fd, yachar *line, int length )
+{
+	yachar *last, *current;
+
+	/* Abort if there's nothing to spew. */
+	if( length <= 0 )
+		return;
+
+	spew_alloc( length );
+
+	last = current = line;
+
+	/* XXX: Remember this across calls? */
+	spew_attrs( fd, line );
+
+	int b = 0;
+
+	for( ; length; --length, ++current )
+	{
+		bool have_escape_sequence = false;
+
+		/* If we compose an escape sequence, we'll need room for "<esc>[" */
+		char *escape_start = &spew_buffer[b];
+		b += 2;
+
+		/* Look for attribute and color changes. */
+		if( last->attributes != current->attributes )
+		{
+			if( !current->attributes )
+			{
+				spew_buffer[b++] = '0';
+				spew_buffer[b++] = ';';
+			}
+			else
+			{
+				DO_ATTRIBUTE( YATTR_BOLD,      '1' );
+				DO_ATTRIBUTE( YATTR_DIM,       '2' );
+				DO_ATTRIBUTE( YATTR_UNDERLINE, '4' );
+				DO_ATTRIBUTE( YATTR_BLINK,     '5' );
+				DO_ATTRIBUTE( YATTR_REVERSE,   '7' );
+			}
+			have_escape_sequence = true;
+		}
+		if( current->foreground != last->foreground )
+		{
+			spew_buffer[b++] = '3';
+			spew_buffer[b++] = '0' + current->foreground;
+			spew_buffer[b++] = ';';
+			have_escape_sequence = true;
+		}
+		if( current->background != last->background )
+		{
+			spew_buffer[b++] = '4';
+			spew_buffer[b++] = '0' + current->background;
+			spew_buffer[b++] = ';';
+			have_escape_sequence = true;
+		}
+
+		if( have_escape_sequence )
+		{
+			/* "<esc>[" prefix */
+			escape_start[0] = '\x1B';
+			escape_start[1] = '[';
+
+			/* Replace last ';' with 'm' (ANSI color) */
+			spew_buffer[b - 1] = 'm';
+		}
+		else
+		{
+			/* No attribute and/or color changes -- reclaim 2 bytes. */
+			b -= 2;
+		}
+
+		if( current->alternate_charset != last->alternate_charset )
+		{
+			/* Are we going into ACS mode? */
+			spew_buffer[b++] = current->alternate_charset ? '\xF' : '\xE';
+		}
+
+		/* And finally, the character itself. */
+		spew_buffer[b++] = current->data;
+
+		last = current;
+	}
+
+	write( fd, spew_buffer, b );
+
+	/* spew_free(); */
 }
 
 /*
@@ -1218,4 +1276,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 				y = 0;
 		}
 	}
+
+	/* Free any memory allocated by spew_line) */
+	spew_free();
 }

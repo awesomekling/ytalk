@@ -365,6 +365,7 @@ extern void set_scroll_region(yuser *, int, int);
 extern void msg_term(char *);
 extern void spew_term(yuser *, int, int, int);
 extern void spew_line(int, yachar *, int);
+extern void spew_free();
 extern char *get_tcstr(char *);
 
 #define set_raw_term			set_raw_curses

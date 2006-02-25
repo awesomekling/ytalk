@@ -346,6 +346,10 @@ save_user_to_file(yuser *user, char *filename)
 			write(fd, "\n", 1);
 		}
 	}
+
+	/* Free any memory allocated by spew_line() */
+	spew_free();
+
 	if (close(fd) < 0) {
 		show_error(_("Couldn't close output file."));
 		return;
