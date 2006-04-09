@@ -104,5 +104,4 @@ gtalk_send_version(yuser *user)
 	);
 	write(user->fd, buf, len);
 	free_mem(buf);
-	return;
 }

@@ -502,7 +502,6 @@ word_term(yuser *user)
 		return;
 	move_term(user, user->y, x);
 	clreol_term(user);
-	return;
 }
 
 /*
@@ -1043,7 +1042,6 @@ msg_term(char *str)
 	bottom_msg = str_copy(str);
 	bottom_time = time(NULL);
 	update_message_curses();
-	return;
 }
 
 
