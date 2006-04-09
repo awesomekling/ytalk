@@ -28,7 +28,6 @@
 char errstr[MAXERR];		/* temporary string for errors */
 char msgstr[MAXERR];		/* temporary string for bottom messages */
 char *vhost = NULL;		/* specified virtual host */
-ylong myuid;			/* global uid */
 char *gshell = NULL;		/* global shell */
 unsigned long int ui_colors = 40;		/* TODO: change default */
 unsigned long int ui_attr = 0;		/* UI output attributes */
@@ -209,9 +208,6 @@ Options:     -v    print program version\n\
 	signal(SIGABRT, got_sig);
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-
-	/* save the uid for later use */
-	myuid = getuid();
 
 	/* set default options */
 

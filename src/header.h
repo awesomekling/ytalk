@@ -292,7 +292,6 @@ extern yuser *scuser;		/* user being scrolled */
 extern long int scrollback_lines;	/* max number of scrollback lines */
 
 extern bool running_process;        /* flag: is process running? */
-extern ylong myuid;		/* stores your uid */
 extern char *gshell;		/* stores your shell */
 extern char *title_format;
 extern char *user_format;

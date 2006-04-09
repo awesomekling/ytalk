@@ -110,7 +110,7 @@ init_user(char *vhost)
 
 	/* get my username */
 
-	my_name = user_name(myuid);
+	my_name = user_name( getuid() );
 	if (my_name == NULL || my_name[0] == '\0') {
 		show_error(_("Who are you?"));
 		bail(YTE_ERROR);

@@ -198,7 +198,7 @@ execute(char *command)
 #  endif
 #endif
 
-	pw = getpwuid(myuid);
+	pw = getpwuid( getuid() );
 	endpwent();
 	if (gshell != NULL) {
 		shell = gshell;

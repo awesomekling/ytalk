@@ -241,7 +241,7 @@ set_shell(char *shell)
 		return 0;
 
 	if (*shell == '~') {
-		pw = getpwuid(myuid);
+		pw = getpwuid( getuid() );
 		endpwent();
 		if (pw != NULL) {
 			gshell = (char *) realloc_mem(gshell, strlen(pw->pw_dir) + strlen(shell) + 1);
@@ -465,7 +465,7 @@ read_ytalkrc()
 
 	/* read the user's ytalkrc file */
 
-	pw = getpwuid(myuid);
+	pw = getpwuid( getuid() );
 	endpwent();
 	if (pw != NULL) {
 		fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
