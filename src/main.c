@@ -144,15 +144,6 @@ main(int argc, char **argv)
 	bool flag_h = false;
 	char *c;
 
-#ifdef ENABLE_NLS
-	if (setlocale(LC_ALL, "")) {
-		bindtextdomain(PACKAGE, LOCALEDIR);
-		textdomain(PACKAGE);
-	} else {
-		show_error("setlocale() failed");
-	}
-#endif
-
 #ifdef YTALK_DEBUG
 	/* check for a 64-bit mis-compile */
 	if (sizeof(ylong) != 4) {

@@ -34,16 +34,6 @@ typedef unsigned char bool;
 #  define false 0
 #endif
 
-#ifdef ENABLE_NLS
-#  ifdef HAVE_LOCALE_H
-#    include <locale.h>
-#  endif
-#  include <libintl.h>
-#  define _(String) gettext(String)
-#else
-#  define _(String) String
-#endif
-
 #include <sys/types.h>
 #include <sys/param.h>
 
