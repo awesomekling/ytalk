@@ -36,13 +36,6 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 
-dnl Internationalization stuff
-ALL_LINGUAS="sv"
-AM_GNU_GETTEXT
-AM_GNU_GETTEXT_VERSION(0.10.40)
-AC_DEFINE_DIR([datadir], [datadir], [datadir])
-AC_DEFINE_UNQUOTED(LOCALEDIR, ["${datadir}/locale"], ["Location of locale database"])
-
 dnl Sanity
 AC_CHECK_SIZEOF(long)
 
@@ -121,8 +114,6 @@ AC_CHECK_FUNC(gethostname,,AC_MSG_ERROR(Can't run without gethostname))
 AC_CHECK_FUNC(select,,AC_MSG_ERROR(Can't compile without select))
 
 AC_OUTPUT(
-	intl/Makefile
-	po/Makefile.in
 	Makefile
 	libytk/Makefile
 	src/Makefile

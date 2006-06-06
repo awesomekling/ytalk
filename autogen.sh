@@ -61,12 +61,6 @@ test -f "ChangeLog" \
 	&& smile \
 	|| frown "Failed to touch ChangeLog"
 
-label "Setting up gettext..."
-autopoint -f >/dev/null 2>&1 \
-	&& smile \
-	|| frown "You need GNU gettext to compile YTalk."
-
-
 label "Running $ACLOCAL..."
 WANT_ACLOCAL="1.9" $ACLOCAL -I m4 2>/dev/null \
 	|| frown "Failed to run $ACLOCAL"
