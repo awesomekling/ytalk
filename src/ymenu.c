@@ -126,14 +126,14 @@ handle_main_menu(ytk_menu_item *i)
 	ytk_thing *b;
 	switch (i->hotkey) {
 	case 'a':
-		b = ytk_new_inputbox(_("Add user"), 60, do_adduser);
+		b = ytk_new_inputbox("Add user", 60, do_adduser);
 		ytk_set_escape(b, do_hidething);
 		ytk_set_colors(b, menu_colors);
 		ytk_set_attr(b, menu_attr);
 		ytk_push(menu_stack, b);
 		break;
 	case 'c':
-		b = ytk_new_inputbox(_("Run command"), 60, do_runcmd);
+		b = ytk_new_inputbox("Run command", 60, do_runcmd);
 		ytk_set_escape(b, do_hidething);
 		ytk_set_colors(b, menu_colors);
 		ytk_set_attr(b, menu_attr);
@@ -256,47 +256,47 @@ init_ymenu()
 	/* build us a couple of menus */
 	menu_stack = ytk_new_stack();
 
-	main_menu = ytk_new_menu(_("Main Menu"));
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Add another user"), 'a', handle_main_menu);
-	ytk_add_menu_item(YTK_MENU(main_menu), _("User list"), 'u', handle_main_menu);
+	main_menu = ytk_new_menu("Main Menu");
+	ytk_add_menu_item(YTK_MENU(main_menu), "Add another user", 'a', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), "User list", 'u', handle_main_menu);
 	ytk_add_menu_separator(YTK_MENU(main_menu));
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Options"), 'o', handle_main_menu);
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Spawn shell"), 's', handle_main_menu);
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Run command"), 'c', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), "Options", 'o', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), "Spawn shell", 's', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), "Run command", 'c', handle_main_menu);
 	ytk_add_menu_separator(YTK_MENU(main_menu));
-	ytk_add_menu_item(YTK_MENU(main_menu), _("Quit"), 'q', handle_main_menu);
+	ytk_add_menu_item(YTK_MENU(main_menu), "Quit", 'q', handle_main_menu);
 	ytk_set_escape(main_menu, do_hidething);
 	ytk_set_colors(main_menu, menu_colors);
 	ytk_set_attr(main_menu, menu_attr);
 
-	options_menu = ytk_new_menu(_("Options"));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Scrolling"), 's', handle_options_menu, (def_flags & FL_SCROLL));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Word-wrap"), 'w', handle_options_menu, (def_flags & FL_WRAP));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-import"), 'i', handle_options_menu, (def_flags & FL_IMPORT));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Auto-invite"), 'v', handle_options_menu, (def_flags & FL_INVITE));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Reringing"), 'r', handle_options_menu, (def_flags & FL_RING));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Beeps"), 'b', handle_options_menu, (def_flags & FL_BEEP));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Ignore break"), 'g', handle_options_menu, (def_flags & FL_IGNBRK));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Require caps"), 'c', handle_options_menu, (def_flags & FL_CAPS));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt rerings"), 'p', handle_options_menu, (def_flags & FL_PROMPTRING));
-	ytk_add_menu_toggle_item(YTK_MENU(options_menu), _("Prompt to quit"), 'q', handle_options_menu, (def_flags & FL_PROMPTQUIT));
+	options_menu = ytk_new_menu("Options");
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Scrolling", 's', handle_options_menu, (def_flags & FL_SCROLL));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Word-wrap", 'w', handle_options_menu, (def_flags & FL_WRAP));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Auto-import", 'i', handle_options_menu, (def_flags & FL_IMPORT));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Auto-invite", 'v', handle_options_menu, (def_flags & FL_INVITE));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Reringing", 'r', handle_options_menu, (def_flags & FL_RING));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Beeps", 'b', handle_options_menu, (def_flags & FL_BEEP));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Ignore break", 'g', handle_options_menu, (def_flags & FL_IGNBRK));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Require caps", 'c', handle_options_menu, (def_flags & FL_CAPS));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Prompt rerings", 'p', handle_options_menu, (def_flags & FL_PROMPTRING));
+	ytk_add_menu_toggle_item(YTK_MENU(options_menu), "Prompt to quit", 'q', handle_options_menu, (def_flags & FL_PROMPTQUIT));
 	ytk_add_menu_separator(YTK_MENU(options_menu));
-	ytk_add_menu_item(YTK_MENU(options_menu), _("Reload ytalkrc"), 'R', do_reloadrc);
+	ytk_add_menu_item(YTK_MENU(options_menu), "Reload ytalkrc", 'R', do_reloadrc);
 	ytk_set_escape(options_menu, do_hidething);
 	ytk_set_colors(options_menu, menu_colors);
 	ytk_set_attr(options_menu, menu_attr);
 
-	color_menu = ytk_new_menu(_("Color Menu"));
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Black"), '0', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Red"), '1', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Green"), '2', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Yellow"), '3', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Blue"), '4', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Magenta"), '5', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("Cyan"), '6', handle_color);
-	ytk_add_menu_item(YTK_MENU(color_menu), _("White"), '7', handle_color);
+	color_menu = ytk_new_menu("Color Menu");
+	ytk_add_menu_item(YTK_MENU(color_menu), "Black", '0', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Red", '1', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Green", '2', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Yellow", '3', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Blue", '4', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Magenta", '5', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "Cyan", '6', handle_color);
+	ytk_add_menu_item(YTK_MENU(color_menu), "White", '7', handle_color);
 	ytk_add_menu_separator(YTK_MENU(color_menu));
-	ytk_add_menu_toggle_item(YTK_MENU(color_menu), _("Bold"), 'b', handle_color, (me->yac.attributes & YATTR_BOLD));
+	ytk_add_menu_toggle_item(YTK_MENU(color_menu), "Bold", 'b', handle_color, (me->yac.attributes & YATTR_BOLD));
 	ytk_set_escape(color_menu, do_hidething);
 	ytk_set_colors(color_menu, menu_colors);
 	ytk_set_attr(color_menu, menu_attr);
@@ -316,7 +316,7 @@ handle_save_to_file(ytk_menu_item *i)
 {
 	ytk_thing *b;
 	(void) i;
-	b = ytk_new_inputbox(_("Enter filename:"), 60, do_save_user_to_file);
+	b = ytk_new_inputbox("Enter filename:", 60, do_save_user_to_file);
 	ytk_set_escape(b, do_hidething);
 	ytk_set_colors(b, menu_colors);
 	ytk_set_attr(b, menu_attr);
@@ -341,14 +341,14 @@ view_user_info(ytk_menu_item *item)
 	if (!menu_user)
 		return;
 
-	info_box = ytk_new_msgbox(_("User information"));
+	info_box = ytk_new_msgbox("User information");
 
-	snprintf(user_at_fqdn, sizeof(user_at_fqdn), _("User:            %s"), menu_user->full_name);
+	snprintf(user_at_fqdn, sizeof(user_at_fqdn), "User:            %s", menu_user->full_name);
 	ytk_add_msgbox_item(YTK_MSGBOX(info_box), user_at_fqdn);
 
 	if (menu_user->edit[0] && menu_user->edit[1] && menu_user->edit[2]) {
 		p = client_type;
-		p += sprintf(p, _("Client type:     "));
+		p += sprintf(p, "Client type:     ");
 		if (menu_user->remote.vmajor > 2) {
 			p += sprintf(p, "YTalk %d.%d",
 				menu_user->remote.vmajor,
@@ -365,16 +365,16 @@ view_user_info(ytk_menu_item *item)
 	}
 
 	if (menu_user->gt.version) {
-		snprintf(gtalk_version, sizeof(gtalk_version), _("Version info:    %s"), menu_user->gt.version);
+		snprintf(gtalk_version, sizeof(gtalk_version), "Version info:    %s", menu_user->gt.version);
 		ytk_add_msgbox_item(YTK_MSGBOX(info_box), gtalk_version);
 	}
 	if (menu_user->gt.system) {
-		snprintf(system_type, sizeof(gtalk_version),_("System type:     %s"), menu_user->gt.system);
+		snprintf(system_type, sizeof(gtalk_version), "System type:     %s", menu_user->gt.system);
 		ytk_add_msgbox_item(YTK_MSGBOX(info_box), system_type);
 	}
 	if (menu_user->edit[0] && menu_user->edit[1] && menu_user->edit[2]) {
 		p = edit_chars;
-		p += sprintf(edit_chars, _("Edit characters: "));
+		p += sprintf(edit_chars, "Edit characters: ");
 		for (i = 0; i < 3; i++) {
 			c = menu_user->edit[i];
 			if (c < ' ') {
@@ -408,11 +408,11 @@ init_usermenu(char k)
 	}
 
 	usermenu_menu = ytk_new_menu(user->full_name);
-	ytk_add_menu_item(YTK_MENU(usermenu_menu), _("User information"), 'i', view_user_info);
+	ytk_add_menu_item(YTK_MENU(usermenu_menu), "User information", 'i', view_user_info);
 	if (user != me) {
-		ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Disconnect"), 'd', handle_disconnect_user);
+		ytk_add_menu_item(YTK_MENU(usermenu_menu), "Disconnect", 'd', handle_disconnect_user);
 	}
-	ytk_add_menu_item(YTK_MENU(usermenu_menu), _("Save to file"), 's', handle_save_to_file);
+	ytk_add_menu_item(YTK_MENU(usermenu_menu), "Save to file", 's', handle_save_to_file);
 	ytk_set_escape(usermenu_menu, do_hidething);
 	ytk_set_colors(usermenu_menu, menu_colors);
 	ytk_set_attr(usermenu_menu, menu_attr);
@@ -425,7 +425,7 @@ init_userlist()
 	yuser *u;
 	char buf[54], *p;
 	char hk = 'a';
-	userlist_menu = ytk_new_menu(_("User List"));
+	userlist_menu = ytk_new_menu("User List");
 	for (u = connect_list; u; u = u->next) {
 		if (u != me) {
 			p = buf
@@ -449,7 +449,7 @@ init_userlist()
 		if (u != me) {
 			p = buf
 			 + sprintf(buf, "%-24.24s               %13.13s",
-				   u->full_name, _("<unconnected>")
+				   u->full_name, "<unconnected>"
 			 );
 			u->key = hk++;
 			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_userlist_menu);
@@ -459,8 +459,8 @@ init_userlist()
 	snprintf(buf, sizeof(buf), "Me (%.36s)", me->full_name);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), buf, me->key, handle_userlist_menu);
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
-	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Rering all unconnected"), 'R', handle_userlist_menu);
-	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Kill all unconnected"), 'K', handle_userlist_menu);
+	ytk_add_menu_item(YTK_MENU(userlist_menu), "Rering all unconnected", 'R', handle_userlist_menu);
+	ytk_add_menu_item(YTK_MENU(userlist_menu), "Kill all unconnected", 'K', handle_userlist_menu);
 	ytk_set_escape(userlist_menu, esc_userlist);
 	ytk_set_colors(userlist_menu, menu_colors);
 	ytk_set_attr(userlist_menu, menu_attr);

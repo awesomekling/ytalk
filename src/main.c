@@ -44,7 +44,7 @@ bail(int n)
 {
 	kill_auto();
 	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT)) {
-		if (show_error_ymenu(_("Press any key to quit."), NULL, NULL) == 0) {
+		if (show_error_ymenu("Press any key to quit.", NULL, NULL) == 0) {
 			update_ymenu();
 			bail_loop();
 		}
@@ -82,7 +82,7 @@ show_error(char *str)
 		putc(7, stderr);
 	if (!in_error && what_term() != 0 && can_ymenu()) {
 		in_error = true;
-		if (show_error_ymenu(str, syserr, _("Error")) < 0) {
+		if (show_error_ymenu(str, syserr, "Error") < 0) {
 			show_error("show_error: show_error_ymenu() failed");
 			show_error(str);
 		} else
@@ -164,7 +164,7 @@ then type 'make clean' and 'make'.\n");
 			case 'v': flag_v = true; break;
 			case 'h': flag_h = true; break;
 			default:
-				fprintf(stderr, _("Unknown option '%c'\n"), *c);
+				fprintf(stderr, "Unknown option '%c'\n", *c);
 				return YTE_INIT;
 			}
 		}
@@ -180,15 +180,15 @@ then type 'make clean' and 'make'.\n");
 
 	if (argc <= 0 || flag_h) {
 		fprintf(stderr,
-			_("Usage:    ytalk [options] user[@host][#tty]...\n\
+			"Usage:    ytalk [options] user[@host][#tty]...\n\
 Options:     -v    print program version\n\
-             -h    show this help message\n"));
+             -h    show this help message\n");
 		exit(YTE_INIT);
 	}
 	/* check that STDIN is a valid tty device */
 
 	if (!isatty(0)) {
-		fprintf(stderr, _("Standard input is not a valid terminal device.\n"));
+		fprintf(stderr, "Standard input is not a valid terminal device.\n");
 		exit(1);
 	}
 	/* set up signals */
@@ -217,7 +217,7 @@ Options:     -v    print program version\n\
 		invite(*argv, 1);
 
 
-	msg_term(_("Waiting for connection..."));
+	msg_term("Waiting for connection...");
 	redraw_all_terms();
 
 	main_loop();

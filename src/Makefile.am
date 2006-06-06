@@ -23,9 +23,9 @@ ytalk_SOURCES = \
 	ymenu.h \
 	gtalk.h
 
-ytalk_LDADD = ../libytk/libytk.a $(INTLLIBS)
+ytalk_LDADD = ../libytk/libytk.a
 
-INCLUDES = -I../libytk -I../intl
+INCLUDES = -I../libytk
 LIBS = @LIBS@
 
 DEFS = @DEFS@ @SYSTEM_DEFS@

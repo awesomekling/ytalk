@@ -294,7 +294,7 @@ read_rcfile(char *fname)
 					def_flags |= opts[i].flag;
 					break;
 				case -1:
-					snprintf(ebuf, MAXERR, _("%s:%d: Invalid bool value '%s'"), fname, line, value);
+					snprintf(ebuf, MAXERR, "%s:%d: Invalid bool value '%s'", fname, line, value);
 					show_error(ebuf);
 					return;
 				case 0:
@@ -310,7 +310,7 @@ read_rcfile(char *fname)
 				from = get_word(&ptr);
 				to   = get_word(&ptr);
 				if (!new_alias(from, to)) {
-					snprintf(ebuf, MAXERR, _("%s:%d: Insufficient alias paramaters"), fname, line);
+					snprintf(ebuf, MAXERR, "%s:%d: Insufficient alias paramaters", fname, line);
 					show_error(ebuf);
 					return;
 				}
@@ -328,28 +328,28 @@ read_rcfile(char *fname)
 					found = 1;
 					break;
 				case 1:
-					snprintf(ebuf, MAXERR, _("%s:%d: You must specify both background and foreground colors"), fname, line);
+					snprintf(ebuf, MAXERR, "%s:%d: You must specify both background and foreground colors", fname, line);
 					show_error(ebuf);
 					return;
 				case 2:
-					snprintf(ebuf, MAXERR, _("%s:%d: Invalid foreground color '%s'"), fname, line, fg);
+					snprintf(ebuf, MAXERR, "%s:%d: Invalid foreground color '%s'", fname, line, fg);
 					show_error(ebuf);
 					return;
 				case 3:
-					snprintf(ebuf, MAXERR, _("%s:%d: Invalid background color '%s'"), fname, line, bg);
+					snprintf(ebuf, MAXERR, "%s:%d: Invalid background color '%s'", fname, line, bg);
 					show_error(ebuf);
 					return;
 				}
 			} else if (strcmp(cmd, "localhost") == 0) {
 				found = 1;
 				if (vhost != NULL) {
-					snprintf(ebuf, MAXERR, _("%s:%d: Virtual host already set to '%s'"), fname, line, vhost);
+					snprintf(ebuf, MAXERR, "%s:%d: Virtual host already set to '%s'", fname, line, vhost);
 					show_error(ebuf);
 					return;
 				}
 				tmp = get_word(&ptr);
 				if (tmp == NULL) {
-					snprintf(ebuf, MAXERR, _("%s:%d: Missing hostname"), fname, line);
+					snprintf(ebuf, MAXERR, "%s:%d: Missing hostname", fname, line);
 					show_error(ebuf);
 					return;
 				}
@@ -359,7 +359,7 @@ read_rcfile(char *fname)
 				found = 1;
 				tmp = get_string(&ptr);
 				if (!tmp) {
-					snprintf(ebuf, MAXERR, _("%s:%d: Missing format string for %s"), fname, line, cmd);
+					snprintf(ebuf, MAXERR, "%s:%d: Missing format string for %s", fname, line, cmd);
 					show_error(ebuf);
 					return;
 				}
@@ -369,7 +369,7 @@ read_rcfile(char *fname)
 				found = 1;
 				tmp = get_string(&ptr);
 				if (!tmp) {
-					snprintf(ebuf, MAXERR, _("%s:%d: Missing format string for %s"), fname, line, cmd);
+					snprintf(ebuf, MAXERR, "%s:%d: Missing format string for %s", fname, line, cmd);
 					show_error(ebuf);
 					return;
 				}
@@ -379,7 +379,7 @@ read_rcfile(char *fname)
 				found = 1;
 				tmp = get_word(&ptr);
 				if (!set_shell(tmp)) {
-					snprintf(ebuf, MAXERR, _("%s:%d: Shell cannot be empty"), fname, line);
+					snprintf(ebuf, MAXERR, "%s:%d: Shell cannot be empty", fname, line);
 					show_error(ebuf);
 					return;
 				}
@@ -389,7 +389,7 @@ read_rcfile(char *fname)
 				if (tmp != NULL)
 					scrollback_lines = strtol(tmp, NULL, 10);
 			} else {
-				snprintf(ebuf, MAXERR, _("%s:%d: Unknown option '%s'"), fname, line, cmd);
+				snprintf(ebuf, MAXERR, "%s:%d: Unknown option '%s'", fname, line, cmd);
 				show_error(ebuf);
 				return;
 			}

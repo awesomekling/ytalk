@@ -112,7 +112,7 @@ init_user(char *vhost)
 
 	my_name = user_name( getuid() );
 	if (my_name == NULL || my_name[0] == '\0') {
-		show_error(_("Who are you?"));
+		show_error("Who are you?");
 		bail(YTE_ERROR);
 	}
 	/* get my hostname */
@@ -221,7 +221,7 @@ free_user(yuser *user)
 
 	/* print a disco message */
 
-	snprintf(msgstr, MAXERR, _("%s disconnected."), user->full_name);
+	snprintf(msgstr, MAXERR, "%s disconnected.", user->full_name);
 	msg_term(msgstr);
 
 	/* make sure we're not stuck scrolling a long gone user */
@@ -280,7 +280,7 @@ free_user(yuser *user)
 	free_scroll(user);
 	free_mem(user);
 	if (connect_list == NULL && wait_list != NULL)
-		msg_term(_("Waiting for connection..."));
+		msg_term("Waiting for connection...");
 	user_winch = 1;
 
 	redraw_all_terms();
@@ -329,7 +329,7 @@ save_user_to_file(yuser *user, char *filename)
 	/* Let's not overwrite or underprotect */
 	fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0600);
 	if (fd < 0) {
-		show_error(_("Couldn't open file for writing."));
+		show_error("Couldn't open file for writing.");
 		return;
 	}
 	/* If user has scrollback history, dump 'em all! */
@@ -351,10 +351,10 @@ save_user_to_file(yuser *user, char *filename)
 	spew_free();
 
 	if (close(fd) < 0) {
-		show_error(_("Couldn't close output file."));
+		show_error("Couldn't close output file.");
 		return;
 	}
-	snprintf(msgbuf, sizeof(msgbuf), _("Wrote %lu lines."), lines);
+	snprintf(msgbuf, sizeof(msgbuf), "Wrote %lu lines.", lines);
 	msg_term(msgbuf);
 }
 

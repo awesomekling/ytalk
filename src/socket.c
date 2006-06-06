@@ -152,7 +152,7 @@ read_autoport(int fd)
 	estr = get_mem(V2_NAMELEN + V2_HOSTLEN + 20);
 
 	if (!(def_flags & FL_INVITE)) {
-		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, _("Talk to %s@%s?"), pack->name, pack->host);
+		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "Talk to %s@%s?", pack->name, pack->host);
 		if (yes_no(estr) == 'n') {
 			free_mem(estr);
 			free_mem(pack);
@@ -251,7 +251,7 @@ sendit(ylong addr, int d)
 		mtype = &(omsg.type);
 		rtype = &(orsp.type);
 	} else {
-		snprintf(errstr, MAXERR, _("Unkown daemon type: %d"), d);
+		snprintf(errstr, MAXERR, "Unkown daemon type: %d", d);
 		show_error(errstr);
 		return -1;
 	}
@@ -409,13 +409,13 @@ find_daemon(ylong addr)
 		n = sendto(talkd[ntalk].fd, (char *) &m2, sizeof(m2),
 			   0, (struct sockaddr *) & remote_daemon, sizeof(remote_daemon));
 		if (n != sizeof(m2))
-			show_error(_("Warning: cannot write to new talk daemon"));
+			show_error("Warning: cannot write to new talk daemon");
 
 		IN_PORT(remote_daemon) = talkd[otalk].port;
 		n = sendto(talkd[otalk].fd, (char *) &m1, sizeof(m1),
 			   0, (struct sockaddr *) & remote_daemon, sizeof(remote_daemon));
 		if (n != sizeof(m1))
-			show_error(_("Warning: cannot write to old talk daemon"));
+			show_error("Warning: cannot write to old talk daemon");
 
 		tv.tv_sec = 4L;
 		tv.tv_usec = 0L;
@@ -466,7 +466,7 @@ find_daemon(ylong addr)
 		if (out)
 			return out;
 	}
-	snprintf(errstr, MAXERR, _("No talk daemon on %s"), host_name(addr));
+	snprintf(errstr, MAXERR, "No talk daemon on %s", host_name(addr));
 	show_error(errstr);
 	return 0;
 }

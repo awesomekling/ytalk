@@ -175,7 +175,7 @@ v2_process(yuser *user, v2_pack *pack)
 	host[V2_HOSTLEN] = '\0';
 	if ((host_addr = get_host_addr(host)) == (ylong) - 1) {
 		errno = 0;
-		snprintf(errstr, MAXERR, _("Unknown host: '%s'"), host);
+		snprintf(errstr, MAXERR, "Unknown host: '%s'", host);
 		show_error(errstr);
 		show_error("port from ytalk V2.? failed");
 		free_mem(host);
@@ -192,7 +192,7 @@ v2_process(yuser *user, v2_pack *pack)
 		if (find_user(name, host_addr, (ylong) - 1) != NULL)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
-			snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, _("Import %s@%s?"), name, host);
+			snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "Import %s@%s?", name, host);
 			if (yes_no(estr) == 'n')
 				break;
 		}
@@ -259,7 +259,7 @@ v3_process_pack(yuser *user, v3_pack *pack)
 		if (find_user(name, host_addr, pid) != NULL)
 			break;
 		if (!(def_flags & FL_IMPORT)) {
-			snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, _("Import %s@%s?"), name, host);
+			snprintf(estr, V3_NAMELEN + V3_HOSTLEN + 20, "Import %s@%s?", name, host);
 			if (yes_no(estr) == 'n')
 				break;
 		}
@@ -649,7 +649,7 @@ connect_user(int fd)
 		user_winch = 1;
 		add_fd(fd, read_user);
 	}
-	snprintf(msgstr, MAXERR, _("%s connected."), user->full_name);
+	snprintf(msgstr, MAXERR, "%s connected.", user->full_name);
 	msg_term(msgstr);
 }
 
@@ -698,7 +698,7 @@ contact_user(int fd)
 			user->host_name = str_copy(hname);
 			user->host_fqdn = str_copy(hname);
 			generate_full_name(user);
-			show_error(_("Connection from unexpected host!"));
+			show_error("Connection from unexpected host!");
 		}
 	}
 	user->fd = n;
@@ -889,7 +889,7 @@ invite(char *name, int send_announce)
 	/* Leave an invitation for him, and announce ourselves. */
 
 	if (send_announce) {
-		snprintf(msgstr, MAXERR, _("Ringing %s..."), user->full_name);
+		snprintf(msgstr, MAXERR, "Ringing %s...", user->full_name);
 		msg_term(msgstr);
 	}
 	if (newsock(user) != 0) {
@@ -901,9 +901,9 @@ invite(char *name, int send_announce)
 	if (send_announce && (rc = announce(user)) != 0) {
 		send_dgram(user, DELETE_INVITE);
 		if (rc > 0)
-			snprintf(errstr, MAXERR, _("%s refusing messages"), user->full_name);
+			snprintf(errstr, MAXERR, "%s refusing messages", user->full_name);
 		else
-			snprintf(errstr, MAXERR, _("%s not logged in"), user->full_name);
+			snprintf(errstr, MAXERR, "%s not logged in", user->full_name);
 		show_error(errstr);
 		free_user(user);
 		return NULL;
@@ -951,20 +951,20 @@ house_clean()
 			if (def_flags & FL_PROMPTRING) {
 				if (input_flag)
 					continue;
-				snprintf(estr, sizeof(estr), _("Rering %s?"), u->full_name);
+				snprintf(estr, sizeof(estr), "Rering %s?", u->full_name);
 				answer = yes_no(estr);
 				t = (ylong) time(NULL);
 				if (answer == 'n')
 					continue;
 			}
-			snprintf(msgstr, MAXERR, _("Reringing %s\n"), u->full_name);
+			snprintf(msgstr, MAXERR, "Reringing %s\n", u->full_name);
 			msg_term(msgstr);
 			if ((rc = announce(u)) != 0) {
 				send_dgram(u, DELETE_INVITE);
 				if (rc > 0)
-					snprintf(errstr, MAXERR, _("%s refusing messages"), u->full_name);
+					snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
 				else
-					snprintf(errstr, MAXERR, _("%s not logged in"), u->full_name);
+					snprintf(errstr, MAXERR, "%s not logged in", u->full_name);
 				show_error(errstr);
 				free_user(u);
 			}
@@ -989,9 +989,9 @@ rering_all()
 		if ((rc = announce(u)) != 0) {
 			send_dgram(u, DELETE_INVITE);
 			if (rc > 0)
-				snprintf(errstr, MAXERR, _("%s refusing messages"), u->full_name);
+				snprintf(errstr, MAXERR, "%s refusing messages", u->full_name);
 			else
-				snprintf(errstr, MAXERR, _("%s not logged in"), u->full_name);
+				snprintf(errstr, MAXERR, "%s not logged in", u->full_name);
 			show_error(errstr);
 			free_user(u);
 		}

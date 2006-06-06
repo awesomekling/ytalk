@@ -14,7 +14,7 @@ libytk_a_SOURCES = \
 	stack.h \
 	ytk.h
 
-INCLUDES = -I../src -I../intl
+INCLUDES = -I../src
 
 DEFS = @DEFS@ @SYSTEM_DEFS@
 LIBS = @LIBS@
