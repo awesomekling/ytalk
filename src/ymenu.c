@@ -343,7 +343,7 @@ view_user_info(ytk_menu_item *item)
 
 	info_box = ytk_new_msgbox(_("User information"));
 
-	sprintf(user_at_fqdn, _("User:            %s"), menu_user->full_name);
+	snprintf(user_at_fqdn, sizeof(user_at_fqdn), _("User:            %s"), menu_user->full_name);
 	ytk_add_msgbox_item(YTK_MSGBOX(info_box), user_at_fqdn);
 
 	if (menu_user->edit[0] && menu_user->edit[1] && menu_user->edit[2]) {
@@ -365,11 +365,11 @@ view_user_info(ytk_menu_item *item)
 	}
 
 	if (menu_user->gt.version) {
-		sprintf(gtalk_version, _("Version info:    %s"), menu_user->gt.version);
+		snprintf(gtalk_version, sizeof(gtalk_version), _("Version info:    %s"), menu_user->gt.version);
 		ytk_add_msgbox_item(YTK_MSGBOX(info_box), gtalk_version);
 	}
 	if (menu_user->gt.system) {
-		sprintf(system_type, _("System type:     %s"), menu_user->gt.system);
+		snprintf(system_type, sizeof(gtalk_version),_("System type:     %s"), menu_user->gt.system);
 		ytk_add_msgbox_item(YTK_MSGBOX(info_box), system_type);
 	}
 	if (menu_user->edit[0] && menu_user->edit[1] && menu_user->edit[2]) {
@@ -456,7 +456,7 @@ init_userlist()
 		}
 	}
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
-	sprintf(buf, "Me (%.36s)", me->full_name);
+	snprintf(buf, sizeof(buf), "Me (%.36s)", me->full_name);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), buf, me->key, handle_userlist_menu);
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
 	ytk_add_menu_item(YTK_MENU(userlist_menu), _("Rering all unconnected"), 'R', handle_userlist_menu);
