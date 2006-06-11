@@ -47,19 +47,26 @@ gtalk_process(yuser *user, ychar data)
 		case GTALK_IMPORT_REQUEST:
 			break;
 		case GTALK_VERSION_MESSAGE:
-			if (user->gt.version != NULL)
-				free_mem(user->gt.version);
-			user->gt.version = gtalk_parse_version(user->gt.buf);
-			/* find the system name (after last space character) */
-			if (user->gt.version != NULL) {
-				user->gt.system = strrchr(user->gt.version, ' ');
-				if (user->gt.system != NULL) {
-					*(user->gt.system) = '\0';
-					user->gt.system++;
+			{
+				/* Parse the version message and break out if it's invalid. */
+				char *version = gtalk_parse_version( user->gt.buf );
+				if( !version )
+					break;
+
+				if( user->gt.version )
+					free_mem(user->gt.version);
+				user->gt.version = version;
+				/* find the system name (after last space character) */
+				if (user->gt.version != NULL) {
+					user->gt.system = strrchr(user->gt.version, ' ');
+					if (user->gt.system != NULL) {
+						*(user->gt.system) = '\0';
+						user->gt.system++;
+					}
 				}
+				retitle_all_terms();
+				break;
 			}
-			retitle_all_terms();
-			break;
 		}
 		return;
 	}
