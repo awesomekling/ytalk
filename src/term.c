@@ -1100,9 +1100,10 @@ static int spew_buffer_size = 0;
 void
 spew_free()
 {
-	if( spew_buffer != NULL )
+	if( spew_buffer )
 	{
 		free_mem( spew_buffer );
+		spew_buffer = NULL;
 	}
 	spew_buffer_size = 0;
 }
