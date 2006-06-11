@@ -201,6 +201,7 @@ set_terminal_size(int fd, int rows, int cols)
 #ifdef TIOCSWINSZ
 	struct winsize winsize;
 
+	memset( &winsize, 0, sizeof( struct winsize ));
 	winsize.ws_row = rows;
 	winsize.ws_col = cols;
 	ioctl(fd, TIOCSWINSZ, &winsize);
