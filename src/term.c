@@ -1253,7 +1253,7 @@ spew_term(yuser *user, int fd, int rows, int cols)
 		if (user->altchar)
 			write(fd, "\033[(0", 4);
 		if (user->csx)
-			write(fd, &YT_ACS_ON, 1);
+			write(fd, "\xE", 1);
 
 	} else {
 		y = first_interesting_row(user, rows, cols);

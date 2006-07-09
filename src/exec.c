@@ -367,7 +367,7 @@ kill_exec()
 		me->altchar = 0;
 	}
 	if (me->csx) {
-		send_users(me, (ychar *)&YT_ACS_OFF, 1, (ychar *)&YT_ACS_OFF, 1);
+		send_users(me, (ychar *)"\xF", 1, (ychar *)"\xF", 1);
 		me->csx = 0;
 	}
 	me->yac.alternate_charset = 0;

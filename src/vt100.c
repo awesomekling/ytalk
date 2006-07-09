@@ -35,9 +35,6 @@ static unsigned char attr_map[10] = {
 	0
 };
 
-char YT_ACS_ON = '\xE';
-char YT_ACS_OFF = '\xF';
-
 void
 vt100_process(yuser *user, char data)
 {

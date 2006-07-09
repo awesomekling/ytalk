@@ -288,9 +288,6 @@ extern char *user_format;
 extern char *bottom_msg;	/* current status message */
 extern ylong bottom_time;	/* timestamp of the above */
 
-extern char YT_ACS_ON;		/* activates vt100 acs */
-extern char YT_ACS_OFF;		/* deactivates it */
-
 /* ---- some machine compatibility definitions ---- */
 
 #ifndef errno
