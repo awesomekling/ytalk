@@ -23,7 +23,6 @@
 #include "ytp.h"
 #include "socket.h"
 #include "ymenu.h"
-#include "mem.h"
 
 #ifdef HAVE_ARPA_INET_H
 #  include <arpa/inet.h>
@@ -123,14 +122,14 @@ read_autoport(int fd)
 	char *estr;
 	static struct sockaddr_in temp;
 
-	pack = get_mem(sizeof(v2_pack));
+	pack = malloc(sizeof(v2_pack));
 
 	/* accept the connection */
 
 	socklen = sizeof(struct sockaddr_in);
 	if ((fd = accept(autofd, (struct sockaddr *) & temp, &socklen)) == -1) {
 		show_error("read_autoport: accept() failed");
-		free_mem(pack);
+		free(pack);
 		return;
 	}
 	/*
@@ -140,7 +139,7 @@ read_autoport(int fd)
 	if (full_read(fd, (char *) pack, V2_PACKLEN) < 0 || pack->code != V2_AUTO) {
 		show_error("read_autoport: unknown auto-invite connection");
 		close(fd);
-		free_mem(pack);
+		free(pack);
 		return;
 	}
 	close(fd);
@@ -149,20 +148,20 @@ read_autoport(int fd)
 	pack->name[V2_NAMELEN - 1] = '\0';
 	pack->host[V2_HOSTLEN - 1] = '\0';
 
-	estr = get_mem(V2_NAMELEN + V2_HOSTLEN + 20);
+	estr = malloc(V2_NAMELEN + V2_HOSTLEN + 20);
 
 	if (!(def_flags & FL_INVITE)) {
 		snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "Talk to %s@%s?", pack->name, pack->host);
 		if (yes_no(estr) == 'n') {
-			free_mem(estr);
-			free_mem(pack);
+			free(estr);
+			free(pack);
 			return;
 		}
 	}
 	snprintf(estr, V2_NAMELEN + V2_HOSTLEN + 20, "%s@%s", pack->name, pack->host);
 	invite(estr, 1);	/* we should be expected */
-	free_mem(estr);
-	free_mem(pack);
+	free(estr);
+	free(pack);
 }
 
 /*
@@ -458,7 +457,7 @@ find_daemon(ylong addr)
 				show_error("find_daemon: second select() failed");
 		} while (n > 0);
 
-		h = (hostinfo *) get_mem(sizeof(hostinfo));
+		h = (hostinfo *) malloc(sizeof(hostinfo));
 		h->next = host_head;
 		host_head = h;
 		h->host_addr = addr;

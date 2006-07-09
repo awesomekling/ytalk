@@ -77,7 +77,7 @@ do_runcmd(ytk_inputbox *b)
 
 	if (command != NULL) {
 		execute(command);
-		free_mem(command);
+		free(command);
 	}
 }
 
@@ -98,7 +98,7 @@ do_save_user_to_file(ytk_inputbox *b)
 	hide_ymenu();
 	save_user_to_file(menu_user, filename);
 	if (filename)
-		free_mem(filename);
+		free(filename);
 }
 
 static void

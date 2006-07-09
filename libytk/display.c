@@ -86,7 +86,7 @@ ytk_display_msgbox(ytk_thing *t)
 	char *linebuf;
 	int y = 1;
 
-	linebuf = get_mem(t->width * sizeof(char) + 1);
+	linebuf = malloc(t->width * sizeof(char) + 1);
 
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
@@ -102,7 +102,7 @@ ytk_display_msgbox(ytk_thing *t)
 			y++;
 		}
 	}
-	free_mem(linebuf);
+	free(linebuf);
 }
 
 static void
@@ -112,7 +112,7 @@ ytk_display_menu(ytk_thing *t)
 	char *linebuf;
 	int y = 1;
 
-	linebuf = get_mem(t->width * sizeof(char) + 1);
+	linebuf = malloc(t->width * sizeof(char) + 1);
 	wattron(t->win, COLOR_PAIR(t->colors) | t->attr);
 
 	while ((it = ytk_next_menu_item(YTK_MENU(t), it))) {
@@ -136,7 +136,7 @@ ytk_display_menu(ytk_thing *t)
 			y++;
 		}
 	}
-	free_mem(linebuf);
+	free(linebuf);
 }
 
 void

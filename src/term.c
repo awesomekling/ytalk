@@ -19,7 +19,6 @@
  */
 
 #include "header.h"
-#include "mem.h"
 #include "ymenu.h"
 #include "cwin.h"
 #include <termcap.h>
@@ -120,8 +119,8 @@ init_termcap()
 {
 	char *term, *tcks;
 	int success;
-	tcbp = get_mem(4096);
-	tcapp = tcap = get_mem(4096);
+	tcbp = malloc(4096);
+	tcapp = tcap = malloc(4096);
 	if ((term = getenv("TERM")) == NULL) {
 		fprintf(stderr, "TERM not set.\n");
 		exit(YTE_INIT);
@@ -148,9 +147,9 @@ end_termcap()
 	if (tcke != NULL)
 		printf("%s", tcke);
 	if (tcap != NULL)
-		free_mem(tcap);
+		free(tcap);
 	if (tcbp != NULL)
-		free_mem(tcbp);
+		free(tcbp);
 }
 
 char *
@@ -281,10 +280,10 @@ close_term(yuser *user)
 	if (user->scr) {
 		close_curses(user);
 		for (i = 0; i < user->t_rows; i++)
-			free_mem(user->scr[i]);
-		free_mem(user->scr);
+			free(user->scr[i]);
+		free(user->scr);
 		user->scr = NULL;
-		free_mem(user->scr_tabs);
+		free(user->scr_tabs);
 		user->scr_tabs = NULL;
 		user->t_rows = user->rows = 0;
 		user->t_cols = user->cols = 0;
@@ -838,7 +837,7 @@ resize_win(yuser *user, int height, int width)
 
 	new_y = -1;
 	y_pos = 0;
-	new_scr = (yachar **) get_mem(height * sizeof(yachar *));
+	new_scr = (yachar **) malloc(height * sizeof(yachar *));
 	if (user->scr == NULL) {
 		user->t_rows = user->rows = 0;
 		user->t_cols = user->cols = 0;
@@ -850,8 +849,8 @@ resize_win(yuser *user, int height, int width)
 		new_y = j - 1;
 		y_pos = user->y;
 		for (; j < user->t_rows; j++)
-			free_mem(user->scr[j]);
-		free_mem(user->scr);
+			free(user->scr[j]);
+		free(user->scr);
 	} else {
 		/* shift all recent lines to top of screen */
 
@@ -866,10 +865,10 @@ resize_win(yuser *user, int height, int width)
 		for (i++; i < user->t_rows; i++) {
 			if (++j >= user->t_rows)
 				j = 0;
-			free_mem(user->scr[j]);
+			free(user->scr[j]);
 		}
 		y_pos = new_y;
-		free_mem(user->scr);
+		free(user->scr);
 	}
 	user->scr = new_scr;
 
@@ -877,12 +876,12 @@ resize_win(yuser *user, int height, int width)
 
 	if (width > user->t_cols) {
 		for (i = 0; i <= new_y; i++) {
-			user->scr[i] = (yachar *) realloc_mem(user->scr[i], width * sizeof(yachar));
+			user->scr[i] = (yachar *) realloc(user->scr[i], width * sizeof(yachar));
 			for (j = user->t_cols; j < width; j++)
 				user->scr[i][j] = emptyc;
 		}
 
-		user->scr_tabs = realloc_mem(user->scr_tabs, width * sizeof(int));
+		user->scr_tabs = realloc(user->scr_tabs, width * sizeof(int));
 		for (j = user->t_cols; j < width; j++) {
 			if (j % 8 == 0)
 				user->scr_tabs[j] = 1;
@@ -893,7 +892,7 @@ resize_win(yuser *user, int height, int width)
 		user->scr_tabs[width - 1] = 1;
 	}
 	for (i = new_y + 1; i < height; i++) {
-		c = user->scr[i] = (yachar *) get_mem(width * sizeof(yachar));
+		c = user->scr[i] = (yachar *) malloc(width * sizeof(yachar));
 		for (j = 0; j < width; j++)
 			*(c++) = emptyc;
 	}
@@ -1039,7 +1038,7 @@ void
 msg_term(char *str)
 {
 	if (bottom_msg != NULL)
-		free_mem(bottom_msg);
+		free(bottom_msg);
 	bottom_msg = str_copy(str);
 	bottom_time = time(NULL);
 	update_message_curses();
@@ -1103,7 +1102,7 @@ spew_free()
 {
 	if( spew_buffer )
 	{
-		free_mem( spew_buffer );
+		free( spew_buffer );
 		spew_buffer = NULL;
 	}
 	spew_buffer_size = 0;
@@ -1117,7 +1116,7 @@ spew_alloc( int length )
 
 	if( spew_buffer_size < wanted_size )
 	{
-		spew_buffer = realloc_mem( spew_buffer, wanted_size );
+		spew_buffer = realloc( spew_buffer, wanted_size );
 		spew_buffer_size = wanted_size;
 	}
 }

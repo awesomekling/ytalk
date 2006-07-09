@@ -27,7 +27,7 @@ ytk_new_msgbox(char *title)
 	ytk_thing *new_thing;
 	ytk_msgbox *new_msgbox;
 	new_thing = ytk_new_thing();
-	new_msgbox = get_mem(sizeof(ytk_msgbox));
+	new_msgbox = malloc(sizeof(ytk_msgbox));
 	new_msgbox->base = new_thing;
 	new_thing->title = str_copy(title);
 	new_msgbox->first = NULL;
@@ -43,25 +43,25 @@ ytk_destroy_msgbox(ytk_msgbox *m)
 	ytk_msgbox_item *it, *itn;
 
 	if (m->first == NULL) {
-		free_mem(m);
+		free(m);
 		return;
 	}
 	it = m->first;
 	while (it != NULL) {
 		itn = it->next;
 		if (it->text != NULL)
-			free_mem(it->text);
-		free_mem(it);
+			free(it->text);
+		free(it);
 		it = itn;
 	}
-	free_mem(m);
+	free(m);
 }
 
 ytk_msgbox_item *
 ytk_add_msgbox_item(ytk_msgbox *m, char *text)
 {
 	ytk_msgbox_item *new;
-	new = get_mem(sizeof(ytk_msgbox_item));
+	new = malloc(sizeof(ytk_msgbox_item));
 	new->text = str_copy(text);
 	new->next = NULL;
 	new->prev = NULL;

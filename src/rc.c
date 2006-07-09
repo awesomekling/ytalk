@@ -20,7 +20,6 @@
  */
 
 #include "header.h"
-#include "mem.h"
 #include "cwin.h"
 
 #include <pwd.h>
@@ -203,7 +202,7 @@ new_alias(char *a1, char *a2)
 	if (a2 == NULL)
 		return 0;
 
-	a = get_mem(sizeof(struct alias));
+	a = malloc(sizeof(struct alias));
 	at = strchr(a1, '@');
 	if (at == a1) {
 		a->type = ALIAS_AFTER;
@@ -244,14 +243,14 @@ set_shell(char *shell)
 		pw = getpwuid( getuid() );
 		endpwent();
 		if (pw != NULL) {
-			gshell = (char *) realloc_mem(gshell, strlen(pw->pw_dir) + strlen(shell) + 1);
+			gshell = (char *) realloc(gshell, strlen(pw->pw_dir) + strlen(shell) + 1);
 			shell++;
 			snprintf(gshell, strlen(pw->pw_dir) + strlen(shell) + 1, "%s%s", pw->pw_dir, shell);
 		} else {
 			return 0;
 		}
 	} else {
-		gshell = (char *) realloc_mem(gshell, strlen(shell) + 1);
+		gshell = (char *) realloc(gshell, strlen(shell) + 1);
 		snprintf(gshell, strlen(shell) + 1, "%s", shell);
 	}
 	return 1;
@@ -353,7 +352,7 @@ read_rcfile(char *fname)
 					show_error(ebuf);
 					return;
 				}
-				vhost = (char *) realloc_mem(vhost, 1 + strlen(tmp));
+				vhost = (char *) realloc(vhost, 1 + strlen(tmp));
 				strcpy(vhost, tmp);
 			} else if (strcmp(cmd, "title_format") == 0) {
 				found = 1;
@@ -363,7 +362,7 @@ read_rcfile(char *fname)
 					show_error(ebuf);
 					return;
 				}
-				title_format = (char *) realloc_mem(title_format, 1 + strlen(tmp));
+				title_format = (char *) realloc(title_format, 1 + strlen(tmp));
 				strcpy(title_format, tmp);
 			} else if (strcmp(cmd, "user_format") == 0) {
 				found = 1;
@@ -373,7 +372,7 @@ read_rcfile(char *fname)
 					show_error(ebuf);
 					return;
 				}
-				user_format = (char *) realloc_mem(user_format, 1 + strlen(tmp));
+				user_format = (char *) realloc(user_format, 1 + strlen(tmp));
 				strcpy(user_format, tmp);
 			} else if (strcmp(cmd, "shell") == 0) {
 				found = 1;
@@ -468,10 +467,10 @@ read_ytalkrc()
 	pw = getpwuid( getuid() );
 	endpwent();
 	if (pw != NULL) {
-		fname = get_mem((strlen(pw->pw_dir) + 10) * sizeof(char));
+		fname = malloc((strlen(pw->pw_dir) + 10) * sizeof(char));
 		snprintf(fname, strlen(pw->pw_dir) + 10, "%s/.ytalkrc", pw->pw_dir);
 		read_rcfile(fname);
-		free_mem(fname);
+		free(fname);
 	}
 
 	/* set all default flags */

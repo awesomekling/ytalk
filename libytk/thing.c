@@ -25,7 +25,7 @@ ytk_thing *
 ytk_new_thing()
 {
 	ytk_thing *new;
-	new = get_mem(sizeof(ytk_thing));
+	new = malloc(sizeof(ytk_thing));
 	new->type = YTK_T_NULL;
 	new->object = NULL;
 	new->win = NULL;
@@ -58,7 +58,7 @@ ytk_delete_thing(ytk_thing *t)
 			return;
 		}
 		if (t->title != NULL)
-			free_mem(t->title);
-		free_mem(t);
+			free(t->title);
+		free(t);
 	}
 }

@@ -22,7 +22,6 @@
 #define __YTK_H__
 
 #include "header.h"
-#include "mem.h"
 
 #ifdef HAVE_NCURSES_H
 # include <ncurses.h>

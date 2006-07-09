@@ -20,7 +20,6 @@
  */
 
 #include "header.h"
-#include "mem.h"
 #include "ymenu.h"
 #include "cwin.h"
 
@@ -56,7 +55,7 @@ new_ywin(yuser *user)
 {
 	register ywin *out;
 
-	out = (ywin *) get_mem(sizeof(ywin));
+	out = (ywin *) malloc(sizeof(ywin));
 	memset(out, 0, sizeof(ywin));
 	out->user = user;
 	return out;
@@ -85,7 +84,7 @@ draw_title(ywin *w)
 	int x;
 	int rl = 0, rj = 0;
 	char *ta, *t;
-	t = ta = (char *) get_mem(COLS * sizeof(char));
+	t = ta = (char *) malloc(COLS * sizeof(char));
 	user_title(w->user, t, COLS - 1);
 	move(w->row - 1, w->col);
 	attron(COLOR_PAIR(ui_colors) | ui_attr);
@@ -120,7 +119,7 @@ draw_title(ywin *w)
 	 */
 	refresh();
 
-	free_mem(ta);
+	free(ta);
 }
 
 /*
@@ -374,7 +373,7 @@ close_curses(yuser *user)
 	delwin(w->win);
 	if (scrolling(user))
 		delwin(w->swin);
-	free_mem(w);
+	free(w);
 	w = NULL;
 	curses_redraw();
 }

@@ -25,7 +25,7 @@ ytk_stack *
 ytk_new_stack()
 {
 	ytk_stack *new;
-	new = get_mem(sizeof(ytk_stack));
+	new = malloc(sizeof(ytk_stack));
 	new->top = NULL;
 	return new;
 }
@@ -34,7 +34,7 @@ void
 ytk_push(ytk_stack *st, ytk_thing *t)
 {
 	ytk_stack_item *new;
-	new = get_mem(sizeof(ytk_stack_item));
+	new = malloc(sizeof(ytk_stack_item));
 	new->thing = t;
 	new->next = NULL;
 	new->prev = st->top;
@@ -56,7 +56,7 @@ ytk_pop(ytk_stack *st)
 	ret = st->top->thing;
 
 	newtop = st->top->prev;
-	free_mem(st->top);
+	free(st->top);
 	st->top = newtop;
 
 	if (st->top != NULL)
@@ -115,7 +115,7 @@ ytk_purge_stack(ytk_stack *st)
 	ytk_thing *t;
 	while ((t = ytk_pop(st)))
 		ytk_delete_thing(t);
-	free_mem(st);
+	free(st);
 }
 
 int

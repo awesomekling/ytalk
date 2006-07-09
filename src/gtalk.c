@@ -21,7 +21,6 @@
 
 #include "header.h"
 #include "cwin.h"
-#include "mem.h"
 #include "gtalk.h"
 #include "ymenu.h"
 
@@ -37,7 +36,7 @@ gtalk_process(yuser *user, ychar data)
 	}
 
 	if (user->gt.buf == NULL)
-		user->gt.buf = get_mem(MAXBUF);
+		user->gt.buf = malloc(MAXBUF);
 
 	if (data == user->KILL || data == '\n') {
 		user->gt.got_gt = 0;
@@ -54,7 +53,7 @@ gtalk_process(yuser *user, ychar data)
 					break;
 
 				if( user->gt.version )
-					free_mem(user->gt.version);
+					free(user->gt.version);
 				user->gt.version = version;
 				/* find the system name (after last space character) */
 				if (user->gt.version != NULL) {
@@ -98,7 +97,7 @@ gtalk_send_version(yuser *user)
 {
 	char *buf;
 	int len;
-	buf = get_mem(strlen(me->user_name) + strlen(PACKAGE_VERSION) + strlen(SYSTEM_TYPE) + 32);
+	buf = malloc(strlen(me->user_name) + strlen(PACKAGE_VERSION) + strlen(SYSTEM_TYPE) + 32);
 	len = snprintf(buf, strlen(me->user_name) + strlen(PACKAGE_VERSION) + strlen(SYSTEM_TYPE) + 32,
 						"%c%c%s %d YTALK %s %s%c\n",
 						GTALK_ESCAPE,
@@ -110,5 +109,5 @@ gtalk_send_version(yuser *user)
 						me->KILL
 	);
 	write(user->fd, buf, len);
-	free_mem(buf);
+	free(buf);
 }

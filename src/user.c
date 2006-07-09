@@ -22,7 +22,6 @@
 #include "ytp.h"
 #include "cwin.h"
 #include "ymenu.h"
-#include "mem.h"
 
 #include <stdio.h>
 #include <pwd.h>
@@ -70,7 +69,7 @@ generate_full_name(yuser *user)
 	register char *c, *d, *ce;
 
 	if (user->full_name == NULL)
-		user->full_name = get_mem(50);
+		user->full_name = malloc(50);
 	c = user->full_name, ce = user->full_name + 49;
 
 	for (d = user->user_name; *d && c < ce; d++)
@@ -185,7 +184,7 @@ new_user(char *name, char *hostname, char *tty)
 	}
 	/* create the user record */
 
-	out = (yuser *) get_mem(sizeof(yuser));
+	out = (yuser *) malloc(sizeof(yuser));
 	memset(out, 0, sizeof(yuser));
 	out->user_name = str_copy(name);
 	out->host_name = str_copy(hostname);
@@ -263,22 +262,22 @@ free_user(yuser *user)
 		bail(YTE_SUCCESS_PROMPT);
 
 	close_term(user);
-	free_mem(user->full_name);
-	free_mem(user->user_name);
-	free_mem(user->host_name);
-	free_mem(user->tty_name);
+	free(user->full_name);
+	free(user->user_name);
+	free(user->host_name);
+	free(user->tty_name);
 
 	if (user->gt.buf)
-		free_mem(user->gt.buf);
+		free(user->gt.buf);
 	if (user->dbuf)
-		free_mem(user->dbuf);
+		free(user->dbuf);
 	if (user->fd) {
 		remove_fd(user->fd);
 		fd_to_user[user->fd] = NULL;
 		close(user->fd);
 	}
 	free_scroll(user);
-	free_mem(user);
+	free(user);
 	if (connect_list == NULL && wait_list != NULL)
 		msg_term("Waiting for connection...");
 	user_winch = 1;
@@ -484,22 +483,22 @@ free_users()
 	for (u = user_list; u != NULL;) {
 		un = u->unext;
 		free_scroll(u);
-		free_mem(u->user_name);
-		free_mem(u->host_name);
-		free_mem(u->host_fqdn);
-		free_mem(u->tty_name);
-		free_mem(u->full_name);
+		free(u->user_name);
+		free(u->host_name);
+		free(u->host_fqdn);
+		free(u->tty_name);
+		free(u->full_name);
 		if (u->gt.buf)
-			free_mem(u->gt.buf);
+			free(u->gt.buf);
 		if (u->term != NULL)
-			free_mem(u->term);
+			free(u->term);
 		if (u->scr != NULL) {
 			for (i = 0; i < u->rows; i++)
-				free_mem(u->scr[i]);
-			free_mem(u->scr);
-			free_mem(u->scr_tabs);
+				free(u->scr[i]);
+			free(u->scr);
+			free(u->scr_tabs);
 		}
-		free_mem(u);
+		free(u);
 		u = un;
 	}
 }

@@ -21,7 +21,6 @@
 
 #include "header.h"
 #include "cwin.h"
-#include "mem.h"
 
 #include <assert.h>
 
@@ -33,7 +32,7 @@ init_scroll(yuser *user)
 {
 	/* Initialize scrollback (if we're keeping more than 0 lines) */
 	if (scrollback_lines > 0) {
-		user->scrollback = (yachar **) get_mem((scrollback_lines+1) * sizeof(yachar *));
+		user->scrollback = (yachar **) malloc((scrollback_lines+1) * sizeof(yachar *));
 		memset(user->scrollback, 0, (scrollback_lines+1) * sizeof(yachar *));
 		user->scrollpos = 0;
 	}
@@ -46,8 +45,8 @@ free_scroll(yuser *user)
 	long int i;
 	if (scrollback_lines && user->scrollback) {
 		for (i = 0; (i < scrollback_lines) && (user->scrollback[i]); i++)
-			free_mem(user->scrollback[i]);
-		free_mem(user->scrollback);
+			free(user->scrollback[i]);
+		free(user->scrollback);
 	}
 }
 
@@ -162,14 +161,14 @@ scroll_add_line(yuser *user, yachar *line)
 		y = user->scrollend;
 		if (y < scrollback_lines - 1)
 			user->scrollend++;
-		user->scrollback[y] = get_mem((user->cols + 1) * sizeof(yachar));
+		user->scrollback[y] = malloc((user->cols + 1) * sizeof(yachar));
 	} else {
 		/* Displace the history buffer one step to make room. */
 		yachar *oldest = user->scrollback[0];
 		for (y = 0; y < scrollback_lines - 1; ++y) {
 			user->scrollback[y] = user->scrollback[y + 1];
 		}
-		user->scrollback[y] = realloc_mem(oldest, (user->cols + 1) * sizeof(yachar));
+		user->scrollback[y] = realloc(oldest, (user->cols + 1) * sizeof(yachar));
 	}
 	memcpy(user->scrollback[y], line, (user->cols * sizeof(yachar)));
 

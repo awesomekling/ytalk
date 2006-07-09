@@ -21,7 +21,6 @@
 #include "header.h"
 #include "cwin.h"
 #include "ymenu.h"
-#include "mem.h"
 
 #include <signal.h>
 
@@ -52,11 +51,11 @@ bail(int n)
 	end_term();
 	free_users();
 	if (gshell != NULL)
-		free_mem(gshell);
+		free(gshell);
 	if (title_format != NULL)
-		free_mem(title_format);
+		free(title_format);
 	if (user_format != NULL)
-		free_mem(user_format);
+		free(user_format);
 #ifdef YTALK_DEBUG
 	clear_all();
 #endif
@@ -109,7 +108,7 @@ str_copy(char *str)
 	if (str == NULL)
 		return NULL;
 	len = strlen(str) + 1;
-	out = get_mem(len);
+	out = malloc(len);
 	memcpy(out, str, len);
 	return out;
 }

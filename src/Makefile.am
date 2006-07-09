@@ -12,13 +12,11 @@ ytalk_SOURCES = \
 	exec.c \
 	getpty.c \
 	cwin.c \
-	mem.c \
 	scroll.c \
 	vt100.c \
 	gtalk.c \
 	header.h \
 	cwin.h \
-	mem.h \
 	socket.h \
 	ymenu.h \
 	gtalk.h

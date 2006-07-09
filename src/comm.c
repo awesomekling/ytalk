@@ -23,7 +23,6 @@
 #include "ytp.h"
 #include "socket.h"
 #include "ymenu.h"
-#include "mem.h"
 #include "cwin.h"
 #include "gtalk.h"
 
@@ -70,7 +69,7 @@ drain_user(yuser *user, int len, void (*func) (yuser *, void *))
 {
 	if (len > user->dbuf_size) {
 		user->dbuf_size = len + 64;
-		user->dbuf = (ychar *) realloc_mem(user->dbuf, user->dbuf_size);
+		user->dbuf = (ychar *) realloc(user->dbuf, user->dbuf_size);
 	}
 	user->drain = len;
 	user->dptr = user->dbuf;
@@ -162,8 +161,8 @@ v2_process(yuser *user, v2_pack *pack)
 	ylong host_addr;
 	char *estr, *name, *host;
 
-	name = get_mem(V2_NAMELEN + 1);
-	host = get_mem(V2_HOSTLEN + 1);
+	name = malloc(V2_NAMELEN + 1);
+	host = malloc(V2_HOSTLEN + 1);
 
 	/*
 	 * Ytalk version 2.* didn't have very clever import/export
@@ -178,11 +177,11 @@ v2_process(yuser *user, v2_pack *pack)
 		snprintf(errstr, MAXERR, "Unknown host: '%s'", host);
 		show_error(errstr);
 		show_error("port from ytalk V2.? failed");
-		free_mem(host);
-		free_mem(name);
+		free(host);
+		free(name);
 		return;
 	}
-	estr = get_mem(V2_NAMELEN + V2_HOSTLEN + 20);
+	estr = malloc(V2_NAMELEN + V2_HOSTLEN + 20);
 	switch (pack->code) {
 	case V2_IMPORT:
 		/*
@@ -222,9 +221,9 @@ v2_process(yuser *user, v2_pack *pack)
 		invite(estr, 1);	/* we should be expected */
 		break;
 	}
-	free_mem(host);
-	free_mem(name);
-	free_mem(estr);
+	free(host);
+	free(name);
+	free(estr);
 }
 
 /*
@@ -237,9 +236,9 @@ v3_process_pack(yuser *user, v3_pack *pack)
 	ylong host_addr, pid;
 	char *estr, *name, *host;
 
-	estr = get_mem(V3_NAMELEN + V3_HOSTLEN + 20);
-	name = get_mem(V3_NAMELEN + 1);
-	host = get_mem(V3_HOSTLEN + 1);
+	estr = malloc(V3_NAMELEN + V3_HOSTLEN + 20);
+	name = malloc(V3_NAMELEN + 1);
+	host = malloc(V3_HOSTLEN + 1);
 
 	strncpy(name, pack->name, V3_NAMELEN);
 	strncpy(host, pack->host, V3_HOSTLEN);
@@ -297,9 +296,9 @@ v3_process_pack(yuser *user, v3_pack *pack)
 		invite(estr, 1);	/* we should be expected */
 		break;
 	}
-	free_mem(host);
-	free_mem(name);
-	free_mem(estr);
+	free(host);
+	free(name);
+	free(estr);
 }
 
 /*
@@ -690,9 +689,9 @@ contact_user(int fd)
 	if (getpeername(n, (struct sockaddr *) & peer, &socklen) >= 0) {
 		if (IN_ADDR(peer) != user->host_addr) {
 			if (user->host_name)
-				free_mem(user->host_name);
+				free(user->host_name);
 			if (user->host_fqdn)
-				free_mem(user->host_fqdn);
+				free(user->host_fqdn);
 			user->host_addr = IN_ADDR(peer);
 			hname = host_name(user->host_addr);
 			user->host_name = str_copy(hname);
@@ -812,7 +811,7 @@ invite(char *name, int send_announce)
 		}
 	}
 	user = new_user(hisname, hishost, histty);
-	free_mem(hisname);
+	free(hisname);
 	if (user == NULL)
 		return NULL;
 
@@ -928,7 +927,7 @@ house_clean()
 
 	if (bottom_msg != NULL && bottom_time != 0) {
 		if (t - bottom_time >= 10) {
-			free_mem(bottom_msg);
+			free(bottom_msg);
 			bottom_msg = NULL;
 			update_message_curses();
 		}
@@ -1062,11 +1061,11 @@ send_users(yuser *user, ychar *buf, int len, ychar *cbuf, int clen)
 	/* duplicate OOB markers to allow transmission of 'ý' */
 	if ((len << 1) > o_len) {
 		o_len = (len << 1) + 512;
-		o_buf = realloc_mem(o_buf, o_len);
+		o_buf = realloc(o_buf, o_len);
 	}
 	if ((clen << 1) > o_clen) {
 		o_clen = (clen << 1) + 512;
-		o_cbuf = realloc_mem(o_cbuf, o_clen);
+		o_cbuf = realloc(o_cbuf, o_clen);
 	}
 	for (b = buf, o = o_buf; len > 0; b++, len--) {
 		*(o++) = *b;
@@ -1241,7 +1240,7 @@ my_input(yuser *user, ychar *buf, int len)
 	/* Substitution buffer for LF -> CRLF */
 	if ((len << 1) > nlen) {
 		nlen = (len << 1) + 512;
-		nbuf = realloc_mem(nbuf, nlen);
+		nbuf = realloc(nbuf, nlen);
 	}
 
 	/* Process input normally */

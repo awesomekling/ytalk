@@ -27,11 +27,11 @@ ytk_new_inputbox(char *title, int size, void (*callback) (ytk_inputbox *))
 	ytk_thing *new_thing;
 	ytk_inputbox *new_inputbox;
 	new_thing = ytk_new_thing();
-	new_inputbox = get_mem(sizeof(ytk_inputbox));
+	new_inputbox = malloc(sizeof(ytk_inputbox));
 	new_inputbox->base = new_thing;
 	new_thing->title = str_copy(title);
-	new_inputbox->data = get_mem((size + 1) * sizeof(char));
-	new_inputbox->buf = get_mem((size + 3) * sizeof(char));
+	new_inputbox->data = malloc((size + 1) * sizeof(char));
+	new_inputbox->buf = malloc((size + 3) * sizeof(char));
 	new_inputbox->data[0] = '\0';
 	new_inputbox->buf[0] = '\0';
 	new_inputbox->size = size;
@@ -45,9 +45,9 @@ ytk_new_inputbox(char *title, int size, void (*callback) (ytk_inputbox *))
 void
 ytk_destroy_inputbox(ytk_inputbox *b)
 {
-	free_mem(b->data);
-	free_mem(b->buf);
-	free_mem(b);
+	free(b->data);
+	free(b->buf);
+	free(b);
 }
 
 void
