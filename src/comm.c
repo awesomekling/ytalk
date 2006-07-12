@@ -1304,6 +1304,11 @@ my_input(yuser *user, ychar *buf, int len)
 						j = (n - nbuf);
 						show_input(me, nbuf, j);
 						send_users(user, c, i, nbuf, j);
+
+						/* If we start typing in scrolling mode, scroll the view to bottom
+						 * so we can see what we're writing. */
+						if(scrolling(me))
+							scroll_to_bottom(me);
 					}
 				}
 				if (len > 0) {	/* we broke for a special
