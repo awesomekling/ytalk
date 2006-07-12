@@ -123,6 +123,22 @@ scroll_down(yuser *user)
 	update_scroll_term(user);
 }
 
+void
+scroll_to_bottom(yuser *user)
+{
+	assert(user);
+
+	/* Check that we're actually using scrollback and that at least one
+	 * line has been logged. */
+	if (!scrollback_lines || !user->scrollback[0])
+		return;
+
+	user->scrollpos = user->scrollend;
+	disable_scrolling(user);
+	end_scroll_term(user);
+	update_scroll_term(user);
+}
+
 int
 scrolled_amount(yuser *user)
 {

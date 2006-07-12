@@ -1283,7 +1283,7 @@ my_input(yuser *user, ychar *buf, int len)
 						break;
 					else if (*buf == 2)		/* ^B - Bold */
 						break;
-					else if (*buf == 14 || *buf == 6 || *buf == 16)	/* ^N, ^F or ^P */
+					else if (*buf == 14 || *buf == 6 || *buf == 16 || *buf == 5)	/* ^N, ^F, ^P or ^E */
 						break;
 					else if (*buf == 12 || *buf == 18)	/* ^L or ^R */
 						break;
@@ -1347,6 +1347,9 @@ my_input(yuser *user, ychar *buf, int len)
 						buf++, len--;
 					} else if (*buf == 12 || *buf == 18) {	/* ^L or ^R */
 						redraw_all_terms();
+						buf++, len--;
+					} else if (*buf == 5) {
+						scroll_to_bottom(scuser);
 						buf++, len--;
 					}
 				}

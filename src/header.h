@@ -428,6 +428,7 @@ extern void free_scroll(yuser *);
 extern void scroll_up(yuser *);
 extern void scroll_down(yuser *);
 extern int scrolled_amount(yuser *);
+extern void scroll_to_bottom(yuser *);
 extern void scroll_add_line(yuser *, yachar *);
 #define scrolling(user)				((user)->scroll == 1)
 #define enable_scrolling(user)		((user)->scroll = 1)
