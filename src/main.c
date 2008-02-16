@@ -56,9 +56,6 @@ bail(int n)
 		free(title_format);
 	if (user_format != NULL)
 		free(user_format);
-#ifdef YTALK_DEBUG
-	clear_all();
-#endif
 	exit(n == YTE_SUCCESS_PROMPT ? YTE_SUCCESS : n);
 }
 

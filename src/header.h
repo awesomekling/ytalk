@@ -112,8 +112,12 @@ typedef struct {
 	BITFIELD(alternate_charset, 1);
 } yachar;
 
-typedef unsigned int ylong;		/* this should work both on 32-bit and 64-bit
-				 * machines  -Roger */
+#ifdef HAVE_STDINT_H
+typedef uint32_t ylong;
+#else
+/* this should work both on 32-bit and 64-bit machines  -Roger */
+typedef unsigned int ylong;
+#endif
 
 #ifndef HAVE_SOCKLEN_T
 typedef int socklen_t;
