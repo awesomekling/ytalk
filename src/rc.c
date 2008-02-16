@@ -61,6 +61,7 @@ static options opts[] = {
 	{"require_caps",	FL_CAPS		},
 	{"no_invite",		FL_NOAUTO	},
 	{"prompt_quit",		FL_PROMPTQUIT	},
+	{"persist",		FL_PERSIST	},
 	{(char *)NULL,		0		}
 };
 

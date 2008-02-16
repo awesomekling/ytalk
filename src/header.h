@@ -229,6 +229,7 @@ typedef struct _ywin {
 #define FL_BEEP		0x00000200L	/* allow ytalk to beep? */
 #define FL_IGNBRK	0x00000400L	/* don't die when ^C is pressed */
 #define FL_PROMPTQUIT	0x00001000L	/* prompt before quitting */
+#define FL_PERSIST	0x00002000L	/* don't quit when alone */
 #define FL_LOCKED	0x40000000L	/* flags locked by other end */
 
 /* ---- defines and short-cuts ---- */

@@ -175,9 +175,18 @@ then type 'make clean' and 'make'.\n");
 		fprintf(stderr, "YTalk %s\n", PACKAGE_VERSION);
 		exit(YTE_SUCCESS);
 	}
+
+	/* set default options */
+
+	def_flags = FL_PROMPTRING | FL_RING | FL_BEEP | FL_SCROLL;
+
+	/* read user/system configuration */
+
+	read_ytalkrc();
+
 	/* check for users */
 
-	if (argc <= 0 || flag_h) {
+	if (!(def_flags & FL_PERSIST) && (argc <= 0 || flag_h)) {
 		fprintf(stderr,
 			"Usage:    ytalk [options] user[@host][#tty]...\n\
 Options:     -v    print program version\n\
@@ -199,15 +208,10 @@ Options:     -v    print program version\n\
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 
-	/* set default options */
-
-	def_flags = FL_PROMPTRING | FL_RING | FL_BEEP | FL_SCROLL;
-
 	/* go for it! */
 
 	errno = 0;
 	init_fd();
-	read_ytalkrc();
 	init_user(vhost);
 	init_term();
 	init_ymenu();
@@ -215,8 +219,9 @@ Options:     -v    print program version\n\
 	for (; argc > 0; argc--, argv++)
 		invite(*argv, 1);
 
+	if (argc != 0)
+		msg_term("Waiting for connection...");
 
-	msg_term("Waiting for connection...");
 	redraw_all_terms();
 
 	main_loop();

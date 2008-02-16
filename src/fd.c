@@ -152,7 +152,8 @@ main_loop()
 		if (connect_list == NULL
 		    && wait_list == NULL
 		    && in_ymenu() == 0
-		    && running_process == 0)
+		    && running_process == 0
+		    && !(def_flags & FL_PERSIST))
 			bail(0);
 
 		/* select */
