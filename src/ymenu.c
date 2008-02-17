@@ -455,7 +455,11 @@ init_userlist()
 			ytk_add_menu_item(YTK_MENU(userlist_menu), buf, u->key, handle_userlist_menu);
 		}
 	}
-	ytk_add_menu_separator(YTK_MENU(userlist_menu));
+
+	/* Only draw a separator if we've got peers */
+	if (connect_list || wait_list)
+		ytk_add_menu_separator(YTK_MENU(userlist_menu));
+
 	snprintf(buf, sizeof(buf), "Me (%.36s)", me->full_name);
 	ytk_add_menu_item(YTK_MENU(userlist_menu), buf, me->key, handle_userlist_menu);
 	ytk_add_menu_separator(YTK_MENU(userlist_menu));
