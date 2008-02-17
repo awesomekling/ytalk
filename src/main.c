@@ -183,7 +183,7 @@ then type 'make clean' and 'make'.\n");
 
 	/* check for users */
 
-	if (!(def_flags & FL_PERSIST) && (argc <= 0 || flag_h)) {
+	if (flag_h || (!(def_flags & FL_PERSIST) && (argc <= 0))) {
 		fprintf(stderr,
 			"Usage:    ytalk [options] user[@host][#tty]...\n\
 Options:     -v    print program version\n\

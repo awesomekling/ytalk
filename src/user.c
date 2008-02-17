@@ -258,7 +258,8 @@ free_user(yuser *user)
 
 	if (connect_list == NULL
 	    && wait_list == NULL
-	    && running_process == 0)
+	    && running_process == 0
+	    && !(def_flags & FL_PERSIST))
 		bail(YTE_SUCCESS_PROMPT);
 
 	close_term(user);
