@@ -117,7 +117,7 @@ draw_title(ywin *w)
 	 * versions. Without it, the top line in each user window will lose
 	 * its attributes on redraw.
 	 */
-	refresh();
+	wnoutrefresh(stdscr);
 
 	free(ta);
 }
@@ -569,6 +569,9 @@ void
 redisplay_curses()
 {
 	register ywin *w;
+	int y, x;
+	ywin *most_recent_window = 0L;
+	getyx(stdscr, y, x);
 
 	clear();
 
@@ -577,6 +580,10 @@ redisplay_curses()
 
 	wnoutrefresh(stdscr);
 	for (w = head; w; w = w->next) {
+		if (!most_recent_window || w->user->last_contact > most_recent_window->user->last_contact) {
+			most_recent_window = w;
+			getyx(w->win, y, x);
+		}
 		if (scrolling(w->user)) {
 			__update_scroll_curses(w->user);
 			draw_title(w);
@@ -591,6 +598,12 @@ redisplay_curses()
 	}
 	if (in_ymenu()) {
 		__refresh_ymenu();
+	} else if (!most_recent_window) {
+		move(y, x);
+		wnoutrefresh(stdscr);
+	} else {
+		wmove(most_recent_window->win, y, x);
+		wnoutrefresh(most_recent_window->win);
 	}
 	doupdate();
 }

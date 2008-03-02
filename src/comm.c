@@ -1233,7 +1233,11 @@ my_input(yuser *user, ychar *buf, int len)
 	static ychar *nbuf = NULL;
 	static int nlen = 0;
 
-	me->last_contact = time(0L);
+	if (len == 1 && *buf == 12 || *buf == 18)
+		/* it's just a ^L or ^R, don't update my last_contact... */
+		;
+	else
+		me->last_contact = time(0L);
 
 	/* If someone's waiting for input, give it to them! */
 
