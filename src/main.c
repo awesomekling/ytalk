@@ -35,6 +35,19 @@ unsigned long int menu_attr = 0;
 char *title_format = NULL;
 char *user_format = NULL;
 
+bool track_idle_time = false;
+static void
+sigalrm_handle(int signal)
+{
+	if (!track_idle_time) {
+		alarm(0);
+		return;
+	}
+
+	retitle_all_terms();
+	alarm(1);
+}
+
 /*
  * Clean up and exit.
  */
@@ -204,6 +217,7 @@ Options:     -v    print program version\n\
 	signal(SIGABRT, got_sig);
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGALRM, sigalrm_handle);
 
 	/* go for it! */
 

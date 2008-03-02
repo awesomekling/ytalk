@@ -487,6 +487,8 @@ read_user(int fd)
 			}
 		}
 	}
+
+	user->last_contact = time(0L);
 }
 
 /*
@@ -611,6 +613,8 @@ connect_user(int fd)
 		show_error("connect_user: open_term() failed");
 		return;
 	}
+
+	user->last_contact = time(0L);
 
 	/* check for ytalk connection */
 

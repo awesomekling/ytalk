@@ -453,6 +453,30 @@ user_title(yuser *user, char *buf, int size)
 				else
 					*(b++) = ' ';
 				break;
+			case 'i':
+				/* %i - Idle time */
+				if ((int) (b - buf) < (size - 5)) {
+					time_t idle_seconds = time(0L) - user->last_contact;
+					time_t idle_minutes = idle_seconds / 60;
+					idle_seconds %= 60;
+					if (idle_minutes > 60) {
+						time_t idle_hours = idle_minutes / 60;
+						if (idle_hours > 24) {
+							time_t idle_days = idle_hours / 24;
+							b += sprintf(b, "%-4dd", idle_days);
+						} else {
+							b += sprintf(b, "%02uhr%s", idle_hours, (idle_hours == 1) ? "" : "s");
+						}
+					} else {
+						b += sprintf(b, "%02u:%02u", idle_minutes, idle_seconds );
+					}
+				}
+				/* Request a SIGALRM every second so we can update idle time. */
+				if (!track_idle_time) {
+					alarm(1);
+					track_idle_time = true;
+				}
+				break;
 			case '%':
 				/* %% - Percent sign */
 				*(b++) ='%';

@@ -210,6 +210,8 @@ typedef struct _yuser {
 
 	void *term;                     /* terminal cookie */
 
+	time_t last_contact;
+
 } yuser;
 
 typedef struct _ywin {
@@ -285,6 +287,7 @@ extern int io_len;		/* user input count */
 
 extern yuser *scuser;		/* user being scrolled */
 extern long int scrollback_lines;	/* max number of scrollback lines */
+extern bool track_idle_time;
 
 extern bool running_process;        /* flag: is process running? */
 extern char *gshell;		/* stores your shell */
