@@ -269,14 +269,18 @@ sendit(ylong addr, int d)
 		tv.tv_usec = 0L;
 		FD_SET(talkd[d].fd, &sel);
 		if ((n = select(talkd[d].fd + 1, &sel, 0, 0, &tv)) < 0) {
-			show_error("sendit: flush select() failed");
-			return -1;
+			if (errno != EINTR) {
+				show_error("sendit: flush select() failed");
+				return -1;
+			}
 		}
 		if (n <= 0)
 			break;
 		if (recv(talkd[d].fd, talkd[d].rptr, talkd[d].rlen, 0) < 0) {
-			show_error("sendit: flush recv() failed");
-			return -1;
+			if (errno != EINTR) {
+				show_error("sendit: flush recv() failed");
+				return -1;
+			}
 		}
 	}
 
@@ -299,8 +303,10 @@ sendit(ylong addr, int d)
 			tv.tv_usec = 0L;
 			FD_SET(talkd[d].fd, &sel);
 			if ((n = select(talkd[d].fd + 1, &sel, 0, 0, &tv)) < 0) {
-				show_error("sendit: first select() failed");
-				return -1;
+				if (errno != EINTR) {
+					show_error("sendit: first select() failed");
+					return -1;
+				}
 			}
 		} while (n <= 0);	/* ie: until we receive a reply */
 
