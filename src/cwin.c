@@ -509,13 +509,27 @@ void
 retitle_all_curses()
 {
 	ywin *w;
+	int y, x;
+
+	ywin *most_recent_window = 0L;
+	getyx(stdscr, y, x);
+
 	for (w = head; w; w = w->next) {
+		if (!most_recent_window || w->user->last_contact > most_recent_window->user->last_contact) {
+			most_recent_window = w;
+			getyx(w->win, y, x);
+		}
 		draw_title(w);
 	}
-	if (in_ymenu())
+	if (in_ymenu()) {
 		__refresh_ymenu();
-	move(LINES - 1, COLS - 1);
-	wnoutrefresh(stdscr);
+	} else if (!most_recent_window) {
+		move(y, x);
+		wnoutrefresh(stdscr);
+	} else {
+		wmove(most_recent_window->win, y, x);
+		wnoutrefresh(most_recent_window->win);
+	}
 	doupdate();
 }
 

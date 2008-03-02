@@ -1233,6 +1233,8 @@ my_input(yuser *user, ychar *buf, int len)
 	static ychar *nbuf = NULL;
 	static int nlen = 0;
 
+	me->last_contact = time(0L);
+
 	/* If someone's waiting for input, give it to them! */
 
 	if (input_flag) {
