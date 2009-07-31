@@ -141,6 +141,10 @@ init_user(char *vhost)
 
 	if ((me = new_user(my_name, my_host, NULL)) == NULL)
 		bail(YTE_ERROR);
+
+	/* Start tracking my idle time. */
+	me->last_contact = time(0L);
+
 	me->remote.protocol = YTP_NEW;
 	me->remote.vmajor = VMAJOR;
 	me->remote.vminor = VMINOR;
