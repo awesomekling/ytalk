@@ -463,12 +463,12 @@ user_title(yuser *user, char *buf, int size)
 						time_t idle_hours = idle_minutes / 60;
 						if (idle_hours > 24) {
 							time_t idle_days = idle_hours / 24;
-							b += sprintf(b, "%-4dd", idle_days);
+							b += sprintf(b, "%-4lud", idle_days);
 						} else {
-							b += sprintf(b, "%02uhr%s", idle_hours, (idle_hours == 1) ? "" : "s");
+							b += sprintf(b, "%02luhr%s", idle_hours, (idle_hours == 1) ? "" : "s");
 						}
 					} else {
-						b += sprintf(b, "%02u:%02u", idle_minutes, idle_seconds );
+						b += sprintf(b, "%02lu:%02lu", idle_minutes, idle_seconds );
 					}
 				}
 				/* Request a SIGALRM every second so we can update idle time. */
